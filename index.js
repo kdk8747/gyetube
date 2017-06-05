@@ -26,18 +26,26 @@ app.get('/times', function(request, response) {
   response.send(result);
 });
 
-var ms = require('mariasql');
+
+
+
+
+
 
 app.get('/db', function (request, response) {
-  ms.connect(process.env.DATABASE_URL, function(err, client, done) {
-    client.query('SELECT * FROM test_table', function(err, result) {
-      done();
-      if (err)
-       { console.error(err); response.send("Error " + err); }
-      else
-       { response.render('pages/db', {results: result.rows} ); }
+    var mysql = require('mysql');
+    var connection = mysql.createConnection(process.env.JAWSDB_MARIA_URL);
+
+    connection.connect();
+
+    connection.query('SELECT 1 + 1 AS solution', function(err, rows, fields) {
+        if (err) throw err;
+
+        console.log('The solution is: ', rows[0].solution);
     });
-  });
+
+    connection.end();
+    response.send('good');
 });
 
 app.listen(app.get('port'), function() {
