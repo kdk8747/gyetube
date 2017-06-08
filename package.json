@@ -1,6 +1,6 @@
 {
-  "name": "node-js-getting-started",
-  "version": "0.2.6",
+  "name": "grassroots-archive",
+  "version": "0.0.1",
   "description": "A sample Node.js app using Express 4",
   "engines": {
     "node": "6.10.2"
@@ -10,18 +10,15 @@
     "start": "node server/server.js"
   },
   "dependencies": {
-    "express": "^4.15.2",
-    "generic-pool": "^3.1.7",
-    "mysql": "^2.13.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/heroku/node-js-getting-started"
+    "express": "4.15.3",
+    "generic-pool": "3.1.7",
+    "mysql": "2.13.0"
   },
   "keywords": [
     "node",
     "heroku",
     "express"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "author": "DongKyoo Kim"
 }
