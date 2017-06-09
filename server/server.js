@@ -3,15 +3,16 @@ var app = express();
 
 app.set('port', (process.env.PORT || 5000));
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/../client'));
+app.use(express.static(__dirname + '/..'));
 
-// views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
 
 app.get('/', function(request, response) {
-  //response.render('pages/index');
-    response.send('this is ' + request.headers.host);
+    response.sendFile('index.html');
+});
+
+app.get('/node_modules/*', function(request, response) {
+    response.sendFile(request.url.substr(1));
 });
 
 app.get('/times', function(request, response) {
@@ -21,12 +22,6 @@ app.get('/times', function(request, response) {
       result += i + ' ';
   response.send(result);
 });
-
-
-
-
-
-
 
 app.get('/db', function (request, response) {
     var mysql = require('mysql');
