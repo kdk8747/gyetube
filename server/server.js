@@ -3,16 +3,12 @@ var app = express();
 
 app.set('port', (process.env.PORT || 5000));
 
-app.use(express.static(__dirname + '/../client'));
+app.use(express.static(__dirname + '/../dist'));
 app.use(express.static(__dirname + '/..'));
 
 
 app.get('/', function(request, response) {
     response.sendFile('index.html');
-});
-
-app.get('/dist/*', function(request, response) {
-    response.sendFile(request.url.substr(1));
 });
 
 app.get('/times', function(request, response) {
