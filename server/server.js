@@ -19,6 +19,11 @@ app.get('/times', function(request, response) {
   response.send(result);
 });
 
+app.get('*.js', function (request, response) {
+  request.url = request.url + '.gz';
+  response.set('Content-Encoding', 'gzip');
+});
+
 app.get('/db', function (request, response) {
     var mysql = require('mysql');
     var connection = mysql.createConnection(process.env.JAWSDB_MARIA_URL);
