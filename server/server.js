@@ -11,7 +11,7 @@ app.get('/', function(request, response) {
     response.sendFile('index.html');
 });
 
-app.get('/node_modules/*', function(request, response) {
+app.get('/dist/*', function(request, response) {
     response.sendFile(request.url.substr(1));
 });
 
