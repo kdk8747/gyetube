@@ -7,10 +7,10 @@
   },
   "main": "server.js",
   "scripts": {
-    "build": "webpack --config config/webpack.config.common.js",
+    "build": "webpack -p --config config/webpack.config.common.js --progress",
     "dev": "webpack-dev-server --config config/webpack.config.common.js --inline --progress --port 8080",
     "start": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 server/server.js",
-    "heroku-postbuild": "webpack -p --config config/webpack.config.common.js --progress"
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@angular/common": "4.1.3",
