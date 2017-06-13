@@ -19,9 +19,10 @@ app.get('/times', function(request, response) {
   response.send(result);
 });
 
-app.get('*.js', function (request, response) {
+app.get('*.js', function (request, response, next) {
   request.url = request.url + '.gz';
   response.set('Content-Encoding', 'gzip');
+  next();
 });
 
 app.get('/db', function (request, response) {
