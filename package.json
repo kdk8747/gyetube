@@ -9,8 +9,8 @@
   "scripts": {
     "build": "rimraf dist && webpack --config config/webpack.config.prod.js --progress",
     "dev": "webpack-dev-server --config config/webpack.config.dev.js --inline --progress --port 8080",
-    "start": "pm2 start --attach server/server.js --node-args \"--optimize_for_size --max_old_space_size=460 --gc_interval=100\"",
-    "heroku-postbuild": "npm run build"
+    "start": "pm2 start --attach server/server.js --node-args \"--optimize_for_size --max_old_space_size=460 --gc_interval=100\" && pm2 logs all",
+    "heroku-postbuild": "npm run build && npm install -g pm2 && pm2 install pm2-logrotate"
   },
   "dependencies": {
     "@angular/common": "4.1.3",
