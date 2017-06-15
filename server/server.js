@@ -4,7 +4,7 @@ var app = express();
 
 app.set('port', (process.env.PORT || 5000));
 
-var __public = path.resolve(__dirname + '/../dist');
+var __public = path.resolve(__dirname + '/../public');
 
 
 app.get('/', function (request, response) {

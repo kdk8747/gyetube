@@ -7,7 +7,7 @@
   },
   "main": "server.js",
   "scripts": {
-    "build": "rimraf dist && webpack --config config/webpack.config.prod.js --progress",
+    "build": "rimraf public && webpack --config config/webpack.config.prod.js --progress",
     "dev": "concurrently \"nodemon server/server.js\" \"webpack-dev-server --config config/webpack.config.dev.js\"",
     "start": "pm2 start --attach server/server.js --node-args \"--optimize_for_size --max_old_space_size=460 --gc_interval=100\" && pm2 logs all",
     "heroku-postbuild": "npm run build && npm install -g pm2 && pm2 install pm2-logrotate"

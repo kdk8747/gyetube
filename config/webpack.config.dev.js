@@ -4,7 +4,7 @@ var helpers = require('./helpers');
 
 module.exports = webpackMerge(commonConfig, {
   output: {
-    path: helpers.root('dist'),
+    path: helpers.root('public'),
     publicPath: '/',
     filename: '[name].js',
     chunkFilename: '[id].chunk.js'
