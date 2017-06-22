@@ -1,10 +1,11 @@
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var helpers = require('./helpers');
 
 module.exports = {
-  devtool: 'inline-source-map',
-  entry: {
+  devtool: 'source-map',
+    entry: {
     'polyfills': './client/polyfills.ts',
     'vendor': './client/vendor.ts',
     'app': './client/main.ts'
@@ -22,6 +23,20 @@ module.exports = {
             options: { configFileName: helpers.root('client', 'tsconfig.json') }
           } , 'angular2-template-loader'
         ]
+      },
+      {
+        test: /\.html$/,
+        loader: 'html-loader'
+      },
+      {
+        test: /\.css$/,
+        exclude: helpers.root('client', 'app'),
+        loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader?sourceMap' })
+      },
+      {
+        test: /\.css$/,
+        include: helpers.root('client', 'app'),
+        loader: 'raw-loader'
       }
     ]
   },

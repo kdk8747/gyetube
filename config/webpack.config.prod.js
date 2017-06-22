@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var webpackMerge = require('webpack-merge');
 var CompressionPlugin = require("compression-webpack-plugin");
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var commonConfig = require('./webpack.config.common.js');
 var helpers = require('./helpers');
 
@@ -31,7 +32,8 @@ module.exports = webpackMerge(commonConfig, {
       },
       output: {
         comments: false
-      }
+      },
+      sourceMap: true
     }),
     new CompressionPlugin({
       asset: "[path].gz[query]",
@@ -40,6 +42,7 @@ module.exports = webpackMerge(commonConfig, {
       threshold: 10240, // 10kb
       minRatio: 0.8
     }),
+    new ExtractTextPlugin('[name].[hash].css'),
     new webpack.DefinePlugin({
       'process.env': {
         'ENV': JSON.stringify(ENV)
