@@ -4,11 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule }    from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { HeroesComponent } from './heroes.component';
-import { DashboardComponent } from './dashboard.component';
-import { HeroDetailComponent } from './hero-detail.component';
-import { HeroService } from './hero.service';
-import { HeroSearchComponent } from './hero-search.component';
+import { GroupComponent } from './group';
+
+import { ActivityService, DecisionService, ProceedingService, ReceiptService, UserService } from './_services';
 
 import { AppRoutingModule }     from './app-routing.module';
 
@@ -21,12 +19,15 @@ import { AppRoutingModule }     from './app-routing.module';
   ],
   declarations: [
     AppComponent,
-    HeroesComponent,
-    DashboardComponent,
-    HeroDetailComponent,
-    HeroSearchComponent
+    GroupComponent
   ],
-  providers: [HeroService],
+  providers: [
+    ActivityService,
+    DecisionService,
+    ProceedingService,
+    ReceiptService,
+    UserService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
