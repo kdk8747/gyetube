@@ -1,0 +1,54 @@
+<div id="main-content">
+    <div id="proceeding-list">
+        <ol>
+            <li>
+                <div>+</div>
+            </li>
+            <li *ngFor="let proceeding of proceedings">
+                <div class="proceeding">
+                    <span>date: {{proceeding.date}}</span>
+                    <span>title: {{proceeding.title}}</span>
+                    <span>content: {{proceeding.content}}</span>
+                </div>
+            </li>
+        </ol>
+    </div>
+    <div id="decision-list">
+        <ol>
+            <li>
+                <div>+</div>
+            </li>
+            <li *ngFor="let decision of decisions">
+                <div class="decision">
+                    <span>content: {{decision.content}}</span>
+                </div>
+            </li>
+        </ol>
+    </div>
+    <div id="activity-list">
+        <ol>
+            <li>
+                <div>+</div>
+            </li>
+            <li *ngFor="let activity of activities">
+                <div class="activity">
+                    <span>date: {{activity.date}}</span>
+                    <span>content: {{activity.content}}</span>
+                </div>
+            </li>
+        </ol>
+    </div>
+    <div id="receipt-list">
+        <ol>
+            <li>
+                <div>+</div>
+            </li>
+            <li *ngFor="let receipt of receipts">
+                <div class="receipt">
+                    <span>date: {{receipt.date}}</span>
+                    <span>imageUrl: {{receipt.imageUrl}}</span>
+                </div>
+            </li>
+        </ol>
+    </div>
+</div>

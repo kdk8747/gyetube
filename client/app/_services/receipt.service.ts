@@ -12,7 +12,7 @@ export class ReceiptService {
 
   constructor(private http: Http) { }
 
-  getReceiptes(): Promise<Receipt[]> {
+  getReceipts(): Promise<Receipt[]> {
     return this.http.get(this.receiptsUrl)
       .toPromise()
       .then(response => response.json() as Receipt[])

@@ -12,7 +12,7 @@ export class ActivityService {
 
   constructor(private http: Http) { }
 
-  getActivityes(): Promise<Activity[]> {
+  getActivities(): Promise<Activity[]> {
     return this.http.get(this.activitiesUrl)
       .toPromise()
       .then(response => response.json() as Activity[])

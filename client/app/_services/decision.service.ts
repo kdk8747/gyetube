@@ -12,7 +12,7 @@ export class DecisionService {
 
   constructor(private http: Http) { }
 
-  getDecisiones(): Promise<Decision[]> {
+  getDecisions(): Promise<Decision[]> {
     return this.http.get(this.decisionsUrl)
       .toPromise()
       .then(response => response.json() as Decision[])

@@ -12,7 +12,7 @@ export class ProceedingService {
 
   constructor(private http: Http) { }
 
-  getProceedinges(): Promise<Proceeding[]> {
+  getProceedings(): Promise<Proceeding[]> {
     return this.http.get(this.proceedingsUrl)
       .toPromise()
       .then(response => response.json() as Proceeding[])
