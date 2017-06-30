@@ -28,18 +28,18 @@ export class ActivityService {
 
   }
 
-  update(hero: Activity): Promise<Activity> {
-    const url = `${this.activitiesUrl}/${hero.id}`;
+  update(activity: Activity): Promise<Activity> {
+    const url = `${this.activitiesUrl}/${activity.id}`;
     return this.http
-      .put(url, JSON.stringify(hero), { headers: this.headers })
+      .put(url, JSON.stringify(activity), { headers: this.headers })
       .toPromise()
-      .then(() => hero)
+      .then(() => activity)
       .catch(this.handleError);
   }
 
-  create(name: string): Promise<Activity> {
+  create(activity: Activity): Promise<Activity> {
     return this.http
-      .post(this.activitiesUrl, JSON.stringify({ name: name }), { headers: this.headers })
+      .post(this.activitiesUrl, JSON.stringify(activity), { headers: this.headers })
       .toPromise()
       .then(res => res.json() as Activity)
       .catch(this.handleError);

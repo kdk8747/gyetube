@@ -2,11 +2,21 @@
     <div id="proceeding-list">
         <ol>
             <li>
-                <div>+</div>
+                <div *ngIf="!selectedNewProceeding" (click)="onNewProceeding()">+</div>
+                <div *ngIf="selectedNewProceeding">
+                    <label>Title:</label> <input #proceedingTitle />
+                    <label>Content:</label> <input #proceedingContent />
+                    <button (click)="addProceeding(proceedingTitle.value, proceedingContent.value); proceedingTitle.value=proceedingContent.value=''">
+                        Add
+                    </button>
+                    <button (click)="selectedNewProceeding=false; proceedingTitle.value=proceedingContent.value=''">
+                        Delete
+                    </button>
+                </div>
             </li>
             <li *ngFor="let proceeding of proceedings">
                 <div class="proceeding">
-                    <span>date: {{proceeding.date}}</span>
+                    <span>date: {{proceeding.date | date:'y-MM-dd'}}</span>
                     <span>title: {{proceeding.title}}</span>
                     <span>content: {{proceeding.content}}</span>
                 </div>
@@ -16,7 +26,22 @@
     <div id="decision-list">
         <ol>
             <li>
-                <div>+</div>
+                <div *ngIf="!selectedNewDecision" (click)="onNewDecision()">+</div>
+                <div *ngIf="selectedNewDecision">
+                    <label>Content:</label> <input #decisionContent />
+                    <label>ref. proceeding:</label>
+                    <select #decisionByProceeding>
+                        <option *ngFor="let proceeding of proceedings" [value]="proceeding.id">
+                            {{ proceeding.title }}
+                        </option>
+                    </select>
+                    <button (click)="addDecision(decisionContent.value, decisionByProceeding.value); decisionContent.value=''">
+                        Add
+                    </button>
+                    <button (click)="selectedNewDecision=false; decisionContent.value=''">
+                        Delete
+                    </button>
+                </div>
             </li>
             <li *ngFor="let decision of decisions">
                 <div class="decision">
@@ -32,7 +57,7 @@
             </li>
             <li *ngFor="let activity of activities">
                 <div class="activity">
-                    <span>date: {{activity.date}}</span>
+                    <span>date: {{activity.date | date:'y-MM-dd'}}</span>
                     <span>content: {{activity.content}}</span>
                 </div>
             </li>
@@ -45,7 +70,7 @@
             </li>
             <li *ngFor="let receipt of receipts">
                 <div class="receipt">
-                    <span>date: {{receipt.date}}</span>
+                    <span>date: {{receipt.date | date:'y-MM-dd'}}</span>
                     <span>imageUrl: {{receipt.imageUrl}}</span>
                 </div>
             </li>

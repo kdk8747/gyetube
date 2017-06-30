@@ -28,18 +28,18 @@ export class DecisionService {
 
   }
 
-  update(hero: Decision): Promise<Decision> {
-    const url = `${this.decisionsUrl}/${hero.id}`;
+  update(decision: Decision): Promise<Decision> {
+    const url = `${this.decisionsUrl}/${decision.id}`;
     return this.http
-      .put(url, JSON.stringify(hero), { headers: this.headers })
+      .put(url, JSON.stringify(decision), { headers: this.headers })
       .toPromise()
-      .then(() => hero)
+      .then(() => decision)
       .catch(this.handleError);
   }
 
-  create(name: string): Promise<Decision> {
+  create(decision: Decision): Promise<Decision> {
     return this.http
-      .post(this.decisionsUrl, JSON.stringify({ name: name }), { headers: this.headers })
+      .post(this.decisionsUrl, JSON.stringify(decision), { headers: this.headers })
       .toPromise()
       .then(res => res.json() as Decision)
       .catch(this.handleError);

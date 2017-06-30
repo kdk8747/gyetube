@@ -28,18 +28,18 @@ export class ProceedingService {
 
   }
 
-  update(hero: Proceeding): Promise<Proceeding> {
-    const url = `${this.proceedingsUrl}/${hero.id}`;
+  update(proceeding: Proceeding): Promise<Proceeding> {
+    const url = `${this.proceedingsUrl}/${proceeding.id}`;
     return this.http
-      .put(url, JSON.stringify(hero), { headers: this.headers })
+      .put(url, JSON.stringify(proceeding), { headers: this.headers })
       .toPromise()
-      .then(() => hero)
+      .then(() => proceeding)
       .catch(this.handleError);
   }
 
-  create(name: string): Promise<Proceeding> {
+  create(proceeding: Proceeding): Promise<Proceeding> {
     return this.http
-      .post(this.proceedingsUrl, JSON.stringify({ name: name }), { headers: this.headers })
+      .post(this.proceedingsUrl, JSON.stringify(proceeding), { headers: this.headers })
       .toPromise()
       .then(res => res.json() as Proceeding)
       .catch(this.handleError);

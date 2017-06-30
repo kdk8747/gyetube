@@ -28,18 +28,18 @@ export class ReceiptService {
 
   }
 
-  update(hero: Receipt): Promise<Receipt> {
-    const url = `${this.receiptsUrl}/${hero.id}`;
+  update(receipt: Receipt): Promise<Receipt> {
+    const url = `${this.receiptsUrl}/${receipt.id}`;
     return this.http
-      .put(url, JSON.stringify(hero), { headers: this.headers })
+      .put(url, JSON.stringify(receipt), { headers: this.headers })
       .toPromise()
-      .then(() => hero)
+      .then(() => receipt)
       .catch(this.handleError);
   }
 
-  create(name: string): Promise<Receipt> {
+  create(receipt: Receipt): Promise<Receipt> {
     return this.http
-      .post(this.receiptsUrl, JSON.stringify({ name: name }), { headers: this.headers })
+      .post(this.receiptsUrl, JSON.stringify(receipt), { headers: this.headers })
       .toPromise()
       .then(res => res.json() as Receipt)
       .catch(this.handleError);

@@ -28,18 +28,18 @@ export class UserService {
 
   }
 
-  update(hero: User): Promise<User> {
-    const url = `${this.usersUrl}/${hero.id}`;
+  update(user: User): Promise<User> {
+    const url = `${this.usersUrl}/${user.id}`;
     return this.http
-      .put(url, JSON.stringify(hero), { headers: this.headers })
+      .put(url, JSON.stringify(user), { headers: this.headers })
       .toPromise()
-      .then(() => hero)
+      .then(() => user)
       .catch(this.handleError);
   }
 
-  create(name: string): Promise<User> {
+  create(user: User): Promise<User> {
     return this.http
-      .post(this.usersUrl, JSON.stringify({ name: name }), { headers: this.headers })
+      .post(this.usersUrl, JSON.stringify(user), { headers: this.headers })
       .toPromise()
       .then(res => res.json() as User)
       .catch(this.handleError);
