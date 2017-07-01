@@ -39,7 +39,7 @@ export class GroupComponent implements OnInit {
         title = title.trim();
         content = content.trim();
         if (!title || !content) { return; }
-        this.proceedingService.create({ id: 0, date: new Date(Date.now()), title: title, content: content, decisions: [] })
+        this.proceedingService.create({ id: 0, date: new Date(Date.now()), title: title, content: content, childDecisions: [] })
             .then(proceeding => {
                 this.proceedings.push(proceeding);
                 this.afterGetProceedings();
@@ -62,13 +62,12 @@ export class GroupComponent implements OnInit {
         content = content.trim();
         let proceeding = this.proceedings.find(item => item.id === +proceedingID);
         if (!content || !proceeding) { return; }
-        this.decisionService.create({ id: 0, content: content, activities: [] })
+        this.decisionService.create({ id: 0, content: content, parentProceeding: proceedingID, childActivities: [] })
             .then(decision => {
                 this.decisions.push(decision);
                 this.selectedNewDecision = false;
 
-                proceeding.decisions.push(decision.id);
-                this.proceedingService.update(proceeding);
+                proceeding.childDecisions.push(decision.id);
             });
     }
 };

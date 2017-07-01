@@ -1,5 +1,6 @@
 export class Receipt {
   id: number;
-  date: number;
+  date: Date;
   imageUrl: string;
+  parentActivity: number;
 }

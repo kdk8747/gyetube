@@ -3,5 +3,5 @@ export class Proceeding {
   date: Date;
   title: string;
   content: string;
-  decisions: number[];
+  childDecisions: number[];
 }

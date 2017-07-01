@@ -1,6 +1,7 @@
 export class Activity {
   id: number;
-  date: number;
+  date: Date;
   content: string;
-  receipts: number[];
+  parentDecision: number;
+  childReceipts: number[];
 }
