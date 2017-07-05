@@ -3,50 +3,50 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { Decision } from '../_models';
+import { Policy } from '../_models';
 
 @Injectable()
-export class DecisionService {
-  private decisionsUrl = 'api/decisions';  // URL to web api
+export class PolicyService {
+  private policiesUrl = 'api/policies';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(private http: Http) { }
 
-  getDecisions(): Promise<Decision[]> {
-    return this.http.get(this.decisionsUrl)
+  getPolicys(): Promise<Policy[]> {
+    return this.http.get(this.policiesUrl)
       .toPromise()
-      .then(response => response.json() as Decision[])
+      .then(response => response.json() as Policy[])
       .catch(this.handleError);
   }
 
-  getDecision(id: number): Promise<Decision> {
-    const url = `${this.decisionsUrl}/${id}`;
+  getPolicy(id: number): Promise<Policy> {
+    const url = `${this.policiesUrl}/${id}`;
     return this.http.get(url)
       .toPromise()
-      .then(response => response.json() as Decision)
+      .then(response => response.json() as Policy)
       .catch(this.handleError);
 
   }
 
-  update(decision: Decision): Promise<Decision> {
-    const url = `${this.decisionsUrl}/${decision.id}`;
+  update(policy: Policy): Promise<Policy> {
+    const url = `${this.policiesUrl}/${policy.id}`;
     return this.http
-      .put(url, JSON.stringify(decision), { headers: this.headers })
+      .put(url, JSON.stringify(policy), { headers: this.headers })
       .toPromise()
-      .then(() => decision)
+      .then(() => policy)
       .catch(this.handleError);
   }
 
-  create(decision: Decision): Promise<Decision> {
+  create(policy: Policy): Promise<Policy> {
     return this.http
-      .post(this.decisionsUrl, JSON.stringify(decision), { headers: this.headers })
+      .post(this.policiesUrl, JSON.stringify(policy), { headers: this.headers })
       .toPromise()
-      .then(res => res.json() as Decision)
+      .then(res => res.json() as Policy)
       .catch(this.handleError);
   }
 
   delete(id: number): Promise<void> {
-    const url = `${this.decisionsUrl}/${id}`;
+    const url = `${this.policiesUrl}/${id}`;
     return this.http.delete(url, { headers: this.headers })
       .toPromise()
       .then(() => null)

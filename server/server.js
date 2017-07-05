@@ -48,11 +48,11 @@ app.delete('/api/users/:id', (req, res) => {
 });
 
 var proceedings = [
-  { id: 1, date: new Date(2016,5,24,11,33,30,0), title: 'dummy1', content: 'dummy1', childDecisions:[1] },
-  { id: 2, date: new Date(2016,6,24,11,33,30,0), title: 'dummy2', content: 'dummy2', childDecisions:[2] },
-  { id: 3, date: new Date(2016,7,24,11,33,30,0), title: 'dummy3', content: 'dummy3', childDecisions:[3] },
-  { id: 4, date: new Date(2016,8,24,11,33,30,0), title: 'dummy4', content: 'dummy4', childDecisions:[4] },
-  { id: 5, date: new Date(2016,9,24,11,33,30,0), title: 'dummy5', content: 'dummy5', childDecisions:[5] }
+  { id: 1, date: new Date(2016,5,24,11,33,30,0), title: 'dummy1', content: 'dummy1', childPolicies:[1] },
+  { id: 2, date: new Date(2016,6,24,11,33,30,0), title: 'dummy2', content: 'dummy2', childPolicies:[2] },
+  { id: 3, date: new Date(2016,7,24,11,33,30,0), title: 'dummy3', content: 'dummy3', childPolicies:[3] },
+  { id: 4, date: new Date(2016,8,24,11,33,30,0), title: 'dummy4', content: 'dummy4', childPolicies:[4] },
+  { id: 5, date: new Date(2016,9,24,11,33,30,0), title: 'dummy5', content: 'dummy5', childPolicies:[5] }
 ];
 var proceedingID = 6;
 app.get('/api/proceedings', (req, res) => {
@@ -77,7 +77,7 @@ app.delete('/api/proceedings/:id', (req, res) => {
   res.send();
 });
 
-var decisions = [
+var policies = [
   { id: 1, parentProceeding: 1, childActivities:[1,6,10], content: '소모임 활성화 방안 - 녹색평론 읽기모임'},
   { id: 2, parentProceeding: 2, childActivities:[2,8], content: '소식지 발송 활동'},
   { id: 3, parentProceeding: 3, childActivities:[3], content: '한달에 한번 정보공개청구'},
@@ -85,44 +85,44 @@ var decisions = [
   { id: 5, parentProceeding: 5, childActivities:[7,9], content: 'dummy5'}
 ];
 var decisionID = 6;
-app.get('/api/decisions', (req, res) => {
-  res.json(decisions);
+app.get('/api/policies', (req, res) => {
+  res.json(policies);
 });
-app.get('/api/decisions/:id', (req, res) => {
-  res.json(decisions.find(item => item.id === +req.params.id));
+app.get('/api/policies/:id', (req, res) => {
+  res.json(policies.find(item => item.id === +req.params.id));
 });
-app.put('/api/decisions/:id', (req, res) => {
-  let i = decisions.findIndex(item => item.id === +req.params.id);
-  decisions[i] = req.body;
+app.put('/api/policies/:id', (req, res) => {
+  let i = policies.findIndex(item => item.id === +req.params.id);
+  policies[i] = req.body;
   res.send();
 });
-app.post('/api/decisions', (req, res) => {
-  let newDecision = req.body;
+app.post('/api/policies', (req, res) => {
+  let newPolicy = req.body;
 
-  newDecision['id'] = decisionID ++;
-  decisions.push(newDecision);
+  newPolicy['id'] = decisionID ++;
+  policies.push(newPolicy);
   
-  let proceeding = proceedings.find(item => item.id === +newDecision.parentProceeding);
-  proceeding.childDecisions.push(newDecision.id);
+  let proceeding = proceedings.find(item => item.id === +newPolicy.parentProceeding);
+  proceeding.childPolicys.push(newPolicy.id);
 
-  res.json(newDecision);
+  res.json(newPolicy);
 });
-app.delete('/api/decisions/:id', (req, res) => {
-  decisions = decisions.filter(h => h.id !== +req.params.id);
+app.delete('/api/policies/:id', (req, res) => {
+  policies = policies.filter(h => h.id !== +req.params.id);
   res.send();
 });
 
 var activities = [
-  { id: 1, date: new Date(2016,5,24,11,33,30,0), content: 'hahaha', parentDecision: 1, childReceipts: [1] },
-  { id: 2, date: new Date(2016,6,2,11,33,30,0), content: 'hohoho', parentDecision: 2, childReceipts: [2] },
-  { id: 3, date: new Date(2016,6,24,11,33,30,0), content: 'hohoho', parentDecision: 3, childReceipts: [3] },
-  { id: 4, date: new Date(2016,7,4,11,33,30,0), content: 'hohoho', parentDecision: 4, childReceipts: [4] },
-  { id: 5, date: new Date(2016,7,24,11,33,30,0), content: 'hohoho', parentDecision: 4, childReceipts: [5] },
-  { id: 6, date: new Date(2016,8,2,11,33,30,0), content: 'hohoho', parentDecision: 1, childReceipts: [6] },
-  { id: 7, date: new Date(2016,8,24,11,33,30,0), content: 'hohoho', parentDecision: 5, childReceipts: [7] },
-  { id: 8, date: new Date(2016,9,4,11,33,30,0), content: 'hohoho', parentDecision: 2, childReceipts: [8] },
-  { id: 9, date: new Date(2016,9,24,11,33,30,0), content: 'hohoho', parentDecision: 5, childReceipts: [9] },
-  { id: 10, date: new Date(2016,10,24,11,33,30,0), content: 'hohoho', parentDecision: 1, childReceipts: [10,11] }
+  { id: 1, date: new Date(2016,5,24,11,33,30,0), content: 'hahaha', parentPolicy: 1, childReceipts: [1] },
+  { id: 2, date: new Date(2016,6,2,11,33,30,0), content: 'hohoho', parentPolicy: 2, childReceipts: [2] },
+  { id: 3, date: new Date(2016,6,24,11,33,30,0), content: 'hohoho', parentPolicy: 3, childReceipts: [3] },
+  { id: 4, date: new Date(2016,7,4,11,33,30,0), content: 'hohoho', parentPolicy: 4, childReceipts: [4] },
+  { id: 5, date: new Date(2016,7,24,11,33,30,0), content: 'hohoho', parentPolicy: 4, childReceipts: [5] },
+  { id: 6, date: new Date(2016,8,2,11,33,30,0), content: 'hohoho', parentPolicy: 1, childReceipts: [6] },
+  { id: 7, date: new Date(2016,8,24,11,33,30,0), content: 'hohoho', parentPolicy: 5, childReceipts: [7] },
+  { id: 8, date: new Date(2016,9,4,11,33,30,0), content: 'hohoho', parentPolicy: 2, childReceipts: [8] },
+  { id: 9, date: new Date(2016,9,24,11,33,30,0), content: 'hohoho', parentPolicy: 5, childReceipts: [9] },
+  { id: 10, date: new Date(2016,10,24,11,33,30,0), content: 'hohoho', parentPolicy: 1, childReceipts: [10,11] }
 ];
 var activityID = 11;
 app.get('/api/activities', (req, res) => {

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Activity, Decision, Proceeding, Receipt } from '../_models';
-import { ActivityService, DecisionService, ProceedingService, ReceiptService } from '../_services';
+import { Activity, Policy, Proceeding, Receipt } from '../_models';
+import { ActivityService, ReceiptService } from '../_services';
+import { /*ActivityListService,*/ PolicyListService, ProceedingListService/*, ReceiptListService*/ } from '../_services';
 
 @Component({
     selector: 'group',
@@ -11,24 +12,27 @@ import { ActivityService, DecisionService, ProceedingService, ReceiptService } f
 
 export class GroupComponent implements OnInit {
     proceedings: Proceeding[];
-    decisions: Decision[];
+    policies: Policy[];
     activities: Activity[];
     receipts: Receipt[];
+
     selectedNewProceeding: boolean;
-    selectedNewDecision: boolean;
+    selectedNewPolicy: boolean;
 
     constructor(
-        private proceedingService: ProceedingService,
-        private decisionService: DecisionService,
+        private proceedingListService: ProceedingListService,
+        private policyListService: PolicyListService,
         private activityService: ActivityService,
         private receiptService: ReceiptService
     ) { }
 
     ngOnInit(): void {
-        this.proceedingService.getProceedings().then(proceedings => { this.proceedings = proceedings; this.afterGetProceedings(); });
-        this.decisionService.getDecisions().then(decisions => this.decisions = decisions);
+        this.proceedingListService.init().then(() => { this.proceedings = this.proceedingListService.get() });
+        this.policyListService.init().then(() => { this.policies = this.policyListService.get() });
+        /*this.proceedingService.getProceedings().then(proceedings => { this.proceedings = proceedings; this.afterGetProceedings(); });
+        this.policyService.getPolicys().then(policies => this.policies = policies);
         this.activityService.getActivities().then(activities => this.activities = activities);
-        this.receiptService.getReceipts().then(receipts => this.receipts = receipts);
+        this.receiptService.getReceipts().then(receipts => this.receipts = receipts);*/
     }
 
     onNewProceeding(): void {
@@ -36,38 +40,27 @@ export class GroupComponent implements OnInit {
     }
 
     addProceeding(title: string, content: string): void {
-        title = title.trim();
-        content = content.trim();
-        if (!title || !content) { return; }
-        this.proceedingService.create({ id: 0, date: new Date(Date.now()), title: title, content: content, childDecisions: [] })
-            .then(proceeding => {
-                this.proceedings.push(proceeding);
-                this.afterGetProceedings();
+        this.proceedingListService.addProceeding(title, content)
+            .then(() => {
+                this.proceedings = this.proceedingListService.get();
                 this.selectedNewProceeding = false;
             });
     }
 
-    afterGetProceedings(): void {
-        this.proceedings = this.proceedings.sort((h1, h2) => {
-            return h1.date < h2.date ? 1 :
-                (h1.date > h2.date ? -1 : 0);
-        });
+
+    onNewPolicy(): void {
+        this.selectedNewPolicy = true;
     }
 
-    onNewDecision(): void {
-        this.selectedNewDecision = true;
+    addPolicy(content: string, proceedingID: number): void {
+        /*
+        this.policyListService.addPolicy(content, proceedingID)
+            .then(() => {
+                this.policies = this.policyListService.get();
+                this.selectedNewPolicy = false;
+            });*/
     }
 
-    addDecision(content: string, proceedingID: number): void {
-        content = content.trim();
-        let proceeding = this.proceedings.find(item => item.id === +proceedingID);
-        if (!content || !proceeding) { return; }
-        this.decisionService.create({ id: 0, content: content, parentProceeding: proceedingID, childActivities: [] })
-            .then(decision => {
-                this.decisions.push(decision);
-                this.selectedNewDecision = false;
-
-                proceeding.childDecisions.push(decision.id);
-            });
+    deletePolicy(): void {
     }
-};
+}

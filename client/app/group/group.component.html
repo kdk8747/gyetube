@@ -6,46 +6,40 @@
                 <div *ngIf="selectedNewProceeding">
                     <label>Title:</label> <input #proceedingTitle />
                     <label>Content:</label> <input #proceedingContent />
+                    <label>Changes of activity policy:</label>
+                    <button *ngIf="!policyChangeMode" (click)="policyChangeMode=true"> Add </button>
+                    <button *ngIf="policyChangeMode" (click)="policyChangeMode=false"> Done </button>
                     <button (click)="addProceeding(proceedingTitle.value, proceedingContent.value); proceedingTitle.value=proceedingContent.value=''">
-                        Add
+                        Done
                     </button>
                     <button (click)="selectedNewProceeding=false; proceedingTitle.value=proceedingContent.value=''">
-                        Delete
+                        Cancel
                     </button>
                 </div>
             </li>
             <li *ngFor="let proceeding of proceedings">
-                <div class="proceeding">
-                    <span>date: {{proceeding.date | date:'y-MM-dd'}}</span>
-                    <span>title: {{proceeding.title}}</span>
-                    <span>content: {{proceeding.content}}</span>
-                </div>
+                <proceeding [proceeding]="proceeding"></proceeding>
             </li>
         </ol>
     </div>
-    <div id="decision-list">
+    <div id="policy-list">
         <ol>
             <li>
-                <div *ngIf="!selectedNewDecision" (click)="onNewDecision()">+</div>
-                <div *ngIf="selectedNewDecision">
-                    <label>Content:</label> <input #decisionContent />
-                    <label>ref. proceeding:</label>
-                    <select #decisionByProceeding>
-                        <option *ngFor="let proceeding of proceedings" [value]="proceeding.id">
-                            {{ proceeding.title }}
-                        </option>
-                    </select>
-                    <button (click)="addDecision(decisionContent.value, decisionByProceeding.value); decisionContent.value=''">
-                        Add
+                <div *ngIf="!selectedNewPolicy && policyChangeMode" (click)="onNewPolicy()">+</div>
+                <div *ngIf="selectedNewPolicy">
+                    <label>Content:</label> <input #policyContent />
+                    <button (click)="addPolicy(policyContent.value, policyByProceeding.value); policyContent.value=''">
+                        Done
                     </button>
-                    <button (click)="selectedNewDecision=false; decisionContent.value=''">
-                        Delete
+                    <button (click)="selectedNewPolicy=false; policyContent.value=''">
+                        Cancel
                     </button>
                 </div>
             </li>
-            <li *ngFor="let decision of decisions">
-                <div class="decision">
-                    <span>content: {{decision.content}}</span>
+            <li *ngFor="let policy of policies">
+                <div class="policy">
+                    <span>content: {{policy.content}}</span>
+                    <button *ngIf="policyChangeMode" (click)="deletePolicy()" >Delete</button>
                 </div>
             </li>
         </ol>

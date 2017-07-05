@@ -1,7 +1,10 @@
 export class Proceeding {
-  id: number;
-  date: Date;
-  title: string;
-  content: string;
-  childDecisions: number[];
+  constructor(
+    public id: number,
+    public prevId: number, // 0: unused
+    public createdDate: Date,
+    public meetingDate: Date,
+    public title: string,
+    public content: string,
+    public childPolicies: number[]) { }
 }
