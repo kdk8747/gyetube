@@ -12,7 +12,7 @@ export class PolicyService {
 
   constructor(private http: Http) { }
 
-  getPolicys(): Promise<Policy[]> {
+  getPolicies(): Promise<Policy[]> {
     return this.http.get(this.policiesUrl)
       .toPromise()
       .then(response => response.json() as Policy[])

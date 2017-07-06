@@ -48,11 +48,11 @@ app.delete('/api/users/:id', (req, res) => {
 });
 
 var proceedings = [
-  { id: 1, date: new Date(2016,5,24,11,33,30,0), title: 'dummy1', content: 'dummy1', childPolicies:[1] },
-  { id: 2, date: new Date(2016,6,24,11,33,30,0), title: 'dummy2', content: 'dummy2', childPolicies:[2] },
-  { id: 3, date: new Date(2016,7,24,11,33,30,0), title: 'dummy3', content: 'dummy3', childPolicies:[3] },
-  { id: 4, date: new Date(2016,8,24,11,33,30,0), title: 'dummy4', content: 'dummy4', childPolicies:[4] },
-  { id: 5, date: new Date(2016,9,24,11,33,30,0), title: 'dummy5', content: 'dummy5', childPolicies:[5] }
+  { id: 1, prevId: 0, state: 0, createdDate: new Date(2016,5,24,11,33,30,0), meetingDate: new Date(2016,5,24,11,33,30,0), title: 'dummy1', content: 'dummy1', childPolicies:[1] },
+  { id: 2, prevId: 0, state: 0, createdDate: new Date(2016,6,24,11,33,30,0), meetingDate: new Date(2016,6,24,11,33,30,0), title: 'dummy2', content: 'dummy2', childPolicies:[2] },
+  { id: 3, prevId: 0, state: 0, createdDate: new Date(2016,7,24,11,33,30,0), meetingDate: new Date(2016,7,24,11,33,30,0), title: 'dummy3', content: 'dummy3', childPolicies:[3] },
+  { id: 4, prevId: 0, state: 0, createdDate: new Date(2016,8,24,11,33,30,0), meetingDate: new Date(2016,8,24,11,33,30,0), title: 'dummy4', content: 'dummy4', childPolicies:[4] },
+  { id: 5, prevId: 0, state: 0, createdDate: new Date(2016,9,24,11,33,30,0), meetingDate: new Date(2016,9,24,11,33,30,0), title: 'dummy5', content: 'dummy5', childPolicies:[5] }
 ];
 var proceedingID = 6;
 app.get('/api/proceedings', (req, res) => {
@@ -78,11 +78,11 @@ app.delete('/api/proceedings/:id', (req, res) => {
 });
 
 var policies = [
-  { id: 1, parentProceeding: 1, childActivities:[1,6,10], content: '소모임 활성화 방안 - 녹색평론 읽기모임'},
-  { id: 2, parentProceeding: 2, childActivities:[2,8], content: '소식지 발송 활동'},
-  { id: 3, parentProceeding: 3, childActivities:[3], content: '한달에 한번 정보공개청구'},
-  { id: 4, parentProceeding: 4, childActivities:[4,5], content: 'dummy4'},
-  { id: 5, parentProceeding: 5, childActivities:[7,9], content: 'dummy5'}
+  { id: 1, prevId: 0, state: 0, createdDate: new Date(2016,5,24,11,33,30,0), expiryDate: new Date(2018,5,24,11,33,30,0), parentProceeding: 1, childActivities:[1,6,10], content: '소모임 활성화 방안 - 녹색평론 읽기모임'},
+  { id: 2, prevId: 0, state: 0, createdDate: new Date(2016,6,24,11,33,30,0), expiryDate: new Date(2018,5,24,11,33,30,0), parentProceeding: 2, childActivities:[2,8], content: '소식지 발송 활동'},
+  { id: 3, prevId: 0, state: 0, createdDate: new Date(2016,7,24,11,33,30,0), expiryDate: new Date(2018,5,24,11,33,30,0), parentProceeding: 3, childActivities:[3], content: '한달에 한번 정보공개청구'},
+  { id: 4, prevId: 0, state: 0, createdDate: new Date(2016,8,24,11,33,30,0), expiryDate: new Date(2018,5,24,11,33,30,0), parentProceeding: 4, childActivities:[4,5], content: 'dummy4'},
+  { id: 5, prevId: 0, state: 0, createdDate: new Date(2016,9,24,11,33,30,0), expiryDate: new Date(2018,5,24,11,33,30,0), parentProceeding: 5, childActivities:[7,9], content: 'dummy5'}
 ];
 var decisionID = 6;
 app.get('/api/policies', (req, res) => {

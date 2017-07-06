@@ -2,15 +2,16 @@
     <div id="proceeding-list">
         <ol>
             <li>
-                <div *ngIf="!selectedNewProceeding" (click)="onNewProceeding()">+</div>
+                <div *ngIf="!selectedNewProceeding" (click)="selectedNewProceeding = true;">+</div>
                 <div *ngIf="selectedNewProceeding">
                     <label>Title:</label> <input #proceedingTitle />
                     <label>Content:</label> <input #proceedingContent />
-                    <label>Changes of activity policy:</label>
-                    <button *ngIf="!policyChangeMode" (click)="policyChangeMode=true"> Add </button>
-                    <button *ngIf="policyChangeMode" (click)="policyChangeMode=false"> Done </button>
-                    <button (click)="addProceeding(proceedingTitle.value, proceedingContent.value); proceedingTitle.value=proceedingContent.value=''">
-                        Done
+                    <label>Policy Changeset:</label>
+                    <button *ngIf="!policyChangeMode" (click)="onAddPolicyChangeset()"> Add </button>
+                    <button *ngIf="policyChangeMode" (click)="onCancelPolicyChangeset()"> Cancel </button>
+                    <policy-changeset [policyChangeset]="policyChangeset" [changeMode]="true"></policy-changeset>
+                    <button (click)="onNewProceeding(proceedingTitle.value, proceedingContent.value); proceedingTitle.value=proceedingContent.value=''">
+                        Create
                     </button>
                     <button (click)="selectedNewProceeding=false; proceedingTitle.value=proceedingContent.value=''">
                         Cancel
@@ -25,10 +26,11 @@
     <div id="policy-list">
         <ol>
             <li>
-                <div *ngIf="!selectedNewPolicy && policyChangeMode" (click)="onNewPolicy()">+</div>
+                <div *ngIf="!selectedNewPolicy && policyChangeMode" (click)="selectedNewPolicy = true">+</div>
                 <div *ngIf="selectedNewPolicy">
                     <label>Content:</label> <input #policyContent />
-                    <button (click)="addPolicy(policyContent.value, policyByProceeding.value); policyContent.value=''">
+                    <label>Expiry Date:</label> <input type="date" #policyExpiryDate />
+                    <button (click)="onNewPolicy(policyContent.value, policyExpiryDate.value) ? policyContent.value='' : '';">
                         Done
                     </button>
                     <button (click)="selectedNewPolicy=false; policyContent.value=''">
@@ -37,10 +39,7 @@
                 </div>
             </li>
             <li *ngFor="let policy of policies">
-                <div class="policy">
-                    <span>content: {{policy.content}}</span>
-                    <button *ngIf="policyChangeMode" (click)="deletePolicy()" >Delete</button>
-                </div>
+                <policy [policy]="policy" [changeMode]="policyChangeMode" (policyChangesetRequest)="onPolicyChangesetRequested()"></policy>
             </li>
         </ol>
     </div>

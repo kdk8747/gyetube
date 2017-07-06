@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Proceeding } from '../_models';
 import { ProceedingService } from '../_services';
+import { State } from '../constants';
 
 @Injectable()
 export class ProceedingListService {
@@ -30,7 +31,7 @@ export class ProceedingListService {
         title = title.trim();
         content = content.trim();
         if (!title || !content) { return Promise.resolve(); }
-        return this.proceedingService.create(new Proceeding(0, 0, new Date(Date.now()), new Date(Date.now()), title, content, []))
+        return this.proceedingService.create(new Proceeding(0, 0, State.STATE_NEW_ONE, new Date(Date.now()), new Date(Date.now()), title, content, []))
             .then((proceeding: Proceeding) => {
                 this.proceedings.push(proceeding);
                 this.sortByDate();

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { State } from '../constants';
 
 import { Activity, Policy, Proceeding, Receipt } from '../_models';
 import { ActivityService, ReceiptService } from '../_services';
-import { /*ActivityListService,*/ PolicyListService, ProceedingListService/*, ReceiptListService*/ } from '../_services';
+import { /*ActivityListService,*/ PolicyListService, PolicyChangesetService, ProceedingListService/*, ReceiptListService*/ } from '../_services';
 
 @Component({
     selector: 'group',
@@ -12,15 +13,22 @@ import { /*ActivityListService,*/ PolicyListService, ProceedingListService/*, Re
 
 export class GroupComponent implements OnInit {
     proceedings: Proceeding[];
+    selectedNewProceeding: boolean = false;
+    policyChangeMode: boolean = false;
+    policyChangeset: Policy[] = [];
+
     policies: Policy[];
+    selectedNewPolicy: boolean = false;
+
     activities: Activity[];
+
     receipts: Receipt[];
 
-    selectedNewProceeding: boolean;
-    selectedNewPolicy: boolean;
+    
 
     constructor(
         private proceedingListService: ProceedingListService,
+        private policyChangesetService: PolicyChangesetService,
         private policyListService: PolicyListService,
         private activityService: ActivityService,
         private receiptService: ReceiptService
@@ -35,24 +43,14 @@ export class GroupComponent implements OnInit {
         this.receiptService.getReceipts().then(receipts => this.receipts = receipts);*/
     }
 
-    onNewProceeding(): void {
-        this.selectedNewProceeding = true;
-    }
-
-    addProceeding(title: string, content: string): void {
+    onNewProceeding(title: string, content: string): void {
+        //if ( /*validate*/ ) return false;
         this.proceedingListService.addProceeding(title, content)
             .then(() => {
                 this.proceedings = this.proceedingListService.get();
                 this.selectedNewProceeding = false;
             });
-    }
-
-
-    onNewPolicy(): void {
-        this.selectedNewPolicy = true;
-    }
-
-    addPolicy(content: string, proceedingID: number): void {
+            
         /*
         this.policyListService.addPolicy(content, proceedingID)
             .then(() => {
@@ -61,6 +59,24 @@ export class GroupComponent implements OnInit {
             });*/
     }
 
-    deletePolicy(): void {
+    onAddPolicyChangeset(): void {
+        this.policyChangeMode = true;
+        this.policyChangeset = [];
+    }
+
+    onCancelPolicyChangeset(): void {
+        this.policyChangeMode = false;
+        this.policyChangesetService.policies = this.policyChangeset = [];
+    }
+
+    onNewPolicy(content: string, policyExpiryDate: string): boolean {
+        if (!content || !policyExpiryDate) return false;
+        this.policyChangeset.push(new Policy(0, 0, State.STATE_NEW_ONE, new Date(Date.now()), new Date(policyExpiryDate), content, 0, []));
+        this.selectedNewPolicy = false;
+        return true;
+    }
+
+    onPolicyChangesetRequested(): void {
+        this.policyChangeset = this.policyChangesetService.policies;
     }
 }

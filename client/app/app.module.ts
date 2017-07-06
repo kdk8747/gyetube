@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule }    from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { GroupComponent, ProceedingComponent } from './group';
+import { GroupComponent, ProceedingComponent, PolicyComponent, PolicyChangesetComponent } from './group';
 
 import { ActivityService, PolicyService, ProceedingService, ReceiptService, UserService } from './_services';
-import { /*ActivityListService,*/ PolicyListService, ProceedingListService/*, ReceiptListService*/ } from './_services';
+import { /*ActivityListService,*/ PolicyListService, PolicyChangesetService, ProceedingListService/*, ReceiptListService*/ } from './_services';
 
 import { AppRoutingModule }     from './app-routing.module';
 
@@ -21,11 +21,14 @@ import { AppRoutingModule }     from './app-routing.module';
   declarations: [
     AppComponent,
     GroupComponent,
-    ProceedingComponent
+    ProceedingComponent,
+    PolicyComponent,
+    PolicyChangesetComponent
   ],
   providers: [
     ActivityService,
     PolicyService,
+    PolicyChangesetService,
     PolicyListService,
     ProceedingService,
     ProceedingListService,
