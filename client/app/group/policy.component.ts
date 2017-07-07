@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { State } from '../constants';
 import { Policy } from '../_models';
 import { PolicyChangesetService } from '../_services';
@@ -9,13 +9,13 @@ import { PolicyChangesetService } from '../_services';
         <div class="policy">
             <span>createdDate: {{policy.createdDate | date:'y-MM-dd'}}</span>
             <label>content:</label>
-            <input [readonly]="!changeMode" [value]="policy.content"
+            <input [readonly]="!policyChangesetService.isActivated" [value]="policy.content"
                  #content (blur)="onBlurContent(content.value, expiryDate.value)" />
             <label>Expiry Date:</label>
-            <input [readonly]="!changeMode" [value]="policy.expiryDate.toISOString().substr(0,10)" type="date"
+            <input [readonly]="!policyChangesetService.isActivated" [value]="policy.expiryDate.toISOString().substr(0,10)" type="date"
                  #expiryDate (blur)="onBlurExpiryDate(content.value, expiryDate.value)" />
-            <button *ngIf="changeMode && changeDetected" (click)="onUpdate(content.value, expiryDate.value)" >Update</button>
-            <button *ngIf="changeMode" (click)="onDelete()" >Delete</button>
+            <button *ngIf="policyChangesetService.isActivated && changeDetected" (click)="onUpdate(content.value, expiryDate.value)" >Update</button>
+            <button *ngIf="policyChangesetService.isActivated" (click)="onDelete()" >Delete</button>
         </div>
     `,
     styles: [`
@@ -28,8 +28,6 @@ import { PolicyChangesetService } from '../_services';
 
 export class PolicyComponent {
     @Input() policy: Policy;
-    @Input() changeMode: boolean;
-    @Output() policyChangesetRequest = new EventEmitter<void>();
     changeDetected: boolean = false;
 
     constructor(
@@ -59,8 +57,6 @@ export class PolicyComponent {
     onCancel(): void {
         this.policyChangesetService.policies = this.policyChangesetService.policies
             .filter(item => item.prevId != this.policy.id || item.state != State.STATE_UPDATED);
-
-        this.policyChangesetRequest.emit();
     }
 
     onDelete(): void {
@@ -71,8 +67,6 @@ export class PolicyComponent {
             this.policyChangesetService.policies[found] = policy;
         else 
             this.policyChangesetService.policies.push(policy);
-
-        this.policyChangesetRequest.emit();
     }
 
     onUpdate(content: string, expiryDate: string): void {
@@ -83,7 +77,5 @@ export class PolicyComponent {
             this.policyChangesetService.policies[found] = policy;
         else
             this.policyChangesetService.policies.push(policy);
-
-        this.policyChangesetRequest.emit();
     }
 }

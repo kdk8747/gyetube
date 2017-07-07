@@ -103,7 +103,7 @@ app.post('/api/policies', (req, res) => {
   policies.push(newPolicy);
   
   let proceeding = proceedings.find(item => item.id === +newPolicy.parentProceeding);
-  proceeding.childPolicys.push(newPolicy.id);
+  proceeding.childPolicies.push(newPolicy.id);
 
   res.json(newPolicy);
 });
@@ -121,7 +121,7 @@ var activities = [
   { id: 6, modifiedDate: new Date(2016,8,2,11,33,30,0), activityDate: new Date(2016,8,2,11,33,30,0), content: 'huhuhu', parentPolicy: 1, childReceipts: [6] },
   { id: 7, modifiedDate: new Date(2016,8,24,11,33,30,0), activityDate: new Date(2016,8,24,11,33,30,0), content: 'hohuha', parentPolicy: 5, childReceipts: [7] },
   { id: 8, modifiedDate: new Date(2016,9,4,11,33,30,0), activityDate: new Date(2016,9,4,11,33,30,0), content: 'hohoha', parentPolicy: 2, childReceipts: [8] },
-  { id: 9, damodifiedDatete: new Date(2016,9,24,11,33,30,0), activityDate: new Date(2016,9,24,11,33,30,0), content: 'hahoho', parentPolicy: 5, childReceipts: [9] },
+  { id: 9, modifiedDate: new Date(2016,9,24,11,33,30,0), activityDate: new Date(2016,9,24,11,33,30,0), content: 'hahoho', parentPolicy: 5, childReceipts: [9] },
   { id: 10, modifiedDate: new Date(2016,10,24,11,33,30,0), activityDate: new Date(2016,10,24,11,33,30,0), content: 'hahuhu', parentPolicy: 1, childReceipts: [10,11] }
 ];
 var activityID = 11;

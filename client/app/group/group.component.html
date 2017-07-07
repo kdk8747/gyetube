@@ -2,24 +2,8 @@
     <div id="proceeding-list">
         <ol>
             <li>
-                <div *ngIf="!selectedNewProceeding" (click)="selectedNewProceeding = true;">+</div>
-                <div *ngIf="selectedNewProceeding">
-                    <label>Meeting Date:</label>
-                    <input [(ngModel)]="newProceedingMeetingDate" type="date" />
-                    <input [(ngModel)]="newProceedingMeetingTime" type="time" />
-                    <label>Title:</label> <input [(ngModel)]="newProceedingTitle" />
-                    <label>Content:</label> <input [(ngModel)]="newProceedingContent" />
-                    <label>Policy Changeset:</label>
-                    <button *ngIf="!policyChangeMode" (click)="onAddPolicyChangeset()"> Add </button>
-                    <button *ngIf="policyChangeMode" (click)="onCancelPolicyChangeset()"> Cancel </button>
-                    <policy-changeset [policyChangeset]="policyChangeset" [changeMode]="true"></policy-changeset>
-                    <button (click)="onNewProceeding();">
-                        Create
-                    </button>
-                    <button (click)="onCancelNewProceeding();">
-                        Cancel
-                    </button>
-                </div>
+                <proceeding-writing-frame [policies]="policies" [proceedings]="proceedings" (policiesRefreshRequested)="onPoliciesRefreshRequested()">
+                </proceeding-writing-frame>
             </li>
             <li *ngFor="let proceeding of proceedings">
                 <proceeding [proceeding]="proceeding"></proceeding>
@@ -29,20 +13,10 @@
     <div id="policy-list">
         <ol>
             <li>
-                <div *ngIf="!selectedNewPolicy && policyChangeMode" (click)="selectedNewPolicy = true">+</div>
-                <div *ngIf="selectedNewPolicy">
-                    <label>Content:</label> <input #policyContent />
-                    <label>Expiry Date:</label> <input type="date" #policyExpiryDate />
-                    <button (click)="onNewPolicy(policyContent.value, policyExpiryDate.value) ? policyContent.value='' : '';">
-                        Done
-                    </button>
-                    <button (click)="selectedNewPolicy=false; policyContent.value=''">
-                        Cancel
-                    </button>
-                </div>
+                <policy-writing-frame></policy-writing-frame>
             </li>
             <li *ngFor="let policy of policies">
-                <policy [policy]="policy" [changeMode]="policyChangeMode" (policyChangesetRequest)="onPolicyChangesetRequested()"></policy>
+                <policy [policy]="policy"></policy>
             </li>
         </ol>
     </div>
@@ -53,7 +27,8 @@
             </li>
             <li *ngFor="let activity of activities">
                 <div class="activity">
-                    <span>date: {{activity.date | date:'y-MM-dd'}}</span>
+                    <span>modifiedDate: {{activity.modifiedDate | date:'y-MM-dd'}}</span>
+                    <span>activityDate: {{activity.activityDate | date:'y-MM-dd'}}</span>
                     <span>content: {{activity.content}}</span>
                 </div>
             </li>
@@ -66,7 +41,8 @@
             </li>
             <li *ngFor="let receipt of receipts">
                 <div class="receipt">
-                    <span>date: {{receipt.date | date:'y-MM-dd'}}</span>
+                    <span>modifiedDate: {{receipt.modifiedDate | date:'y-MM-dd'}}</span>
+                    <span>paymentDate: {{receipt.paymentDate | date:'y-MM-dd'}}</span>
                     <span>imageUrl: {{receipt.imageUrl}}</span>
                 </div>
             </li>
