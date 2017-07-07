@@ -14,6 +14,10 @@ import { /*ActivityListService,*/ PolicyListService, PolicyChangesetService, Pro
 export class GroupComponent implements OnInit {
     proceedings: Proceeding[];
     selectedNewProceeding: boolean = false;
+    newProceedingMeetingDate: string;
+    newProceedingMeetingTime: string;
+    newProceedingTitle: string;
+    newProceedingContent: string;
     policyChangeMode: boolean = false;
     policyChangeset: Policy[] = [];
 
@@ -43,13 +47,14 @@ export class GroupComponent implements OnInit {
         this.receiptService.getReceipts().then(receipts => this.receipts = receipts);*/
     }
 
-    onNewProceeding(title: string, content: string): void {
+    onNewProceeding(): void {
         //if ( /*validate*/ ) return false;
-        this.proceedingListService.addProceeding(title, content)
+        this.proceedingListService.addProceeding(this.newProceedingTitle, this.newProceedingContent)
             .then(() => {
                 this.proceedings = this.proceedingListService.get();
                 this.selectedNewProceeding = false;
             });
+        this.newProceedingMeetingDate = this.newProceedingMeetingTime = this.newProceedingTitle = this.newProceedingContent = '';
             
         /*
         this.policyListService.addPolicy(content, proceedingID)
@@ -66,12 +71,13 @@ export class GroupComponent implements OnInit {
 
     onAddPolicyChangeset(): void {
         this.policyChangeMode = true;
-        this.policyChangeset = [];
     }
 
     onCancelPolicyChangeset(): void {
         this.policyChangeMode = false;
         this.policyChangesetService.policies = this.policyChangeset = [];
+        this.policies = this.policies
+            .map(p => new Policy(p.id, p.prevId, p.state, p.createdDate, p.expiryDate, p.content, p.parentProceeding, p.childActivities));
     }
 
     onNewPolicy(content: string, policyExpiryDate: string): boolean {

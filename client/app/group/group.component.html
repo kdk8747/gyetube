@@ -4,16 +4,19 @@
             <li>
                 <div *ngIf="!selectedNewProceeding" (click)="selectedNewProceeding = true;">+</div>
                 <div *ngIf="selectedNewProceeding">
-                    <label>Title:</label> <input #proceedingTitle />
-                    <label>Content:</label> <input #proceedingContent />
+                    <label>Meeting Date:</label>
+                    <input [(ngModel)]="newProceedingMeetingDate" type="date" />
+                    <input [(ngModel)]="newProceedingMeetingTime" type="time" />
+                    <label>Title:</label> <input [(ngModel)]="newProceedingTitle" />
+                    <label>Content:</label> <input [(ngModel)]="newProceedingContent" />
                     <label>Policy Changeset:</label>
                     <button *ngIf="!policyChangeMode" (click)="onAddPolicyChangeset()"> Add </button>
                     <button *ngIf="policyChangeMode" (click)="onCancelPolicyChangeset()"> Cancel </button>
                     <policy-changeset [policyChangeset]="policyChangeset" [changeMode]="true"></policy-changeset>
-                    <button (click)="onNewProceeding(proceedingTitle.value, proceedingContent.value); proceedingTitle.value=proceedingContent.value=''">
+                    <button (click)="onNewProceeding();">
                         Create
                     </button>
-                    <button (click)="onCancelNewProceeding(); proceedingTitle.value=proceedingContent.value=''">
+                    <button (click)="onCancelNewProceeding();">
                         Cancel
                     </button>
                 </div>

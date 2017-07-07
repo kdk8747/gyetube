@@ -14,7 +14,7 @@ import { PolicyChangesetService } from '../_services';
             <label>Expiry Date:</label>
             <input [readonly]="!changeMode" [value]="policy.expiryDate.toISOString().substr(0,10)" type="date"
                  #expiryDate (blur)="onBlurExpiryDate(content.value, expiryDate.value)" />
-            <button *ngIf="changeDetected" (click)="onUpdate(content.value, expiryDate.value)" >Update</button>
+            <button *ngIf="changeMode && changeDetected" (click)="onUpdate(content.value, expiryDate.value)" >Update</button>
             <button *ngIf="changeMode" (click)="onDelete()" >Delete</button>
         </div>
     `,
