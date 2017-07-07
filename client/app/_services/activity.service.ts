@@ -15,7 +15,14 @@ export class ActivityService {
   getActivities(): Promise<Activity[]> {
     return this.http.get(this.activitiesUrl)
       .toPromise()
-      .then(response => response.json() as Activity[])
+      .then(response => {
+        let activities = response.json() as Activity[];
+        return activities.map(activity => {
+          activity.modifiedDate = new Date(activity.modifiedDate);
+          activity.activityDate = new Date(activity.activityDate);
+          return activity;
+        })
+      })
       .catch(this.handleError);
   }
 
@@ -23,7 +30,12 @@ export class ActivityService {
     const url = `${this.activitiesUrl}/${id}`;
     return this.http.get(url)
       .toPromise()
-      .then(response => response.json() as Activity)
+      .then(response => {
+        let activity = response.json() as Activity;
+        activity.modifiedDate = new Date(activity.modifiedDate);
+        activity.activityDate = new Date(activity.activityDate);
+        return activity;
+      })
       .catch(this.handleError);
 
   }
@@ -41,7 +53,12 @@ export class ActivityService {
     return this.http
       .post(this.activitiesUrl, JSON.stringify(activity), { headers: this.headers })
       .toPromise()
-      .then(res => res.json() as Activity)
+      .then(response => {
+        let activity = response.json() as Activity;
+        activity.modifiedDate = new Date(activity.modifiedDate);
+        activity.activityDate = new Date(activity.activityDate);
+        return activity;
+      })
       .catch(this.handleError);
   }
 

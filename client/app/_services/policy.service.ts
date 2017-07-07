@@ -15,7 +15,14 @@ export class PolicyService {
   getPolicies(): Promise<Policy[]> {
     return this.http.get(this.policiesUrl)
       .toPromise()
-      .then(response => response.json() as Policy[])
+      .then(response => {
+        let policies = response.json() as Policy[];
+        return policies.map(policy => {
+          policy.createdDate = new Date(policy.createdDate);
+          policy.expiryDate = new Date(policy.expiryDate);
+          return policy;
+        })
+      })
       .catch(this.handleError);
   }
 
@@ -23,7 +30,12 @@ export class PolicyService {
     const url = `${this.policiesUrl}/${id}`;
     return this.http.get(url)
       .toPromise()
-      .then(response => response.json() as Policy)
+      .then(response => {
+        let policy = response.json() as Policy;
+        policy.createdDate = new Date(policy.createdDate);
+        policy.expiryDate = new Date(policy.expiryDate);
+        return policy;
+      })
       .catch(this.handleError);
 
   }
@@ -41,7 +53,12 @@ export class PolicyService {
     return this.http
       .post(this.policiesUrl, JSON.stringify(policy), { headers: this.headers })
       .toPromise()
-      .then(res => res.json() as Policy)
+      .then(response => {
+        let policy = response.json() as Policy;
+        policy.createdDate = new Date(policy.createdDate);
+        policy.expiryDate = new Date(policy.expiryDate);
+        return policy;
+      })
       .catch(this.handleError);
   }
 

@@ -59,6 +59,11 @@ export class GroupComponent implements OnInit {
             });*/
     }
 
+    onCancelNewProceeding(): void {
+        this.selectedNewProceeding = false;
+        this.onCancelPolicyChangeset();
+    }
+
     onAddPolicyChangeset(): void {
         this.policyChangeMode = true;
         this.policyChangeset = [];

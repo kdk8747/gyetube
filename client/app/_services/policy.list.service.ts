@@ -16,11 +16,7 @@ export class PolicyListService {
     init(): Promise<void> {
         return this.policyService.getPolicies()
             .then(policies => {
-                this.policies = policies.map(policy => {
-                    policy.createdDate = new Date(policy.createdDate);
-                    policy.expiryDate = new Date(policy.expiryDate);
-                    return policy;
-                })
+                this.policies = policies;
             });
     }
 

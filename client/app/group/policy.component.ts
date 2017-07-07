@@ -7,14 +7,15 @@ import { PolicyChangesetService } from '../_services';
     selector: 'policy',
     template: `
         <div class="policy">
+            <span>createdDate: {{policy.createdDate | date:'y-MM-dd'}}</span>
             <label>content:</label>
             <input [readonly]="!changeMode" [value]="policy.content"
-                 #content (blur)="onBlurContent(content.value)" />
+                 #content (blur)="onBlurContent(content.value, expiryDate.value)" />
             <label>Expiry Date:</label>
             <input [readonly]="!changeMode" [value]="policy.expiryDate.toISOString().substr(0,10)" type="date"
-                 #expiryDate (blur)="onBlurExpiryDate(expiryDate.value)" />
-            <button *ngIf="changeMode" (click)="onDelete()" >Delete</button>
+                 #expiryDate (blur)="onBlurExpiryDate(content.value, expiryDate.value)" />
             <button *ngIf="changeDetected" (click)="onUpdate(content.value, expiryDate.value)" >Update</button>
+            <button *ngIf="changeMode" (click)="onDelete()" >Delete</button>
         </div>
     `,
     styles: [`
@@ -35,27 +36,54 @@ export class PolicyComponent {
         private policyChangesetService: PolicyChangesetService
     ) { }
 
-    onBlurContent(content: string): void {
-        if (this.policy.content !== content)
-            this.changeDetected = true;
+    isChanged(content: string, expiryDate: string): boolean {
+        return this.policy.content !== content || this.policy.expiryDate.toISOString().substr(0, 10) !== expiryDate;
     }
 
-    onBlurExpiryDate(expiryDate: string): void {
-        if (this.policy.expiryDate.toISOString().substr(0, 10) !== expiryDate)
-            this.changeDetected = true;
+    onBlurContent(content: string, expiryDate: string): void {
+        this.changeDetected = this.isChanged(content, expiryDate);
+        if (this.changeDetected)
+            this.onUpdate(content, expiryDate);
+        else
+            this.onCancel();
+    }
+
+    onBlurExpiryDate(content: string, expiryDate: string): void {
+        this.changeDetected = this.isChanged(content, expiryDate);
+        if (this.changeDetected)
+            this.onUpdate(content, expiryDate);
+        else
+            this.onCancel();
+    }
+
+    onCancel(): void {
+        this.policyChangesetService.policies = this.policyChangesetService.policies
+            .filter(item => item.prevId != this.policy.id || item.state != State.STATE_UPDATED);
+
+        this.policyChangesetRequest.emit();
     }
 
     onDelete(): void {
-        if (this.policyChangesetService.policies.some(item => item.prevId == this.policy.id)) return;
-        this.policyChangesetService.policies.push(
-            new Policy(0, this.policy.id, State.STATE_DELETED, new Date(Date.now()), new Date(Date.now()), this.policy.content, 0, []));
+        let found = this.policyChangesetService.policies.findIndex(item => item.prevId == this.policy.id);
+        let policy = new Policy(0, this.policy.id, State.STATE_DELETED, new Date(Date.now()), new Date(Date.now()), this.policy.content, 0, []);
+
+        if (found != -1)
+            this.policyChangesetService.policies[found] = policy;
+        else 
+            this.policyChangesetService.policies.push(policy);
+
         this.policyChangesetRequest.emit();
     }
 
     onUpdate(content: string, expiryDate: string): void {
-        if (this.policyChangesetService.policies.some(item => item.prevId == this.policy.id)) return;
-        this.policyChangesetService.policies.push(
-            new Policy(0, this.policy.id, State.STATE_UPDATED, new Date(Date.now()), new Date(expiryDate), content, 0, []));
+        let found = this.policyChangesetService.policies.findIndex(item => item.prevId == this.policy.id);
+        let policy = new Policy(0, this.policy.id, State.STATE_UPDATED, new Date(Date.now()), new Date(expiryDate), content, 0, []);
+
+        if (found != -1) 
+            this.policyChangesetService.policies[found] = policy;
+        else
+            this.policyChangesetService.policies.push(policy);
+
         this.policyChangesetRequest.emit();
     }
 }

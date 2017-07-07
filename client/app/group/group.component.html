@@ -13,7 +13,7 @@
                     <button (click)="onNewProceeding(proceedingTitle.value, proceedingContent.value); proceedingTitle.value=proceedingContent.value=''">
                         Create
                     </button>
-                    <button (click)="selectedNewProceeding=false; proceedingTitle.value=proceedingContent.value=''">
+                    <button (click)="onCancelNewProceeding(); proceedingTitle.value=proceedingContent.value=''">
                         Cancel
                     </button>
                 </div>

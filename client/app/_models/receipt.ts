@@ -1,6 +1,9 @@
 export class Receipt {
-  id: number;
-  date: Date;
-  imageUrl: string;
-  parentActivity: number;
+  constructor(
+    public id: number,
+    public modifiedDate: Date,
+    public paymentDate: Date,
+    public imageUrl: string,
+    public parentActivity: number
+  ) { }
 }

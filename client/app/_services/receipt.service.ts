@@ -15,7 +15,14 @@ export class ReceiptService {
   getReceipts(): Promise<Receipt[]> {
     return this.http.get(this.receiptsUrl)
       .toPromise()
-      .then(response => response.json() as Receipt[])
+      .then(response => {
+        let receipts = response.json() as Receipt[];
+        return receipts.map(receipt => {
+          receipt.modifiedDate = new Date(receipt.modifiedDate);
+          receipt.paymentDate = new Date(receipt.paymentDate);
+          return receipt;
+        })
+      })
       .catch(this.handleError);
   }
 
@@ -23,7 +30,12 @@ export class ReceiptService {
     const url = `${this.receiptsUrl}/${id}`;
     return this.http.get(url)
       .toPromise()
-      .then(response => response.json() as Receipt)
+      .then(response => {
+        let receipt = response.json() as Receipt;
+        receipt.modifiedDate = new Date(receipt.modifiedDate);
+        receipt.paymentDate = new Date(receipt.paymentDate);
+        return receipt;
+      })
       .catch(this.handleError);
 
   }
@@ -41,7 +53,12 @@ export class ReceiptService {
     return this.http
       .post(this.receiptsUrl, JSON.stringify(receipt), { headers: this.headers })
       .toPromise()
-      .then(res => res.json() as Receipt)
+      .then(response => {
+        let receipt = response.json() as Receipt;
+        receipt.modifiedDate = new Date(receipt.modifiedDate);
+        receipt.paymentDate = new Date(receipt.paymentDate);
+        return receipt;
+      })
       .catch(this.handleError);
   }
 

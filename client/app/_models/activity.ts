@@ -1,7 +1,10 @@
 export class Activity {
-  id: number;
-  date: Date;
-  content: string;
-  parentPolicy: number;
-  childReceipts: number[];
+  constructor(
+    public id: number,
+    public modifiedDate: Date,
+    public activityDate: Date,
+    public content: string,
+    public parentPolicy: number,
+    public childReceipts: number[]
+  ) { }
 }

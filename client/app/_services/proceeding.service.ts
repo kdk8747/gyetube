@@ -15,7 +15,14 @@ export class ProceedingService {
   getProceedings(): Promise<Proceeding[]> {
     return this.http.get(this.proceedingsUrl)
       .toPromise()
-      .then(response => response.json() as Proceeding[])
+      .then(response => {
+        let proceedings = response.json() as Proceeding[];
+        return proceedings.map(proceeding => {
+          proceeding.createdDate = new Date(proceeding.createdDate);
+          proceeding.meetingDate = new Date(proceeding.meetingDate);
+          return proceeding;
+        })
+      })
       .catch(this.handleError);
   }
 
@@ -23,7 +30,12 @@ export class ProceedingService {
     const url = `${this.proceedingsUrl}/${id}`;
     return this.http.get(url)
       .toPromise()
-      .then(response => response.json() as Proceeding)
+      .then(response => {
+        let proceeding = response.json() as Proceeding;
+        proceeding.createdDate = new Date(proceeding.createdDate);
+        proceeding.meetingDate = new Date(proceeding.meetingDate);
+        return proceeding;
+      })
       .catch(this.handleError);
 
   }
@@ -41,7 +53,12 @@ export class ProceedingService {
     return this.http
       .post(this.proceedingsUrl, JSON.stringify(proceeding), { headers: this.headers })
       .toPromise()
-      .then(res => res.json() as Proceeding)
+      .then(response => {
+        let proceeding = response.json() as Proceeding;
+        proceeding.createdDate = new Date(proceeding.createdDate);
+        proceeding.meetingDate = new Date(proceeding.meetingDate);
+        return proceeding;
+      })
       .catch(this.handleError);
   }
 

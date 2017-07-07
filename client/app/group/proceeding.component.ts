@@ -1,13 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Proceeding, Policy } from '../_models';
 
-import { PolicyListService } from '../_services';
+import { PolicyService } from '../_services';
 
 @Component({
     selector: 'proceeding',
     template: `
         <div class="proceeding">
-            <span>date: {{proceeding.date | date:'y-MM-dd'}}</span>
+            <span>createdDate: {{proceeding.createdDate | date:'y-MM-dd'}}</span>
+            <span>meetingDate: {{proceeding.meetingDate | date:'y-MM-dd'}}</span>
             <span>title: {{proceeding.title}}</span>
             <span>content: {{proceeding.content}}</span>
             <label>Policy Changeset:</label>
@@ -28,13 +29,15 @@ export class ProceedingComponent implements OnInit{
     @Input() proceeding: Proceeding;
     
     constructor(
-        private policyListService: PolicyListService
+        private policyService: PolicyService
     ) { }
 
     ngOnInit(): void {
-        // FIX ME //
-        this.policyChangeset = this.policyListService.get().filter(policy => {
-            return this.proceeding.childPolicies.some(id => id === policy.id)
+        this.proceeding.childPolicies.forEach(childPolicyId => {
+            this.policyService.getPolicy(childPolicyId)
+                .then(policy => {
+                    this.policyChangeset.push(policy)
+                })
         });
     }
 }
