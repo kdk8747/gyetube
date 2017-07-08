@@ -2,7 +2,9 @@
     <div id="proceeding-list">
         <ol>
             <li>
-                <proceeding-writing-frame [policies]="policies" [proceedings]="proceedings" (policiesRefreshRequested)="onPoliciesRefreshRequested()">
+                <proceeding-writing-frame [policies]="policies" [proceedings]="proceedings"
+                (policiesRefreshRequested)="onPoliciesRefreshRequested()"
+                (proceedingsRefreshRequested)="sortByDate()">
                 </proceeding-writing-frame>
             </li>
             <li *ngFor="let proceeding of proceedings">

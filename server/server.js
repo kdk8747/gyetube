@@ -98,13 +98,8 @@ app.put('/api/policies/:id', (req, res) => {
 });
 app.post('/api/policies', (req, res) => {
   let newPolicy = req.body;
-
   newPolicy['id'] = decisionID ++;
   policies.push(newPolicy);
-  
-  let proceeding = proceedings.find(item => item.id === +newPolicy.parentProceeding);
-  proceeding.childPolicies.push(newPolicy.id);
-
   res.json(newPolicy);
 });
 app.delete('/api/policies/:id', (req, res) => {
