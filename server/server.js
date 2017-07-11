@@ -2,11 +2,7 @@ const express = require('express');
 const expressStaticGzip = require('express-static-gzip');
 const bodyParser = require('body-parser');
 const path = require('path');
-const cloudinary = require('cloudinary');
 const debug = require('debug')('server');
-const multer = require('multer');
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
 const app = express();
 
 app.set('port', (process.env.PORT || 5000));
@@ -182,21 +178,6 @@ app.delete('/api/receipts/:id', (req, res) => {
   res.send();
 });
 
-
-app.get('/example', (req, res) => {
-  res.send('<form method="post" enctype="multipart/form-data">'
-    + '<p>Public ID: <input type="text" name="title"/></p>'
-    + '<p>Image: <input type="file" name="image"/></p>'
-    + '<p><input type="submit" value="Upload"/></p>'
-    + '</form>');
-});
-app.post('/example', upload.single('image'), (req, res) => {
-  cloudinary.uploader.upload_stream(function(result) {
-    debug(result);
-    res.send('Done:<br/> <img src="' + result.url + '"/><br/>' +
-             cloudinary.image(result.public_id, { format: 'png', width: 100, height: 130, crop: 'fill' }));
-  }, { public_id: req.body.title } ).end(req.file.buffer);
-});
 
 
 app.get('*', (req, res) => {
