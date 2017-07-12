@@ -15,6 +15,7 @@ export class GroupComponent implements OnInit {
     policies: Policy[];
     activities: Activity[];
     receipts: Receipt[];
+    balance: number = 0;
 
     constructor(
         private proceedingService: ProceedingService,

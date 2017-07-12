@@ -25,28 +25,20 @@
     <div id="activity-list">
         <ol>
             <li>
-                <div>+</div>
+                <activity-writing-frame [policies]="policies" [activities]="activities"></activity-writing-frame>
             </li>
             <li *ngFor="let activity of activities">
-                <div class="activity">
-                    <span>modifiedDate: {{activity.modifiedDate | date:'y-MM-dd'}}</span>
-                    <span>activityDate: {{activity.activityDate | date:'y-MM-dd'}}</span>
-                    <span>content: {{activity.content}}</span>
-                </div>
+                <activity [activity]="activity"></activity>
             </li>
         </ol>
     </div>
     <div id="receipt-list">
         <ol>
             <li>
-                <div>+</div>
+                <receipt-writing-frame [receipts]="receipts" [activities]="activities"></receipt-writing-frame>
             </li>
             <li *ngFor="let receipt of receipts">
-                <div class="receipt">
-                    <span>modifiedDate: {{receipt.modifiedDate | date:'y-MM-dd'}}</span>
-                    <span>paymentDate: {{receipt.paymentDate | date:'y-MM-dd'}}</span>
-                    <span>imageUrl: {{receipt.imageUrl}}</span>
-                </div>
+                <receipt [receipt]="receipt"></receipt>
             </li>
         </ol>
     </div>

@@ -6,6 +6,8 @@ import { HttpModule }    from '@angular/http';
 import { AppComponent } from './app.component';
 import { GroupComponent, ProceedingComponent, ProceedingWritingFrameComponent } from './group';
 import { PolicyComponent, PolicyWritingFrameComponent, PolicyChangesetComponent } from './group';
+import { ActivityComponent, ActivityWritingFrameComponent } from './group';
+import { ReceiptComponent, ReceiptWritingFrameComponent } from './group';
 
 import { ActivityService, PolicyService, PolicyChangesetService, ProceedingService, ReceiptService, UserService } from './_services';
 
@@ -25,7 +27,11 @@ import { AppRoutingModule }     from './app-routing.module';
     ProceedingWritingFrameComponent,
     PolicyComponent,
     PolicyWritingFrameComponent,
-    PolicyChangesetComponent
+    PolicyChangesetComponent,
+    ActivityComponent,
+    ActivityWritingFrameComponent,
+    ReceiptComponent,
+    ReceiptWritingFrameComponent
   ],
   providers: [
     ActivityService,
