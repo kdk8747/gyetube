@@ -11,7 +11,6 @@ import { Receipt } from '../_models';
             <span>paymentDate: {{receipt.paymentDate | date:'y-MM-dd'}}</span>
             <span>memo: {{receipt.memo}}</span>
             <span>difference: {{receipt.difference}}</span>
-            <span>balance:</span>
             <span>imageUrl: {{receipt.imageUrl}}</span>
         </div>
     `,

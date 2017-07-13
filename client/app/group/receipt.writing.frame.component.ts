@@ -12,13 +12,14 @@ import { Activity, Receipt } from '../_models';
             <select [(ngModel)]="newReceiptParentActivity" >
                 <option *ngFor="let activity of activities" [value]="activity.id"> {{activity.content}} </option>
             </select>
-            <label>Payment Date:</label>    <input type="date" #paymentDate />
-            <label>Memo:</label>            <input type="text" #memo />
+            <label>Payment Date:</label>    <input type="date"   [(ngModel)]="newReceiptPaymentDate" />
+            <label>Memo:</label>            <input type="text"   [(ngModel)]="newReceiptMemo" />
+            <label>Difference:</label>      <input type="number" [(ngModel)]="newReceiptDifference" />
             <label>Receipt:</label>         <input type="file" (change)="onChangeReceiptPhoto($event)" />
-            <button (click)="onNewReceipt(memo.value, expiryDate.value) ? memo.value='' : '';">
+            <button (click)="onNewReceipt()">
                 Done
             </button>
-            <button (click)="selectedNewReceipt=false; memo.value=''">
+            <button (click)="onCancelNewReceipt()">
                 Cancel
             </button>
         </div>
@@ -36,17 +37,26 @@ export class ReceiptWritingFrameComponent {
     @Input() receipts: Receipt[];
     selectedNewReceipt: boolean = false;
 
+    dateNow: Date = new Date(Date.now());
+    newReceiptParentActivity: string = null;
+    newReceiptPaymentDate: string = this.dateNow.toISOString().slice(0,10);
+    newReceiptMemo: string;
+    newReceiptDifference: string;
+
 
     onChangeReceiptPhoto(event: any) {
         var files = event.srcElement.files;
         console.log(files);
     }
 
-    onNewReceipt(memo: string, expiryDate: string): boolean {
+    onNewReceipt(): void {
         /*
         content = content.trim();
         if (!content || !expiryDate) return false;
         this.selectedNewReceipt = false;*/
-        return true;
+    }
+
+    onCancelNewReceipt(): void {
+        this.selectedNewReceipt = false;
     }
 }

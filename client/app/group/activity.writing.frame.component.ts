@@ -34,8 +34,10 @@ export class ActivityWritingFrameComponent {
     @Input() activities: Activity[];
     @Input() policies: Policy[];
     selectedNewActivity: boolean = false;
+
+    dateNow: Date = new Date(Date.now());
     newActivityParentPolicy: string;
-    newActivityDate: string;
+    newActivityDate: string = this.dateNow.toISOString().slice(0,10);
     newActivityContent: string;
     newActivityImageUrls: string;
     newActivityDocumentUrls: string;

@@ -10,7 +10,7 @@ import { PolicyChangesetService } from '../_services';
         <div *ngIf="!selectedNewPolicy && policyChangesetService.isActivated" (click)="selectedNewPolicy = true">+</div>
         <div *ngIf="selectedNewPolicy && policyChangesetService.isActivated">
             <label>Content:</label> <input #content />
-            <label>Expiry Date:</label> <input type="date" #expiryDate />
+            <label>Expiry Date:</label> <input type="date" #expiryDate [value]="initialExpiryDate.toISOString().slice(0,10)" />
             <button (click)="onNewPolicy(content.value, expiryDate.value) ? content.value='' : '';">
                 Done
             </button>
@@ -29,6 +29,9 @@ import { PolicyChangesetService } from '../_services';
 
 export class PolicyWritingFrameComponent {
     selectedNewPolicy: boolean = false;
+    
+    dateNow: Date = new Date(Date.now());
+    initialExpiryDate: Date = new Date(this.dateNow.setMonth(this.dateNow.getMonth() + 1));
 
     constructor(
         private policyChangesetService: PolicyChangesetService

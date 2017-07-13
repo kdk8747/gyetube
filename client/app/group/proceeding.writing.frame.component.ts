@@ -43,8 +43,10 @@ export class ProceedingWritingFrameComponent {
     @Output() policiesRefreshRequested = new EventEmitter<void>();
     @Output() proceedingsRefreshRequested = new EventEmitter<void>();
     selectedNewProceeding: boolean = false;
-    newProceedingMeetingDate: string;
-    newProceedingMeetingTime: string;
+
+    dateNow: Date = new Date(Date.now());
+    newProceedingMeetingDate: string = this.dateNow.toISOString().slice(0,10);
+    newProceedingMeetingTime: string = this.dateNow.getHours() + ':' + this.dateNow.getMinutes();
     newProceedingTitle: string;
     newProceedingContent: string;
 
