@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { State } from '../constants';
-import { Activity, Receipt } from '../_models';
+import { Activity, Receipt, AmazonSignature } from '../_models';
 
 import { ReceiptService, ActivityService, AmazonService } from '../_services';
 
@@ -16,7 +16,7 @@ import { ReceiptService, ActivityService, AmazonService } from '../_services';
             <label>Payment Date:</label>    <input type="date"   [(ngModel)]="newReceiptPaymentDate" />
             <label>Memo:</label>            <input type="text"   [(ngModel)]="newReceiptMemo" />
             <label>Difference:</label>      <input type="number" [(ngModel)]="newReceiptDifference" />
-            <label>Receipt:</label>         <input type="file" (change)="onChangeReceiptPhoto($event)" accept="image/*"/>
+            <label>Receipt:</label>         <input type="file" multiple (change)="onChangeReceiptPhoto($event)" accept="image/*"/>
             <button (click)="onNewReceipt()">
                 Done
             </button>
@@ -43,7 +43,7 @@ export class ReceiptWritingFrameComponent {
     newReceiptPaymentDate: string = this.dateNow.toISOString().slice(0, 10);
     newReceiptMemo: string;
     newReceiptDifference: string;
-    newReceiptImage: File = null;
+    newReceiptImages: File[] = [];
 
     constructor(
         private receiptService: ReceiptService,
@@ -52,20 +52,28 @@ export class ReceiptWritingFrameComponent {
     ) { }
 
     onChangeReceiptPhoto(event: any) {
-        this.newReceiptImage = event.target.files[0];
-
-        this.amazonService.test(this.newReceiptImage).then(()=>{
-            alert('success');
-        });;
+        let fileList = event.target.files;
+        this.newReceiptImages = [];
+        for (let i = 0; i < fileList.length; i ++)
+            this.newReceiptImages.push(event.target.files[i] as File);
     }
 
     onNewReceipt(): void {
-        if (!this.newReceiptParentActivity || !this.newReceiptPaymentDate || !this.newReceiptDifference || !this.newReceiptImage) return;
+        if (!this.newReceiptParentActivity || !this.newReceiptPaymentDate || !this.newReceiptDifference) return;
         this.newReceiptMemo = this.newReceiptMemo.trim();
 
         let newReceipt = new Receipt(0, new Date(Date.now()), new Date(this.newReceiptPaymentDate),
             this.newReceiptMemo, +this.newReceiptDifference,
             '', +this.newReceiptParentActivity);
+
+        let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
+        this.amazonService.getAmazonSignatureForReceiptPOST(dateForSign)
+            .then((amzSign: AmazonSignature) => {
+                Promise.all(this.newReceiptImages.map(file => this.amazonService.postReceipt(file, dateForSign, amzSign)))
+                    .then(() => {
+                        console.log('upload end');
+                    }).catch(()=>{console.log('upload failed')});
+            }).catch(()=>{console.log('get failed')});
 
     }
 
