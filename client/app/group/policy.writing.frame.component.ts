@@ -38,8 +38,8 @@ export class PolicyWritingFrameComponent {
     ) { }
 
     onNewPolicy(content: string, expiryDate: string): boolean {
-        content = content.trim();
         if (!content || !expiryDate) return false;
+        content = content.trim();
         this.policyChangesetService.policies.push(new Policy(0, 0, State.STATE_NEW_ONE, new Date(Date.now()), new Date(expiryDate), content, 0, []));
         this.selectedNewPolicy = false;
         return true;

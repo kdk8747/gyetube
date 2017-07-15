@@ -9,7 +9,7 @@ import { PolicyComponent, PolicyWritingFrameComponent, PolicyChangesetComponent 
 import { ActivityComponent, ActivityWritingFrameComponent } from './group';
 import { ReceiptComponent, ReceiptWritingFrameComponent } from './group';
 
-import { ActivityService, PolicyService, PolicyChangesetService, ProceedingService, ReceiptService, UserService } from './_services';
+import { ActivityService, PolicyService, PolicyChangesetService, ProceedingService, ReceiptService, AmazonService, UserService } from './_services';
 
 import { AppRoutingModule }     from './app-routing.module';
 
@@ -39,6 +39,7 @@ import { AppRoutingModule }     from './app-routing.module';
     PolicyChangesetService,
     ProceedingService,
     ReceiptService,
+    AmazonService,
     UserService
   ],
   bootstrap: [AppComponent]

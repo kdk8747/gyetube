@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { State } from '../constants';
 import { Activity, Receipt } from '../_models';
 
+import { ReceiptService, ActivityService, AmazonService } from '../_services';
 
 @Component({
     selector: 'receipt-writing-frame',
@@ -15,7 +16,7 @@ import { Activity, Receipt } from '../_models';
             <label>Payment Date:</label>    <input type="date"   [(ngModel)]="newReceiptPaymentDate" />
             <label>Memo:</label>            <input type="text"   [(ngModel)]="newReceiptMemo" />
             <label>Difference:</label>      <input type="number" [(ngModel)]="newReceiptDifference" />
-            <label>Receipt:</label>         <input type="file" (change)="onChangeReceiptPhoto($event)" />
+            <label>Receipt:</label>         <input type="file" (change)="onChangeReceiptPhoto($event)" accept="image/*"/>
             <button (click)="onNewReceipt()">
                 Done
             </button>
@@ -39,21 +40,33 @@ export class ReceiptWritingFrameComponent {
 
     dateNow: Date = new Date(Date.now());
     newReceiptParentActivity: string = null;
-    newReceiptPaymentDate: string = this.dateNow.toISOString().slice(0,10);
+    newReceiptPaymentDate: string = this.dateNow.toISOString().slice(0, 10);
     newReceiptMemo: string;
     newReceiptDifference: string;
+    newReceiptImage: File = null;
 
+    constructor(
+        private receiptService: ReceiptService,
+        private activityService: ActivityService,
+        private amazonService: AmazonService
+    ) { }
 
     onChangeReceiptPhoto(event: any) {
-        var files = event.srcElement.files;
-        console.log(files);
+        this.newReceiptImage = event.target.files[0];
+
+        this.amazonService.test(this.newReceiptImage).then(()=>{
+            alert('success');
+        });;
     }
 
     onNewReceipt(): void {
-        /*
-        content = content.trim();
-        if (!content || !expiryDate) return false;
-        this.selectedNewReceipt = false;*/
+        if (!this.newReceiptParentActivity || !this.newReceiptPaymentDate || !this.newReceiptDifference || !this.newReceiptImage) return;
+        this.newReceiptMemo = this.newReceiptMemo.trim();
+
+        let newReceipt = new Receipt(0, new Date(Date.now()), new Date(this.newReceiptPaymentDate),
+            this.newReceiptMemo, +this.newReceiptDifference,
+            '', +this.newReceiptParentActivity);
+
     }
 
     onCancelNewReceipt(): void {

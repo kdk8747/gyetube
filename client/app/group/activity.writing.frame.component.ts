@@ -14,10 +14,10 @@ import { Policy, Activity } from '../_models';
             <label>Content:</label>         <input type="text" [(ngModel)]="newActivityContent" />
             <label>Photos:</label>          <input type="file" multiple (change)="onChangePhotos($event)" />
             <label>Documents:</label>       <input type="file" multiple (change)="onChangeDocuments($event)" />
-            <button (click)="onNewActivity() ? content.value='' : '';">
+            <button (click)="onNewActivity()">
                 Done
             </button>
-            <button (click)="selectedNewActivity=false; content.value=''">
+            <button (click)="onCancelNewActivity()">
                 Cancel
             </button>
         </div>
@@ -53,10 +53,13 @@ export class ActivityWritingFrameComponent {
         console.log(files);
     }
 
-    onNewActivity(content: string, expiryDate: string): boolean {
-        content = content.trim();
-        if (!content || !expiryDate) return false;
+    onNewActivity(): void {
+        if (!this.newActivityParentPolicy || !this.newActivityContent) return;
+        this.newActivityContent = this.newActivityContent.trim();
         this.selectedNewActivity = false;
-        return true;
+    }
+
+    onCancelNewActivity(): void {
+        this.selectedNewActivity = false;
     }
 }

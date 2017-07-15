@@ -57,9 +57,9 @@ export class ProceedingWritingFrameComponent {
     ) { }
 
     onNewProceeding(): void {
+        if (!this.newProceedingTitle || !this.newProceedingContent) return;
         this.newProceedingTitle = this.newProceedingTitle.trim();
         this.newProceedingContent = this.newProceedingContent.trim();
-        if (!this.newProceedingTitle || !this.newProceedingContent) return;
 
         let newProceeding = new Proceeding(0, 0, State.STATE_NEW_ONE, 
                             new Date(Date.now()),
