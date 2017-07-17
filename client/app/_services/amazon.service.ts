@@ -28,11 +28,28 @@ export class AmazonService {
             .catch(this.handleError);
     }
 
-    postReceipt(file: File, ISO8601Date: string, amazonSignature: AmazonSignature): Promise<string> {
+    getAmazonSignatureForPhotoPOST(ISO8601Date: string): Promise<AmazonSignature> {
+        let url = `api/sign-s3/photos?amz-date=${ISO8601Date}`;
+        return this.http.get(url)
+            .toPromise()
+            .then(response => response.json() as AmazonSignature)
+            .catch(this.handleError);
+    }
+
+    getAmazonSignatureForDocumentPOST(ISO8601Date: string): Promise<AmazonSignature> {
+        let url = `api/sign-s3/documents?amz-date=${ISO8601Date}`;
+        return this.http.get(url)
+            .toPromise()
+            .then(response => response.json() as AmazonSignature)
+            .catch(this.handleError);
+    }
+
+    postFile(file: File, ISO8601Date: string, amazonSignature: AmazonSignature): Promise<string> {
         let formData = new FormData();
         formData.append('key', amazonSignature.keyPath + file.name);   // FIX ME
         formData.append('acl', 'public-read');
-        formData.append('Content-Type', file.type);
+        if (file.type.substr(0,5) == 'image')
+            formData.append('Content-Type', file.type);
         formData.append('x-amz-meta-uuid', '14365123651274'); // remove test
         formData.append('x-amz-server-side-encryption', 'AES256');
         formData.append('success_action_status', '201')

@@ -45,7 +45,7 @@ export class ProceedingWritingFrameComponent {
     selectedNewProceeding: boolean = false;
 
     dateNow: Date = new Date(Date.now());
-    newProceedingMeetingDate: string = this.dateNow.toISOString().slice(0,10);
+    newProceedingMeetingDate: string = this.dateNow.toISOString().slice(0, 10);
     newProceedingMeetingTime: string = this.dateNow.getHours() + ':' + this.dateNow.getMinutes();
     newProceedingTitle: string;
     newProceedingContent: string;
@@ -61,29 +61,33 @@ export class ProceedingWritingFrameComponent {
         this.newProceedingTitle = this.newProceedingTitle.trim();
         this.newProceedingContent = this.newProceedingContent.trim();
 
-        let newProceeding = new Proceeding(0, 0, State.STATE_NEW_ONE, 
-                            new Date(Date.now()),
-                            new Date(this.newProceedingMeetingDate + ' ' + this.newProceedingMeetingTime),
-                            this.newProceedingTitle, this.newProceedingContent, []);
-        this.proceedingService.create(newProceeding)
-        .then((proceeding: Proceeding) => {
-            newProceeding.id = proceeding.id;
-            this.selectedNewProceeding = false;
+        let newProceeding = new Proceeding(0, 0, State.STATE_NEW_ONE,
+            new Date(Date.now()),
+            new Date(this.newProceedingMeetingDate + ' ' + this.newProceedingMeetingTime),
+            this.newProceedingTitle, this.newProceedingContent, []);
 
-            Promise.all(this.policyChangesetService.policies.map(policy => this.policyService.create(policy)))
+        this.proceedingService.create(newProceeding)
+            .then((proceeding: Proceeding) => {
+                newProceeding.id = proceeding.id;
+                this.selectedNewProceeding = false;
+                return Promise.all(this.policyChangesetService.policies.map(policy => {
+                    policy.parentProceeding = newProceeding.id;
+                    return this.policyService.create(policy);
+                }));
+            })
             .then((policies: Policy[]) => {
-                newProceeding.childPolicies = policies.map(policy => {this.policies.push(policy); return policy.id});
-                this.proceedingService.update(newProceeding)
-                .then((proceeding: Proceeding) => {
-                    this.proceedings.push(proceeding);
-                    this.proceedingsRefreshRequested.emit();
-                    this.newProceedingMeetingDate = this.dateNow.toISOString().slice(0,10);
-                    this.newProceedingMeetingTime = this.dateNow.getHours() + ':' + this.dateNow.getMinutes();
-                    this.newProceedingTitle = this.newProceedingContent = '';
-                    this.onCancelNewProceeding();
-                });
-            });
-        });
+                newProceeding.childPolicies = policies.map(policy => { this.policies.push(policy); return policy.id });
+                return this.proceedingService.update(newProceeding);
+            })
+            .then((proceeding: Proceeding) => {
+                this.proceedings.push(proceeding);
+                this.proceedingsRefreshRequested.emit();
+                this.newProceedingMeetingDate = this.dateNow.toISOString().slice(0, 10);
+                this.newProceedingMeetingTime = this.dateNow.getHours() + ':' + this.dateNow.getMinutes();
+                this.newProceedingTitle = this.newProceedingContent = '';
+                this.onCancelNewProceeding();
+            })
+            .catch(() => { console.log('new proceeding failed') });
     }
 
     onCancelNewProceeding(): void {

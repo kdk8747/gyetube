@@ -26,7 +26,7 @@ export class GroupComponent implements OnInit {
     ngOnInit(): void {
         this.proceedingService.getProceedings().then(proceedings => { this.proceedings = proceedings; this.sortByDate(); });
         this.policyService.getPolicies().then(policies => { this.policies = policies; this.filterPastPolicies(); });
-        this.activityService.getActivities().then(activities => this.activities = activities);
+        this.activityService.getActivities().then(activities => {this.activities = activities; this.sortByDateA(); });
         this.receiptService.getReceipts().then(receipts => {this.receipts = receipts; this.sortByDateR(); });
     }
 
@@ -41,6 +41,13 @@ export class GroupComponent implements OnInit {
         this.receipts = this.receipts.sort((h1, h2) => {
             return h1.paymentDate < h2.paymentDate ? 1 :
                 (h1.paymentDate > h2.paymentDate ? -1 : 0);
+        });
+    }
+
+    sortByDateA(): void {
+        this.activities = this.activities.sort((h1, h2) => {
+            return h1.activityDate < h2.activityDate ? 1 :
+                (h1.activityDate > h2.activityDate ? -1 : 0);
         });
     }
 

@@ -25,7 +25,7 @@
     <div id="activity-list">
         <ol>
             <li>
-                <activity-writing-frame [policies]="policies" [activities]="activities"></activity-writing-frame>
+                <activity-writing-frame [policies]="policies" [activities]="activities" (activitiesRefreshRequested)="sortByDateA()"></activity-writing-frame>
             </li>
             <li *ngFor="let activity of activities">
                 <activity [activity]="activity"></activity>

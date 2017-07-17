@@ -188,11 +188,11 @@ function getSignatureKey(key, dateStamp, regionName, serviceName) {
   return kSigning;
 }
 
-app.get('/api/sign-s3/receipts', (req, res) => {
+app.get('/api/sign-s3/:category(receipts|documents|photos)', (req, res) => {
   const amzDate = req.query['amz-date'];
   let authDate = amzDate.split('T')[0];
   let credential = `${process.env.AWS_ACCESS_KEY_ID}/${authDate}/ap-northeast-2/s3/aws4_request`;
-  let keyPath = 'suwongreenparty/receipts/';
+  let keyPath = 'suwongreenparty/' + req.params.category + '/';
 
   let expiration = new Date();
   expiration.setMinutes(expiration.getMinutes() + 3);
@@ -202,7 +202,6 @@ app.get('/api/sign-s3/receipts', (req, res) => {
       { 'bucket': 'grassroots-groups' },
       ['starts-with', '$key', keyPath],
       { 'acl': 'public-read' },
-      ['starts-with', '$Content-Type', 'image/'],
       { 'x-amz-meta-uuid': '14365123651274' },
       { 'x-amz-server-side-encryption': 'AES256' },
       { 'success_action_status': '201' },
@@ -211,6 +210,9 @@ app.get('/api/sign-s3/receipts', (req, res) => {
       { 'x-amz-date': amzDate }
     ]
   };
+  if (req.params.category != 'documents')
+    policy.conditions.push(['starts-with', '$Content-Type', 'image/']);
+
   let policyString = JSON.stringify(policy);
   let stringToSign = new Buffer(policyString).toString('base64');
   let signingKey = getSignatureKey(process.env.AWS_SECRET_ACCESS_KEY, authDate, 'ap-northeast-2', 's3', 'aws4_request');
