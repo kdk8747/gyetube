@@ -24,21 +24,18 @@ export class AmazonService {
         let url = `api/sign-s3/receipts?amz-date=${ISO8601Date}`;
         return this.http.get(url)
             .toPromise()
-            .then(response => {
-                let amazonSignature = response.json() as AmazonSignature;
-                console.log(amazonSignature);
-                return amazonSignature;
-            }).catch(this.handleError);
+            .then(response => response.json() as AmazonSignature)
+            .catch(this.handleError);
     }
 
-    postReceipt(file: File, ISO8601Date: string, amazonSignature: AmazonSignature): Promise<void> {
+    postReceipt(file: File, ISO8601Date: string, amazonSignature: AmazonSignature): Promise<string> {
         let formData = new FormData();
-        console.log(file);
         formData.append('key', amazonSignature.keyPath + file.name);   // FIX ME
         formData.append('acl', 'public-read');
         formData.append('Content-Type', file.type);
         formData.append('x-amz-meta-uuid', '14365123651274'); // remove test
         formData.append('x-amz-server-side-encryption', 'AES256');
+        formData.append('success_action_status', '201')
         formData.append('X-Amz-Credential', amazonSignature.credential);
         formData.append('X-Amz-Algorithm', 'AWS4-HMAC-SHA256');
         formData.append('X-Amz-Date', ISO8601Date);
@@ -47,7 +44,7 @@ export class AmazonService {
         formData.append('file', file, file.name);
         return this.http.post('http://grassroots-groups.s3.amazonaws.com/', formData)
             .toPromise()
-            .then(() => { console.log('post end'); })
+            .then(response => response.text())
             .catch(this.handleError);
     }
 

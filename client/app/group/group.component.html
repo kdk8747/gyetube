@@ -35,7 +35,7 @@
     <div id="receipt-list">
         <ol>
             <li>
-                <receipt-writing-frame [receipts]="receipts" [activities]="activities"></receipt-writing-frame>
+                <receipt-writing-frame [receipts]="receipts" [activities]="activities" (receiptsRefreshRequested)="sortByDateR()"></receipt-writing-frame>
             </li>
             <li *ngFor="let receipt of receipts">
                 <receipt [receipt]="receipt"></receipt>

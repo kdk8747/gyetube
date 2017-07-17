@@ -77,8 +77,9 @@ export class ProceedingWritingFrameComponent {
                 .then((proceeding: Proceeding) => {
                     this.proceedings.push(proceeding);
                     this.proceedingsRefreshRequested.emit();
-                    this.newProceedingMeetingDate = this.newProceedingMeetingTime
-                        = this.newProceedingTitle = this.newProceedingContent = '';
+                    this.newProceedingMeetingDate = this.dateNow.toISOString().slice(0,10);
+                    this.newProceedingMeetingTime = this.dateNow.getHours() + ':' + this.dateNow.getMinutes();
+                    this.newProceedingTitle = this.newProceedingContent = '';
                     this.onCancelNewProceeding();
                 });
             });

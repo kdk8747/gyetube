@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { State } from '../constants';
 import { Activity, Receipt, AmazonSignature } from '../_models';
 
@@ -16,7 +16,7 @@ import { ReceiptService, ActivityService, AmazonService } from '../_services';
             <label>Payment Date:</label>    <input type="date"   [(ngModel)]="newReceiptPaymentDate" />
             <label>Memo:</label>            <input type="text"   [(ngModel)]="newReceiptMemo" />
             <label>Difference:</label>      <input type="number" [(ngModel)]="newReceiptDifference" />
-            <label>Receipt:</label>         <input type="file" multiple (change)="onChangeReceiptPhoto($event)" accept="image/*"/>
+            <label>Receipt:</label>         <input type="file"   (change)="onChangeReceiptPhoto($event)" accept="image/*"/>
             <button (click)="onNewReceipt()">
                 Done
             </button>
@@ -36,14 +36,15 @@ import { ReceiptService, ActivityService, AmazonService } from '../_services';
 export class ReceiptWritingFrameComponent {
     @Input() activities: Activity[];
     @Input() receipts: Receipt[];
+    @Output() receiptsRefreshRequested = new EventEmitter<void>();
     selectedNewReceipt: boolean = false;
 
     dateNow: Date = new Date(Date.now());
     newReceiptParentActivity: string = null;
     newReceiptPaymentDate: string = this.dateNow.toISOString().slice(0, 10);
     newReceiptMemo: string;
-    newReceiptDifference: string;
-    newReceiptImages: File[] = [];
+    newReceiptDifference: string = '0';
+    newReceiptImage: File = null;
 
     constructor(
         private receiptService: ReceiptService,
@@ -52,14 +53,11 @@ export class ReceiptWritingFrameComponent {
     ) { }
 
     onChangeReceiptPhoto(event: any) {
-        let fileList = event.target.files;
-        this.newReceiptImages = [];
-        for (let i = 0; i < fileList.length; i ++)
-            this.newReceiptImages.push(event.target.files[i] as File);
+        this.newReceiptImage = event.target.files[0] as File;
     }
 
     onNewReceipt(): void {
-        if (!this.newReceiptParentActivity || !this.newReceiptPaymentDate || !this.newReceiptDifference) return;
+        if (!this.newReceiptParentActivity || !this.newReceiptPaymentDate || !this.newReceiptDifference || +this.newReceiptDifference == 0) return;
         this.newReceiptMemo = this.newReceiptMemo.trim();
 
         let newReceipt = new Receipt(0, new Date(Date.now()), new Date(this.newReceiptPaymentDate),
@@ -68,12 +66,26 @@ export class ReceiptWritingFrameComponent {
 
         let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
         this.amazonService.getAmazonSignatureForReceiptPOST(dateForSign)
-            .then((amzSign: AmazonSignature) => {
-                Promise.all(this.newReceiptImages.map(file => this.amazonService.postReceipt(file, dateForSign, amzSign)))
-                    .then(() => {
-                        console.log('upload end');
-                    }).catch(()=>{console.log('upload failed')});
-            }).catch(()=>{console.log('get failed')});
+            .then((amzSign: AmazonSignature) => this.amazonService.postReceipt(this.newReceiptImage, dateForSign, amzSign))
+            .then(xml => {
+                let regexp = /<Location>(.+)<\/Location>/;
+                let result = regexp.exec(xml);
+                if (result.length < 2) return Promise.reject('Unknown XML format');
+                newReceipt.imageUrl = result[1];
+                return this.receiptService.create(newReceipt);
+            }).then((receipt: Receipt) => {
+                this.receipts.push(receipt);
+                let activity = this.activities.find(activity => activity.id == +this.newReceiptParentActivity);
+                activity.childReceipts.push(receipt.id);
+                return this.activityService.update(activity);
+            }).then(() => {
+                this.receiptsRefreshRequested.emit();
+                this.newReceiptParentActivity = null;
+                this.newReceiptMemo = '';
+                this.newReceiptDifference = '0';
+                this.newReceiptPaymentDate = this.dateNow.toISOString().slice(0, 10);
+                this.selectedNewReceipt = false;
+            }).catch(() => { console.log('get failed') });
 
     }
 

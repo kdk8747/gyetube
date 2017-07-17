@@ -27,13 +27,20 @@ export class GroupComponent implements OnInit {
         this.proceedingService.getProceedings().then(proceedings => { this.proceedings = proceedings; this.sortByDate(); });
         this.policyService.getPolicies().then(policies => { this.policies = policies; this.filterPastPolicies(); });
         this.activityService.getActivities().then(activities => this.activities = activities);
-        this.receiptService.getReceipts().then(receipts => this.receipts = receipts);
+        this.receiptService.getReceipts().then(receipts => {this.receipts = receipts; this.sortByDateR(); });
     }
 
     sortByDate(): void {
         this.proceedings = this.proceedings.sort((h1, h2) => {
             return h1.meetingDate < h2.meetingDate ? 1 :
                 (h1.meetingDate > h2.meetingDate ? -1 : 0);
+        });
+    }
+
+    sortByDateR(): void {
+        this.receipts = this.receipts.sort((h1, h2) => {
+            return h1.paymentDate < h2.paymentDate ? 1 :
+                (h1.paymentDate > h2.paymentDate ? -1 : 0);
         });
     }
 

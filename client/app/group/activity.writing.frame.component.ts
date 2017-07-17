@@ -12,8 +12,7 @@ import { Policy, Activity } from '../_models';
             </select>
             <label>Activity Date:</label>   <input type="date" [(ngModel)]="newActivityDate" />
             <label>Content:</label>         <input type="text" [(ngModel)]="newActivityContent" />
-            <label>Photos:</label>          <input type="file" multiple (change)="onChangePhotos($event)" />
-            <label>Documents:</label>       <input type="file" multiple (change)="onChangeDocuments($event)" />
+            <label>Files:</label>           <input type="file" multiple (change)="onChangeFiles($event)" />
             <button (click)="onNewActivity()">
                 Done
             </button>
@@ -39,18 +38,20 @@ export class ActivityWritingFrameComponent {
     newActivityParentPolicy: string;
     newActivityDate: string = this.dateNow.toISOString().slice(0,10);
     newActivityContent: string;
-    newActivityImageUrls: string;
-    newActivityDocumentUrls: string;
+    newActivityImageUrls: File[];
+    newActivityDocumentUrls: File[];
 
 
-    onChangePhotos(event: any) {
-        var files = event.srcElement.files;
-        console.log(files);
-    }
-
-    onChangeDocuments(event: any) {
-        var files = event.srcElement.files;
-        console.log(files);
+    onChangeFiles(event: any) {
+        let fileList = event.target.files;
+        this.newActivityImageUrls = this.newActivityDocumentUrls = [];
+        for (let i = 0; i < fileList.length; i ++){
+            let file = event.target.files[i] as File;
+            if (file.type.substr(0,5) == 'image')
+                this.newActivityImageUrls.push(file);
+            else
+                this.newActivityDocumentUrls.push(file);
+        }
     }
 
     onNewActivity(): void {

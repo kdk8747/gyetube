@@ -205,7 +205,7 @@ app.get('/api/sign-s3/receipts', (req, res) => {
       ['starts-with', '$Content-Type', 'image/'],
       { 'x-amz-meta-uuid': '14365123651274' },
       { 'x-amz-server-side-encryption': 'AES256' },
-
+      { 'success_action_status': '201' },
       { 'x-amz-credential': credential },
       { 'x-amz-algorithm': 'AWS4-HMAC-SHA256' },
       { 'x-amz-date': amzDate }
