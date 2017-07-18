@@ -16,7 +16,7 @@ import { PolicyService, ActivityService, AmazonService } from '../_services';
             <label>Content:</label>         <input type="text" [(ngModel)]="newActivityContent" />
             <label>Files:</label>           <input type="file" multiple (change)="onChangeFiles($event)" />
             <button (click)="onNewActivity()">
-                Done
+                Create
             </button>
             <button (click)="onCancelNewActivity()">
                 Cancel
@@ -59,7 +59,7 @@ export class ActivityWritingFrameComponent {
     }
 
     onNewActivity(): void {
-        if (!this.newActivityParentPolicy || !this.newActivityContent) return;
+        if (!this.newActivityParentPolicy || !this.newActivityContent || !this.newActivityDate) return;
         this.newActivityContent = this.newActivityContent.trim();
 
         let newActivity = new Activity(0, new Date(Date.now()), new Date(this.newActivityDate),

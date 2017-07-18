@@ -17,7 +17,7 @@ import { ReceiptService, ActivityService, AmazonService } from '../_services';
             <label>Difference:</label>      <input type="number" [(ngModel)]="newReceiptDifference" />
             <label>Receipt:</label>         <input type="file"   (change)="onChangeReceiptPhoto($event)" accept="image/*"/>
             <button (click)="onNewReceipt()">
-                Done
+                Create
             </button>
             <button (click)="onCancelNewReceipt()">
                 Cancel
