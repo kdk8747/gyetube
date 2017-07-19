@@ -238,7 +238,7 @@ app.get('/oauth', (req, res) => {
 
   const options = {
     hostname: 'kauth.kakao.com/',
-    port: 443,
+    port: 80,
     path: '/oauth/token?grant_type=authorization_code'
     + '&client_id=' + process.env.KAKAO_CLIENT_KEY
     + '&redirect_uri=http://grassroots.kr/oauth'
