@@ -12,7 +12,7 @@ import { PolicyChangesetService } from '../_services';
             <label>Content:</label> <input #content />
             <label>Expiry Date:</label> <input type="date" #expiryDate [value]="initialExpiryDate.toISOString().slice(0,10)" />
             <button (click)="onNewPolicy(content.value, expiryDate.value) ? content.value='' : '';">
-                Done
+                Create
             </button>
             <button (click)="selectedNewPolicy=false; content.value=''">
                 Cancel

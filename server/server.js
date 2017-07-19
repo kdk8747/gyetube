@@ -229,6 +229,12 @@ app.get('/api/sign-s3/:category(receipts|documents|photos)', (req, res) => {
 });
 
 
+app.get('/oauth', (req, res) => {
+  debug(req.body);
+  debug('GOOD JOB');
+});
+
+
 
 app.get('*', (req, res) => {
   res.redirect('/');

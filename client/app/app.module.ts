@@ -4,12 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule }    from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { GroupComponent, ProceedingComponent, ProceedingWritingFrameComponent } from './group';
+import { GroupComponent, LoginComponent } from './group';
+import { ProceedingComponent, ProceedingWritingFrameComponent } from './group';
 import { PolicyComponent, PolicyWritingFrameComponent, PolicyChangesetComponent } from './group';
 import { ActivityComponent, ActivityWritingFrameComponent } from './group';
 import { ReceiptComponent, ReceiptWritingFrameComponent } from './group';
 
-import { ActivityService, PolicyService, PolicyChangesetService, ProceedingService, ReceiptService, AmazonService, UserService } from './_services';
+import { ActivityService, PolicyService, PolicyChangesetService, ProceedingService, ReceiptService, UserService } from './_services';
+import { AuthenticationService, AmazonService } from './_services';
 
 import { AppRoutingModule }     from './app-routing.module';
 
@@ -23,6 +25,7 @@ import { AppRoutingModule }     from './app-routing.module';
   declarations: [
     AppComponent,
     GroupComponent,
+    LoginComponent,
     ProceedingComponent,
     ProceedingWritingFrameComponent,
     PolicyComponent,
@@ -34,13 +37,14 @@ import { AppRoutingModule }     from './app-routing.module';
     ReceiptWritingFrameComponent
   ],
   providers: [
+    AuthenticationService,
+    AmazonService,
+    UserService,
     ActivityService,
     PolicyService,
     PolicyChangesetService,
     ProceedingService,
-    ReceiptService,
-    AmazonService,
-    UserService
+    ReceiptService
   ],
   bootstrap: [AppComponent]
 })

@@ -6,4 +6,5 @@ export * from './proceeding.service';
 export * from './receipt.service';
 //export * from './receipt.list.service';
 export * from './amazon.service';
+export * from './authentication.service';
 export * from './user.service';

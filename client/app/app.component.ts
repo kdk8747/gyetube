@@ -4,7 +4,10 @@ import { Component } from '@angular/core';
   selector: 'my-app',
   template: `
     <div>
-      <div>수원녹색당</div> <div>회원가입 | 로그인</div>
+      <nav>
+        <a routerLink="/suwongreenparty" routerLinkActive="active">수원녹색당</a>
+        <a routerLink="/login" routerLinkActive="active">로그인</a>
+      </nav>
     </div>
     <router-outlet></router-outlet>
   `,
