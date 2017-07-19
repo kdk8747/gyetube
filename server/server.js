@@ -2,6 +2,7 @@ const express = require('express');
 const expressStaticGzip = require('express-static-gzip');
 const bodyParser = require('body-parser');
 const path = require('path');
+const http = require('http');
 const crypto = require('crypto');
 const debug = require('debug')('server');
 const app = express();
@@ -11,9 +12,6 @@ app.set('port', (process.env.PORT || 5000));
 const __public = path.resolve(__dirname + '/../public');
 
 app.use('/', expressStaticGzip(__public));
-app.use('/dashboard', expressStaticGzip(__public));
-app.use('/heroes', expressStaticGzip(__public));
-app.use('/detail/*', expressStaticGzip(__public));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -230,9 +228,22 @@ app.get('/api/sign-s3/:category(receipts|documents|photos)', (req, res) => {
 
 
 app.get('/oauth', (req, res) => {
-  debug(req.body);
-  debug('GOOD JOB');
-  res.redirect('/');
+  let code = req.query['code'];
+  let state = req.query['state'];
+
+  let returnData = {
+    code: code,
+    state: state
+  };
+  http.post('https://kauth.kakao.com/oauth/token\
+  &grant_type=authorization_code\
+  &client_id=e377bae94f2edc3f3a3af327b3361ce5\
+  &redirect_uri=http://grassroots.kr/oauth\
+  &code=' + code, (req) => {
+    debug('post from /oauth');
+  }).on('error', (e) => {
+    debug(`Got error: ${e.message}`);
+  });
 });
 
 
