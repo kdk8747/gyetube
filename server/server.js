@@ -235,11 +235,18 @@ app.get('/oauth', (req, res) => {
     code: code,
     state: state
   };
-  http.post('https://kauth.kakao.com/oauth/token\
-  &grant_type=authorization_code\
+
+  const options = {
+    hostname: 'kauth.kakao.com/',
+    port: 443,
+    path: '/oauth/token?grant_type=authorization_code\
   &client_id=e377bae94f2edc3f3a3af327b3361ce5\
   &redirect_uri=http://grassroots.kr/oauth\
-  &code=' + code, (req) => {
+  &code=' + code,
+    method: 'POST'
+  };
+
+  http.request(options, (req) => {
     debug('post from /oauth');
   }).on('error', (e) => {
     debug(`Got error: ${e.message}`);
