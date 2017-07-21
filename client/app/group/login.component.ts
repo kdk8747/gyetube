@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../_services';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
     selector: 'login',
@@ -24,11 +25,22 @@ import { AuthenticationService } from '../_services';
     `]
 })
 
-export class LoginComponent{
+export class LoginComponent {
 
     constructor(
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private activatedRoute: ActivatedRoute
     ) { }
+
+    ngOnInit() {
+        // subscribe to router event
+        this.activatedRoute.queryParams.subscribe((queryParams: Params) => {
+            let code = queryParams['code'];
+            let state = queryParams['state'];
+            //this.authenticationService.accesstoken();
+        });
+    }
+
 
     onNaverLogin(): void {
         ;

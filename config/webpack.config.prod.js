@@ -6,6 +6,8 @@ var commonConfig = require('./webpack.config.common.js');
 var helpers = require('./helpers');
 
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+const HOST_NAME = process.env.HOST_NAME = 'grassroots.kr';
+const PORT = process.env.PORT = 80;
 
 module.exports = webpackMerge(commonConfig, {
   devtool: 'cheap-module-source-map',
@@ -45,7 +47,9 @@ module.exports = webpackMerge(commonConfig, {
     new ExtractTextPlugin('[name].[hash].css'),
     new webpack.DefinePlugin({
       'process.env': {
-        'ENV': JSON.stringify(ENV)
+        'ENV': JSON.stringify(ENV),
+        'HOST_NAME': JSON.stringify(HOST_NAME),
+        'PORT': JSON.stringify(PORT)
       }
     }),
     new webpack.LoaderOptionsPlugin({

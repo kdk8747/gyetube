@@ -11,7 +11,8 @@ app.set('port', (process.env.PORT || 5000));
 
 const __public = path.resolve(__dirname + '/../public');
 
-app.use('/', expressStaticGzip(__public));
+app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
+app.use('/oauth', expressStaticGzip(__public)); // FIX ME (performance)
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -226,32 +227,6 @@ app.get('/api/sign-s3/:category(receipts|documents|photos)', (req, res) => {
   res.end();
 });
 
-
-app.get('/oauth', (req, res) => {
-  let code = req.query['code'];
-  let state = req.query['state'];
-
-  let returnData = {
-    code: code,
-    state: state
-  };
-
-  const options = {
-    hostname: 'kauth.kakao.com/',
-    port: 80,
-    path: '/oauth/token?grant_type=authorization_code'
-    + '&client_id=' + process.env.KAKAO_CLIENT_KEY
-    + '&redirect_uri=http://grassroots.kr/oauth'
-    + '&code=' + code,
-    method: 'POST'
-  };
-
-  http.request(options, (req) => {
-    debug('post from /oauth');
-  }).on('error', (e) => {
-    debug(`Got error: ${e.message}`);
-  });
-});
 
 
 

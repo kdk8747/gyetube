@@ -8,8 +8,12 @@ export class AuthenticationService {
     constructor(private http: Http) { }
 
     kakaoLogin(): void {
-        let url = 'https://kauth.kakao.com/oauth/authorize?client_id=e377bae94f2edc3f3a3af327b3361ce5&redirect_uri=http://grassroots.kr/oauth&response_type=code&state=fdf49f903bd3d93a8d79354055335958104ec4d78f138060';
-        window.location.href=url;
+        let url = 'https://kauth.kakao.com/oauth/authorize'
+        +'?client_id=5761baf913c7452248956fbe892f0f19'
+        +`&redirect_uri=http://${process.env.HOST_NAME}:${process.env.PORT}/oauth`
+        +'&response_type=code'
+        +'&state=fdf49f903bd3d93a8d79354055335958104ec4d78f138060';
+        window.location.href = url;
     }
 
     private handleError(error: any): Promise<any> {
