@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import { AmazonSignature } from '../_models';
+import { AuthenticationService } from './authentication.service';
 
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class AmazonService {
-    constructor(private http: Http) { }
+    constructor(
+        private http: Http,
+        private auth: AuthenticationService
+    ) { }
 
     getISO8601Date(date: Date) {
         let dateStr = date.toISOString();
@@ -21,24 +25,24 @@ export class AmazonService {
     }
 
     getAmazonSignatureForReceiptPOST(ISO8601Date: string): Promise<AmazonSignature> {
-        let url = `api/sign-s3/receipts?amz-date=${ISO8601Date}`;
-        return this.http.get(url)
+        let url = `api/v1.0/suwongreenparty/sign-s3/receipts?amz-date=${ISO8601Date}`;
+        return this.http.get(url, this.auth.addJwt())
             .toPromise()
             .then(response => response.json() as AmazonSignature)
             .catch(this.handleError);
     }
 
     getAmazonSignatureForPhotoPOST(ISO8601Date: string): Promise<AmazonSignature> {
-        let url = `api/sign-s3/photos?amz-date=${ISO8601Date}`;
-        return this.http.get(url)
+        let url = `api/v1.0/suwongreenparty/sign-s3/photos?amz-date=${ISO8601Date}`;
+        return this.http.get(url, this.auth.addJwt())
             .toPromise()
             .then(response => response.json() as AmazonSignature)
             .catch(this.handleError);
     }
 
     getAmazonSignatureForDocumentPOST(ISO8601Date: string): Promise<AmazonSignature> {
-        let url = `api/sign-s3/documents?amz-date=${ISO8601Date}`;
-        return this.http.get(url)
+        let url = `api/v1.0/suwongreenparty/sign-s3/documents?amz-date=${ISO8601Date}`;
+        return this.http.get(url, this.auth.addJwt())
             .toPromise()
             .then(response => response.json() as AmazonSignature)
             .catch(this.handleError);
@@ -48,7 +52,7 @@ export class AmazonService {
         let formData = new FormData();
         formData.append('key', amazonSignature.keyPath + file.name);   // FIX ME
         formData.append('acl', 'public-read');
-        if (file.type.substr(0,5) == 'image')
+        if (file.type.substr(0, 5) == 'image')
             formData.append('Content-Type', file.type);
         formData.append('x-amz-meta-uuid', '14365123651274'); // remove test
         formData.append('x-amz-server-side-encryption', 'AES256');
@@ -59,7 +63,7 @@ export class AmazonService {
         formData.append('Policy', amazonSignature.stringToSign);
         formData.append('X-Amz-Signature', amazonSignature.signature);
         formData.append('file', file, file.name);
-        return this.http.post('http://grassroots-groups.s3.amazonaws.com/', formData)
+        return this.http.post('http://grassroots-groups.s3.amazonaws.com/', formData, this.auth.addJwt())
             .toPromise()
             .then(response => response.text())
             .catch(this.handleError);

@@ -14,6 +14,9 @@ import { ActivatedRoute, Params } from '@angular/router';
             <button (click)="onFacebookLogin()">
                 Facebook Login
             </button>
+            <button (click)="onLogout()">
+                Logout
+            </button>
         </div>
     `,
     styles: [`
@@ -35,19 +38,25 @@ export class LoginComponent {
         this.activatedRoute.queryParams.subscribe((queryParams: Params) => {
             let token = queryParams['token'];
             console.log(token); // TODO: https
+            if (token)
+                localStorage.setItem('currentUserToken', token);
         });
     }
 
 
     onNaverLogin(): void {
-        window.location.href = 'api/users/auth/naver';
+        window.location.href = 'api/v1.0/users/auth/naver';
     }
 
     onKakaoLogin(): void {
-        window.location.href = 'api/users/auth/kakao';
+        window.location.href = 'api/v1.0/users/auth/kakao';
     }
 
     onFacebookLogin(): void {
-        window.location.href = 'api/users/auth/facebook';
+        window.location.href = 'api/v1.0/users/auth/facebook';
+    }
+
+    onLogout(): void {
+        localStorage.removeItem('currentUserToken');
     }
 }

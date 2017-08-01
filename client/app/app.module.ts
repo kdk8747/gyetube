@@ -11,7 +11,7 @@ import { ActivityComponent, ActivityWritingFrameComponent } from './group';
 import { ReceiptComponent, ReceiptWritingFrameComponent } from './group';
 
 import { ActivityService, PolicyService, PolicyChangesetService, ProceedingService, ReceiptService, UserService } from './_services';
-import { AmazonService } from './_services';
+import { AuthenticationService, AmazonService } from './_services';
 
 import { AppRoutingModule }     from './app-routing.module';
 
@@ -37,6 +37,7 @@ import { AppRoutingModule }     from './app-routing.module';
     ReceiptWritingFrameComponent
   ],
   providers: [
+    AuthenticationService,
     AmazonService,
     UserService,
     ActivityService,

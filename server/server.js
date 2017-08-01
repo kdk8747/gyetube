@@ -6,6 +6,8 @@ const expressStaticGzip = require('express-static-gzip');
 const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
+const expressJwt = require('express-jwt');
+const authenticate = expressJwt({secret : process.env.JWT_SECRET});
 const morgan = require('morgan');
 const debug = require('debug')('server');
 
@@ -37,28 +39,13 @@ app.use('/login', expressStaticGzip(__public)); // FIX ME (performance)
 
 require('./middlewares/passports').initialize();
 
-
-
-
-
-
-
-app.get('/logout', function (req, res) {
-  // TODO
-  debug('logout');
-  req.logout();
-  res.redirect('/');
-});
-
-app.use('/api', require('./routes/api'));
-
+app.use('/api/v1.0/suwongreenparty', authenticate, require('./routes/api'));
+app.use('/api/v1.0/users', require('./routes/api/users'));
 
 
 app.get('*', (req, res) => {
   res.redirect('/');
 });
-
-
 
 http.createServer(app).listen(__port, function () {
   debug('Express server listening on port ' + __port);

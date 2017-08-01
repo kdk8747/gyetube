@@ -4,16 +4,20 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { Policy } from '../_models';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class PolicyService {
-  private policiesUrl = 'api/policies';  // URL to web api
+  private policiesUrl = 'api/v1.0/suwongreenparty/policies';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
-  constructor(private http: Http) { }
+  constructor(
+    private http: Http,
+    private auth: AuthenticationService
+  ) { }
 
   getPolicies(): Promise<Policy[]> {
-    return this.http.get(this.policiesUrl)
+    return this.http.get(this.policiesUrl, this.auth.addJwt())
       .toPromise()
       .then(response => {
         let policies = response.json() as Policy[];
@@ -28,7 +32,7 @@ export class PolicyService {
 
   getPolicy(id: number): Promise<Policy> {
     const url = `${this.policiesUrl}/${id}`;
-    return this.http.get(url)
+    return this.http.get(url, this.auth.addJwt())
       .toPromise()
       .then(response => {
         let policy = response.json() as Policy;
@@ -43,7 +47,7 @@ export class PolicyService {
   update(policy: Policy): Promise<Policy> {
     const url = `${this.policiesUrl}/${policy.id}`;
     return this.http
-      .put(url, JSON.stringify(policy), { headers: this.headers })
+      .put(url, JSON.stringify(policy), this.auth.addJwt({ headers: this.headers }))
       .toPromise()
       .then(() => policy)
       .catch(this.handleError);
@@ -51,7 +55,7 @@ export class PolicyService {
 
   create(policy: Policy): Promise<Policy> {
     return this.http
-      .post(this.policiesUrl, JSON.stringify(policy), { headers: this.headers })
+      .post(this.policiesUrl, JSON.stringify(policy), this.auth.addJwt({ headers: this.headers }))
       .toPromise()
       .then(response => {
         let policy = response.json() as Policy;
@@ -64,13 +68,15 @@ export class PolicyService {
 
   delete(id: number): Promise<void> {
     const url = `${this.policiesUrl}/${id}`;
-    return this.http.delete(url, { headers: this.headers })
+    return this.http.delete(url, this.auth.addJwt({ headers: this.headers }))
       .toPromise()
       .then(() => null)
       .catch(this.handleError);
   }
 
   private handleError(error: any): Promise<any> {
+    if (error.status == 401)
+      window.location.href = 'login';
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);
   }
