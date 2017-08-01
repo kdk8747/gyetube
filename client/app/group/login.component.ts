@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../_services';
 import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
@@ -28,29 +27,27 @@ import { ActivatedRoute, Params } from '@angular/router';
 export class LoginComponent {
 
     constructor(
-        private authenticationService: AuthenticationService,
         private activatedRoute: ActivatedRoute
     ) { }
 
     ngOnInit() {
         // subscribe to router event
         this.activatedRoute.queryParams.subscribe((queryParams: Params) => {
-            let code = queryParams['code'];
-            let state = queryParams['state'];
-            //this.authenticationService.accesstoken();
+            let token = queryParams['token'];
+            console.log(token); // TODO: https
         });
     }
 
 
     onNaverLogin(): void {
-        ;
+        window.location.href = 'api/users/auth/naver';
     }
 
     onKakaoLogin(): void {
-        this.authenticationService.kakaoLogin();
+        window.location.href = 'api/users/auth/kakao';
     }
 
     onFacebookLogin(): void {
-        ;
+        window.location.href = 'api/users/auth/facebook';
     }
 }
