@@ -8,7 +8,7 @@ import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class ActivityService {
-  private activitiesUrl = 'api/v1.0/suwongreenparty/activities';  // URL to web api
+  private activitiesUrl = 'api/v1.0/activities/suwongreenparty';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(

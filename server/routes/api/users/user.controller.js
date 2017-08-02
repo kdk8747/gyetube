@@ -3,6 +3,11 @@ const debug = require('debug')('server');
 const jwt = require('jsonwebtoken');
 
 
+var users = [
+  { id: 1, name: 'GG', imageUrl: 'url', login: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} }
+];
+var userID = 2;
+
 exports.authenticateNaver = passport.authenticate('naver');
 exports.callbackByNaver = [ passport.authenticate('naver', { session: false }), serialize, generateToken, respond ];
 exports.authenticateKakao = passport.authenticate('kakao');
@@ -11,6 +16,17 @@ exports.authenticateFacebook = passport.authenticate('facebook');
 exports.callbackByFacebook = [ passport.authenticate('facebook', { session: false }), serialize, generateToken, respond ];
 
 function serialize(req, res, next) {
+  debug(req.user);
+  let i = users.findIndex(item => item.id === +req.user.id);
+  if (i >= 0) {
+    users[i] = req.user;
+  }else{
+    users.push(req.user);
+    userID ++;
+  }
+  req.user.permissions = {'groups': {'suwongreenparty': 'admin'}};
+  next();
+  /*
   db.updateOrCreate(req.user, function (err, user) {
     if (err) { return next(err); }
     debug(req.user);
@@ -19,7 +35,7 @@ function serialize(req, res, next) {
       id: user.id
     };
     next();
-  });
+  });*/
 }
 const db = {
   updateOrCreate: function (user, cb) {
@@ -30,9 +46,7 @@ const db = {
 function generateToken(req, res, next) {
   req.token =
     jwt.sign({
-      id: req.user.id,
-      //username: user.username,
-      //admin: user.admin
+      user: req.user
       },
       process.env.JWT_SECRET,
       {
@@ -52,13 +66,6 @@ function respond(req, res) {
 }
 
 
-var users = [
-  { id: 1, email: 'kdk@naver.com', password: '123' },
-  { id: 2, email: 'hjh@naver.com', password: '123' },
-  { id: 3, email: 'kja@naver.com', password: '123' },
-  { id: 4, email: 'khk@naver.com', password: '123' },
-];
-var userID = 5;
 exports.getAll = (req, res) => {
   res.json(users);
 }

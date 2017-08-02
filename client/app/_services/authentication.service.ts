@@ -11,8 +11,12 @@ export class AuthenticationService {
 
         // add authorization header with jwt token
         let currentUserToken = localStorage.getItem('currentUserToken');
+        console.log(currentUserToken);
         if (currentUserToken) {
-            options.headers.append('Authorization', 'Bearer ' + currentUserToken);
+            options.headers.set('Authorization', 'Bearer ' + currentUserToken);
+        }
+        else {
+            options.headers.delete('Authorization');
         }
 
         return options;

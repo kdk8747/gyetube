@@ -25,7 +25,7 @@ export class AmazonService {
     }
 
     getAmazonSignatureForReceiptPOST(ISO8601Date: string): Promise<AmazonSignature> {
-        let url = `api/v1.0/suwongreenparty/sign-s3/receipts?amz-date=${ISO8601Date}`;
+        let url = `api/v1.0/sign-s3/suwongreenparty/receipts?amz-date=${ISO8601Date}`;
         return this.http.get(url, this.auth.addJwt())
             .toPromise()
             .then(response => response.json() as AmazonSignature)
@@ -33,7 +33,7 @@ export class AmazonService {
     }
 
     getAmazonSignatureForPhotoPOST(ISO8601Date: string): Promise<AmazonSignature> {
-        let url = `api/v1.0/suwongreenparty/sign-s3/photos?amz-date=${ISO8601Date}`;
+        let url = `api/v1.0/sign-s3/suwongreenparty/photos?amz-date=${ISO8601Date}`;
         return this.http.get(url, this.auth.addJwt())
             .toPromise()
             .then(response => response.json() as AmazonSignature)
@@ -41,7 +41,7 @@ export class AmazonService {
     }
 
     getAmazonSignatureForDocumentPOST(ISO8601Date: string): Promise<AmazonSignature> {
-        let url = `api/v1.0/suwongreenparty/sign-s3/documents?amz-date=${ISO8601Date}`;
+        let url = `api/v1.0/sign-s3/suwongreenparty/documents?amz-date=${ISO8601Date}`;
         return this.http.get(url, this.auth.addJwt())
             .toPromise()
             .then(response => response.json() as AmazonSignature)

@@ -1,7 +1,7 @@
 const KakaoStrategy = require('./passport-kakao').Strategy;
 const NaverStrategy = require('./passport-naver').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const debug = require('debug')('server');
+const debug = require('debug')('passports');
 const express = require('express');
 const passport = require('passport');
 
@@ -17,7 +17,12 @@ exports.initialize = () => {
             var _profile = profile._json;
 
             debug(_profile);
-            done(null, _profile);
+            done(null, {
+                id: _profile.id,
+                name: _profile.nickname,
+                imageUrl: _profile.profile_image,
+                login: 'naver'
+            });
         }
     ));
 
@@ -30,7 +35,12 @@ exports.initialize = () => {
             var _profile = profile._json;
 
             debug(_profile);
-            done(null, _profile);
+            done(null, {
+                id: _profile.id,
+                name: _profile.properties.nickname,
+                imageUrl: _profile.properties.thumbnail_image,
+                login: 'kakao'
+            });
         }
     ));
 
@@ -38,13 +48,18 @@ exports.initialize = () => {
         clientID: process.env.FACEBOOK_CLIENT_KEY,
         clientSecret: process.env.FACEBOOK_SECRET_KEY,
         callbackURL: "http://localhost:8080/api/v1.0/users/facebook_oauth",
-        profileFields: ['id', 'email', 'link', 'locale', 'verified', 'displayName']
+        profileFields: ['id', 'email', 'link', 'locale', 'verified', 'displayName', 'picture']
     },
         function (accessToken, refreshToken, profile, done) {
             var _profile = profile._json;
 
             debug(_profile);
-            done(null, _profile);
+            done(null, {
+                id: _profile.id,
+                name: _profile.name,
+                imageUrl: _profile.picture.data.url,
+                login: 'facebook'
+            });
         }
     ));
     app.use(passport.initialize());

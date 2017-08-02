@@ -9,6 +9,7 @@ import { ProceedingComponent, ProceedingWritingFrameComponent } from './group';
 import { PolicyComponent, PolicyWritingFrameComponent, PolicyChangesetComponent } from './group';
 import { ActivityComponent, ActivityWritingFrameComponent } from './group';
 import { ReceiptComponent, ReceiptWritingFrameComponent } from './group';
+import { GreetingComponent } from './greeting.component';
 
 import { ActivityService, PolicyService, PolicyChangesetService, ProceedingService, ReceiptService, UserService } from './_services';
 import { AuthenticationService, AmazonService } from './_services';
@@ -24,6 +25,7 @@ import { AppRoutingModule }     from './app-routing.module';
   ],
   declarations: [
     AppComponent,
+    GreetingComponent,
     GroupComponent,
     LoginComponent,
     ProceedingComponent,

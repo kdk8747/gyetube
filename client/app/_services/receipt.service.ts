@@ -8,7 +8,7 @@ import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class ReceiptService {
-  private receiptsUrl = 'api/v1.0/suwongreenparty/receipts';  // URL to web api
+  private receiptsUrl = 'api/v1.0/receipts/suwongreenparty';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(

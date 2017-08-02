@@ -5,7 +5,8 @@ import { Component } from '@angular/core';
   template: `
     <div>
       <nav>
-        <a routerLink="/suwongreenparty" routerLinkActive="active">수원녹색당</a>
+        <a routerLink="/" routerLinkActive="active">Grassroots</a>
+        <!-- <a routerLink="/suwongreenparty" routerLinkActive="active">수원녹색당</a> -->
         <a routerLink="/login" routerLinkActive="active">로그인</a>
       </nav>
     </div>

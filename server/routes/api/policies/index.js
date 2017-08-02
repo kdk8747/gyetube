@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const controller = require('./policy.controller');
 
-router.get('/', controller.getAll);
-router.get('/:id', controller.getByID);
-router.put('/:id', controller.updateByID);
-router.post('/', controller.create);
-router.delete('/:id', controller.deleteByID);
+router.get('/:group/', controller.getAll);
+router.get('/:group/:id', controller.getByID);
+router.put('/:group/:id', controller.updateByID);
+router.post('/:group/', controller.create);
+router.delete('/:group/:id', controller.deleteByID);
 
 module.exports = router;

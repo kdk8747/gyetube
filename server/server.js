@@ -6,8 +6,6 @@ const expressStaticGzip = require('express-static-gzip');
 const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
-const expressJwt = require('express-jwt');
-const authenticate = expressJwt({secret : process.env.JWT_SECRET});
 const morgan = require('morgan');
 const debug = require('debug')('server');
 
@@ -36,10 +34,11 @@ if (process.env.NODE_ENV != 'production')
 
 app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
 app.use('/login', expressStaticGzip(__public)); // FIX ME (performance)
+app.use('/suwongreenparty', expressStaticGzip(__public)); // FIX ME (performance)
 
 require('./middlewares/passports').initialize();
 
-app.use('/api/v1.0/suwongreenparty', authenticate, require('./routes/api'));
+app.use('/api/v1.0/', require('./middlewares/authentication'), require('./routes/api'));
 app.use('/api/v1.0/users', require('./routes/api/users'));
 
 

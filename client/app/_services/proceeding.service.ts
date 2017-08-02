@@ -8,7 +8,7 @@ import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class ProceedingService {
-  private proceedingsUrl = 'api/v1.0/suwongreenparty/proceedings';  // URL to web api
+  private proceedingsUrl = 'api/v1.0/proceedings/suwongreenparty';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
