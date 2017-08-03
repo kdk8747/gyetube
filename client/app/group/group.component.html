@@ -2,8 +2,8 @@
     <div id="proceeding-list">
         <ol>
             <li>
-                <proceeding-writing-frame [policies]="policies" [proceedings]="proceedings"
-                (policiesRefreshRequested)="onPoliciesRefreshRequested()"
+                <proceeding-writing-frame [decisions]="decisions" [proceedings]="proceedings"
+                (decisionsRefreshRequested)="onDecisionsRefreshRequested()"
                 (proceedingsRefreshRequested)="sortByDate()">
                 </proceeding-writing-frame>
             </li>
@@ -12,20 +12,20 @@
             </li>
         </ol>
     </div>
-    <div id="policy-list">
+    <div id="decision-list">
         <ol>
             <li>
-                <policy-writing-frame></policy-writing-frame>
+                <decision-writing-frame></decision-writing-frame>
             </li>
-            <li *ngFor="let policy of policies">
-                <policy [policy]="policy"></policy>
+            <li *ngFor="let decision of decisions">
+                <decision [decision]="decision"></decision>
             </li>
         </ol>
     </div>
     <div id="activity-list">
         <ol>
             <li>
-                <activity-writing-frame [policies]="policies" [activities]="activities" (activitiesRefreshRequested)="sortByDateA()"></activity-writing-frame>
+                <activity-writing-frame [decisions]="decisions" [activities]="activities" (activitiesRefreshRequested)="sortByDateA()"></activity-writing-frame>
             </li>
             <li *ngFor="let activity of activities">
                 <activity [activity]="activity"></activity>

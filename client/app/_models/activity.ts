@@ -6,7 +6,7 @@ export class Activity {
     public content: string,
     public imageUrls: string[],
     public documentUrls: string[],
-    public parentPolicy: number,
+    public parentDecision: number,
     public childReceipts: number[]
   ) { }
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { State } from '../constants';
 
-import { Activity, Policy, Proceeding, Receipt } from '../_models';
-import { ProceedingService, PolicyService, ActivityService, ReceiptService } from '../_services';
+import { Activity, Decision, Proceeding, Receipt } from '../_models';
+import { ProceedingService, DecisionService, ActivityService, ReceiptService } from '../_services';
 
 @Component({
     selector: 'group',
@@ -12,20 +12,20 @@ import { ProceedingService, PolicyService, ActivityService, ReceiptService } fro
 
 export class GroupComponent implements OnInit {
     proceedings: Proceeding[];
-    policies: Policy[];
+    decisions: Decision[];
     activities: Activity[];
     receipts: Receipt[];
 
     constructor(
         private proceedingService: ProceedingService,
-        private policyService: PolicyService,
+        private decisionService: DecisionService,
         private activityService: ActivityService,
         private receiptService: ReceiptService
     ) { }
 
     ngOnInit(): void {
         this.proceedingService.getProceedings().then(proceedings => { this.proceedings = proceedings; this.sortByDate(); });
-        this.policyService.getPolicies().then(policies => { this.policies = policies; this.filterPastPolicies(); });
+        this.decisionService.getDecisions().then(decisions => { this.decisions = decisions; this.filterPastDecisions(); });
         this.activityService.getActivities().then(activities => {this.activities = activities; this.sortByDateA(); });
         this.receiptService.getReceipts().then(receipts => {this.receipts = receipts; this.sortByDateR(); });
     }
@@ -51,25 +51,25 @@ export class GroupComponent implements OnInit {
         });
     }
 
-    filterPastPolicies(): void {
-        let policyIdToIndex = {};
-        for (let i = 0; i < this.policies.length; i ++)
-            policyIdToIndex[this.policies[i].id] = i;
+    filterPastDecisions(): void {
+        let decisionIdToIndex = {};
+        for (let i = 0; i < this.decisions.length; i ++)
+            decisionIdToIndex[this.decisions[i].id] = i;
 
-        let visitedIndex = new Array<boolean>(this.policies.length).fill(false);
-        for (let i = 0; i < this.policies.length; i ++) {
-            if (this.policies[i].prevId)
-                visitedIndex[policyIdToIndex[this.policies[i].prevId]] = true;
-            if (this.policies[i].state == State.STATE_DELETED)
-                visitedIndex[policyIdToIndex[this.policies[i].id]] = true;
+        let visitedIndex = new Array<boolean>(this.decisions.length).fill(false);
+        for (let i = 0; i < this.decisions.length; i ++) {
+            if (this.decisions[i].prevId)
+                visitedIndex[decisionIdToIndex[this.decisions[i].prevId]] = true;
+            if (this.decisions[i].state == State.STATE_DELETED)
+                visitedIndex[decisionIdToIndex[this.decisions[i].id]] = true;
         }
 
-        this.policies = this.policies.filter(policy => !visitedIndex[policyIdToIndex[policy.id]]);
+        this.decisions = this.decisions.filter(decision => !visitedIndex[decisionIdToIndex[decision.id]]);
     }
 
-    onPoliciesRefreshRequested(): void {
-        this.policies = this.policies
-            .map(p => new Policy(p.id, p.prevId, p.state, p.createdDate, p.expiryDate, p.content, p.parentProceeding, p.childActivities));
-        this.filterPastPolicies();
+    onDecisionsRefreshRequested(): void {
+        this.decisions = this.decisions
+            .map(p => new Decision(p.id, p.prevId, p.state, p.createdDate, p.expiryDate, p.content, p.parentProceeding, p.childActivities));
+        this.filterPastDecisions();
     }
 }

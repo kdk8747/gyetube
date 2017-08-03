@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { State } from '../constants';
-import { Proceeding, Policy } from '../_models';
+import { Proceeding, Decision } from '../_models';
 
-import { ProceedingService, PolicyService, PolicyChangesetService } from '../_services';
+import { ProceedingService, DecisionService, DecisionChangesetService } from '../_services';
 
 @Component({
     selector: 'proceeding-writing-frame',
@@ -17,10 +17,10 @@ import { ProceedingService, PolicyService, PolicyChangesetService } from '../_se
             <label>Title:</label> <input [(ngModel)]="newProceedingTitle" />
             <label>Content:</label> <input [(ngModel)]="newProceedingContent" />
 
-            <label>Policy Changeset:</label>
-            <button *ngIf="!policyChangesetService.isActivated" (click)="onAddPolicyChangeset()"> Add </button>
-            <button *ngIf="policyChangesetService.isActivated" (click)="onCancelPolicyChangeset()"> Cancel </button>
-            <policy-changeset [policyChangeset]="policyChangesetService.policies" [changeMode]="true"></policy-changeset>
+            <label>Decision Changeset:</label>
+            <button *ngIf="!decisionChangesetService.isActivated" (click)="onAddDecisionChangeset()"> Add </button>
+            <button *ngIf="decisionChangesetService.isActivated" (click)="onCancelDecisionChangeset()"> Cancel </button>
+            <decision-changeset [decisionChangeset]="decisionChangesetService.decisions" [changeMode]="true"></decision-changeset>
             <button (click)="onNewProceeding();">
                 Create
             </button>
@@ -38,9 +38,9 @@ import { ProceedingService, PolicyService, PolicyChangesetService } from '../_se
 })
 
 export class ProceedingWritingFrameComponent {
-    @Input() policies: Policy[];
+    @Input() decisions: Decision[];
     @Input() proceedings: Proceeding[];
-    @Output() policiesRefreshRequested = new EventEmitter<void>();
+    @Output() decisionsRefreshRequested = new EventEmitter<void>();
     @Output() proceedingsRefreshRequested = new EventEmitter<void>();
     selectedNewProceeding: boolean = false;
 
@@ -52,8 +52,8 @@ export class ProceedingWritingFrameComponent {
 
     constructor(
         private proceedingService: ProceedingService,
-        private policyService: PolicyService,
-        private policyChangesetService: PolicyChangesetService
+        private decisionService: DecisionService,
+        private decisionChangesetService: DecisionChangesetService
     ) { }
 
     onNewProceeding(): void {
@@ -70,13 +70,13 @@ export class ProceedingWritingFrameComponent {
             .then((proceeding: Proceeding) => {
                 newProceeding.id = proceeding.id;
                 this.selectedNewProceeding = false;
-                return Promise.all(this.policyChangesetService.policies.map(policy => {
-                    policy.parentProceeding = newProceeding.id;
-                    return this.policyService.create(policy);
+                return Promise.all(this.decisionChangesetService.decisions.map(decision => {
+                    decision.parentProceeding = newProceeding.id;
+                    return this.decisionService.create(decision);
                 }));
             })
-            .then((policies: Policy[]) => {
-                newProceeding.childPolicies = policies.map(policy => { this.policies.push(policy); return policy.id });
+            .then((decisions: Decision[]) => {
+                newProceeding.childDecisions = decisions.map(decision => { this.decisions.push(decision); return decision.id });
                 return this.proceedingService.update(newProceeding);
             })
             .then((proceeding: Proceeding) => {
@@ -92,16 +92,16 @@ export class ProceedingWritingFrameComponent {
 
     onCancelNewProceeding(): void {
         this.selectedNewProceeding = false;
-        this.onCancelPolicyChangeset();
+        this.onCancelDecisionChangeset();
     }
 
-    onAddPolicyChangeset(): void {
-        this.policyChangesetService.isActivated = true;
+    onAddDecisionChangeset(): void {
+        this.decisionChangesetService.isActivated = true;
     }
 
-    onCancelPolicyChangeset(): void {
-        this.policyChangesetService.isActivated = false;
-        this.policyChangesetService.policies = [];
-        this.policiesRefreshRequested.emit();
+    onCancelDecisionChangeset(): void {
+        this.decisionChangesetService.isActivated = false;
+        this.decisionChangesetService.decisions = [];
+        this.decisionsRefreshRequested.emit();
     }
 }

@@ -1,6 +1,6 @@
 import { State } from '../constants';
 
-export class Policy {
+export class Decision {
   constructor(
     public id: number,
     public prevId: number, // 0: unused

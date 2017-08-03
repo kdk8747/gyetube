@@ -52,7 +52,7 @@ module.exports = (req, res, next) => {
       next();
       return;
     } else {
-      if (decoded.user.permissions.groups['suwongreenparty'] === 'admin') {
+      if (decoded.permissions.groups['suwongreenparty'] === 'admin') {
         next();
         return;
       }

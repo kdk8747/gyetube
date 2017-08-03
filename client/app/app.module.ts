@@ -6,14 +6,14 @@ import { HttpModule }    from '@angular/http';
 import { AppComponent } from './app.component';
 import { GroupComponent } from './group';
 import { ProceedingComponent, ProceedingWritingFrameComponent } from './group';
-import { PolicyComponent, PolicyWritingFrameComponent, PolicyChangesetComponent } from './group';
+import { DecisionComponent, DecisionWritingFrameComponent, DecisionChangesetComponent } from './group';
 import { ActivityComponent, ActivityWritingFrameComponent } from './group';
 import { ReceiptComponent, ReceiptWritingFrameComponent } from './group';
 import { GreetingComponent } from './greeting.component';
 import { LoginComponent } from './login.component';
 import { MyPageComponent } from './mypage.component';
 
-import { ActivityService, PolicyService, PolicyChangesetService, ProceedingService, ReceiptService, UserService } from './_services';
+import { ActivityService, DecisionService, DecisionChangesetService, ProceedingService, ReceiptService, UserService } from './_services';
 import { AuthenticationService, AmazonService } from './_services';
 
 import { AppRoutingModule }     from './app-routing.module';
@@ -33,9 +33,9 @@ import { AppRoutingModule }     from './app-routing.module';
     MyPageComponent,
     ProceedingComponent,
     ProceedingWritingFrameComponent,
-    PolicyComponent,
-    PolicyWritingFrameComponent,
-    PolicyChangesetComponent,
+    DecisionComponent,
+    DecisionWritingFrameComponent,
+    DecisionChangesetComponent,
     ActivityComponent,
     ActivityWritingFrameComponent,
     ReceiptComponent,
@@ -46,8 +46,8 @@ import { AppRoutingModule }     from './app-routing.module';
     AmazonService,
     UserService,
     ActivityService,
-    PolicyService,
-    PolicyChangesetService,
+    DecisionService,
+    DecisionChangesetService,
     ProceedingService,
     ReceiptService
   ],

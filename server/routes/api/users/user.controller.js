@@ -22,7 +22,7 @@ function serialize(req, res, next) {
   }else{
     users.push(req.user);
   }
-  //req.user.permissions = {'groups': {'suwongreenparty': 'admin'}};
+  req.user.permissions = {'groups': {'suwongreenparty': 'admin'}};
   next();
   /*
   db.updateOrCreate(req.user, function (err, user) {
@@ -44,7 +44,8 @@ const db = {
 function generateToken(req, res, next) {
   req.token =
     jwt.sign({
-        id: req.user.id
+        id: req.user.id,
+        permissions: req.user.permissions
       },
       process.env.JWT_SECRET,
       {

@@ -9,5 +9,5 @@ export class Proceeding {
     public meetingDate: Date,
     public title: string,
     public content: string,
-    public childPolicies: number[]) { }
+    public childDecisions: number[]) { }
 }

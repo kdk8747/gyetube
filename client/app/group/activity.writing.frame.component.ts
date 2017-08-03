@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Policy, Activity, AmazonSignature } from '../_models';
+import { Decision, Activity, AmazonSignature } from '../_models';
 
-import { PolicyService, ActivityService, AmazonService } from '../_services';
+import { DecisionService, ActivityService, AmazonService } from '../_services';
 
 @Component({
     selector: 'activity-writing-frame',
@@ -9,8 +9,8 @@ import { PolicyService, ActivityService, AmazonService } from '../_services';
         <div *ngIf="!selectedNewActivity" (click)="selectedNewActivity = true">+</div>
         <div *ngIf="selectedNewActivity">
             <label>Basis: </label>
-            <select [(ngModel)]="newActivityParentPolicy" >
-                <option *ngFor="let policy of policies" [value]="policy.id"> {{policy.content}} </option>
+            <select [(ngModel)]="newActivityParentDecision" >
+                <option *ngFor="let decision of decisions" [value]="decision.id"> {{decision.content}} </option>
             </select>
             <label>Activity Date:</label>   <input type="date" [(ngModel)]="newActivityDate" />
             <label>Content:</label>         <input type="text" [(ngModel)]="newActivityContent" />
@@ -33,18 +33,18 @@ import { PolicyService, ActivityService, AmazonService } from '../_services';
 
 export class ActivityWritingFrameComponent {
     @Input() activities: Activity[];
-    @Input() policies: Policy[];
+    @Input() decisions: Decision[];
     @Output() activitiesRefreshRequested = new EventEmitter<void>();
     selectedNewActivity: boolean = false;
 
     dateNow: Date = new Date(Date.now());
-    newActivityParentPolicy: string;
+    newActivityParentDecision: string;
     newActivityDate: string = this.dateNow.toISOString().slice(0, 10);
     newActivityContent: string;
     newActivityFiles: File[];
 
     constructor(
-        private policyService: PolicyService,
+        private decisionService: DecisionService,
         private activityService: ActivityService,
         private amazonService: AmazonService
     ) { }
@@ -59,11 +59,11 @@ export class ActivityWritingFrameComponent {
     }
 
     onNewActivity(): void {
-        if (!this.newActivityParentPolicy || !this.newActivityContent || !this.newActivityDate) return;
+        if (!this.newActivityParentDecision || !this.newActivityContent || !this.newActivityDate) return;
         this.newActivityContent = this.newActivityContent.trim();
 
         let newActivity = new Activity(0, new Date(Date.now()), new Date(this.newActivityDate),
-            this.newActivityContent, [], [], +this.newActivityParentPolicy, []);
+            this.newActivityContent, [], [], +this.newActivityParentDecision, []);
 
         let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
         let amzSignForPhoto: AmazonSignature = null;
@@ -90,13 +90,13 @@ export class ActivityWritingFrameComponent {
             .then(() => this.activityService.create(newActivity))
             .then((activity: Activity) => {
                 this.activities.push(activity);
-                let policy = this.policies.find(policy => policy.id == +this.newActivityParentPolicy); // FIX ME
-                policy.childActivities.push(activity.id);
-                return this.policyService.update(policy);
+                let decision = this.decisions.find(decision => decision.id == +this.newActivityParentDecision); // FIX ME
+                decision.childActivities.push(activity.id);
+                return this.decisionService.update(decision);
             })
             .then(() => {
                 this.activitiesRefreshRequested.emit();
-                this.newActivityParentPolicy = null;
+                this.newActivityParentDecision = null;
                 this.newActivityDate = this.dateNow.toISOString().slice(0, 10);
                 this.newActivityContent = '';
                 this.selectedNewActivity = false;

@@ -63,7 +63,7 @@ export class AmazonService {
         formData.append('Policy', amazonSignature.stringToSign);
         formData.append('X-Amz-Signature', amazonSignature.signature);
         formData.append('file', file, file.name);
-        return this.http.post('http://grassroots-groups.s3.amazonaws.com/', formData, this.auth.addJwt())
+        return this.http.post('http://grassroots-groups.s3.amazonaws.com/', formData)
             .toPromise()
             .then(response => response.text())
             .catch(this.handleError);
