@@ -4,9 +4,8 @@ const jwt = require('jsonwebtoken');
 
 
 var users = [
-  { id: 1, name: 'GG', imageUrl: 'url', login: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} }
+  { id: '1', name: 'GG', imageUrl: 'url', login: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} }
 ];
-var userID = 2;
 
 exports.authenticateNaver = passport.authenticate('naver');
 exports.callbackByNaver = [ passport.authenticate('naver', { session: false }), serialize, generateToken, respond ];
@@ -22,9 +21,8 @@ function serialize(req, res, next) {
     users[i] = req.user;
   }else{
     users.push(req.user);
-    userID ++;
   }
-  req.user.permissions = {'groups': {'suwongreenparty': 'admin'}};
+  //req.user.permissions = {'groups': {'suwongreenparty': 'admin'}};
   next();
   /*
   db.updateOrCreate(req.user, function (err, user) {
@@ -46,7 +44,7 @@ const db = {
 function generateToken(req, res, next) {
   req.token =
     jwt.sign({
-      user: req.user
+        id: req.user.id
       },
       process.env.JWT_SECRET,
       {
@@ -67,23 +65,17 @@ function respond(req, res) {
 
 
 exports.getAll = (req, res) => {
-  res.json(users);
+  res.json(users); // TODO: remove permissions (with mongoDB)
 }
 exports.getByID = (req, res) => {
-  res.json(users.find(item => item.id === +req.params.id));
+  res.json(users.find(item => item.id === req.params.id)); // TODO: remove permissions (with mongoDB)
 }
 exports.updateByID = (req, res) => {
-  let i = users.findIndex(item => item.id === +req.params.id);
+  let i = users.findIndex(item => item.id === req.params.id);
   users[i] = req.body;
   res.send();
 }
-exports.create = (req, res) => {
-  let newHero = req.body;
-  newHero['id'] = userID++;
-  users.push(newHero);
-  res.json(newHero);
-}
 exports.deleteByID = (req, res) => {
-  users = users.filter(h => h.id !== +req.params.id);
+  users = users.filter(h => h.id !== req.params.id);
   res.send();
 }

@@ -1,9 +1,9 @@
 export class User {
   constructor(
-    public id: number,
+    public id: string,
     public name: string,
     public imageUrl: string,
-    public login: string,
-    public permissions: JSON
+    public login: string
+    //public permissions: JSON
   ) { }
 }

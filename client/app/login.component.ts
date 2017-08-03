@@ -27,7 +27,7 @@ import { ActivatedRoute, Params } from '@angular/router';
     `]
 })
 
-export class LoginComponent {
+export class LoginComponent implements OnInit{
 
     constructor(
         private activatedRoute: ActivatedRoute

@@ -8,4 +8,3 @@ export * from './activity.component';
 export * from './activity.writing.frame.component';
 export * from './receipt.component';
 export * from './receipt.writing.frame.component';
-export * from './login.component';

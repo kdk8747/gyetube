@@ -23,7 +23,7 @@ export class UserService {
       .catch(this.handleError);
   }
 
-  getUser(id: number): Promise<User> {
+  getUser(id: string): Promise<User> {
     const url = `${this.usersUrl}/${id}`;
     return this.http.get(url, this.auth.addJwt())
       .toPromise()
