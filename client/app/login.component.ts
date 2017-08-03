@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit{
         // subscribe to router event
         this.activatedRoute.queryParams.subscribe((queryParams: Params) => {
             let token = queryParams['token'];
-            console.log(token); // TODO: https
+            //console.log(token); // TODO: https
             if (token)
                 localStorage.setItem('currentUserToken', token);
         });

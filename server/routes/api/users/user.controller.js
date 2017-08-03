@@ -16,7 +16,7 @@ exports.callbackByFacebook = [ passport.authenticate('facebook', { session: fals
 
 function serialize(req, res, next) {
   debug(req.user);
-  let i = users.findIndex(item => item.id === +req.user.id);
+  let i = users.findIndex(item => item.id === req.user.id);
   if (i >= 0) {
     users[i] = req.user;
   }else{

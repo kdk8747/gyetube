@@ -8,7 +8,7 @@ import { User } from './_models';
     template: `
         <div>
             <span>name: {{name}}</span>
-            <span>imageUrl: {{imageUrl}}</span>
+            <img class="user" [src]="imageUrl">
             <span>login: {{login}}</span>
         </div>
     `,
@@ -16,6 +16,15 @@ import { User } from './_models';
         div {
             border: 1px solid #000000;
             text-align: center;
+        }
+        .user {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
         }
     `]
 })
@@ -32,7 +41,6 @@ export class MyPageComponent implements OnInit {
     ngOnInit() {
         let token = localStorage.getItem('currentUserToken');
         if (token) {
-            console.log(token);
             let tokens = token.split('.');
             if (tokens.length === 3) {
                 let payload = JSON.parse(window.atob(tokens[1]));
