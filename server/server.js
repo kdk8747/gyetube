@@ -6,14 +6,13 @@ const expressStaticGzip = require('express-static-gzip');
 const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
-const morgan = require('morgan');
 const debug = require('debug')('server');
 
 
 /* =======================
     LOAD THE CONFIG
 ==========================*/
-const __public = path.resolve(__dirname + '/../public');
+const __public = path.resolve(__dirname + '/../www');
 const __port = process.env.PORT || 5000;
 
 
@@ -29,12 +28,12 @@ app.use(bodyParser.json());
 
 // print the request log on console
 if (process.env.NODE_ENV != 'production')
-  app.use(morgan('dev'));
+  app.use(require('morgan')('dev'));
 
-
-app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
-app.use('/login', expressStaticGzip(__public)); // FIX ME (performance)
-app.use('/suwongreenparty', expressStaticGzip(__public)); // FIX ME (performance)
+app.use(express.static(__public));
+//app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
+//app.use('/login', expressStaticGzip(__public)); // FIX ME (performance)
+//app.use('/suwongreenparty', expressStaticGzip(__public)); // FIX ME (performance)
 
 require('./middlewares/passports').initialize();
 
