@@ -6,12 +6,12 @@
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
-    "build": "ionic-app-scripts build",
+    "build": "ionic-app-scripts build --prod && gzip www/build/*",
     "lint": "ionic-app-scripts lint",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve",
     "demo": "npm run build && cd server && node -r dotenv/config server.js --optimize_for_size --max_old_space_size=460 --gc_interval=100",
-    "dev": "concurrently \"cd server && npm run nodemon\" \"ionic serve\"",
+    "dev": "concurrently \"cd server && npm run nodemon\" \"ionic serve --prod\"",
     "heroku-start": "cd server && pm2 start --attach server.js --node-args \"--optimize_for_size --max_old_space_size=460 --gc_interval=100\" && pm2 logs all",
     "heroku-postbuild": "npm run build && cd server && npm install --product && pm2 install pm2-logrotate"
   },

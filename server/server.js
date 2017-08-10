@@ -30,10 +30,11 @@ app.use(bodyParser.json());
 if (process.env.NODE_ENV != 'production')
   app.use(require('morgan')('dev'));
 
-app.use(express.static(__public));
-//app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
-//app.use('/login', expressStaticGzip(__public)); // FIX ME (performance)
-//app.use('/suwongreenparty', expressStaticGzip(__public)); // FIX ME (performance)
+
+app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
+app.use('/build', expressStaticGzip(__public)); // FIX ME (performance)
+app.use('/login', expressStaticGzip(__public)); // FIX ME (performance)
+app.use('/suwongreenparty', expressStaticGzip(__public)); // FIX ME (performance)
 
 require('./middlewares/passports').initialize();
 
