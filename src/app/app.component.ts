@@ -8,6 +8,8 @@ import { ListPage } from '../pages/list/list';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -17,13 +19,14 @@ export class MyApp {
 
   // make HelloIonicPage the root (or first) page
   rootPage = HelloIonicPage;
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{ title: string, component: any }>;
 
   constructor(
     public platform: Platform,
     public menu: MenuController,
     public statusBar: StatusBar,
-    public splashScreen: SplashScreen
+    public splashScreen: SplashScreen,
+    public translate: TranslateService
   ) {
     this.initializeApp();
 
@@ -32,6 +35,18 @@ export class MyApp {
       { title: 'Hello Ionic', component: HelloIonicPage },
       { title: 'My First List', component: ListPage }
     ];
+
+    //this is to determine the text direction depending on the selected language
+    this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      if (event.lang == 'ar') { // Arabic
+        platform.setDir('rtl', true);
+        platform.setDir('ltr', false);
+      }
+      else {
+        platform.setDir('ltr', true);
+        platform.setDir('rtl', false);
+      }
+    });
   }
 
   initializeApp() {

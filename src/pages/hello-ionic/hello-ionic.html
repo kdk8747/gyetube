@@ -1,25 +1,20 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Hello Ionic</ion-title>
+    <ion-title>{{ 'I18N_GRASSROOTS' | translate }}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only>
+        <ion-icon name="search"></ion-icon>
+      </button>
+      <button ion-button icon-only>
+        <ion-icon name="contact"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 
-<ion-content padding>
-
-  <h3>Welcome to your first Ionic app!</h3>
-
-  <p>
-    This starter project is our way of helping you get a functional app running in record time.
-  </p>
-  <p>
-    Follow along on the tutorial section of the Ionic docs!
-  </p>
-  <p>
-    <button ion-button color="primary" menuToggle>Toggle Menu</button>
-  </p>
-
-</ion-content>
+<ion-tabs>
+  <ion-tab [root]="tab1Root" [tabTitle]="('I18N_GROUPS' | translate) || '&nbsp;'" tabIcon="cube"></ion-tab>
+  <ion-tab [root]="tab2Root" [tabTitle]="('I18N_UNCHECKED' | translate) || '&nbsp;'" tabIcon="eye-off"></ion-tab>
+  <ion-tab [root]="tab3Root" [tabTitle]="('I18N_NOTIFICATIONS' | translate) || '&nbsp;'" tabIcon="notifications"></ion-tab>
+</ion-tabs>
