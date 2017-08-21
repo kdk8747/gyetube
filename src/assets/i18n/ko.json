@@ -1,0 +1,13 @@
+{
+  "I18N_GRASSROOTS": "풀뿌리",
+  "I18N_GROUPS": "그룹",
+  "I18N_UNCHECKED": "미확인",
+  "I18N_NOTIFICATIONS": "새소식",
+  "I18N_ACCOUNT": "계정",
+  "I18N_SIGN_IN": "로그인",
+  "I18N_SETTINGS": "설정",
+  "I18N_TERMS_AND_PRIVACY_POLICY": "서비스 약관 및 개인정보처리방침",
+  "I18N_SIGN_IN_BY_NAVER": "네이버로 로그인",
+  "I18N_SIGN_IN_BY_KAKAO": "카카오로 로그인",
+  "I18N_SIGN_IN_BY_FACEBOOK": "페이스북으로 로그인"
+}

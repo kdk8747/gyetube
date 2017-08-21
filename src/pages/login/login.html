@@ -1,0 +1,27 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons left>
+        <button ion-button icon-only (click)="popMenu()">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-title>{{ 'I18N_ACCOUNT' | translate }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list inset>
+      <button ion-item>
+        <ion-icon name="unlock" item-left></ion-icon>
+        {{ 'I18N_SIGN_IN_BY_NAVER' | translate }}
+      </button>
+      <button ion-item>
+        <ion-icon name="unlock" item-left></ion-icon>
+        {{ 'I18N_SIGN_IN_BY_KAKAO' | translate }}
+      </button>
+      <button ion-item>
+        <ion-icon name="logo-facebook" item-left></ion-icon>
+        {{ 'I18N_SIGN_IN_BY_FACEBOOK' | translate }}
+      </button>
+    </ion-list>
+  </ion-content>

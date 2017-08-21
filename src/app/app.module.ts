@@ -4,12 +4,14 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
-import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
-import { HomePage } from '../pages/home/home';
-import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
+import { GroupListPage } from '../pages/group-list/group-list';
+import { UncheckedListPage } from '../pages/unchecked-list/unchecked-list';
+import { NotificationListPage } from '../pages/notification-list/notification-list';
+import { TabsPage } from '../pages/tabs/tabs';
 import { ItemDetailsPage } from '../pages/item-details/item-details';
 import { ListPage } from '../pages/list/list';
+import { MenuPage } from '../pages/menu/menu';
+import { LoginPage } from '../pages/login/login';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -26,12 +28,14 @@ export function HttpLoaderFactory(http: Http) {
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
-    ContactPage,
-    HomePage,
-    HelloIonicPage,
+    GroupListPage,
+    UncheckedListPage,
+    NotificationListPage,
+    TabsPage,
     ItemDetailsPage,
-    ListPage
+    ListPage,
+    MenuPage,
+    LoginPage
   ],
   imports: [
     BrowserModule,
@@ -43,17 +47,19 @@ export function HttpLoaderFactory(http: Http) {
         deps: [Http]
       }
     }),
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
-    ContactPage,
-    HomePage,
-    HelloIonicPage,
+    GroupListPage,
+    UncheckedListPage,
+    NotificationListPage,
+    TabsPage,
     ItemDetailsPage,
-    ListPage
+    ListPage,
+    MenuPage,
+    LoginPage
   ],
   providers: [
     StatusBar,

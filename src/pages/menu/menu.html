@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons left>
+      <button ion-button icon-only (click)="popMenu()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>{{ 'I18N_ACCOUNT' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list inset>
+    <button ion-item (click)="pushLogin()">
+      <ion-icon name="contact" item-left></ion-icon>
+      {{ 'I18N_SIGN_IN' | translate }}
+    </button>
+    <button ion-item >
+      <ion-icon name="settings" item-left></ion-icon>
+      {{ 'I18N_SETTINGS' | translate }}
+    </button>
+    <button ion-item >
+      <ion-icon name="lock" item-left></ion-icon>
+      {{ 'I18N_TERMS_AND_PRIVACY_POLICY' | translate }}
+    </button>
+  </ion-list>
+</ion-content>
