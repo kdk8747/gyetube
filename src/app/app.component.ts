@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { Platform, Nav } from 'ionic-angular';
+import { Platform } from 'ionic-angular';
 
 import { TabsPage } from '../pages/tabs/tabs';
 
