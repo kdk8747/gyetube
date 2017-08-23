@@ -3,6 +3,7 @@ import { HttpModule, Http } from '@angular/http';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
+import { EnvironmentsModule } from './environment-variables/environment-variables.module';
 
 import { GroupListPage } from '../pages/group-list/group-list';
 import { UncheckedListPage } from '../pages/unchecked-list/unchecked-list';
@@ -47,7 +48,8 @@ export function HttpLoaderFactory(http: Http) {
         deps: [Http]
       }
     }),
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    EnvironmentsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

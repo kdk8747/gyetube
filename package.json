@@ -67,5 +67,8 @@
             "android",
             "ios"
         ]
-    }
+    },
+	"config": {
+	    "ionic_webpack": "./config/webpack.config.js"
+	}
 }
