@@ -11,15 +11,15 @@
 
   <ion-content>
     <ion-list inset>
-      <button ion-item>
+      <button ion-item (click)="login('naver')">
         <ion-icon name="unlock" item-left></ion-icon>
         {{ 'I18N_SIGN_IN_BY_NAVER' | translate }}
       </button>
-      <button ion-item>
+      <button ion-item (click)="login('kakao')">
         <ion-icon name="unlock" item-left></ion-icon>
         {{ 'I18N_SIGN_IN_BY_KAKAO' | translate }}
       </button>
-      <button ion-item>
+      <button ion-item (click)="login('facebook')">
         <ion-icon name="logo-facebook" item-left></ion-icon>
         {{ 'I18N_SIGN_IN_BY_FACEBOOK' | translate }}
       </button>
