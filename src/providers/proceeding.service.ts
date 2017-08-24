@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
 import { Proceeding } from '../models';
-import { AuthenticationService } from './authentication.service';
+import { HttpWrapperService } from './http-wrapper.service';
 
 @Injectable()
 export class ProceedingService {
@@ -12,13 +12,11 @@ export class ProceedingService {
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
-    private http: Http,
-    private auth: AuthenticationService
+    private http: HttpWrapperService
   ) { }
 
   getProceedings(): Promise<Proceeding[]> {
-    return this.http.get(this.proceedingsUrl, this.auth.addJwt())
-      .toPromise()
+    return this.http.get(this.proceedingsUrl)
       .then(response => {
         let proceedings = response.json() as Proceeding[];
         return proceedings.map(proceeding => {
@@ -32,8 +30,7 @@ export class ProceedingService {
 
   getProceeding(id: number): Promise<Proceeding> {
     const url = `${this.proceedingsUrl}/${id}`;
-    return this.http.get(url, this.auth.addJwt())
-      .toPromise()
+    return this.http.get(url)
       .then(response => {
         let proceeding = response.json() as Proceeding;
         proceeding.createdDate = new Date(proceeding.createdDate);
@@ -47,16 +44,14 @@ export class ProceedingService {
   update(proceeding: Proceeding): Promise<Proceeding> {
     const url = `${this.proceedingsUrl}/${proceeding.id}`;
     return this.http
-      .put(url, JSON.stringify(proceeding), this.auth.addJwt({ headers: this.headers }))
-      .toPromise()
+      .put(url, JSON.stringify(proceeding), { headers: this.headers })
       .then(() => proceeding)
       .catch(this.handleError);
   }
 
   create(proceeding: Proceeding): Promise<Proceeding> {
     return this.http
-      .post(this.proceedingsUrl, JSON.stringify(proceeding), this.auth.addJwt({ headers: this.headers }))
-      .toPromise()
+      .post(this.proceedingsUrl, JSON.stringify(proceeding), { headers: this.headers })
       .then(response => {
         let proceeding = response.json() as Proceeding;
         proceeding.createdDate = new Date(proceeding.createdDate);
@@ -68,8 +63,7 @@ export class ProceedingService {
 
   delete(id: number): Promise<void> {
     const url = `${this.proceedingsUrl}/${id}`;
-    return this.http.delete(url, this.auth.addJwt({ headers: this.headers }))
-      .toPromise()
+    return this.http.delete(url, { headers: this.headers })
       .then(() => null)
       .catch(this.handleError);
   }

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
 import { Decision } from '../models';
-import { AuthenticationService } from './authentication.service';
+import { HttpWrapperService } from './http-wrapper.service';
 
 @Injectable()
 export class DecisionService {
@@ -12,13 +12,11 @@ export class DecisionService {
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
-    private http: Http,
-    private auth: AuthenticationService
+    private http: HttpWrapperService
   ) { }
 
   getDecisions(): Promise<Decision[]> {
-    return this.http.get(this.decisionsUrl, this.auth.addJwt())
-      .toPromise()
+    return this.http.get(this.decisionsUrl)
       .then(response => {
         let decisions = response.json() as Decision[];
         return decisions.map(decision => {
@@ -32,8 +30,7 @@ export class DecisionService {
 
   getDecision(id: number): Promise<Decision> {
     const url = `${this.decisionsUrl}/${id}`;
-    return this.http.get(url, this.auth.addJwt())
-      .toPromise()
+    return this.http.get(url)
       .then(response => {
         let decision = response.json() as Decision;
         decision.createdDate = new Date(decision.createdDate);
@@ -47,16 +44,14 @@ export class DecisionService {
   update(decision: Decision): Promise<Decision> {
     const url = `${this.decisionsUrl}/${decision.id}`;
     return this.http
-      .put(url, JSON.stringify(decision), this.auth.addJwt({ headers: this.headers }))
-      .toPromise()
+      .put(url, JSON.stringify(decision), { headers: this.headers })
       .then(() => decision)
       .catch(this.handleError);
   }
 
   create(decision: Decision): Promise<Decision> {
     return this.http
-      .post(this.decisionsUrl, JSON.stringify(decision), this.auth.addJwt({ headers: this.headers }))
-      .toPromise()
+      .post(this.decisionsUrl, JSON.stringify(decision), { headers: this.headers })
       .then(response => {
         let decision = response.json() as Decision;
         decision.createdDate = new Date(decision.createdDate);
@@ -68,8 +63,7 @@ export class DecisionService {
 
   delete(id: number): Promise<void> {
     const url = `${this.decisionsUrl}/${id}`;
-    return this.http.delete(url, this.auth.addJwt({ headers: this.headers }))
-      .toPromise()
+    return this.http.delete(url, { headers: this.headers })
       .then(() => null)
       .catch(this.handleError);
   }

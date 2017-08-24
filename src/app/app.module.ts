@@ -4,6 +4,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { EnvironmentsModule } from './environment-variables/environment-variables.module';
+import { IonicStorageModule } from '@ionic/storage';
 
 import { GroupListPage } from '../pages/group-list/group-list';
 import { UncheckedListPage } from '../pages/unchecked-list/unchecked-list';
@@ -16,6 +17,7 @@ import { LoginPage } from '../pages/login/login';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -49,7 +51,8 @@ export function HttpLoaderFactory(http: Http) {
       }
     }),
     IonicModule.forRoot(MyApp),
-    EnvironmentsModule
+    EnvironmentsModule,
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -66,6 +69,7 @@ export function HttpLoaderFactory(http: Http) {
   providers: [
     StatusBar,
     SplashScreen,
+    InAppBrowser,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

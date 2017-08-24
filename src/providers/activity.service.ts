@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
 import { Activity } from '../models';
-import { AuthenticationService } from './authentication.service';
+import { HttpWrapperService } from './http-wrapper.service';
 
 @Injectable()
 export class ActivityService {
@@ -12,13 +12,11 @@ export class ActivityService {
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
-    private http: Http,
-    private auth: AuthenticationService
+    private http: HttpWrapperService
   ) { }
 
   getActivities(): Promise<Activity[]> {
-    return this.http.get(this.activitiesUrl, this.auth.addJwt())
-      .toPromise()
+    return this.http.get(this.activitiesUrl)
       .then(response => {
         let activities = response.json() as Activity[];
         return activities.map(activity => {
@@ -32,8 +30,7 @@ export class ActivityService {
 
   getActivity(id: number): Promise<Activity> {
     const url = `${this.activitiesUrl}/${id}`;
-    return this.http.get(url, this.auth.addJwt())
-      .toPromise()
+    return this.http.get(url)
       .then(response => {
         let activity = response.json() as Activity;
         activity.modifiedDate = new Date(activity.modifiedDate);
@@ -47,16 +44,14 @@ export class ActivityService {
   update(activity: Activity): Promise<Activity> {
     const url = `${this.activitiesUrl}/${activity.id}`;
     return this.http
-      .put(url, JSON.stringify(activity), this.auth.addJwt({ headers: this.headers }))
-      .toPromise()
+      .put(url, JSON.stringify(activity), { headers: this.headers })
       .then(() => activity)
       .catch(this.handleError);
   }
 
   create(activity: Activity): Promise<Activity> {
     return this.http
-      .post(this.activitiesUrl, JSON.stringify(activity), this.auth.addJwt({ headers: this.headers }))
-      .toPromise()
+      .post(this.activitiesUrl, JSON.stringify(activity), { headers: this.headers })
       .then(response => {
         let activity = response.json() as Activity;
         activity.modifiedDate = new Date(activity.modifiedDate);
@@ -68,8 +63,7 @@ export class ActivityService {
 
   delete(id: number): Promise<void> {
     const url = `${this.activitiesUrl}/${id}`;
-    return this.http.delete(url, this.auth.addJwt({ headers: this.headers }))
-      .toPromise()
+    return this.http.delete(url, { headers: this.headers })
       .then(() => null)
       .catch(this.handleError);
   }

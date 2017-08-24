@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "nodemon": "nodemon --exec \"node -r dotenv/config server.js --trace-sync-io\""
+    "nodemon": "nodemon --exec \"node -r dotenv/config server.js --trace-sync-io\"",
+    "demo": "node -r dotenv/config server.js --optimize_for_size --max_old_space_size=460 --gc_interval=100"
   },
   "author": "DongKyoo Kim",
   "license": "MIT",

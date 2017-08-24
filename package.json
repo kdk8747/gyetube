@@ -10,8 +10,12 @@
         "lint": "ionic-app-scripts lint",
         "ionic:build": "ionic-app-scripts build",
         "ionic:serve": "ionic-app-scripts serve",
-        "demo": "npm run build && cd server && node -r dotenv/config server.js --optimize_for_size --max_old_space_size=460 --gc_interval=100",
-        "dev": "concurrently \"cd server && npm run nodemon\" \"ionic serve\"",
+        "demo:ios": "ionic cordova emulate ios --prod",
+        "demo:md": "ionic cordova emulate android --prod",
+        "demo:web": "ionic-app-scripts build && cd server && npm run demo",
+        "dev:ios": "ionic cordova emulate ios -lcs --prod",
+        "dev:md": "ionic cordova emulate android -lcs --prod",
+        "dev:web": "concurrently \"cd server && npm run nodemon\" \"ionic serve\"",
         "heroku-start": "cd server && pm2 start --attach server.js --node-args \"--optimize_for_size --max_old_space_size=460 --gc_interval=100\" && pm2 logs all",
         "heroku-postbuild": "npm run build && cd server && npm install --product && pm2 install pm2-logrotate"
     },
@@ -25,6 +29,7 @@
         "@angular/platform-browser": "4.1.3",
         "@angular/platform-browser-dynamic": "4.1.3",
         "@ionic-native/core": "4.1.0",
+        "@ionic-native/in-app-browser": "4.1.0",
         "@ionic-native/splash-screen": "4.1.0",
         "@ionic-native/status-bar": "4.1.0",
         "@ionic/app-scripts": "2.1.4",
@@ -32,12 +37,14 @@
         "@ngx-translate/core": "7.2.0",
         "@ngx-translate/http-loader": "0.1.0",
         "cordova-android": "^6.2.3",
+        "cordova-ios": "^4.4.0",
         "cordova-plugin-console": "^1.0.5",
         "cordova-plugin-device": "^1.1.4",
         "cordova-plugin-inappbrowser": "^1.7.1",
         "cordova-plugin-splashscreen": "^4.0.3",
         "cordova-plugin-statusbar": "^2.2.2",
         "cordova-plugin-whitelist": "^1.3.1",
+        "cordova-sqlite-storage": "^2.0.4",
         "ionic-angular": "3.6.0",
         "ionic-plugin-keyboard": "^2.2.1",
         "ionicons": "3.0.0",
@@ -45,8 +52,7 @@
         "rxjs": "5.4.0",
         "sw-toolbox": "3.6.0",
         "typescript": "2.3.4",
-        "zone.js": "0.8.12",
-        "cordova-ios": "^4.4.0"
+        "zone.js": "0.8.12"
     },
     "devDependencies": {
         "concurrently": "3.5.0",
@@ -57,18 +63,19 @@
         "plugins": {
             "cordova-plugin-console": {},
             "cordova-plugin-device": {},
+            "cordova-plugin-inappbrowser": {},
             "cordova-plugin-splashscreen": {},
             "cordova-plugin-statusbar": {},
             "cordova-plugin-whitelist": {},
-            "ionic-plugin-keyboard": {},
-            "cordova-plugin-inappbrowser": {}
+            "cordova-sqlite-storage": {},
+            "ionic-plugin-keyboard": {}
         },
         "platforms": [
             "android",
             "ios"
         ]
     },
-	"config": {
-	    "ionic_webpack": "./config/webpack.config.js"
-	}
+    "config": {
+        "ionic_webpack": "./config/webpack.config.js"
+    }
 }

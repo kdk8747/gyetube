@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import { AmazonSignature } from '../models';
-import { AuthenticationService } from './authentication.service';
+import { HttpWrapperService } from './http-wrapper.service';
 
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class AmazonService {
     constructor(
-        private http: Http,
-        private auth: AuthenticationService
+        private http: HttpWrapperService
     ) { }
 
     getISO8601Date(date: Date) {
@@ -26,24 +24,21 @@ export class AmazonService {
 
     getAmazonSignatureForReceiptPOST(ISO8601Date: string): Promise<AmazonSignature> {
         let url = `api/v1.0/sign-s3/suwongreenparty/receipts?amz-date=${ISO8601Date}`;
-        return this.http.get(url, this.auth.addJwt())
-            .toPromise()
+        return this.http.get(url)
             .then(response => response.json() as AmazonSignature)
             .catch(this.handleError);
     }
 
     getAmazonSignatureForPhotoPOST(ISO8601Date: string): Promise<AmazonSignature> {
         let url = `api/v1.0/sign-s3/suwongreenparty/photos?amz-date=${ISO8601Date}`;
-        return this.http.get(url, this.auth.addJwt())
-            .toPromise()
+        return this.http.get(url)
             .then(response => response.json() as AmazonSignature)
             .catch(this.handleError);
     }
 
     getAmazonSignatureForDocumentPOST(ISO8601Date: string): Promise<AmazonSignature> {
         let url = `api/v1.0/sign-s3/suwongreenparty/documents?amz-date=${ISO8601Date}`;
-        return this.http.get(url, this.auth.addJwt())
-            .toPromise()
+        return this.http.get(url)
             .then(response => response.json() as AmazonSignature)
             .catch(this.handleError);
     }
@@ -64,7 +59,6 @@ export class AmazonService {
         formData.append('X-Amz-Signature', amazonSignature.signature);
         formData.append('file', file, file.name);
         return this.http.post('http://grassroots-groups.s3.amazonaws.com/', formData)
-            .toPromise()
             .then(response => response.text())
             .catch(this.handleError);
     }
