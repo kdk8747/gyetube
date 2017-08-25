@@ -31,18 +31,6 @@ if (process.env.NODE_ENV != 'production')
   app.use(require('morgan')('dev'));
 
 
-app.use('/.well-known/acme-challenge/XUjRWV8U8j945zn48YuWazD3c_SAX6SiEqnSo_vJssY',
-(req, res) => {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.write('XUjRWV8U8j945zn48YuWazD3c_SAX6SiEqnSo_vJssY.hb-F3oClErLHI0Su7X0ltruYKmKLf8Hi5hLSXl9b4Qg');
-  res.end();
-});
-app.use('/.well-known/acme-challenge/Lwgg3qjGB1wJxCYbN0TqCHmA15S7A7g3GCvuYTWlnqc',
-(req, res) => {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.write('Lwgg3qjGB1wJxCYbN0TqCHmA15S7A7g3GCvuYTWlnqc.hb-F3oClErLHI0Su7X0ltruYKmKLf8Hi5hLSXl9b4Qg');
-  res.end();
-});
 app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
 app.use('/build', expressStaticGzip(__public)); // FIX ME (performance)
 app.use('/login', expressStaticGzip(__public)); // FIX ME (performance)
