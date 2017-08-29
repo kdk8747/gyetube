@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 
-import { LoginPage } from '../login/login';
-
+@IonicPage({
+  segment: 'menu',
+  defaultHistory: ['TabsMyPage']
+})
 @Component({
   selector: 'page-menu',
   templateUrl: 'menu.html'
@@ -21,6 +23,6 @@ export class MenuPage {
 
   pushLogin() {
     this.navCtrl.pop();
-    this.navCtrl.push(LoginPage);
+    this.navCtrl.push('LoginPage');
   }
 }

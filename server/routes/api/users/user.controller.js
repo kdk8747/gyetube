@@ -56,7 +56,7 @@ function generateToken(req, res, next) {
   next();
 }
 function respond(req, res) {
-  res.redirect('/login?token=' + req.token);
+  res.redirect('/#/login?token=' + req.token);
   /*
   res.status(200).json({
     user: req.user,

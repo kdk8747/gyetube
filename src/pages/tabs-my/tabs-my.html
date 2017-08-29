@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ 'I18N_GRASSROOTS' | translate }}</ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only>
+        <ion-icon name="search"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="pushMenu()">
+        <ion-icon name="contact"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content *ngIf="!loggedIn">
+  Hello not logged in
+</ion-content>
+
+<ion-tabs *ngIf="loggedIn" tabsPlacement="bottom">
+  <ion-tab [root]="tab1Root" tabUrlPath="list" [tabTitle]="('I18N_GROUPS' | translate) || '&nbsp;'" tabIcon="cube"></ion-tab>
+  <ion-tab [root]="tab2Root" tabUrlPath="list" [tabTitle]="('I18N_UNCHECKED' | translate) || '&nbsp;'" tabIcon="eye-off"></ion-tab>
+  <ion-tab [root]="tab3Root" tabUrlPath="list" [tabTitle]="('I18N_NOTIFICATIONS' | translate) || '&nbsp;'" tabIcon="notifications"></ion-tab>
+</ion-tabs>

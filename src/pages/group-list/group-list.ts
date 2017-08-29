@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 
+@IonicPage({
+  segment: 'group'
+})
 @Component({
   selector: 'page-group-list',
   templateUrl: 'group-list.html'

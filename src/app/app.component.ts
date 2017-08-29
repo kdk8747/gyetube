@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-
 import { Platform } from 'ionic-angular';
-
-import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -15,7 +12,7 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 })
 export class MyApp {
   // make TabsPage the root (or first) page
-  rootPage = TabsPage;
+  rootPage: string = 'TabsMyPage';
 
   constructor(
     public platform: Platform,

@@ -6,15 +6,6 @@ import { MyApp } from './app.component';
 import { EnvironmentsModule } from './environment-variables/environment-variables.module';
 import { IonicStorageModule } from '@ionic/storage';
 
-import { GroupListPage } from '../pages/group-list/group-list';
-import { UncheckedListPage } from '../pages/unchecked-list/unchecked-list';
-import { NotificationListPage } from '../pages/notification-list/notification-list';
-import { TabsPage } from '../pages/tabs/tabs';
-import { ItemDetailsPage } from '../pages/item-details/item-details';
-import { ListPage } from '../pages/list/list';
-import { MenuPage } from '../pages/menu/menu';
-import { LoginPage } from '../pages/login/login';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
@@ -30,15 +21,7 @@ export function HttpLoaderFactory(http: Http) {
 
 @NgModule({
   declarations: [
-    MyApp,
-    GroupListPage,
-    UncheckedListPage,
-    NotificationListPage,
-    TabsPage,
-    ItemDetailsPage,
-    ListPage,
-    MenuPage,
-    LoginPage
+    MyApp
   ],
   imports: [
     BrowserModule,
@@ -56,15 +39,7 @@ export function HttpLoaderFactory(http: Http) {
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    GroupListPage,
-    UncheckedListPage,
-    NotificationListPage,
-    TabsPage,
-    ItemDetailsPage,
-    ListPage,
-    MenuPage,
-    LoginPage
+    MyApp
   ],
   providers: [
     StatusBar,
