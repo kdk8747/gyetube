@@ -1,5 +1,5 @@
 export const prodVariables = {
-  apiEndpoint: 'http://grassroots.kr',
+  apiEndpoint: 'https://grassroots.kr',
   environmentName: 'Production Environment',
   ionicEnvName: 'prod'
 };
