@@ -32,13 +32,13 @@ if (process.env.NODE_ENV != 'production')
   app.use(require('morgan')('dev'));
 
 
+app.use(sslRedirect(['production'], 301));
 app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
 app.use('/build', expressStaticGzip(__public)); // FIX ME (performance)
 app.use('/login', expressStaticGzip(__public)); // FIX ME (performance)
 app.use('/suwongreenparty', expressStaticGzip(__public)); // FIX ME (performance)
 
 require('./middlewares/passports').initialize();
-app.use(sslRedirect(['production'], 301));
 
 app.use('/api/v1.0/', require('./middlewares/authentication'), require('./routes/api'));
 app.use('/api/v1.0/users', require('./routes/api/users'));
