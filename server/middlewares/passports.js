@@ -21,7 +21,7 @@ exports.initialize = () => {
                 id: String(_profile.id),
                 name: _profile.nickname,
                 imageUrl: _profile.profile_image,
-                login: 'naver'
+                loggedInBy: 'naver'
             });
         }
     ));
@@ -39,7 +39,7 @@ exports.initialize = () => {
                 id: String(_profile.id),
                 name: _profile.properties.nickname,
                 imageUrl: _profile.properties.thumbnail_image,
-                login: 'kakao'
+                loggedInBy: 'kakao'
             });
         }
     ));
@@ -58,7 +58,7 @@ exports.initialize = () => {
                 id: String(_profile.id),
                 name: _profile.name,
                 imageUrl: _profile.picture.data.url,
-                login: 'facebook'
+                loggedInBy: 'facebook'
             });
         }
     ));

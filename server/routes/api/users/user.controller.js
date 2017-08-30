@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 
 var users = [
-  { id: '1', name: 'GG', imageUrl: 'url', login: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} }
+  { id: '1', name: 'GG', imageUrl: 'url', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} }
 ];
 
 exports.authenticateNaver = passport.authenticate('naver');
@@ -69,6 +69,11 @@ exports.getAll = (req, res) => {
   res.json(users); // TODO: remove permissions (with mongoDB)
 }
 exports.getByID = (req, res) => {
+  let found = users.find(item => item.id === req.params.id);
+  if (found == undefined){
+    res.writeHead(404, {'Content-Type': 'application/json'})
+    res.send();
+  }
   res.json(users.find(item => item.id === req.params.id)); // TODO: remove permissions (with mongoDB)
 }
 exports.updateByID = (req, res) => {

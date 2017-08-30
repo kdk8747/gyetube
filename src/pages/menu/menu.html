@@ -11,15 +11,26 @@
 
 <ion-content>
   <ion-list inset>
-    <button ion-item (click)="pushLogin()">
+    <ion-item *ngIf="loggedIn">
+      <ion-avatar item-start>
+        <img [src]="myProfile.imageUrl">
+      </ion-avatar>
+      <h2>{{myProfile.name}}</h2>
+      <p>{{myProfile.loggedInBy}}</p>
+    </ion-item>
+    <button *ngIf="!loggedIn" ion-item (click)="pushLogin()">
       <ion-icon name="contact" item-left></ion-icon>
       {{ 'I18N_SIGN_IN' | translate }}
     </button>
-    <button ion-item >
+    <button *ngIf="loggedIn" ion-item (click)="signOut()">
+      <ion-icon name="log-out" item-left></ion-icon>
+      {{ 'I18N_SIGN_OUT' | translate }}
+    </button>
+    <button ion-item>
       <ion-icon name="settings" item-left></ion-icon>
       {{ 'I18N_SETTINGS' | translate }}
     </button>
-    <button ion-item >
+    <button ion-item>
       <ion-icon name="lock" item-left></ion-icon>
       {{ 'I18N_TERMS_AND_PRIVACY_POLICY' | translate }}
     </button>

@@ -8,7 +8,7 @@ import { HttpWrapperService } from './http-wrapper.service';
 
 @Injectable()
 export class DecisionService {
-  private decisionsUrl = 'api/v1.0/decisions/suwongreenparty';  // URL to web api
+  private decisionsUrl = '/api/v1.0/decisions/suwongreenparty';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
@@ -69,8 +69,6 @@ export class DecisionService {
   }
 
   private handleError(error: any): Promise<any> {
-    if (error.status == 401)
-      window.location.href = 'login';
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);
   }

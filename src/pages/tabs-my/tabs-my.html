@@ -1,12 +1,15 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{ 'I18N_GRASSROOTS' | translate }}</ion-title>
+    <ion-title>{{ 'I18N_GRASSROOTS' | translate }} - {{ 'I18N_OUR_LIVELIHOOD_PROCEEDINGS' | translate }}</ion-title>
     <ion-buttons right>
       <button ion-button icon-only>
         <ion-icon name="search"></ion-icon>
       </button>
       <button ion-button icon-only (click)="pushMenu()">
-        <ion-icon name="contact"></ion-icon>
+        <ion-icon *ngIf="!loggedIn" name="contact"></ion-icon>
+        <ion-avatar *ngIf="loggedIn">
+          <img [src]="myProfileImg" >
+        </ion-avatar>
       </button>
     </ion-buttons>
   </ion-navbar>

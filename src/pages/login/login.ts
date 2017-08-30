@@ -1,7 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { InAppBrowser, InAppBrowserEvent } from '@ionic-native/in-app-browser';
-import { IonicPage, NavController } from 'ionic-angular';
-import { Storage } from '@ionic/storage'
+import { IonicPage, NavController, ToastController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
+import { TranslateService } from '@ngx-translate/core';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
 
 @IonicPage({
@@ -18,15 +19,16 @@ export class LoginPage {
     public navCtrl: NavController,
     @Inject(EnvVariables) public envVariables,
     private iab: InAppBrowser,
-    private storage: Storage
+    private storage: Storage,
+    public toastCtrl: ToastController,
+    public translate: TranslateService
   ) { }
 
   ionViewDidLoad() {
     let splits = window.location.href.split('token=');
     if (splits.length > 1) {
       console.log(splits[1]);
-      this.storage.set('currentUserToken', splits[1]);
-      this.navCtrl.setRoot('TabsMyPage');
+      this.afterLoggedIn(splits[1]);
     }
     else {
       console.log('no token');
@@ -44,8 +46,9 @@ export class LoginPage {
   login(site: string) {
     let url: string = this.envVariables.apiEndpoint + '/api/v1.0/users/auth/' + site;
     if (this.isNativeApp()) {
-      this.loginWithNativeApp(url).then((success: string) => {
-        this.navCtrl.setRoot('TabsMyPage');
+      this.loginWithNativeApp(url).then((eventUrl: string) => {
+        let token = eventUrl.split('=')[1].split('&')[0];
+        this.afterLoggedIn(token);
       }, (err: string) => {
         console.log(err);
       });
@@ -68,8 +71,6 @@ export class LoginPage {
         if (event.url.indexOf(this.envVariables.apiEndpoint) > -1) {
           listener.unsubscribe();
           browser.close();
-          let token = event.url.split('=')[1].split('&')[0];
-          this.storage.set('currentUserToken', token);
           resolve(event.url);
         } else {
           reject("Could not authenticate");
@@ -80,5 +81,18 @@ export class LoginPage {
 
   loginWithBrowser(url: string) {
     window.open(url, '_self');
+  }
+
+  afterLoggedIn(token: string) {
+    this.storage.set('currentUserToken', token);
+    this.translate.get('I18N_SIGN_IN_TOAST').subscribe(
+      (value) => {
+        let toast = this.toastCtrl.create({
+          duration: 3000,
+          message: value
+        });
+        toast.present();
+      });
+    this.navCtrl.setRoot('TabsMyPage');
   }
 }

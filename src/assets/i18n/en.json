@@ -1,13 +1,17 @@
 {
-  "I18N_GRASSROOTS": "Grassroots",
+  "I18N_GRASSROOTS": "GrassRoots",
+  "I18N_OUR_LIVELIHOOD_PROCEEDINGS": "Our Livelihood Prodeedings",
   "I18N_GROUPS": "Groups",
   "I18N_UNCHECKED": "Unchecked",
   "I18N_NOTIFICATIONS": "Notifications",
   "I18N_ACCOUNT": "Account",
   "I18N_SIGN_IN": "SIGN IN",
+  "I18N_SIGN_OUT": "SIGN OUT",
   "I18N_SETTINGS": "Settings",
   "I18N_TERMS_AND_PRIVACY_POLICY": "Terms & privacy policy",
   "I18N_SIGN_IN_BY_NAVER": "Sign in by Naver",
   "I18N_SIGN_IN_BY_KAKAO": "Sign in by Kakao",
-  "I18N_SIGN_IN_BY_FACEBOOK": "Sign in by Facebook"
+  "I18N_SIGN_IN_BY_FACEBOOK": "Sign in by Facebook",
+  "I18N_SIGN_IN_TOAST": "Successfully signed in",
+  "I18N_SIGN_OUT_TOAST": "You're now using GrassRoots signed out"
 }
