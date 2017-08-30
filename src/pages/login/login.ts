@@ -25,13 +25,15 @@ export class LoginPage {
   ) { }
 
   ionViewDidLoad() {
-    let splits = window.location.href.split('token=');
-    if (splits.length > 1) {
-      console.log(splits[1]);
-      this.afterLoggedIn(splits[1]);
-    }
-    else {
-      console.log('no token');
+    if (!this.isNativeApp()) {
+      let splits = window.location.href.split('token=');
+      if (splits.length > 1) {
+        console.log(splits[1]);
+        this.afterLoggedIn(splits[1]);
+      }
+      else {
+        console.log('no token');
+      }
     }
   }
 
@@ -40,7 +42,7 @@ export class LoginPage {
   }
 
   isNativeApp(): boolean {
-    return !document.URL.startsWith('http');
+    return !document.URL.startsWith('https');
   }
 
   login(site: string) {
@@ -60,20 +62,12 @@ export class LoginPage {
 
   loginWithNativeApp(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      let browser = this.iab.create(url, '_self');
+      let browser = this.iab.create(url, '_blank');
       let listener = browser.on('loadstart').subscribe((event: InAppBrowserEvent) => {
-        //Ignore the dropbox authorize screen
-        if (event.url.indexOf('oauth2/authorize') > -1) {
-          return;
-        }
-
-        //Check the redirect uri
-        if (event.url.indexOf(this.envVariables.apiEndpoint) > -1) {
+        if (event.url.indexOf(this.envVariables.apiEndpoint + '/#/login?token=') > -1) {
           listener.unsubscribe();
           browser.close();
           resolve(event.url);
-        } else {
-          reject("Could not authenticate");
         }
       });
     });
