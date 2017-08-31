@@ -13,8 +13,8 @@
         "demo:ios": "ionic cordova emulate ios --prod",
         "demo:md": "ionic cordova emulate android --prod",
         "demo:web": "ionic-app-scripts build && cd server && npm run demo",
-        "dev:ios": "ionic cordova emulate ios -lcs --prod",
-        "dev:md": "ionic cordova emulate android -lcs --prod",
+        "dev:ios": "concurrently \"cd server && npm run nodemon\" \"ionic cordova emulate ios -lcs\"",
+        "dev:md": "concurrently \"cd server && npm run nodemon\" \"ionic cordova emulate android -lcs\"",
         "dev:web": "concurrently \"cd server && npm run nodemon\" \"ionic serve\"",
         "heroku-start": "cd server && pm2 start --attach server.js --node-args \"--optimize_for_size --max_old_space_size=460 --gc_interval=100\" && pm2 logs all",
         "heroku-postbuild": "npm run build && cd server && npm install --product && pm2 install pm2-logrotate"

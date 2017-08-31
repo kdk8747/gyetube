@@ -1,5 +1,5 @@
 export const devVariables = {
-  apiEndpoint: 'http://localhost:8100',
+  apiEndpoint: 'http://175.195.88.228:8100',
   environmentName: 'Development Environment',
   ionicEnvName: 'dev'
 };

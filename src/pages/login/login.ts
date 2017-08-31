@@ -1,9 +1,11 @@
 import { Component, Inject } from '@angular/core';
 import { InAppBrowser, InAppBrowserEvent } from '@ionic-native/in-app-browser';
-import { IonicPage, NavController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, ToastController, Platform } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
+
+declare const process: any; // Typescript compiler will complain without this
 
 @IonicPage({
   segment: 'login',
@@ -16,6 +18,7 @@ import { EnvVariables } from '../../app/environment-variables/environment-variab
 export class LoginPage {
 
   constructor(
+    public platform: Platform,
     public navCtrl: NavController,
     @Inject(EnvVariables) public envVariables,
     private iab: InAppBrowser,
@@ -42,7 +45,11 @@ export class LoginPage {
   }
 
   isNativeApp(): boolean {
-    return !document.URL.startsWith('http');
+    console.log('platform : ' + this.platform.platforms().join(', '));
+    if (process.env.IONIC_ENV === 'prod')
+      return !document.URL.startsWith('http');
+    else
+      return this.platform.is('mobile'); // CAUTION: This code can't determine whether it's in a mobile web browser or in a native app.
   }
 
   login(site: string) {
