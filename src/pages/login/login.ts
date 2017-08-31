@@ -42,7 +42,7 @@ export class LoginPage {
   }
 
   isNativeApp(): boolean {
-    return !document.URL.startsWith('https');
+    return !document.URL.startsWith('http');
   }
 
   login(site: string) {
