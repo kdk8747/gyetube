@@ -5,6 +5,7 @@
     "homepage": "http://ionicframework.com/",
     "private": true,
     "scripts": {
+        "cfg:ip": "node config/config.dev.by.ethernet.js",
         "clean": "ionic-app-scripts clean",
         "build": "ionic-app-scripts build --prod && gzip www/build/*",
         "lint": "ionic-app-scripts lint",
@@ -13,9 +14,9 @@
         "demo:ios": "ionic cordova emulate ios --prod",
         "demo:md": "ionic cordova emulate android --prod",
         "demo:web": "ionic-app-scripts build && cd server && npm run demo",
-        "dev:ios": "concurrently \"cd server && npm run nodemon\" \"ionic cordova emulate ios -lcs\"",
-        "dev:md": "concurrently \"cd server && npm run nodemon\" \"ionic cordova emulate android -lcs\"",
-        "dev:web": "concurrently \"cd server && npm run nodemon\" \"ionic serve\"",
+        "dev:ios": "npm run cfg:ip && concurrently \"cd server && npm run nodemon\" \"ionic cordova emulate ios -lcs\"",
+        "dev:md": "npm run cfg:ip && concurrently \"cd server && npm run nodemon\" \"ionic cordova emulate android -lcs\"",
+        "dev:web": "npm run cfg:ip && concurrently \"cd server && npm run nodemon\" \"node config/ionic.serve.js\"",
         "heroku-start": "cd server && pm2 start --attach server.js --node-args \"--optimize_for_size --max_old_space_size=460 --gc_interval=100\" && pm2 logs all",
         "heroku-postbuild": "npm run build && cd server && npm install --product && pm2 install pm2-logrotate"
     },
