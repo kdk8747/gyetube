@@ -58,15 +58,17 @@ export class MenuPage {
   }
 
   signOut() {
-    this.storage.clear();
-    this.translate.get('I18N_SIGN_OUT_TOAST').subscribe(
-      (value) => {
-        let toast = this.toastCtrl.create({
-          duration: 3000,
-          message: value
-        });
-        toast.present();
+    this.storage.clear()
+      .then(() => {
+        this.translate.get('I18N_SIGN_OUT_TOAST').subscribe(
+          (value) => {
+            let toast = this.toastCtrl.create({
+              duration: 3000,
+              message: value
+            });
+            toast.present();
+            this.navCtrl.setRoot('TabsMyPage');
+          });
       });
-    this.navCtrl.setRoot('TabsMyPage');
   }
 }

@@ -85,15 +85,17 @@ export class LoginPage {
   }
 
   afterLoggedIn(token: string) {
-    this.storage.set('currentUserToken', token);
-    this.translate.get('I18N_SIGN_IN_TOAST').subscribe(
-      (value) => {
-        let toast = this.toastCtrl.create({
-          duration: 3000,
-          message: value
-        });
-        toast.present();
+    this.storage.set('currentUserToken', token)
+      .then(() => {
+        this.translate.get('I18N_SIGN_IN_TOAST').subscribe(
+          (value) => {
+            let toast = this.toastCtrl.create({
+              duration: 3000,
+              message: value
+            });
+            toast.present();
+            this.navCtrl.setRoot('TabsMyPage');
+          });
       });
-    this.navCtrl.setRoot('TabsMyPage');
   }
 }
