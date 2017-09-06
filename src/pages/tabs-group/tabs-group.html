@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ 'I18N_GRASSCUBE' | translate }}</ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only>
+        <ion-icon name="search"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="pushMenu()">
+        <ion-icon *ngIf="!loggedIn" name="contact"></ion-icon>
+        <ion-avatar *ngIf="loggedIn">
+          <img [src]="myProfileImg" >
+        </ion-avatar>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-tabs *ngIf="loggedIn" tabsPlacement="bottom">
+  <ion-tab [root]="tab1Root" tabUrlPath="fixme" [tabTitle]="('I18N_HOME' | translate) || '&nbsp;'" tabIcon="home"></ion-tab>
+  <ion-tab [root]="tab2Root" tabUrlPath="list" [tabTitle]="('I18N_PROCEEDING' | translate) || '&nbsp;'" tabIcon="finger-print"></ion-tab>
+  <ion-tab [root]="tab3Root" tabUrlPath="list" [tabTitle]="('I18N_DECISION' | translate) || '&nbsp;'" tabIcon="attach"></ion-tab>
+  <ion-tab [root]="tab4Root" tabUrlPath="list" [tabTitle]="('I18N_ACTIVITY' | translate) || '&nbsp;'" tabIcon="bicycle"></ion-tab>
+  <ion-tab [root]="tab5Root" tabUrlPath="list" [tabTitle]="('I18N_RECEIPT' | translate) || '&nbsp;'" tabIcon="calculator"></ion-tab>
+</ion-tabs>

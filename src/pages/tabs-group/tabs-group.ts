@@ -5,16 +5,18 @@ import { UserService } from '../../providers';
 import { User } from '../../models';
 
 @IonicPage({
-  segment: 'my-page'
+  segment: 'group-page'
 })
 @Component({
-  selector: 'page-tabs-my',
-  templateUrl: 'tabs-my.html'
+  selector: 'page-tabs-group',
+  templateUrl: 'tabs-group.html',
 })
-export class TabsMyPage {
-  tab1Root: string = 'GroupListPage';
-  tab2Root: string = 'UncheckedListPage';
-  tab3Root: string = 'NotificationListPage';
+export class TabsGroupPage {
+  tab1Root: string = 'GroupHomePage';
+  tab2Root: string = 'ProceedingListPage';
+  tab3Root: string = 'DecisionListPage';
+  tab4Root: string = 'ActivityListPage';
+  tab5Root: string = 'ReceiptListPage';
 
   loggedIn: boolean = false;
   myProfileImg: string = '';
