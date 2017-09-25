@@ -74,7 +74,7 @@ exports.getByID = (req, res) => {
     res.writeHead(404, {'Content-Type': 'application/json'})
     res.send();
   }
-  res.json(users.find(item => item.id === req.params.id)); // TODO: remove permissions (with mongoDB)
+  res.json(found); // TODO: remove permissions (with mongoDB)
 }
 exports.updateByID = (req, res) => {
   let i = users.findIndex(item => item.id === req.params.id);

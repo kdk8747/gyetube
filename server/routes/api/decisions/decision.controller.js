@@ -19,10 +19,10 @@ exports.updateByID = (req, res) => {
   res.send();
 }
 exports.create = (req, res) => {
-  let newPolicy = req.body;
-  newPolicy['id'] = decisionID++;
-  decisions.push(newPolicy);
-  res.json(newPolicy);
+  let newDecision = req.body;
+  newDecision['id'] = decisionID++;
+  decisions.push(newDecision);
+  res.json(newDecision);
 }
 exports.deleteByID = (req, res) => {
   decisions = decisions.filter(h => h.id !== +req.params.id);
