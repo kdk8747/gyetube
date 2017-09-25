@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { UserService } from '../../providers';
-import { User } from '../../models';
+import { UserService, GroupService } from '../../providers';
+import { User, Group } from '../../models';
 
 @IonicPage({
   segment: 'my-page'
@@ -19,11 +19,19 @@ export class TabsMyPage {
   loggedIn: boolean = false;
   myProfileImg: string = '';
 
+  groups: Group[];
+
   constructor(
     public navCtrl: NavController,
     private storage: Storage,
-    private userService: UserService
+    private userService: UserService,
+    private groupService: GroupService
   ) {
+    groupService.getGroups().then(groups => this.groups = groups);
+  }
+
+  pushGroup(group_id: string) {
+    this.navCtrl.setRoot('TabsGroupPage', {group_id: group_id });
   }
 
   ionViewDidLoad() {

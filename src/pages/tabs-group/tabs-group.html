@@ -15,7 +15,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-tabs *ngIf="loggedIn" tabsPlacement="bottom">
+<ion-tabs tabsPlacement="bottom">
   <ion-tab [root]="tab1Root" tabUrlPath="fixme" [tabTitle]="('I18N_HOME' | translate) || '&nbsp;'" tabIcon="home"></ion-tab>
   <ion-tab [root]="tab2Root" tabUrlPath="list" [tabTitle]="('I18N_PROCEEDING' | translate) || '&nbsp;'" tabIcon="finger-print"></ion-tab>
   <ion-tab [root]="tab3Root" tabUrlPath="list" [tabTitle]="('I18N_DECISION' | translate) || '&nbsp;'" tabIcon="attach"></ion-tab>

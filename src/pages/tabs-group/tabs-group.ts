@@ -5,7 +5,7 @@ import { UserService } from '../../providers';
 import { User } from '../../models';
 
 @IonicPage({
-  segment: 'group-page'
+  segment: ':group_id/group-page'
 })
 @Component({
   selector: 'page-tabs-group',

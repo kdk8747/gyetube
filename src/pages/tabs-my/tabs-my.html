@@ -16,7 +16,14 @@
 </ion-header>
 
 <ion-content *ngIf="!loggedIn">
-  Hello not logged in
+  <ion-card *ngFor="let group of groups" (click)="pushGroup(group.id)">
+    <ion-card-header>
+      {{group.title}}
+    </ion-card-header>
+    <ion-card-content>
+      {{group.description}} - (클릭)
+    </ion-card-content>
+  </ion-card>
 </ion-content>
 
 <ion-tabs *ngIf="loggedIn" tabsPlacement="bottom">
