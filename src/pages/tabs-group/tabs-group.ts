@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { UserService } from '../../providers';
 import { User } from '../../models';
@@ -20,15 +20,18 @@ export class TabsGroupPage {
 
   loggedIn: boolean = false;
   myProfileImg: string = '';
+  groupId: string = '';
 
   constructor(
     public navCtrl: NavController,
-    private storage: Storage,
-    private userService: UserService
+    public navParams: NavParams,
+    public storage: Storage,
+    public userService: UserService
   ) {
   }
 
   ionViewDidLoad() {
+    this.groupId = this.navParams.get('group_id');
     this.storage.get('currentUserToken').then((token: string) => {
       if (token) {
         let tokens = token.split('.');

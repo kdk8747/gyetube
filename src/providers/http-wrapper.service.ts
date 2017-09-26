@@ -9,8 +9,8 @@ import 'rxjs/add/operator/toPromise';
 export class HttpWrapperService {
 
   constructor(
-    private http: Http,
-    private storage: Storage,
+    public http: Http,
+    public storage: Storage,
     @Inject(EnvVariables) public envVariables
   ) { }
 

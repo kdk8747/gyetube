@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { UserService, GroupService } from '../../providers';
+import { UserService, GroupService, UtilService } from '../../providers';
 import { User, Group } from '../../models';
 
 @IonicPage({
@@ -23,14 +23,16 @@ export class TabsMyPage {
 
   constructor(
     public navCtrl: NavController,
-    private storage: Storage,
-    private userService: UserService,
-    private groupService: GroupService
+    public storage: Storage,
+    public userService: UserService,
+    public groupService: GroupService,
+    public util: UtilService
   ) {
-    groupService.getGroups().then(groups => this.groups = groups);
+    this.groupService.getGroups().then(groups => this.groups = groups);
   }
 
   pushGroup(group_id: string) {
+    this.util.setCurrentGroupId(group_id);
     this.navCtrl.setRoot('TabsGroupPage', {group_id: group_id });
   }
 

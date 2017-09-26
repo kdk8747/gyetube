@@ -6,5 +6,12 @@
 
 
 <ion-content padding>
-  <h2>Proceeding List Page</h2>
+    <ion-card *ngFor="let proceeding of proceedings">
+      <ion-card-header>
+        {{proceeding.title}}
+      </ion-card-header>
+      <ion-card-content>
+        {{proceeding.content}}
+      </ion-card-content>
+    </ion-card>
 </ion-content>

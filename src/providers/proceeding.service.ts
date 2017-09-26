@@ -8,15 +8,16 @@ import { HttpWrapperService } from './http-wrapper.service';
 
 @Injectable()
 export class ProceedingService {
-  private proceedingsUrl = '/api/v1.0/proceedings/suwongreenparty';  // URL to web api
+  private proceedingsUrl = '/api/v1.0/proceedings';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
-    private http: HttpWrapperService
+    public http: HttpWrapperService
   ) { }
 
-  getProceedings(): Promise<Proceeding[]> {
-    return this.http.get(this.proceedingsUrl)
+  getProceedings(group_id: string): Promise<Proceeding[]> {
+    const url = `${this.proceedingsUrl}/${group_id}`;
+    return this.http.get(url)
       .then(response => {
         let proceedings = response.json() as Proceeding[];
         return proceedings.map(proceeding => {
@@ -28,8 +29,8 @@ export class ProceedingService {
       .catch(this.handleError);
   }
 
-  getProceeding(id: number): Promise<Proceeding> {
-    const url = `${this.proceedingsUrl}/${id}`;
+  getProceeding(group_id: string, id: number): Promise<Proceeding> {
+    const url = `${this.proceedingsUrl}/${group_id}/${id}`;
     return this.http.get(url)
       .then(response => {
         let proceeding = response.json() as Proceeding;
@@ -41,17 +42,18 @@ export class ProceedingService {
 
   }
 
-  update(proceeding: Proceeding): Promise<Proceeding> {
-    const url = `${this.proceedingsUrl}/${proceeding.id}`;
+  update(group_id: string, proceeding: Proceeding): Promise<Proceeding> {
+    const url = `${this.proceedingsUrl}/${group_id}/${proceeding.id}`;
     return this.http
       .put(url, JSON.stringify(proceeding), { headers: this.headers })
       .then(() => proceeding)
       .catch(this.handleError);
   }
 
-  create(proceeding: Proceeding): Promise<Proceeding> {
+  create(group_id: string, proceeding: Proceeding): Promise<Proceeding> {
+    const url = `${this.proceedingsUrl}/${group_id}`;
     return this.http
-      .post(this.proceedingsUrl, JSON.stringify(proceeding), { headers: this.headers })
+      .post(url, JSON.stringify(proceeding), { headers: this.headers })
       .then(response => {
         let proceeding = response.json() as Proceeding;
         proceeding.createdDate = new Date(proceeding.createdDate);
@@ -61,8 +63,8 @@ export class ProceedingService {
       .catch(this.handleError);
   }
 
-  delete(id: number): Promise<void> {
-    const url = `${this.proceedingsUrl}/${id}`;
+  delete(group_id: string, id: number): Promise<void> {
+    const url = `${this.proceedingsUrl}/${group_id}/${id}`;
     return this.http.delete(url, { headers: this.headers })
       .then(() => null)
       .catch(this.handleError);

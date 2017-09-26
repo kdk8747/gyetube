@@ -1,11 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { InAppBrowser, InAppBrowserEvent } from '@ionic-native/in-app-browser';
-import { IonicPage, NavController, ToastController, Platform } from 'ionic-angular';
+import { IonicPage, NavController, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
-
-declare const process: any; // Typescript compiler will complain without this
+import { UtilService } from '../../providers';
 
 @IonicPage({
   segment: 'login',
@@ -18,17 +17,17 @@ declare const process: any; // Typescript compiler will complain without this
 export class LoginPage {
 
   constructor(
-    public platform: Platform,
     public navCtrl: NavController,
+    public util: UtilService,
     @Inject(EnvVariables) public envVariables,
-    private iab: InAppBrowser,
-    private storage: Storage,
+    public iab: InAppBrowser,
+    public storage: Storage,
     public toastCtrl: ToastController,
     public translate: TranslateService
   ) { }
 
   ionViewDidLoad() {
-    if (!this.isNativeApp()) {
+    if (!this.util.isNativeApp()) {
       let splits = window.location.href.split('token=');
       if (splits.length > 1) {
         console.log(splits[1]);
@@ -44,17 +43,9 @@ export class LoginPage {
     this.navCtrl.pop();
   }
 
-  isNativeApp(): boolean {
-    console.log('platform : ' + this.platform.platforms().join(', '));
-    if (process.env.IONIC_ENV === 'prod')
-      return !document.URL.startsWith('http');
-    else
-      return this.platform.is('mobile'); // CAUTION: This code can't determine whether it's in a mobile web browser or in a native app.
-  }
-
   login(site: string) {
     let url: string = this.envVariables.apiEndpoint + '/api/v1.0/users/auth/' + site;
-    if (this.isNativeApp()) {
+    if (this.util.isNativeApp()) {
       this.loginWithNativeApp(url).then((eventUrl: string) => {
         let token = eventUrl.split('=')[1].split('&')[0];
         this.afterLoggedIn(token);

@@ -6,5 +6,9 @@
 
 
 <ion-content padding>
-  <h2>Decision List Page</h2>
+    <ion-card *ngFor="let decision of decisions">
+      <ion-card-content>
+        {{decision.content}}
+      </ion-card-content>
+    </ion-card>
 </ion-content>

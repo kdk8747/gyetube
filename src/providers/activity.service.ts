@@ -8,15 +8,16 @@ import { HttpWrapperService } from './http-wrapper.service';
 
 @Injectable()
 export class ActivityService {
-  private activitiesUrl = '/api/v1.0/activities/suwongreenparty';  // URL to web api
+  private activitiesUrl = '/api/v1.0/activities';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
-    private http: HttpWrapperService
+    public http: HttpWrapperService
   ) { }
 
-  getActivities(): Promise<Activity[]> {
-    return this.http.get(this.activitiesUrl)
+  getActivities(group_id: string): Promise<Activity[]> {
+    const url = `${this.activitiesUrl}/${group_id}`;
+    return this.http.get(url)
       .then(response => {
         let activities = response.json() as Activity[];
         return activities.map(activity => {
@@ -28,8 +29,8 @@ export class ActivityService {
       .catch(this.handleError);
   }
 
-  getActivity(id: number): Promise<Activity> {
-    const url = `${this.activitiesUrl}/${id}`;
+  getActivity(group_id: string, id: number): Promise<Activity> {
+    const url = `${this.activitiesUrl}/${group_id}/${id}`;
     return this.http.get(url)
       .then(response => {
         let activity = response.json() as Activity;
@@ -41,17 +42,18 @@ export class ActivityService {
 
   }
 
-  update(activity: Activity): Promise<Activity> {
-    const url = `${this.activitiesUrl}/${activity.id}`;
+  update(group_id: string, activity: Activity): Promise<Activity> {
+    const url = `${this.activitiesUrl}/${group_id}/${activity.id}`;
     return this.http
       .put(url, JSON.stringify(activity), { headers: this.headers })
       .then(() => activity)
       .catch(this.handleError);
   }
 
-  create(activity: Activity): Promise<Activity> {
+  create(group_id: string, activity: Activity): Promise<Activity> {
+    const url = `${this.activitiesUrl}/${group_id}`;
     return this.http
-      .post(this.activitiesUrl, JSON.stringify(activity), { headers: this.headers })
+      .post(url, JSON.stringify(activity), { headers: this.headers })
       .then(response => {
         let activity = response.json() as Activity;
         activity.modifiedDate = new Date(activity.modifiedDate);
@@ -61,8 +63,8 @@ export class ActivityService {
       .catch(this.handleError);
   }
 
-  delete(id: number): Promise<void> {
-    const url = `${this.activitiesUrl}/${id}`;
+  delete(group_id: string, id: number): Promise<void> {
+    const url = `${this.activitiesUrl}/${group_id}/${id}`;
     return this.http.delete(url, { headers: this.headers })
       .then(() => null)
       .catch(this.handleError);

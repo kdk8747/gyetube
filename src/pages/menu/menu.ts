@@ -20,8 +20,8 @@ export class MenuPage {
 
   constructor(
     public navCtrl: NavController,
-    private storage: Storage,
-    private userService: UserService,
+    public storage: Storage,
+    public userService: UserService,
     public toastCtrl: ToastController,
     public translate: TranslateService
   ) {

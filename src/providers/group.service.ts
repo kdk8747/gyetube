@@ -12,7 +12,7 @@ export class GroupService {
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
-    private http: HttpWrapperService
+    public http: HttpWrapperService
   ) { }
 
   getGroups(): Promise<Group[]> {

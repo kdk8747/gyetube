@@ -6,5 +6,9 @@
 
 
 <ion-content padding>
-  <h2>Receipt List Page</h2>
+  <ion-card *ngFor="let receipt of receipts">
+    <ion-card-content>
+      {{receipt.memo}}
+    </ion-card-content>
+  </ion-card>
 </ion-content>

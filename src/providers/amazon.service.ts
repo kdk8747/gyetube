@@ -7,7 +7,7 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class AmazonService {
     constructor(
-        private http: HttpWrapperService
+      public http: HttpWrapperService
     ) { }
 
     getISO8601Date(date: Date) {

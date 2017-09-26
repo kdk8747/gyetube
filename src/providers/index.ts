@@ -9,3 +9,4 @@ export * from './amazon.service';
 export * from './http-wrapper.service';
 export * from './user.service';
 export * from './group.service';
+export * from './util.service';

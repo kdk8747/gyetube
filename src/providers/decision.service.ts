@@ -8,15 +8,16 @@ import { HttpWrapperService } from './http-wrapper.service';
 
 @Injectable()
 export class DecisionService {
-  private decisionsUrl = '/api/v1.0/decisions/suwongreenparty';  // URL to web api
+  private decisionsUrl = '/api/v1.0/decisions';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
-    private http: HttpWrapperService
+    public http: HttpWrapperService
   ) { }
 
-  getDecisions(): Promise<Decision[]> {
-    return this.http.get(this.decisionsUrl)
+  getDecisions(group_id: string): Promise<Decision[]> {
+    const url = `${this.decisionsUrl}/${group_id}`;
+    return this.http.get(url)
       .then(response => {
         let decisions = response.json() as Decision[];
         return decisions.map(decision => {
@@ -28,8 +29,8 @@ export class DecisionService {
       .catch(this.handleError);
   }
 
-  getDecision(id: number): Promise<Decision> {
-    const url = `${this.decisionsUrl}/${id}`;
+  getDecision(group_id: string, id: number): Promise<Decision> {
+    const url = `${this.decisionsUrl}/${group_id}/${id}`;
     return this.http.get(url)
       .then(response => {
         let decision = response.json() as Decision;
@@ -41,17 +42,18 @@ export class DecisionService {
 
   }
 
-  update(decision: Decision): Promise<Decision> {
-    const url = `${this.decisionsUrl}/${decision.id}`;
+  update(group_id: string, decision: Decision): Promise<Decision> {
+    const url = `${this.decisionsUrl}/${group_id}/${decision.id}`;
     return this.http
       .put(url, JSON.stringify(decision), { headers: this.headers })
       .then(() => decision)
       .catch(this.handleError);
   }
 
-  create(decision: Decision): Promise<Decision> {
+  create(group_id: string, decision: Decision): Promise<Decision> {
+    const url = `${this.decisionsUrl}/${group_id}`;
     return this.http
-      .post(this.decisionsUrl, JSON.stringify(decision), { headers: this.headers })
+      .post(url, JSON.stringify(decision), { headers: this.headers })
       .then(response => {
         let decision = response.json() as Decision;
         decision.createdDate = new Date(decision.createdDate);
@@ -61,8 +63,8 @@ export class DecisionService {
       .catch(this.handleError);
   }
 
-  delete(id: number): Promise<void> {
-    const url = `${this.decisionsUrl}/${id}`;
+  delete(group_id: string, id: number): Promise<void> {
+    const url = `${this.decisionsUrl}/${group_id}/${id}`;
     return this.http.delete(url, { headers: this.headers })
       .then(() => null)
       .catch(this.handleError);
