@@ -85,7 +85,7 @@ export class LoginPage {
               message: value
             });
             toast.present();
-            this.navCtrl.setRoot('TabsMyPage');
+            this.navCtrl.pop();
           });
       });
   }

@@ -17,8 +17,7 @@ export class TabsMyPage {
   tab3Root: string = 'NotificationListPage';
 
   loggedIn: boolean = false;
-  myProfileImg: string = '';
-
+  user: User;
   groups: Group[];
 
   constructor(
@@ -43,13 +42,14 @@ export class TabsMyPage {
         if (tokens.length === 3) {
           let payload = JSON.parse(window.atob(tokens[1]));
           let userId = payload.id;
-          this.userService.getUser(userId)
-            .then((user: User) => {
-              this.myProfileImg = user.imageUrl;
+          this.userService.getUser(userId).subscribe(
+            (user: User) => {
               this.loggedIn = true;
-            }).catch((err) => {
+              this.user = user;
+            },
+            (error: any) => {
               this.storage.clear();
-              console.log(err);
+              console.log(error);
             });
         }
       }

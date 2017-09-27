@@ -16,7 +16,7 @@ import { User } from '../../models';
 export class MenuPage {
 
   loggedIn: boolean = false;
-  myProfile: User;
+  user: User;
 
   constructor(
     public navCtrl: NavController,
@@ -35,13 +35,14 @@ export class MenuPage {
         if (tokens.length === 3) {
           let payload = JSON.parse(window.atob(tokens[1]));
           let userId = payload.id;
-          this.userService.getUser(userId)
-            .then((user: User) => {
-              this.myProfile = user;
+          this.userService.getUser(userId).subscribe(
+            (user: User) => {
               this.loggedIn = true;
-            }).catch((err) => {
+              this.user = user;
+            },
+            (error: any) => {
               this.storage.clear();
-              console.log(err);
+              console.log(error);
             });
         }
       }
@@ -67,7 +68,7 @@ export class MenuPage {
               message: value
             });
             toast.present();
-            this.navCtrl.setRoot('TabsMyPage');
+            this.navCtrl.pop();
           });
       });
   }

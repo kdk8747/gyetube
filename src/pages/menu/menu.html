@@ -13,10 +13,10 @@
   <ion-list inset>
     <ion-item *ngIf="loggedIn">
       <ion-avatar item-start>
-        <img [src]="myProfile.imageUrl">
+        <img [src]="user.imageUrl">
       </ion-avatar>
-      <h2>{{myProfile.name}}</h2>
-      <p>{{myProfile.loggedInBy}}</p>
+      <h2>{{user.name}}</h2>
+      <p>{{user.loggedInBy}}</p>
     </ion-item>
     <button *ngIf="!loggedIn" ion-item (click)="pushLogin()">
       <ion-icon name="contact" item-left></ion-icon>
