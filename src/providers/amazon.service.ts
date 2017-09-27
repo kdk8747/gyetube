@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AmazonSignature } from '../models';
-import { HttpWrapperService } from './http-wrapper.service';
+import { AuthHttp } from 'angular2-jwt';
+import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/take';
 
 @Injectable()
 export class AmazonService {
     constructor(
-      public http: HttpWrapperService
+      public http: AuthHttp
     ) { }
 
     getISO8601Date(date: Date) {
@@ -22,28 +24,28 @@ export class AmazonService {
         return dateStr;
     }
 
-    getAmazonSignatureForReceiptPOST(ISO8601Date: string): Promise<AmazonSignature> {
+    getAmazonSignatureForReceiptPOST(ISO8601Date: string): Observable<AmazonSignature> {
         let url = `/api/v1.0/sign-s3/suwongreenparty/receipts?amz-date=${ISO8601Date}`;
         return this.http.get(url)
-            .then(response => response.json() as AmazonSignature)
-            .catch(this.handleError);
+            .map(response => response.json() as AmazonSignature)
+            .take(1);
     }
 
-    getAmazonSignatureForPhotoPOST(ISO8601Date: string): Promise<AmazonSignature> {
+    getAmazonSignatureForPhotoPOST(ISO8601Date: string): Observable<AmazonSignature> {
         let url = `/api/v1.0/sign-s3/suwongreenparty/photos?amz-date=${ISO8601Date}`;
         return this.http.get(url)
-            .then(response => response.json() as AmazonSignature)
-            .catch(this.handleError);
+            .map(response => response.json() as AmazonSignature)
+            .take(1);
     }
 
-    getAmazonSignatureForDocumentPOST(ISO8601Date: string): Promise<AmazonSignature> {
+    getAmazonSignatureForDocumentPOST(ISO8601Date: string): Observable<AmazonSignature> {
         let url = `/api/v1.0/sign-s3/suwongreenparty/documents?amz-date=${ISO8601Date}`;
         return this.http.get(url)
-            .then(response => response.json() as AmazonSignature)
-            .catch(this.handleError);
+            .map(response => response.json() as AmazonSignature)
+            .take(1);
     }
 
-    postFile(file: File, ISO8601Date: string, amazonSignature: AmazonSignature): Promise<string> {
+    postFile(file: File, ISO8601Date: string, amazonSignature: AmazonSignature): Observable<string> {
         let formData = new FormData();
         formData.append('key', amazonSignature.keyPath + file.name);   // FIX ME
         formData.append('acl', 'public-read');
@@ -59,12 +61,7 @@ export class AmazonService {
         formData.append('X-Amz-Signature', amazonSignature.signature);
         formData.append('file', file, file.name);
         return this.http.post('http://grassroots-groups.s3.amazonaws.com/', formData)
-            .then(response => response.text())
-            .catch(this.handleError);
-    }
-
-    private handleError(error: any): Promise<any> {
-        console.error('An error occurred', error); // for demo purposes only
-        return Promise.reject(error.message || error);
+            .map(response => response.text())
+            .take(1);
     }
 }

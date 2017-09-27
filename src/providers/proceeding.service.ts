@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
+import { Proceeding } from '../models';
+import { AuthHttp } from 'angular2-jwt';
+import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/take';
 
-import { Proceeding } from '../models';
-import { HttpWrapperService } from './http-wrapper.service';
 
 @Injectable()
 export class ProceedingService {
@@ -12,66 +14,58 @@ export class ProceedingService {
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
-    public http: HttpWrapperService
+    public http: AuthHttp
   ) { }
 
-  getProceedings(group_id: string): Promise<Proceeding[]> {
+  getProceedings(group_id: string): Observable<Proceeding[]> {
     const url = `${this.proceedingsUrl}/${group_id}`;
     return this.http.get(url)
-      .then(response => {
+      .map(response => {
         let proceedings = response.json() as Proceeding[];
         return proceedings.map(proceeding => {
           proceeding.createdDate = new Date(proceeding.createdDate);
           proceeding.meetingDate = new Date(proceeding.meetingDate);
           return proceeding;
         })
-      })
-      .catch(this.handleError);
+      }).take(1);
   }
 
-  getProceeding(group_id: string, id: number): Promise<Proceeding> {
+  getProceeding(group_id: string, id: number): Observable<Proceeding> {
     const url = `${this.proceedingsUrl}/${group_id}/${id}`;
     return this.http.get(url)
-      .then(response => {
+      .map(response => {
         let proceeding = response.json() as Proceeding;
         proceeding.createdDate = new Date(proceeding.createdDate);
         proceeding.meetingDate = new Date(proceeding.meetingDate);
         return proceeding;
-      })
-      .catch(this.handleError);
+      }).take(1);
 
   }
 
-  update(group_id: string, proceeding: Proceeding): Promise<Proceeding> {
+  update(group_id: string, proceeding: Proceeding): Observable<Proceeding> {
     const url = `${this.proceedingsUrl}/${group_id}/${proceeding.id}`;
     return this.http
       .put(url, JSON.stringify(proceeding), { headers: this.headers })
-      .then(() => proceeding)
-      .catch(this.handleError);
+      .map(() => proceeding)
+      .take(1);
   }
 
-  create(group_id: string, proceeding: Proceeding): Promise<Proceeding> {
+  create(group_id: string, proceeding: Proceeding): Observable<Proceeding> {
     const url = `${this.proceedingsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(proceeding), { headers: this.headers })
-      .then(response => {
+      .map(response => {
         let proceeding = response.json() as Proceeding;
         proceeding.createdDate = new Date(proceeding.createdDate);
         proceeding.meetingDate = new Date(proceeding.meetingDate);
         return proceeding;
-      })
-      .catch(this.handleError);
+      }).take(1);
   }
 
-  delete(group_id: string, id: number): Promise<void> {
+  delete(group_id: string, id: number): Observable<void> {
     const url = `${this.proceedingsUrl}/${group_id}/${id}`;
     return this.http.delete(url, { headers: this.headers })
-      .then(() => null)
-      .catch(this.handleError);
-  }
-
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
-    return Promise.reject(error.message || error);
+      .map(() => null)
+      .take(1);
   }
 }

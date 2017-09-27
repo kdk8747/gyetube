@@ -16,7 +16,7 @@
 </ion-header>
 
 <ion-content *ngIf="!loggedIn">
-  <ion-card *ngFor="let group of groups" (click)="pushGroup(group.id)">
+  <ion-card *ngFor="let group of groups | async" (click)="pushGroup(group.id)">
     <ion-card-header>
       {{group.title}}
     </ion-card-header>

@@ -3,6 +3,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { UserService, GroupService, UtilService } from '../../providers';
 import { User, Group } from '../../models';
+import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
   segment: 'my-page'
@@ -18,7 +19,7 @@ export class TabsMyPage {
 
   loggedIn: boolean = false;
   user: User;
-  groups: Group[];
+  groups: Observable<Group[]>;
 
   constructor(
     public navCtrl: NavController,
@@ -27,7 +28,7 @@ export class TabsMyPage {
     public groupService: GroupService,
     public util: UtilService
   ) {
-    this.groupService.getGroups().then(groups => this.groups = groups);
+    this.groups = this.groupService.getGroups();
   }
 
   pushGroup(group_id: string) {

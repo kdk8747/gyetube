@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
+import { Activity } from '../models';
+import { AuthHttp } from 'angular2-jwt';
+import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/take';
 
-import { Activity } from '../models';
-import { HttpWrapperService } from './http-wrapper.service';
 
 @Injectable()
 export class ActivityService {
@@ -12,66 +14,59 @@ export class ActivityService {
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
-    public http: HttpWrapperService
+    public http: AuthHttp
   ) { }
 
-  getActivities(group_id: string): Promise<Activity[]> {
+  getActivities(group_id: string): Observable<Activity[]> {
     const url = `${this.activitiesUrl}/${group_id}`;
     return this.http.get(url)
-      .then(response => {
+      .map(response => {
         let activities = response.json() as Activity[];
         return activities.map(activity => {
           activity.modifiedDate = new Date(activity.modifiedDate);
           activity.activityDate = new Date(activity.activityDate);
           return activity;
         })
-      })
-      .catch(this.handleError);
+      }).take(1);
   }
 
-  getActivity(group_id: string, id: number): Promise<Activity> {
+  getActivity(group_id: string, id: number): Observable<Activity> {
     const url = `${this.activitiesUrl}/${group_id}/${id}`;
     return this.http.get(url)
-      .then(response => {
+      .map(response => {
         let activity = response.json() as Activity;
         activity.modifiedDate = new Date(activity.modifiedDate);
         activity.activityDate = new Date(activity.activityDate);
         return activity;
-      })
-      .catch(this.handleError);
+      }).take(1);
 
   }
 
-  update(group_id: string, activity: Activity): Promise<Activity> {
+  update(group_id: string, activity: Activity): Observable<Activity> {
     const url = `${this.activitiesUrl}/${group_id}/${activity.id}`;
     return this.http
       .put(url, JSON.stringify(activity), { headers: this.headers })
-      .then(() => activity)
-      .catch(this.handleError);
+      .map(() => activity)
+      .take(1);
   }
 
-  create(group_id: string, activity: Activity): Promise<Activity> {
+  create(group_id: string, activity: Activity): Observable<Activity> {
     const url = `${this.activitiesUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(activity), { headers: this.headers })
-      .then(response => {
+      .map(response => {
         let activity = response.json() as Activity;
         activity.modifiedDate = new Date(activity.modifiedDate);
         activity.activityDate = new Date(activity.activityDate);
         return activity;
       })
-      .catch(this.handleError);
+      .take(1);
   }
 
-  delete(group_id: string, id: number): Promise<void> {
+  delete(group_id: string, id: number): Observable<void> {
     const url = `${this.activitiesUrl}/${group_id}/${id}`;
     return this.http.delete(url, { headers: this.headers })
-      .then(() => null)
-      .catch(this.handleError);
-  }
-
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
-    return Promise.reject(error.message || error);
+      .map(() => null)
+      .take(1);
   }
 }

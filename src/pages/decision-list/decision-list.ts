@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UtilService, DecisionService } from '../../providers';
 import { Decision } from '../../models';
 import { State } from '../../app/constants';
+import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
@@ -15,7 +16,7 @@ import { State } from '../../app/constants';
 export class DecisionListPage {
 
   groupId: string;
-  decisions: Decision[];
+  decisions: Observable<Decision[]>;
 
   constructor(
     public navCtrl: NavController,
@@ -25,40 +26,29 @@ export class DecisionListPage {
   }
 
   ionViewDidLoad() {
-    if (!this.util.isNativeApp()) {
-      let splits = window.location.href.split('/');
-      if (splits.length > 5) {
-        console.log(splits[4]);
-        this.groupId = splits[4];
-
-        this.decisionService.getDecisions(this.groupId)
-          .then(decisions => { this.decisions = decisions; this.filterPastDecisions(); });
-      }
-      else {
-        console.log('there is no group');
-      }
-    }
-    else {
-      this.groupId = this.util.getCurrentGroupId();
-      this.decisionService.getDecisions(this.groupId)
-        .then(decisions => { this.decisions = decisions; this.filterPastDecisions(); });
-    }
+    this.groupId = this.util.getCurrentGroupId();
+    this.decisions = this.decisionService.getDecisions(this.groupId)
+      .map((decisions: Decision[]) => this.filterPastDecisions(decisions));
   }
 
-  filterPastDecisions(): void {
-    let decisionIdToIndex = {};
-    for (let i = 0; i < this.decisions.length; i++)
-      decisionIdToIndex[this.decisions[i].id] = i;
+  navigateToDetail(decisionId: number) {
+    this.navCtrl.push('DecisionDetailPage', { id: decisionId });
+  }
 
-    let visitedIndex = new Array<boolean>(this.decisions.length).fill(false);
-    for (let i = 0; i < this.decisions.length; i++) {
-      if (this.decisions[i].prevId)
-        visitedIndex[decisionIdToIndex[this.decisions[i].prevId]] = true;
-      if (this.decisions[i].state == State.STATE_DELETED)
-        visitedIndex[decisionIdToIndex[this.decisions[i].id]] = true;
+  filterPastDecisions(decisions: Decision[]): Decision[] {
+    let decisionIdToIndex = {};
+    for (let i = 0; i < decisions.length; i++)
+      decisionIdToIndex[decisions[i].id] = i;
+
+    let visitedIndex = new Array<boolean>(decisions.length).fill(false);
+    for (let i = 0; i < decisions.length; i++) {
+      if (decisions[i].prevId)
+        visitedIndex[decisionIdToIndex[decisions[i].prevId]] = true;
+      if (decisions[i].state == State.STATE_DELETED)
+        visitedIndex[decisionIdToIndex[decisions[i].id]] = true;
     }
 
-    this.decisions = this.decisions.filter(decision => !visitedIndex[decisionIdToIndex[decision.id]]);
+    return decisions.filter(decision => !visitedIndex[decisionIdToIndex[decision.id]]);
   }
 
 }

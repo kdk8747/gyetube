@@ -1,0 +1,27 @@
+<ion-header>
+    <ion-navbar>
+      <ion-title> {{ 'I18N_GRASSCUBE' | translate }} > {{ 'I18N_DECISION' | translate }} </ion-title>
+    </ion-navbar>
+  </ion-header>
+
+
+<ion-content padding>
+    <ion-card>
+      <ion-toolbar>
+        <ion-buttons left>
+          <button ion-button icon-only (click)="popMenu()">
+            <ion-icon name="arrow-back"></ion-icon>
+          </button>
+        </ion-buttons>
+        <ion-title>{{(decision | async)?.content}}</ion-title>
+      </ion-toolbar>
+      <ion-card-header>
+        <ion-card-title>
+          title
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        {{(decision | async)?.content}}
+      </ion-card-content>
+    </ion-card>
+</ion-content>

@@ -6,7 +6,7 @@
 
 
 <ion-content padding>
-  <ion-card *ngFor="let receipt of receipts">
+  <ion-card *ngFor="let receipt of receipts | async" (click)="navigateToDetail(receipt.id)">
     <ion-card-content>
       {{receipt.memo}}
     </ion-card-content>

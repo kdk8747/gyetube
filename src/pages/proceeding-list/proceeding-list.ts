@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UtilService, ProceedingService } from '../../providers';
 import { Proceeding } from '../../models';
+import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
   segment: 'proceeding'
@@ -13,7 +14,7 @@ import { Proceeding } from '../../models';
 export class ProceedingListPage {
 
   groupId: string;
-  proceedings: Proceeding[];
+  proceedings: Observable<Proceeding[]>;
 
   constructor(
     public navCtrl: NavController,
@@ -23,28 +24,17 @@ export class ProceedingListPage {
   }
 
   ionViewDidLoad() {
-    if (!this.util.isNativeApp()) {
-      let splits = window.location.href.split('/');
-      if (splits.length > 5) {
-        console.log(splits[4]);
-        this.groupId = splits[4];
-
-        this.proceedingService.getProceedings(this.groupId)
-          .then(proceedings => { this.proceedings = proceedings; this.sortByDate(); });
-      }
-      else {
-        console.log('there is no group');
-      }
-    }
-    else {
-      this.groupId = this.util.getCurrentGroupId();
-      this.proceedingService.getProceedings(this.groupId)
-        .then(proceedings => { this.proceedings = proceedings; this.sortByDate(); });
-    }
+    this.groupId = this.util.getCurrentGroupId();
+    this.proceedings = this.proceedingService.getProceedings(this.groupId)
+      .map((proceedings:Proceeding[]) => this.sortByDate(proceedings));
   }
 
-  sortByDate(): void {
-    this.proceedings = this.proceedings.sort((h1, h2) => {
+  navigateToDetail(proceedingId: number) {
+    this.navCtrl.push('ProceedingDetailPage', { id: proceedingId });
+  }
+
+  sortByDate(proceedings:Proceeding[]): Proceeding[] {
+    return proceedings.sort((h1, h2) => {
       return h1.meetingDate < h2.meetingDate ? 1 :
         (h1.meetingDate > h2.meetingDate ? -1 : 0);
     });

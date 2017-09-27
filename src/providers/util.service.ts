@@ -25,6 +25,12 @@ export class UtilService {
   }
 
   getCurrentGroupId() {
+    if (!this.isNativeApp()) {
+      let splits = window.location.href.split('/');
+      if (splits.length > 5) {
+        return splits[4];
+      }
+    }
     return this.groupId;
   }
 }

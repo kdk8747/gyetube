@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/take';
 
 import { Decision } from '../models';
-import { HttpWrapperService } from './http-wrapper.service';
+import { AuthHttp } from 'angular2-jwt';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class DecisionService {
@@ -12,13 +14,13 @@ export class DecisionService {
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
-    public http: HttpWrapperService
+    public http: AuthHttp
   ) { }
 
-  getDecisions(group_id: string): Promise<Decision[]> {
+  getDecisions(group_id: string): Observable<Decision[]> {
     const url = `${this.decisionsUrl}/${group_id}`;
     return this.http.get(url)
-      .then(response => {
+      .map(response => {
         let decisions = response.json() as Decision[];
         return decisions.map(decision => {
           decision.createdDate = new Date(decision.createdDate);
@@ -26,52 +28,47 @@ export class DecisionService {
           return decision;
         })
       })
-      .catch(this.handleError);
+      .take(1);
   }
 
-  getDecision(group_id: string, id: number): Promise<Decision> {
+  getDecision(group_id: string, id: number): Observable<Decision> {
     const url = `${this.decisionsUrl}/${group_id}/${id}`;
     return this.http.get(url)
-      .then(response => {
+      .map(response => {
         let decision = response.json() as Decision;
         decision.createdDate = new Date(decision.createdDate);
         decision.expiryDate = new Date(decision.expiryDate);
         return decision;
       })
-      .catch(this.handleError);
+      .take(1);
 
   }
 
-  update(group_id: string, decision: Decision): Promise<Decision> {
+  update(group_id: string, decision: Decision): Observable<Decision> {
     const url = `${this.decisionsUrl}/${group_id}/${decision.id}`;
     return this.http
       .put(url, JSON.stringify(decision), { headers: this.headers })
-      .then(() => decision)
-      .catch(this.handleError);
+      .map(() => decision)
+      .take(1);
   }
 
-  create(group_id: string, decision: Decision): Promise<Decision> {
+  create(group_id: string, decision: Decision): Observable<Decision> {
     const url = `${this.decisionsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(decision), { headers: this.headers })
-      .then(response => {
+      .map(response => {
         let decision = response.json() as Decision;
         decision.createdDate = new Date(decision.createdDate);
         decision.expiryDate = new Date(decision.expiryDate);
         return decision;
       })
-      .catch(this.handleError);
+      .take(1);
   }
 
-  delete(group_id: string, id: number): Promise<void> {
+  delete(group_id: string, id: number): Observable<void> {
     const url = `${this.decisionsUrl}/${group_id}/${id}`;
     return this.http.delete(url, { headers: this.headers })
-      .then(() => null)
-      .catch(this.handleError);
-  }
-
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
-    return Promise.reject(error.message || error);
+      .map(() => null)
+      .take(1);
   }
 }

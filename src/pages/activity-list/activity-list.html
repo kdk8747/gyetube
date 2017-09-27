@@ -6,7 +6,7 @@
 
 
 <ion-content padding>
-  <ion-card *ngFor="let activity of activities">
+  <ion-card *ngFor="let activity of activities | async" (click)="navigateToDetail(activity.id)">
     <ion-card-content>
       {{activity.content}}
     </ion-card-content>

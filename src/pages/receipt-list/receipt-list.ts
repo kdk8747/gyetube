@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UtilService, ReceiptService } from '../../providers';
 import { Receipt } from '../../models';
+import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
   segment: 'receipt'
@@ -13,7 +14,7 @@ import { Receipt } from '../../models';
 export class ReceiptListPage {
 
   groupId: string;
-  receipts: Receipt[];
+  receipts: Observable<Receipt[]>;
 
   constructor(
     public navCtrl: NavController,
@@ -23,28 +24,17 @@ export class ReceiptListPage {
   }
 
   ionViewDidLoad() {
-    if (!this.util.isNativeApp()) {
-      let splits = window.location.href.split('/');
-      if (splits.length > 5) {
-        console.log(splits[4]);
-        this.groupId = splits[4];
-
-        this.receiptService.getReceipts(this.groupId)
-          .then(receipts => { this.receipts = receipts; this.sortByDateR(); });
-      }
-      else {
-        console.log('there is no group');
-      }
-    }
-    else {
-      this.groupId = this.util.getCurrentGroupId();
-      this.receiptService.getReceipts(this.groupId)
-        .then(receipts => { this.receipts = receipts; this.sortByDateR(); });
-    }
+    this.groupId = this.util.getCurrentGroupId();
+    this.receipts = this.receiptService.getReceipts(this.groupId)
+      .map((receipts: Receipt[]) => this.sortByDateR(receipts));
   }
 
-  sortByDateR(): void {
-    this.receipts = this.receipts.sort((h1, h2) => {
+  navigateToDetail(receiptId: number) {
+    this.navCtrl.push('ReceiptDetailPage', { id: receiptId });
+  }
+
+  sortByDateR(receipts: Receipt[]): Receipt[] {
+    return receipts.sort((h1, h2) => {
       return h1.paymentDate < h2.paymentDate ? 1 :
         (h1.paymentDate > h2.paymentDate ? -1 : 0);
     });
