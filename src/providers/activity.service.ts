@@ -20,25 +20,15 @@ export class ActivityService {
   getActivities(group_id: string): Observable<Activity[]> {
     const url = `${this.activitiesUrl}/${group_id}`;
     return this.http.get(url)
-      .map(response => {
-        let activities = response.json() as Activity[];
-        return activities.map(activity => {
-          activity.modifiedDate = new Date(activity.modifiedDate);
-          activity.activityDate = new Date(activity.activityDate);
-          return activity;
-        })
-      }).take(1);
+      .map(response => response.json() as Activity[])
+      .take(1);
   }
 
   getActivity(group_id: string, id: number): Observable<Activity> {
     const url = `${this.activitiesUrl}/${group_id}/${id}`;
     return this.http.get(url)
-      .map(response => {
-        let activity = response.json() as Activity;
-        activity.modifiedDate = new Date(activity.modifiedDate);
-        activity.activityDate = new Date(activity.activityDate);
-        return activity;
-      }).take(1);
+      .map(response => response.json() as Activity)
+      .take(1);
 
   }
 
@@ -54,12 +44,7 @@ export class ActivityService {
     const url = `${this.activitiesUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(activity), { headers: this.headers })
-      .map(response => {
-        let activity = response.json() as Activity;
-        activity.modifiedDate = new Date(activity.modifiedDate);
-        activity.activityDate = new Date(activity.activityDate);
-        return activity;
-      })
+      .map(response => response.json() as Activity)
       .take(1);
   }
 

@@ -20,26 +20,14 @@ export class ReceiptService {
   getReceipts(group_id: string): Observable<Receipt[]> {
     const url = `${this.receiptsUrl}/${group_id}`;
     return this.http.get(url)
-      .map(response => {
-        let receipts = response.json() as Receipt[];
-        return receipts.map(receipt => {
-          receipt.modifiedDate = new Date(receipt.modifiedDate);
-          receipt.paymentDate = new Date(receipt.paymentDate);
-          return receipt;
-        })
-      })
+      .map(response => response.json() as Receipt[])
       .take(1);
   }
 
   getReceipt(group_id: string, id: number): Observable<Receipt> {
     const url = `${this.receiptsUrl}/${group_id}/${id}`;
     return this.http.get(url)
-      .map(response => {
-        let receipt = response.json() as Receipt;
-        receipt.modifiedDate = new Date(receipt.modifiedDate);
-        receipt.paymentDate = new Date(receipt.paymentDate);
-        return receipt;
-      })
+      .map(response => response.json() as Receipt)
       .take(1);
 
   }
@@ -56,12 +44,7 @@ export class ReceiptService {
     const url = `${this.receiptsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(receipt), { headers: this.headers })
-      .map(response => {
-        let receipt = response.json() as Receipt;
-        receipt.modifiedDate = new Date(receipt.modifiedDate);
-        receipt.paymentDate = new Date(receipt.paymentDate);
-        return receipt;
-      })
+      .map(response => response.json() as Receipt)
       .take(1);
   }
 

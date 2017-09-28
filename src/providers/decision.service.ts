@@ -20,26 +20,14 @@ export class DecisionService {
   getDecisions(group_id: string): Observable<Decision[]> {
     const url = `${this.decisionsUrl}/${group_id}`;
     return this.http.get(url)
-      .map(response => {
-        let decisions = response.json() as Decision[];
-        return decisions.map(decision => {
-          decision.createdDate = new Date(decision.createdDate);
-          decision.expiryDate = new Date(decision.expiryDate);
-          return decision;
-        })
-      })
+      .map(response => response.json() as Decision[])
       .take(1);
   }
 
   getDecision(group_id: string, id: number): Observable<Decision> {
     const url = `${this.decisionsUrl}/${group_id}/${id}`;
     return this.http.get(url)
-      .map(response => {
-        let decision = response.json() as Decision;
-        decision.createdDate = new Date(decision.createdDate);
-        decision.expiryDate = new Date(decision.expiryDate);
-        return decision;
-      })
+      .map(response => response.json() as Decision)
       .take(1);
 
   }
@@ -56,12 +44,7 @@ export class DecisionService {
     const url = `${this.decisionsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(decision), { headers: this.headers })
-      .map(response => {
-        let decision = response.json() as Decision;
-        decision.createdDate = new Date(decision.createdDate);
-        decision.expiryDate = new Date(decision.expiryDate);
-        return decision;
-      })
+      .map(response => response.json() as Decision)
       .take(1);
   }
 

@@ -5,8 +5,8 @@ export class Proceeding {
     public id: number,
     public prevId: number, // 0: unused
     public state: State,
-    public createdDate: Date,
-    public meetingDate: Date,
+    public createdDate: string,
+    public meetingDate: string,
     public title: string,
     public content: string,
     public childDecisions: number[]) { }

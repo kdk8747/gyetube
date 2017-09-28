@@ -20,25 +20,15 @@ export class ProceedingService {
   getProceedings(group_id: string): Observable<Proceeding[]> {
     const url = `${this.proceedingsUrl}/${group_id}`;
     return this.http.get(url)
-      .map(response => {
-        let proceedings = response.json() as Proceeding[];
-        return proceedings.map(proceeding => {
-          proceeding.createdDate = new Date(proceeding.createdDate);
-          proceeding.meetingDate = new Date(proceeding.meetingDate);
-          return proceeding;
-        })
-      }).take(1);
+      .map(response => response.json() as Proceeding[])
+      .take(1);
   }
 
   getProceeding(group_id: string, id: number): Observable<Proceeding> {
     const url = `${this.proceedingsUrl}/${group_id}/${id}`;
     return this.http.get(url)
-      .map(response => {
-        let proceeding = response.json() as Proceeding;
-        proceeding.createdDate = new Date(proceeding.createdDate);
-        proceeding.meetingDate = new Date(proceeding.meetingDate);
-        return proceeding;
-      }).take(1);
+      .map(response => response.json() as Proceeding)
+      .take(1);
 
   }
 
@@ -54,12 +44,8 @@ export class ProceedingService {
     const url = `${this.proceedingsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(proceeding), { headers: this.headers })
-      .map(response => {
-        let proceeding = response.json() as Proceeding;
-        proceeding.createdDate = new Date(proceeding.createdDate);
-        proceeding.meetingDate = new Date(proceeding.meetingDate);
-        return proceeding;
-      }).take(1);
+      .map(response => response.json() as Proceeding)
+      .take(1);
   }
 
   delete(group_id: string, id: number): Observable<void> {
