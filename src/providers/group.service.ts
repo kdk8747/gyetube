@@ -19,16 +19,23 @@ export class GroupService {
 
   getGroups(): Observable<Group[]> {
     return this.http.get(this.groupsUrl)
-      .map(response => response.json() as Group[])
-      .take(1);
+    .map(response => {
+      let groups = response.json() as Group[];
+      return groups.map(group => {
+        group.createdDate = new Date(group.createdDate);
+        return group;
+      })
+    }).take(1);
   }
 
   getGroup(id: string): Observable<Group> {
     const url = `${this.groupsUrl}/${id}`;
     return this.http.get(url)
-      .map(response => response.json() as Group)
-      .take(1);
-
+    .map(response => {
+      let group = response.json() as Group;
+      group.createdDate = new Date(group.createdDate);
+      return group;
+    }).take(1);
   }
 
   update(user: Group): Observable<Group> {
@@ -42,8 +49,11 @@ export class GroupService {
   create(user: Group): Observable<Group> {
     return this.http
       .post(this.groupsUrl, JSON.stringify(user),{ headers: this.headers })
-      .map(res => res.json() as Group)
-      .take(1);
+      .map(response => {
+        let group = response.json() as Group;
+        group.createdDate = new Date(group.createdDate);
+        return group;
+      }).take(1);
   }
 
   delete(id: number): Observable<void> {

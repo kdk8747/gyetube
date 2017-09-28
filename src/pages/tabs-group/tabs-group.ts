@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { UserService } from '../../providers';
-import { User } from '../../models';
+import { UserService, GroupService } from '../../providers';
+import { User, Group } from '../../models';
+import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
   segment: ':group_id/group-page'
@@ -21,12 +22,14 @@ export class TabsGroupPage {
   loggedIn: boolean = false;
   user: User;
   groupId: string = '';
+  group: Observable<Group>;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public storage: Storage,
-    public userService: UserService
+    public userService: UserService,
+    public groupService: GroupService
   ) {
   }
 
@@ -50,6 +53,7 @@ export class TabsGroupPage {
         }
       }
     });
+    this.group = this.groupService.getGroup(this.groupId);
   }
 
   pushMenu() {
