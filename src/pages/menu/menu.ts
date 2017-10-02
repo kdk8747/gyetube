@@ -68,7 +68,7 @@ export class MenuPage {
               message: value
             });
             toast.present();
-            this.navCtrl.pop();
+            this.navCtrl.setRoot('TabsMyPage');
           });
       });
   }
