@@ -10,18 +10,36 @@
     <ion-toolbar>
       <ion-buttons left>
         <button ion-button icon-only (click)="popMenu()">
-          <ion-icon name="arrow-back"></ion-icon>
+          <ion-icon name="arrow-up"></ion-icon>
         </button>
       </ion-buttons>
       <ion-title>{{(receipt | async)?.memo}}</ion-title>
     </ion-toolbar>
     <ion-card-header>
-      <ion-card-title>
-        title
-      </ion-card-title>
+      <ion-row justify-content-start>
+        <ion-col col-auto>
+          <button ion-button clear icon-only (click)="navigateToUserDetail()">
+            <ion-avatar><img [src]="(creator | async)?.imageUrl"></ion-avatar>
+          </button>
+        </ion-col>
+        <ion-col>
+          <p>{{(creator | async)?.name}}</p>
+          <p>{{(receipt | async)?.modifiedDate | localizedDate:'short'}}</p>
+        </ion-col>
+      </ion-row>
     </ion-card-header>
-    <ion-card-content>
-      {{(receipt | async)?.memo}}
-    </ion-card-content>
+
+    <ion-card *ngIf="activity | async">
+      <ion-toolbar>
+        <ion-title>
+          <p>{{ 'I18N_ACTIVITY' | translate }} - {{ (activity | async)?.title }}</p>
+        </ion-title>
+        <ion-buttons left>
+          <button ion-button icon-only (click)="navigateToActivityDetail()">
+              <ion-icon name="arrow-back"></ion-icon>
+            </button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card>
   </ion-card>
 </ion-content>

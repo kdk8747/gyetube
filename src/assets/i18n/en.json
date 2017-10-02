@@ -18,5 +18,11 @@
   "I18N_SIGN_IN_BY_KAKAO": "Sign in by Kakao",
   "I18N_SIGN_IN_BY_FACEBOOK": "Sign in by Facebook",
   "I18N_SIGN_IN_TOAST": "Successfully signed in",
-  "I18N_SIGN_OUT_TOAST": "You're now using GrassCube signed out"
+  "I18N_SIGN_OUT_TOAST": "You're now using GrassCube signed out",
+
+  "I18N_CREATED_DATE": "Created Date",
+  "I18N_EXPIRY_DATE": "Expiry Date",
+  "I18N_ACCEPTERS": "Accepters",
+  "I18N_REJECTERS": "Rejecters",
+  "I18N_ABSTAINERS": "Abstainers"
 }

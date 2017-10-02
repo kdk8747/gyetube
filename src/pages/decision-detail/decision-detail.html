@@ -10,18 +10,63 @@
     <ion-toolbar>
       <ion-buttons left>
         <button ion-button icon-only (click)="popMenu()">
-          <ion-icon name="arrow-back"></ion-icon>
+          <ion-icon name="arrow-up"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-title>{{(decision | async)?.content}}</ion-title>
+      <ion-title>{{(decision | async)?.title}}</ion-title>
     </ion-toolbar>
+
     <ion-card-header>
-      <ion-card-title>
-        title
-      </ion-card-title>
+      <p>{{ 'I18N_CREATED_DATE' | translate}} {{(decision | async)?.createdDate | localizedDate}}</p>
+      <p>{{ 'I18N_EXPIRY_DATE' | translate }} {{(decision | async)?.expiryDate | localizedDate}}</p>
     </ion-card-header>
+
     <ion-card-content>
-      {{(decision | async)?.content}}
+      <p>{{(decision | async)?.content}}</p>
+      <ion-buttons left>
+        {{ 'I18N_ACCEPTERS' | translate}}
+        <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let accepter of accepters">
+          <ion-avatar><img [src]="(accepter | async)?.imageUrl"></ion-avatar>
+        </button>
+      </ion-buttons>
+      <ion-buttons left>
+        {{ 'I18N_REJECTERS' | translate}}
+        <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let rejecter of rejecters">
+          <ion-avatar><img [src]="(rejecter | async)?.imageUrl"></ion-avatar>
+        </button>
+      </ion-buttons>
+      <ion-buttons left>
+        {{ 'I18N_ABSTAINERS' | translate}}
+        <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let abstainer of abstainers">
+          <ion-avatar><img [src]="(abstainer | async)?.imageUrl"></ion-avatar>
+        </button>
+      </ion-buttons>
     </ion-card-content>
+
+    <ion-card *ngIf="proceeding | async">
+      <ion-toolbar>
+        <ion-title>
+          <p>{{ 'I18N_PROCEEDING' | translate }} - {{ (proceeding | async)?.title }}</p>
+        </ion-title>
+        <ion-buttons left>
+          <button ion-button icon-only (click)="navigateToProceedingDetail()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card>
+
+    <ion-card *ngFor="let activity of activities; let i=index">
+      <ion-toolbar>
+        <ion-title text-left>
+          <p>{{ 'I18N_ACTIVITY' | translate }}{{i+1}} - {{ (activity | async)?.title }}</p>
+        </ion-title>
+        <ion-buttons right>
+          <button ion-button icon-only (click)="navigateToActivityDetail()">
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card>
   </ion-card>
 </ion-content>

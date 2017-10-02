@@ -18,5 +18,11 @@
   "I18N_SIGN_IN_BY_KAKAO": "카카오로 로그인",
   "I18N_SIGN_IN_BY_FACEBOOK": "페이스북으로 로그인",
   "I18N_SIGN_IN_TOAST": "로그인 성공",
-  "I18N_SIGN_OUT_TOAST": "현재 로그아웃 상태로 GrassCube를 사용 중입니다."
+  "I18N_SIGN_OUT_TOAST": "현재 로그아웃 상태로 GrassCube를 사용 중입니다.",
+
+  "I18N_CREATED_DATE": "생성일",
+  "I18N_EXPIRY_DATE": "만료일",
+  "I18N_ACCEPTERS": "찬성",
+  "I18N_REJECTERS": "반대",
+  "I18N_ABSTAINERS": "기권"
 }

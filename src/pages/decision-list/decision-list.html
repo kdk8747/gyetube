@@ -6,9 +6,9 @@
 
 
 <ion-content padding>
-    <ion-card *ngFor="let decision of decisions | async" (click)="navigateToDetail(decision.id)">
-      <ion-card-content>
-        {{decision.content}}
-      </ion-card-content>
-    </ion-card>
+  <ion-card *ngFor="let decision of decisions | async" (click)="navigateToDetail(decision.id)">
+    <ion-card-content>
+      {{decision.title}}
+    </ion-card-content>
+  </ion-card>
 </ion-content>

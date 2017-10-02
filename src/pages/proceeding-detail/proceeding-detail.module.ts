@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProceedingDetailPage } from './proceeding-detail';
-import { ProceedingService } from '../../providers';
+import { ProceedingService, DecisionService } from '../../providers';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -10,10 +11,12 @@ import { ProceedingService } from '../../providers';
   ],
   imports: [
     IonicPageModule.forChild(ProceedingDetailPage),
-    TranslateModule.forChild()
+    TranslateModule.forChild(),
+    PipesModule
   ],
   providers: [
-    ProceedingService
+    ProceedingService,
+    DecisionService
   ]
 })
 export class ProceedingDetailPageModule {}

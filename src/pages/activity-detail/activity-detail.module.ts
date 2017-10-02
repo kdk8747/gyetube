@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivityDetailPage } from './activity-detail';
-import { ActivityService } from '../../providers';
+import { ActivityService, DecisionService, ReceiptService } from '../../providers';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -10,10 +11,13 @@ import { ActivityService } from '../../providers';
   ],
   imports: [
     IonicPageModule.forChild(ActivityDetailPage),
-    TranslateModule.forChild()
+    TranslateModule.forChild(),
+    PipesModule
   ],
   providers: [
-    ActivityService
+    ActivityService,
+    DecisionService,
+    ReceiptService
   ]
 })
 export class ActivityDetailPageModule {}

@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { ReceiptDetailPage } from './receipt-detail';
-import { ReceiptService } from '../../providers';
+import { ReceiptService, ActivityService } from '../../providers';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -10,10 +11,12 @@ import { ReceiptService } from '../../providers';
   ],
   imports: [
     IonicPageModule.forChild(ReceiptDetailPage),
-    TranslateModule.forChild()
+    TranslateModule.forChild(),
+    PipesModule
   ],
   providers: [
-    ReceiptService
+    ReceiptService,
+    ActivityService
   ]
 })
 export class ReceiptDetailPageModule {}

@@ -8,6 +8,7 @@ export class Proceeding {
     public createdDate: string,
     public meetingDate: string,
     public title: string,
+    public attendees: string[],
     public content: string,
     public childDecisions: number[]) { }
 }

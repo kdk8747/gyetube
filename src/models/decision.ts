@@ -7,6 +7,10 @@ export class Decision {
     public state: State,
     public createdDate: string,
     public expiryDate: string,
+    public abstainers: string[],
+    public accepters: string[],
+    public rejecters: string[],
+    public title: string,
     public content: string,
     public parentProceeding: number,
     public childActivities: number[]) { }

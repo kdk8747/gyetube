@@ -10,18 +10,33 @@
     <ion-toolbar>
       <ion-buttons left>
         <button ion-button icon-only (click)="popMenu()">
-          <ion-icon name="arrow-back"></ion-icon>
+          <ion-icon name="arrow-up"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-title>{{(proceeding | async)?.title}}</ion-title>
+      <ion-title>{{ (proceeding | async)?.title }}</ion-title>
     </ion-toolbar>
     <ion-card-header>
-      <ion-card-title>
-        title
-      </ion-card-title>
+      <p>{{(proceeding | async)?.meetingDate | localizedDate:'short'}}</p>
+      <ion-buttons left>
+        <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let attendee of attendees">
+          <ion-avatar><img [src]="(attendee | async)?.imageUrl"></ion-avatar>
+        </button>
+      </ion-buttons>
     </ion-card-header>
     <ion-card-content>
-      {{(proceeding | async)?.content}}
+      <p>{{(proceeding | async)?.content}}</p>
     </ion-card-content>
+    <ion-card *ngFor="let decision of decisions; let i=index">
+      <ion-toolbar>
+        <ion-title>
+          <p>{{ 'I18N_DECISION' | translate }}{{i+1}} - {{ (decision | async)?.title }}</p>
+        </ion-title>
+        <ion-buttons right>
+          <button ion-button icon-only (click)="navigateToDecisionDetail()">
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card>
   </ion-card>
 </ion-content>
