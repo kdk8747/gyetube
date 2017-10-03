@@ -59,14 +59,14 @@ export class DecisionDetailPage {
   navigateToProceedingDetail(obs: Observable<Proceeding>) {
     obs.subscribe(proceeding => {
       this.navCtrl.parent.select(1);
-      setTimeout(() => this.event.publish('EventProceedingDetailPage', {id: proceeding.id }), 300); // 300 ms delay : work-around
+      setTimeout(() => this.event.publish('EventProceedingDetailPage', {id: proceeding.id }), 500); // 500 ms delay : work-around
     });
   }
 
   navigateToActivityDetail(obs: Observable<Activity>) {
     obs.subscribe(activity => {
       this.navCtrl.parent.select(3);
-      setTimeout(() => this.event.publish('EventActivityDetailPage', {id: activity.id }), 300); // 300 ms delay : work-around
+      setTimeout(() => this.event.publish('EventActivityDetailPage', {id: activity.id }), 500); // 500 ms delay : work-around
     });
   }
 }
