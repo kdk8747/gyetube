@@ -14,7 +14,7 @@ export class UserService {
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
-    private http: AuthHttp
+    public http: AuthHttp
   ) { }
 
   getUsers(): Observable<User[]> {

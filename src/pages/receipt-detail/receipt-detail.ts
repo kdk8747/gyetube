@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, ReceiptService, UserService, ActivityService } from '../../providers';
 import { Receipt, User, Activity } from '../../models';
 import { Observable } from 'rxjs/Observable';
@@ -24,6 +24,7 @@ export class ReceiptDetailPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public event: Events,
     public util: UtilService,
     public userService: UserService,
     public receiptService: ReceiptService,
@@ -48,7 +49,10 @@ export class ReceiptDetailPage {
     ;
   }
 
-  navigateToActivityDetail() {
-    ;
+  navigateToActivityDetail(obs: Observable<Activity>) {
+    obs.subscribe(activity => {
+      this.navCtrl.parent.select(3);
+      setTimeout(() => this.event.publish('EventActivityDetailPage', {id: activity.id }), 300); // 300 ms delay : work-around
+    });
   }
 }

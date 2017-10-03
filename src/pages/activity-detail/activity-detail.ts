@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, ActivityService, UserService, DecisionService, ReceiptService } from '../../providers';
 import { Activity, User, Decision, Receipt } from '../../models';
 import { Observable } from 'rxjs/Observable';
@@ -25,6 +25,7 @@ export class ActivityDetailPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public event: Events,
     public util: UtilService,
     public activityService: ActivityService,
     public userService: UserService,
@@ -51,12 +52,18 @@ export class ActivityDetailPage {
     ;
   }
 
-  navigateToDecisionDetail() {
-    ;
+  navigateToDecisionDetail(obs: Observable<Decision>) {
+    obs.subscribe(decision => {
+      this.navCtrl.parent.select(2);
+      setTimeout(() => this.event.publish('EventDecisionDetailPage', {id: decision.id }), 300); // 300 ms delay : work-around
+    });
   }
 
-  navigateToReceiptDetail() {
-    ;
+  navigateToReceiptDetail(obs: Observable<Receipt>) {
+    obs.subscribe(receipt => {
+      this.navCtrl.parent.select(4);
+      setTimeout(() => this.event.publish('EventReceiptDetailPage', {id: receipt.id }), 300); // 300 ms delay : work-around
+    });
   }
 
 }

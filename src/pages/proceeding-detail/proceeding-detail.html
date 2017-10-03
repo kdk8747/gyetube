@@ -32,7 +32,7 @@
           <p>{{ 'I18N_DECISION' | translate }}{{i+1}} - {{ (decision | async)?.title }}</p>
         </ion-title>
         <ion-buttons right>
-          <button ion-button icon-only (click)="navigateToDecisionDetail()">
+          <button ion-button icon-only (click)="navigateToDecisionDetail(decision)">
           <ion-icon name="arrow-forward"></ion-icon>
         </button>
         </ion-buttons>

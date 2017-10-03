@@ -35,7 +35,7 @@
           <p>{{ 'I18N_ACTIVITY' | translate }} - {{ (activity | async)?.title }}</p>
         </ion-title>
         <ion-buttons left>
-          <button ion-button icon-only (click)="navigateToActivityDetail()">
+          <button ion-button icon-only (click)="navigateToActivityDetail(activity)">
               <ion-icon name="arrow-back"></ion-icon>
             </button>
         </ion-buttons>

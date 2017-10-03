@@ -38,7 +38,7 @@
           <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
         </ion-title>
         <ion-buttons left>
-          <button ion-button icon-only (click)="navigateToDecisionDetail()">
+          <button ion-button icon-only (click)="navigateToDecisionDetail(decision)">
           <ion-icon name="arrow-back"></ion-icon>
         </button>
         </ion-buttons>
@@ -51,7 +51,7 @@
           <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.memo }}</p>
         </ion-title>
         <ion-buttons right>
-          <button ion-button icon-only (click)="navigateToReceiptDetail()">
+          <button ion-button icon-only (click)="navigateToReceiptDetail(receipt)">
           <ion-icon name="arrow-forward"></ion-icon>
         </button>
         </ion-buttons>

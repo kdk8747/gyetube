@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, ViewController } from 'ionic-angular';
 import { UtilService, ProceedingService } from '../../providers';
 import { Proceeding } from '../../models';
 import { Observable } from 'rxjs/Observable';
@@ -19,6 +19,7 @@ export class ProceedingListPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public event: Events,
     public util: UtilService,
     public proceedingService: ProceedingService) {
   }
@@ -27,6 +28,15 @@ export class ProceedingListPage {
     this.groupId = this.util.getCurrentGroupId();
     this.proceedings = this.proceedingService.getProceedings(this.groupId)
       .map((proceedings:Proceeding[]) => this.sortByDate(proceedings));
+    this.event.subscribe('EventProceedingDetailPage', (obj) => {
+      let top:ViewController = this.navCtrl.last();
+      if (top.id !== 'ProceedingDetailPage' || top.data.id !== obj.id)
+        this.navCtrl.push('ProceedingDetailPage', { id: obj.id });
+    });
+  }
+
+  ionViewWillUnload() {
+    this.event.unsubscribe('EventProceedingDetailPage');
   }
 
   navigateToDetail(proceedingId: number) {

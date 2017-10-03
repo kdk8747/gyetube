@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, ProceedingService, DecisionService, UserService } from '../../providers';
 import { Proceeding, User, Decision } from '../../models';
 import { Observable } from 'rxjs/Observable';
@@ -24,6 +24,7 @@ export class ProceedingDetailPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public event: Events,
     public util: UtilService,
     public userService: UserService,
     public decisionService: DecisionService,
@@ -48,7 +49,10 @@ export class ProceedingDetailPage {
     ;
   }
 
-  navigateToDecisionDetail() {
-    ;
+  navigateToDecisionDetail(obs: Observable<Decision>) {
+    obs.subscribe(decision => {
+      this.navCtrl.parent.select(2);
+      setTimeout(() => this.event.publish('EventDecisionDetailPage', {id: decision.id }), 300); // 300 ms delay : work-around
+    });
   }
 }

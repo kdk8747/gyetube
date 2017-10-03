@@ -49,7 +49,7 @@
           <p>{{ 'I18N_PROCEEDING' | translate }} - {{ (proceeding | async)?.title }}</p>
         </ion-title>
         <ion-buttons left>
-          <button ion-button icon-only (click)="navigateToProceedingDetail()">
+          <button ion-button icon-only (click)="navigateToProceedingDetail(proceeding)">
           <ion-icon name="arrow-back"></ion-icon>
         </button>
         </ion-buttons>
@@ -62,7 +62,7 @@
           <p>{{ 'I18N_ACTIVITY' | translate }}{{i+1}} - {{ (activity | async)?.title }}</p>
         </ion-title>
         <ion-buttons right>
-          <button ion-button icon-only (click)="navigateToActivityDetail()">
+          <button ion-button icon-only (click)="navigateToActivityDetail(activity)">
           <ion-icon name="arrow-forward"></ion-icon>
         </button>
         </ion-buttons>
