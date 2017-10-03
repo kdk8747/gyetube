@@ -13,7 +13,7 @@
           <ion-icon name="arrow-up"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-title>{{(activity | async)?.title}}</ion-title>
+      <ion-buttons>{{(activity | async)?.title}}</ion-buttons>
     </ion-toolbar>
     <ion-card-header>
       <ion-row justify-content-start>
@@ -34,9 +34,9 @@
 
     <ion-card *ngIf="decision | async">
       <ion-toolbar>
-        <ion-title>
+        <ion-buttons>
           <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
-        </ion-title>
+        </ion-buttons>
         <ion-buttons left>
           <button ion-button icon-only (click)="navigateToDecisionDetail(decision)">
           <ion-icon name="arrow-back"></ion-icon>
@@ -47,9 +47,9 @@
 
     <ion-card *ngFor="let receipt of receipts; let i=index">
       <ion-toolbar>
-        <ion-title text-left>
+        <ion-buttons>
           <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.memo }}</p>
-        </ion-title>
+        </ion-buttons>
         <ion-buttons right>
           <button ion-button icon-only (click)="navigateToReceiptDetail(receipt)">
           <ion-icon name="arrow-forward"></ion-icon>

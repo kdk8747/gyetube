@@ -13,7 +13,7 @@
           <ion-icon name="arrow-up"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-title>{{ (proceeding | async)?.title }}</ion-title>
+      <ion-buttons>{{ (proceeding | async)?.title }}</ion-buttons>
     </ion-toolbar>
     <ion-card-header>
       <p>{{(proceeding | async)?.meetingDate | localizedDate:'short'}}</p>
@@ -28,9 +28,9 @@
     </ion-card-content>
     <ion-card *ngFor="let decision of decisions; let i=index">
       <ion-toolbar>
-        <ion-title>
+        <ion-buttons>
           <p>{{ 'I18N_DECISION' | translate }}{{i+1}} - {{ (decision | async)?.title }}</p>
-        </ion-title>
+        </ion-buttons>
         <ion-buttons right>
           <button ion-button icon-only (click)="navigateToDecisionDetail(decision)">
           <ion-icon name="arrow-forward"></ion-icon>

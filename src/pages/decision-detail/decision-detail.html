@@ -13,7 +13,7 @@
           <ion-icon name="arrow-up"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-title>{{(decision | async)?.title}}</ion-title>
+      <ion-buttons>{{(decision | async)?.title}}</ion-buttons>
     </ion-toolbar>
 
     <ion-card-header>
@@ -45,9 +45,9 @@
 
     <ion-card *ngIf="proceeding | async">
       <ion-toolbar>
-        <ion-title>
+        <ion-buttons>
           <p>{{ 'I18N_PROCEEDING' | translate }} - {{ (proceeding | async)?.title }}</p>
-        </ion-title>
+        </ion-buttons>
         <ion-buttons left>
           <button ion-button icon-only (click)="navigateToProceedingDetail(proceeding)">
           <ion-icon name="arrow-back"></ion-icon>
@@ -58,9 +58,9 @@
 
     <ion-card *ngFor="let activity of activities; let i=index">
       <ion-toolbar>
-        <ion-title text-left>
+        <ion-buttons>
           <p>{{ 'I18N_ACTIVITY' | translate }}{{i+1}} - {{ (activity | async)?.title }}</p>
-        </ion-title>
+        </ion-buttons>
         <ion-buttons right>
           <button ion-button icon-only (click)="navigateToActivityDetail(activity)">
           <ion-icon name="arrow-forward"></ion-icon>

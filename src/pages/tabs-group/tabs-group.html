@@ -2,10 +2,10 @@
   <ion-navbar>
     <ion-buttons left>
       <button ion-button icon-only (click)="popMenu()">
-          <ion-icon name="close"></ion-icon>
-        </button>
+        <ion-icon name="close"></ion-icon>
+        <h4>{{ (group | async)?.title }}</h4>
+      </button>
     </ion-buttons>
-    <ion-title>{{ (group | async)?.title }}</ion-title>
     <ion-buttons right>
       <button ion-button icon-only>
         <ion-icon name="search"></ion-icon>

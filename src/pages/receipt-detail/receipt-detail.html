@@ -13,7 +13,7 @@
           <ion-icon name="arrow-up"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-title>{{(receipt | async)?.memo}}</ion-title>
+      <ion-buttons>{{(receipt | async)?.memo}}</ion-buttons>
     </ion-toolbar>
     <ion-card-header>
       <ion-row justify-content-start>
@@ -31,9 +31,9 @@
 
     <ion-card *ngIf="activity | async">
       <ion-toolbar>
-        <ion-title>
+        <ion-buttons>
           <p>{{ 'I18N_ACTIVITY' | translate }} - {{ (activity | async)?.title }}</p>
-        </ion-title>
+        </ion-buttons>
         <ion-buttons left>
           <button ion-button icon-only (click)="navigateToActivityDetail(activity)">
               <ion-icon name="arrow-back"></ion-icon>
