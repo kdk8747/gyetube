@@ -23,8 +23,7 @@ export class ActivityDetailPage {
   creator: Observable<User>;
   participants: Observable<User>[] = [];
   decision: Observable<Decision>;
-  receipts: Receipt[] = [];
-  totalDifference: number = 0;
+  receipts: Observable<Receipt>[];
 
   constructor(
     public navCtrl: NavController,
@@ -45,12 +44,7 @@ export class ActivityDetailPage {
       this.creator = this.userService.getUser(activity.creator).share();
       this.participants = activity.participants.map((id:string) => this.userService.getUser(id).share());
       this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision).share();
-      Promise.all(activity.childReceipts.map((id:number) => this.receiptService.getReceipt(this.groupId, id).toPromise()))
-        .then((receipts: Receipt[]) => {
-          for (let i = 0; i < receipts.length; i ++)
-            this.totalDifference += receipts[i].difference;
-          this.receipts = receipts;
-        });
+      this.receipts = activity.childReceipts.map((id:number) => this.receiptService.getReceipt(this.groupId, id).share());
     });
   }
 
@@ -72,9 +66,11 @@ export class ActivityDetailPage {
     });
   }
 
-  navigateToReceiptDetail(receipt: Receipt) {
-    this.navCtrl.parent.select(4);
-    setTimeout(() => this.event.publish('EventReceiptDetailPage', {id: receipt.id }), 500); // 500 ms delay : work-around
+  navigateToReceiptDetail(obs: Observable<Receipt>) {
+    obs.subscribe(receipt => {
+      this.navCtrl.parent.select(4);
+      setTimeout(() => this.event.publish('EventReceiptDetailPage', {id: receipt.id }), 500); // 500 ms delay : work-around
+    });
   }
 
 }

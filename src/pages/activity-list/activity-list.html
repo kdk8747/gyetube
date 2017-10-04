@@ -8,20 +8,19 @@
 <ion-content>
   <ion-card *ngFor="let activity of activities | async" (click)="navigateToDetail(activity.id)">
     <ion-card-content>
-
       <ion-row>
         <ion-col>
-            <p>{{activity.activityDate | localizedDate}}</p>
-            <p>{{activity.title}}</p>
+          <p>{{activity.activityDate | localizedDate}}</p>
+          <p>{{activity.title}}</p>
         </ion-col>
         <ion-col>
-            <p text-left>
-              {{ activity.hours }} {{ 'I18N_HOURS' | translate}}
-               X {{ activity.participants.length }} {{ 'I18N_PARTICIPANTS' | translate}}
-            </p>
-            <p text-right>
-              = {{ activity.hours * activity.participants.length }} {{ 'I18N_HOURS' | translate}}
-            </p>
+          <p text-left>
+            {{ activity.elapsedTime }} {{ 'I18N_HOURS' | translate}}
+             X {{ activity.participants.length }} {{ 'I18N_PARTICIPANTS' | translate}}
+          </p>
+          <p text-right>
+            = {{ activity.elapsedTime * activity.participants.length }} {{ 'I18N_HOURS' | translate}}
+          </p>
         </ion-col>
       </ion-row>
     </ion-card-content>

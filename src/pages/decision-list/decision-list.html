@@ -8,7 +8,17 @@
 <ion-content>
   <ion-card *ngFor="let decision of decisions | async" (click)="navigateToDetail(decision.id)">
     <ion-card-content>
-      {{decision.title}}
+      <ion-row>
+        <ion-col>
+          <p>{{decision.createdDate | localizedDate}}</p>
+          <p>{{decision.title}}</p>
+        </ion-col>
+        <ion-col>
+          <p text-left> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
+          <p text-left> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
+          <p text-left> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
+        </ion-col>
+      </ion-row>
     </ion-card-content>
   </ion-card>
 </ion-content>

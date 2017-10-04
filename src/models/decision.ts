@@ -13,5 +13,8 @@ export class Decision {
     public title: string,
     public content: string,
     public parentProceeding: number,
-    public childActivities: number[]) { }
+    public childActivities: number[],
+    public totalElapsedTime: number,  // TODO
+    public totalDifference: number    // TODO
+  ) { }
 }

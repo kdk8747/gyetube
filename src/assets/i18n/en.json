@@ -25,10 +25,11 @@
   "I18N_ACCEPTERS": "Accepter(s)",
   "I18N_REJECTERS": "Rejecter(s)",
   "I18N_ABSTAINERS": "Abstainer(s)",
+  "I18N_TOTAL_ELAPSED_TIME": "Total Elapsed Time",
 
   "I18N_ACTIVITY_DATE": "Activity Date",
   "I18N_ELAPSED_TIME": "Elapsed Time",
-  "I18N_HOURS": "hours",
+  "I18N_HOURS": "hour(s)",
   "I18N_PARTICIPANTS": "Participant(s)",
   "I18N_TOTAL_DIFFERENCE": "Total Difference",
 

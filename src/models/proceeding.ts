@@ -10,5 +10,6 @@ export class Proceeding {
     public title: string,
     public attendees: string[],
     public content: string,
-    public childDecisions: number[]) { }
+    public childDecisions: number[]
+  ) { }
 }
