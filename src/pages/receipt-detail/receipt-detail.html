@@ -5,7 +5,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <ion-card>
     <ion-toolbar>
       <ion-buttons left>
@@ -15,6 +15,7 @@
       </ion-buttons>
       <ion-buttons>{{(receipt | async)?.memo}}</ion-buttons>
     </ion-toolbar>
+
     <ion-card-header>
       <ion-row justify-content-start>
         <ion-col col-auto>
@@ -28,6 +29,11 @@
         </ion-col>
       </ion-row>
     </ion-card-header>
+
+    <ion-card-content>
+      <p>{{ 'I18N_PAYMENT_DATE' | translate}} {{(receipt | async)?.paymentDate | localizedDate:'short'}}</p>
+      <p>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
+    </ion-card-content>
 
     <ion-card *ngIf="activity | async">
       <ion-toolbar>

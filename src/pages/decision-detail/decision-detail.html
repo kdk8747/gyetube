@@ -5,7 +5,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <ion-card>
     <ion-toolbar>
       <ion-buttons left>
@@ -19,23 +19,23 @@
     <ion-card-header>
       <p>{{ 'I18N_CREATED_DATE' | translate}} {{(decision | async)?.createdDate | localizedDate}}</p>
       <p>{{ 'I18N_EXPIRY_DATE' | translate }} {{(decision | async)?.expiryDate | localizedDate}}</p>
+      <p>{{(decision | async)?.content}}</p>
     </ion-card-header>
 
     <ion-card-content>
-      <p>{{(decision | async)?.content}}</p>
-      <ion-buttons left>
+      <ion-buttons left *ngIf="accepters.length">
         {{ 'I18N_ACCEPTERS' | translate}}
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let accepter of accepters">
           <ion-avatar><img [src]="(accepter | async)?.imageUrl"></ion-avatar>
         </button>
       </ion-buttons>
-      <ion-buttons left>
+      <ion-buttons left *ngIf="rejecters.length">
         {{ 'I18N_REJECTERS' | translate}}
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let rejecter of rejecters">
           <ion-avatar><img [src]="(rejecter | async)?.imageUrl"></ion-avatar>
         </button>
       </ion-buttons>
-      <ion-buttons left>
+      <ion-buttons left *ngIf="abstainers.length">
         {{ 'I18N_ABSTAINERS' | translate}}
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let abstainer of abstainers">
           <ion-avatar><img [src]="(abstainer | async)?.imageUrl"></ion-avatar>

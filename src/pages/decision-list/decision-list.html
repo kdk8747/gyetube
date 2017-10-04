@@ -5,7 +5,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <ion-card *ngFor="let decision of decisions | async" (click)="navigateToDetail(decision.id)">
     <ion-card-content>
       {{decision.title}}

@@ -20,14 +20,14 @@ export class UtilService {
       return this.platform.is('mobile'); // CAUTION: This code can't determine whether it's in a mobile web browser or in a native app.
   }
 
-  setCurrentGroupId(group_id: string) {
+  setCurrentGroupId(group_id: string): void {
     this.groupId = group_id;
   }
 
-  getCurrentGroupId() {
+  getCurrentGroupId(): string {
     if (!this.isNativeApp()) {
       let splits = window.location.href.split('/');
-      if (splits.length > 5) {
+      if (splits.length > 3) {
         return splits[4];
       }
     }

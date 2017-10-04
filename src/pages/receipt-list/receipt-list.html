@@ -5,10 +5,19 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <ion-card *ngFor="let receipt of receipts | async" (click)="navigateToDetail(receipt.id)">
     <ion-card-content>
-      {{receipt.memo}}
+      <ion-row>
+        <ion-col>
+            <p>{{receipt.paymentDate | localizedDate}}</p>
+            <p>{{receipt.memo}}</p>
+        </ion-col>
+        <ion-col>
+            <p text-left>{{ 'I18N_DIFFERENCE' | translate}} {{receipt.difference | number}}</p>
+            <p text-right>{{ 'I18N_BALANCE' | translate}} {{receipt.difference | number}}</p>
+        </ion-col>
+      </ion-row>
     </ion-card-content>
   </ion-card>
 </ion-content>

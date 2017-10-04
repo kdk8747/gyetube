@@ -18,9 +18,9 @@ export class DecisionDetailPage {
   groupId: string;
   id: number;
   decision: Observable<Decision>;
-  abstainers: Observable<User>[];
-  accepters: Observable<User>[];
-  rejecters: Observable<User>[];
+  abstainers: Observable<User>[] = [];
+  accepters: Observable<User>[] = [];
+  rejecters: Observable<User>[] = [];
   proceeding: Observable<Proceeding>;
   activities: Observable<Activity>[];
 

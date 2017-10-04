@@ -24,5 +24,8 @@
   "I18N_EXPIRY_DATE": "Expiry Date",
   "I18N_ACCEPTERS": "Accepters",
   "I18N_REJECTERS": "Rejecters",
-  "I18N_ABSTAINERS": "Abstainers"
+  "I18N_ABSTAINERS": "Abstainers",
+  "I18N_PAYMENT_DATE": "Payment Date",
+  "I18N_DIFFERENCE": "Difference",
+  "I18N_BALANCE": "Balance"
 }

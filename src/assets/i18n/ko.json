@@ -24,5 +24,8 @@
   "I18N_EXPIRY_DATE": "만료일",
   "I18N_ACCEPTERS": "찬성",
   "I18N_REJECTERS": "반대",
-  "I18N_ABSTAINERS": "기권"
+  "I18N_ABSTAINERS": "기권",
+  "I18N_PAYMENT_DATE": "지불일",
+  "I18N_DIFFERENCE": "차액",
+  "I18N_BALANCE": "잔액"
 }

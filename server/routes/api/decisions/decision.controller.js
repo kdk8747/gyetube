@@ -10,8 +10,8 @@ var decisionID = 6;
 
 var decisions2 = [
   { id: 1, prevId: 0, state: 0, content: 'dummy content', abstainers:['1'], accepters:['2','3'], rejecters:['4','5'], createdDate: new Date(2016, 5, 24, 11, 33, 30, 0), expiryDate: new Date(2018, 5, 24, 11, 33, 30, 0), parentProceeding: 1, childActivities: [1, 6, 10], title: '설문조사' },
-  { id: 2, prevId: 0, state: 0, content: 'dummy content', abstainers:['1'], accepters:['2','3'], rejecters:['4','5'], createdDate: new Date(2016, 6, 24, 11, 33, 30, 0), expiryDate: new Date(2018, 5, 24, 11, 33, 30, 0), parentProceeding: 2, childActivities: [2, 8], title: '홍보 - 현수막' },
-  { id: 3, prevId: 0, state: 0, content: 'dummy content', abstainers:['1'], accepters:['2','3'], rejecters:['4','5'], createdDate: new Date(2016, 7, 24, 11, 33, 30, 0), expiryDate: new Date(2018, 5, 24, 11, 33, 30, 0), parentProceeding: 3, childActivities: [3], title: '한달에 한번 회의' },
+  { id: 2, prevId: 0, state: 0, content: 'dummy content', abstainers:[], accepters:['1','2','3'], rejecters:['4','5'], createdDate: new Date(2016, 6, 24, 11, 33, 30, 0), expiryDate: new Date(2018, 5, 24, 11, 33, 30, 0), parentProceeding: 2, childActivities: [2, 8], title: '홍보 - 현수막' },
+  { id: 3, prevId: 0, state: 0, content: 'dummy content', abstainers:[], accepters:['1','2','3','4','5'], rejecters:[], createdDate: new Date(2016, 7, 24, 11, 33, 30, 0), expiryDate: new Date(2018, 5, 24, 11, 33, 30, 0), parentProceeding: 3, childActivities: [3], title: '한달에 한번 회의' },
   { id: 4, prevId: 0, state: 0, content: 'dummy content', abstainers:['1'], accepters:['2','3'], rejecters:['4','5'], createdDate: new Date(2016, 8, 24, 11, 33, 30, 0), expiryDate: new Date(2018, 5, 24, 11, 33, 30, 0), parentProceeding: 4, childActivities: [4, 5], title: '지역구 별 통계 조사' },
   { id: 5, prevId: 0, state: 0, content: 'dummy content', abstainers:['1'], accepters:['2','3'], rejecters:['4','5'], createdDate: new Date(2016, 9, 24, 11, 33, 30, 0), expiryDate: new Date(2018, 5, 24, 11, 33, 30, 0), parentProceeding: 5, childActivities: [7, 9], title: '시민사회 연대' }
 ];
