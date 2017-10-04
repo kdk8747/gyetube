@@ -27,7 +27,9 @@ export class ReceiptListPage {
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
     this.receipts = this.receiptService.getReceipts(this.groupId)
-      .map((receipts: Receipt[]) => this.sortByDateR(receipts));
+      .map((receipts: Receipt[]) => this.sortByDateR(receipts))
+      .map((receipts: Receipt[]) => this.setBalance(receipts));
+
     this.event.subscribe('EventReceiptDetailPage', (obj) => {
       let top:ViewController = this.navCtrl.last();
       if (top.id !== 'ReceiptDetailPage' || top.data.id !== obj.id)
@@ -48,5 +50,15 @@ export class ReceiptListPage {
       return h1.paymentDate < h2.paymentDate ? 1 :
         (h1.paymentDate > h2.paymentDate ? -1 : 0);
     });
+  }
+
+  setBalance(receipts: Receipt[]): Receipt[] {
+    if (receipts.length > 0) {
+      receipts[receipts.length - 1].balance = receipts[receipts.length - 1].difference;
+      for(let i = receipts.length - 1; i > 0; i --){
+        receipts[i-1].balance = receipts[i].balance + receipts[i-1].difference;
+      }
+    }
+    return receipts;
   }
 }

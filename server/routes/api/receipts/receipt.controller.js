@@ -35,6 +35,12 @@ exports.getAll = (req, res) => {
   else
     res.json(receipts2);
 }
+exports.getBalance = (req, res) => {
+  if (req.params.group === 'suwongreenparty')
+    res.json(0);
+  else
+    res.json(0);
+}
 exports.getByID = (req, res) => {
   if (req.params.group === 'suwongreenparty')
     res.json(receipts.find(item => item.id === +req.params.id));
