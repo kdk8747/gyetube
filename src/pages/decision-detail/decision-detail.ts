@@ -48,8 +48,11 @@ export class DecisionDetailPage {
     });
   }
 
-  popMenu() {
-    this.navCtrl.setRoot('DecisionListPage'); // work-around
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('DecisionListPage');
+    else
+      this.navCtrl.pop();
   }
 
   navigateToUserDetail() {

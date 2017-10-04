@@ -39,8 +39,11 @@ export class LoginPage {
     }
   }
 
-  popMenu() {
-    this.navCtrl.pop();
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('TabsMyPage');
+    else
+      this.navCtrl.pop();
   }
 
   login(site: string) {
@@ -85,7 +88,7 @@ export class LoginPage {
               message: value
             });
             toast.present();
-            this.navCtrl.setRoot('TabsMyPage');
+            this.popNavigation();
           });
       });
   }

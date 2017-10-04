@@ -49,12 +49,15 @@ export class MenuPage {
     });
   }
 
-  popMenu() {
-    this.navCtrl.pop();
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('TabsMyPage');
+    else
+      this.navCtrl.pop();
   }
 
   pushLogin() {
-    this.navCtrl.pop();
+    this.popNavigation();
     this.navCtrl.push('LoginPage');
   }
 
@@ -68,7 +71,7 @@ export class MenuPage {
               message: value
             });
             toast.present();
-            this.navCtrl.setRoot('TabsMyPage');
+            this.navCtrl.setRoot('TabsMyPage'); // DO NOT USE this.popNavigation(); because of user profile refresh issue.
           });
       });
   }

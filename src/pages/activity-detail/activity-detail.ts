@@ -54,8 +54,11 @@ export class ActivityDetailPage {
     });
   }
 
-  popMenu() {
-    this.navCtrl.setRoot('ActivityListPage'); // work-around
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ActivityListPage');
+    else
+      this.navCtrl.pop();
   }
 
   navigateToUserDetail() {

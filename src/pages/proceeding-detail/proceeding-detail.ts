@@ -41,8 +41,11 @@ export class ProceedingDetailPage {
     });
   }
 
-  popMenu() {
-    this.navCtrl.setRoot('ProceedingListPage'); // work-around
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ProceedingListPage');
+    else
+      this.navCtrl.pop();
   }
 
   navigateToUserDetail() {

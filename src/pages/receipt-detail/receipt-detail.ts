@@ -41,8 +41,11 @@ export class ReceiptDetailPage {
     });
   }
 
-  popMenu() {
-    this.navCtrl.setRoot('ReceiptListPage'); // work-around
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ReceiptListPage');
+    else
+      this.navCtrl.pop();
   }
 
   navigateToUserDetail() {
