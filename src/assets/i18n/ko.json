@@ -25,6 +25,13 @@
   "I18N_ACCEPTERS": "찬성",
   "I18N_REJECTERS": "반대",
   "I18N_ABSTAINERS": "기권",
+
+  "I18N_ACTIVITY_DATE": "활동 시각",
+  "I18N_ELAPSED_TIME": "소요 시간",
+  "I18N_HOURS": "시간",
+  "I18N_PARTICIPANTS": "참가자",
+  "I18N_TOTAL_DIFFERENCE": "총 차액",
+
   "I18N_PAYMENT_DATE": "지불일",
   "I18N_DIFFERENCE": "차액",
   "I18N_BALANCE": "잔액"

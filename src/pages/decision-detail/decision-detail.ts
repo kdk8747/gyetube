@@ -40,11 +40,11 @@ export class DecisionDetailPage {
     this.groupId = this.util.getCurrentGroupId();
     this.decision = this.decisionService.getDecision(this.groupId, this.id).share();
     this.decision.subscribe((decision: Decision) => {
-      this.abstainers = decision.abstainers.map((id:string) => this.userService.getUser(id));
-      this.accepters = decision.accepters.map((id:string) => this.userService.getUser(id));
-      this.rejecters = decision.rejecters.map((id:string) => this.userService.getUser(id));
-      this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding);
-      this.activities = decision.childActivities.map((id:number) => this.activityService.getActivity(this.groupId, id));
+      this.abstainers = decision.abstainers.map((id:string) => this.userService.getUser(id).share());
+      this.accepters = decision.accepters.map((id:string) => this.userService.getUser(id).share());
+      this.rejecters = decision.rejecters.map((id:string) => this.userService.getUser(id).share());
+      this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding).share();
+      this.activities = decision.childActivities.map((id:number) => this.activityService.getActivity(this.groupId, id).share());
     });
   }
 

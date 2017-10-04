@@ -36,8 +36,8 @@ export class ProceedingDetailPage {
     this.groupId = this.util.getCurrentGroupId();
     this.proceeding = this.proceedingService.getProceeding(this.groupId, this.id).share();
     this.proceeding.subscribe((proceeding: Proceeding) => {
-      this.attendees = proceeding.attendees.map((id:string) => this.userService.getUser(id));
-      this.decisions = proceeding.childDecisions.map((id:number) => this.decisionService.getDecision(this.groupId,id));
+      this.attendees = proceeding.attendees.map((id:string) => this.userService.getUser(id).share());
+      this.decisions = proceeding.childDecisions.map((id:number) => this.decisionService.getDecision(this.groupId,id).share());
     });
   }
 

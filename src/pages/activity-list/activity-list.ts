@@ -28,6 +28,7 @@ export class ActivityListPage {
     this.groupId = this.util.getCurrentGroupId();
     this.activities = this.activityService.getActivities(this.groupId)
       .map((activities: Activity[]) => this.sortByDateA(activities));
+
     this.event.subscribe('EventActivityDetailPage', (obj) => {
       let top:ViewController = this.navCtrl.last();
       if (top.id !== 'ActivityDetailPage' || top.data.id !== obj.id)

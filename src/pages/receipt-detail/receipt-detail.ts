@@ -36,8 +36,8 @@ export class ReceiptDetailPage {
     this.groupId = this.util.getCurrentGroupId();
     this.receipt = this.receiptService.getReceipt(this.groupId, this.id).share();
     this.receipt.subscribe((receipt: Receipt) => {
-      this.creator = this.userService.getUser(receipt.creator);
-      this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity);
+      this.creator = this.userService.getUser(receipt.creator).share();
+      this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity).share();
     });
   }
 

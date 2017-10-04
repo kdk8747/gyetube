@@ -28,9 +28,18 @@
           <p>{{(activity | async)?.modifiedDate | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>
+      <p>{{ 'I18N_ACTIVITY_DATE' | translate}}: {{(activity | async)?.activityDate | localizedDate:'short'}}</p>
+      <p>{{ 'I18N_ELAPSED_TIME' | translate }}: {{(activity | async)?.hours}} {{ 'I18N_HOURS' | translate }}</p>
+      <ion-buttons left *ngIf="participants.length">
+        {{ 'I18N_PARTICIPANTS' | translate}}:
+        <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let participant of participants">
+          <ion-avatar><img [src]="(participant | async)?.imageUrl"></ion-avatar>
+        </button>
+      </ion-buttons>
     </ion-card-header>
+
     <ion-card-content>
-      {{(activity | async)?.content}}
+      <p>{{(activity | async)?.content}}</p>
     </ion-card-content>
 
     <ion-card *ngIf="decision | async">
@@ -49,7 +58,8 @@
     <ion-card *ngFor="let receipt of receipts; let i=index">
       <ion-toolbar>
         <ion-buttons>
-          <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.memo }}</p>
+          <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ receipt.memo }}</p>
+          <p text-right>{{ 'I18N_DIFFERENCE' | translate}} {{receipt.difference | number}}</p>
         </ion-buttons>
         <ion-buttons right>
           <button ion-button icon-only (click)="navigateToReceiptDetail(receipt)">
@@ -58,5 +68,16 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-card>
+
+    <ion-card-content>
+      <p text-right>
+        {{ (activity | async)?.hours }} {{ 'I18N_HOURS' | translate}}
+        X {{ (activity | async)?.participants.length }} {{ 'I18N_PARTICIPANTS' | translate}}
+        = {{ (activity | async)?.hours * (activity | async)?.participants.length }} {{ 'I18N_HOURS' | translate}}
+      </p>
+      <p text-right>
+        {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{totalDifference | number}}
+      </p>
+    </ion-card-content>
   </ion-card>
 </ion-content>

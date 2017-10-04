@@ -1,29 +1,29 @@
 
 var activities = [
-  { id: 1, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 5, 24, 11, 33, 30, 0), activityDate: new Date(2016, 5, 24, 11, 33, 30, 0), title: 'hahaha', parentDecision: 1, childReceipts: [1] },
-  { id: 2, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 6, 2, 11, 33, 30, 0), activityDate: new Date(2016, 6, 2, 11, 33, 30, 0), title: 'hohoho', parentDecision: 2, childReceipts: [2] },
-  { id: 3, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 6, 24, 11, 33, 30, 0), activityDate: new Date(2016, 6, 24, 11, 33, 30, 0), title: 'huhoho', parentDecision: 3, childReceipts: [3] },
-  { id: 4, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 7, 4, 11, 33, 30, 0), activityDate: new Date(2016, 7, 4, 11, 33, 30, 0), title: 'hohuho', parentDecision: 4, childReceipts: [4] },
-  { id: 5, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 7, 24, 11, 33, 30, 0), activityDate: new Date(2016, 7, 24, 11, 33, 30, 0), title: 'hohohu', parentDecision: 4, childReceipts: [5] },
-  { id: 6, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 8, 2, 11, 33, 30, 0), activityDate: new Date(2016, 8, 2, 11, 33, 30, 0), title: 'huhuhu', parentDecision: 1, childReceipts: [6] },
-  { id: 7, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 8, 24, 11, 33, 30, 0), activityDate: new Date(2016, 8, 24, 11, 33, 30, 0), title: 'hohuha', parentDecision: 5, childReceipts: [7] },
-  { id: 8, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 9, 4, 11, 33, 30, 0), activityDate: new Date(2016, 9, 4, 11, 33, 30, 0), title: 'hohoha', parentDecision: 2, childReceipts: [8] },
-  { id: 9, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), activityDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: 'hahoho', parentDecision: 5, childReceipts: [9] },
-  { id: 10, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 10, 24, 11, 33, 30, 0), activityDate: new Date(2016, 10, 24, 11, 33, 30, 0), title: 'hahuhu', parentDecision: 1, childReceipts: [10, 11] }
+  { id: 1, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 5, 24, 11, 33, 30, 0), activityDate: new Date(2016, 5, 24, 11, 33, 30, 0), title: 'hahaha', parentDecision: 1, childReceipts: [1] },
+  { id: 2, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 6, 2, 11, 33, 30, 0), activityDate: new Date(2016, 6, 2, 11, 33, 30, 0), title: 'hohoho', parentDecision: 2, childReceipts: [2] },
+  { id: 3, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 6, 24, 11, 33, 30, 0), activityDate: new Date(2016, 6, 24, 11, 33, 30, 0), title: 'huhoho', parentDecision: 3, childReceipts: [3] },
+  { id: 4, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 7, 4, 11, 33, 30, 0), activityDate: new Date(2016, 7, 4, 11, 33, 30, 0), title: 'hohuho', parentDecision: 4, childReceipts: [4] },
+  { id: 5, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 7, 24, 11, 33, 30, 0), activityDate: new Date(2016, 7, 24, 11, 33, 30, 0), title: 'hohohu', parentDecision: 4, childReceipts: [5] },
+  { id: 6, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 8, 2, 11, 33, 30, 0), activityDate: new Date(2016, 8, 2, 11, 33, 30, 0), title: 'huhuhu', parentDecision: 1, childReceipts: [6] },
+  { id: 7, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 8, 24, 11, 33, 30, 0), activityDate: new Date(2016, 8, 24, 11, 33, 30, 0), title: 'hohuha', parentDecision: 5, childReceipts: [7] },
+  { id: 8, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 9, 4, 11, 33, 30, 0), activityDate: new Date(2016, 9, 4, 11, 33, 30, 0), title: 'hohoha', parentDecision: 2, childReceipts: [8] },
+  { id: 9, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), activityDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: 'hahoho', parentDecision: 5, childReceipts: [9] },
+  { id: 10, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 10, 24, 11, 33, 30, 0), activityDate: new Date(2016, 10, 24, 11, 33, 30, 0), title: 'hahuhu', parentDecision: 1, childReceipts: [10, 11] }
 ];
 var activityID = 11;
 
 var activities2 = [
-  { id: 1, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 5, 24, 11, 33, 30, 0), activityDate: new Date(2016, 5, 24, 11, 33, 30, 0), title: '5월 정기회의', parentDecision: 1, childReceipts: [1] },
-  { id: 2, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 6, 2, 11, 33, 30, 0), activityDate: new Date(2016, 6, 2, 11, 33, 30, 0), title: 'hohoho', parentDecision: 2, childReceipts: [2] },
-  { id: 3, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 6, 24, 11, 33, 30, 0), activityDate: new Date(2016, 6, 24, 11, 33, 30, 0), title: '6월 정기회의', parentDecision: 3, childReceipts: [3] },
-  { id: 4, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 7, 4, 11, 33, 30, 0), activityDate: new Date(2016, 7, 4, 11, 33, 30, 0), title: 'hohuho', parentDecision: 4, childReceipts: [4] },
-  { id: 5, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 7, 24, 11, 33, 30, 0), activityDate: new Date(2016, 7, 24, 11, 33, 30, 0), title: '7월 정기회의', parentDecision: 4, childReceipts: [5] },
-  { id: 6, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 8, 2, 11, 33, 30, 0), activityDate: new Date(2016, 8, 2, 11, 33, 30, 0), title: 'huhuhu', parentDecision: 1, childReceipts: [6] },
-  { id: 7, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 8, 24, 11, 33, 30, 0), activityDate: new Date(2016, 8, 24, 11, 33, 30, 0), title: '8월 정기회의', parentDecision: 5, childReceipts: [7] },
-  { id: 8, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 9, 4, 11, 33, 30, 0), activityDate: new Date(2016, 9, 4, 11, 33, 30, 0), title: 'hohoha', parentDecision: 2, childReceipts: [8] },
-  { id: 9, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), activityDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: '9월 정기회의', parentDecision: 5, childReceipts: [9] },
-  { id: 10, creator: '1', content: 'dummy content', modifiedDate: new Date(2016, 10, 24, 11, 33, 30, 0), activityDate: new Date(2016, 10, 24, 11, 33, 30, 0), title: '10월 정기회의', parentDecision: 1, childReceipts: [10, 11] }
+  { id: 1, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 5, 24, 11, 33, 30, 0), activityDate: new Date(2016, 5, 24, 11, 33, 30, 0), title: '5월 정기회의', parentDecision: 1, childReceipts: [1] },
+  { id: 2, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 6, 2, 11, 33, 30, 0), activityDate: new Date(2016, 6, 2, 11, 33, 30, 0), title: 'hohoho', parentDecision: 2, childReceipts: [2] },
+  { id: 3, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 6, 24, 11, 33, 30, 0), activityDate: new Date(2016, 6, 24, 11, 33, 30, 0), title: '6월 정기회의', parentDecision: 3, childReceipts: [3] },
+  { id: 4, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 7, 4, 11, 33, 30, 0), activityDate: new Date(2016, 7, 4, 11, 33, 30, 0), title: 'hohuho', parentDecision: 4, childReceipts: [4] },
+  { id: 5, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 7, 24, 11, 33, 30, 0), activityDate: new Date(2016, 7, 24, 11, 33, 30, 0), title: '7월 정기회의', parentDecision: 4, childReceipts: [5] },
+  { id: 6, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 8, 2, 11, 33, 30, 0), activityDate: new Date(2016, 8, 2, 11, 33, 30, 0), title: 'huhuhu', parentDecision: 1, childReceipts: [6] },
+  { id: 7, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 8, 24, 11, 33, 30, 0), activityDate: new Date(2016, 8, 24, 11, 33, 30, 0), title: '8월 정기회의', parentDecision: 5, childReceipts: [7] },
+  { id: 8, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 9, 4, 11, 33, 30, 0), activityDate: new Date(2016, 9, 4, 11, 33, 30, 0), title: 'hohoha', parentDecision: 2, childReceipts: [8] },
+  { id: 9, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), activityDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: '9월 정기회의', parentDecision: 5, childReceipts: [9] },
+  { id: 10, creator: '1', participants: ['1','2','3','4','5'], hours: 2, content: 'dummy content', modifiedDate: new Date(2016, 10, 24, 11, 33, 30, 0), activityDate: new Date(2016, 10, 24, 11, 33, 30, 0), title: '10월 정기회의', parentDecision: 1, childReceipts: [10, 11] }
 ];
 var activityID2 = 11;
 

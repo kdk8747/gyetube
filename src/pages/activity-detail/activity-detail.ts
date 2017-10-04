@@ -4,6 +4,8 @@ import { UtilService, ActivityService, UserService, DecisionService, ReceiptServ
 import { Activity, User, Decision, Receipt } from '../../models';
 import { Observable } from 'rxjs/Observable';
 
+import 'rxjs/add/operator/toPromise';
+
 
 @IonicPage({
   segment: 'activity/:id'
@@ -19,8 +21,10 @@ export class ActivityDetailPage {
   id: number;
   activity: Observable<Activity>;
   creator: Observable<User>;
+  participants: Observable<User>[] = [];
   decision: Observable<Decision>;
-  receipts: Observable<Receipt>[];
+  receipts: Receipt[] = [];
+  totalDifference: number = 0;
 
   constructor(
     public navCtrl: NavController,
@@ -38,9 +42,15 @@ export class ActivityDetailPage {
     this.groupId = this.util.getCurrentGroupId();
     this.activity = this.activityService.getActivity(this.groupId, this.id).share();
     this.activity.subscribe((activity: Activity) => {
-      this.creator = this.userService.getUser(activity.creator);
-      this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision);
-      this.receipts = activity.childReceipts.map((id:number) => this.receiptService.getReceipt(this.groupId, id));
+      this.creator = this.userService.getUser(activity.creator).share();
+      this.participants = activity.participants.map((id:string) => this.userService.getUser(id).share());
+      this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision).share();
+      Promise.all(activity.childReceipts.map((id:number) => this.receiptService.getReceipt(this.groupId, id).toPromise()))
+        .then((receipts: Receipt[]) => {
+          for (let i = 0; i < receipts.length; i ++)
+            this.totalDifference += receipts[i].difference;
+          this.receipts = receipts;
+        });
     });
   }
 
@@ -59,11 +69,9 @@ export class ActivityDetailPage {
     });
   }
 
-  navigateToReceiptDetail(obs: Observable<Receipt>) {
-    obs.subscribe(receipt => {
-      this.navCtrl.parent.select(4);
-      setTimeout(() => this.event.publish('EventReceiptDetailPage', {id: receipt.id }), 500); // 500 ms delay : work-around
-    });
+  navigateToReceiptDetail(receipt: Receipt) {
+    this.navCtrl.parent.select(4);
+    setTimeout(() => this.event.publish('EventReceiptDetailPage', {id: receipt.id }), 500); // 500 ms delay : work-around
   }
 
 }

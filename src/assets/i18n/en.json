@@ -22,9 +22,16 @@
 
   "I18N_CREATED_DATE": "Created Date",
   "I18N_EXPIRY_DATE": "Expiry Date",
-  "I18N_ACCEPTERS": "Accepters",
-  "I18N_REJECTERS": "Rejecters",
-  "I18N_ABSTAINERS": "Abstainers",
+  "I18N_ACCEPTERS": "Accepter(s)",
+  "I18N_REJECTERS": "Rejecter(s)",
+  "I18N_ABSTAINERS": "Abstainer(s)",
+
+  "I18N_ACTIVITY_DATE": "Activity Date",
+  "I18N_ELAPSED_TIME": "Elapsed Time",
+  "I18N_HOURS": "hours",
+  "I18N_PARTICIPANTS": "Participant(s)",
+  "I18N_TOTAL_DIFFERENCE": "Total Difference",
+
   "I18N_PAYMENT_DATE": "Payment Date",
   "I18N_DIFFERENCE": "Difference",
   "I18N_BALANCE": "Balance"
