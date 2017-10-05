@@ -17,6 +17,7 @@ export class ReceiptDetailPage {
 
   groupId: string;
   id: number;
+  responseTimeMs: number = 500;
   receipt: Observable<Receipt>;
   creator: Observable<User>;
   activity: Observable<Activity>;
@@ -34,8 +35,12 @@ export class ReceiptDetailPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
+
+    let sendDate = (new Date()).getTime();
     this.receipt = this.receiptService.getReceipt(this.groupId, this.id).share();
     this.receipt.subscribe((receipt: Receipt) => {
+      let receiveDate = (new Date()).getTime();
+      this.responseTimeMs = receiveDate - sendDate;
       this.creator = this.userService.getUser(receipt.creator).share();
       this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity).share();
     });
@@ -55,7 +60,7 @@ export class ReceiptDetailPage {
   navigateToActivityDetail(obs: Observable<Activity>) {
     obs.subscribe(activity => {
       this.navCtrl.parent.select(3);
-      setTimeout(() => this.event.publish('EventActivityDetailPage', {id: activity.id }), 500); // 500 ms delay : work-around
+      setTimeout(() => this.event.publish('EventActivityDetailPage', {id: activity.id }), this.responseTimeMs); // delay : work-around
     });
   }
 }

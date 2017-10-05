@@ -34,9 +34,6 @@ if (process.env.NODE_ENV != 'production')
 
 app.use(sslRedirect(['production'], 301));
 app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
-app.use('/build', expressStaticGzip(__public)); // FIX ME (performance)
-app.use('/login', expressStaticGzip(__public)); // FIX ME (performance)
-app.use('/suwongreenparty', expressStaticGzip(__public)); // FIX ME (performance)
 
 require('./middlewares/passports').initialize();
 

@@ -19,6 +19,7 @@ export class ActivityDetailPage {
 
   groupId: string;
   id: number;
+  responseTimeMs: number = 500;
   activity: Observable<Activity>;
   creator: Observable<User>;
   participants: Observable<User>[] = [];
@@ -39,8 +40,12 @@ export class ActivityDetailPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
+
+    let sendDate = (new Date()).getTime();
     this.activity = this.activityService.getActivity(this.groupId, this.id).share();
     this.activity.subscribe((activity: Activity) => {
+      let receiveDate = (new Date()).getTime();
+      this.responseTimeMs = receiveDate - sendDate;
       this.creator = this.userService.getUser(activity.creator).share();
       this.participants = activity.participants.map((id:string) => this.userService.getUser(id).share());
       this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision).share();
@@ -62,14 +67,14 @@ export class ActivityDetailPage {
   navigateToDecisionDetail(obs: Observable<Decision>) {
     obs.subscribe(decision => {
       this.navCtrl.parent.select(2);
-      setTimeout(() => this.event.publish('EventDecisionDetailPage', {id: decision.id }), 500); // 500 ms delay : work-around
+      setTimeout(() => this.event.publish('EventDecisionDetailPage', {id: decision.id }), this.responseTimeMs); // delay : work-around
     });
   }
 
   navigateToReceiptDetail(obs: Observable<Receipt>) {
     obs.subscribe(receipt => {
       this.navCtrl.parent.select(4);
-      setTimeout(() => this.event.publish('EventReceiptDetailPage', {id: receipt.id }), 500); // 500 ms delay : work-around
+      setTimeout(() => this.event.publish('EventReceiptDetailPage', {id: receipt.id }), this.responseTimeMs); // delay : work-around
     });
   }
 

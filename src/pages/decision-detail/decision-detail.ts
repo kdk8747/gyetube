@@ -17,6 +17,7 @@ export class DecisionDetailPage {
 
   groupId: string;
   id: number;
+  responseTimeMs: number = 500;
   decision: Observable<Decision>;
   abstainers: Observable<User>[] = [];
   accepters: Observable<User>[] = [];
@@ -38,8 +39,12 @@ export class DecisionDetailPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
+
+    let sendDate = (new Date()).getTime();
     this.decision = this.decisionService.getDecision(this.groupId, this.id).share();
     this.decision.subscribe((decision: Decision) => {
+      let receiveDate = (new Date()).getTime();
+      this.responseTimeMs = receiveDate - sendDate;
       this.abstainers = decision.abstainers.map((id:string) => this.userService.getUser(id).share());
       this.accepters = decision.accepters.map((id:string) => this.userService.getUser(id).share());
       this.rejecters = decision.rejecters.map((id:string) => this.userService.getUser(id).share());
@@ -62,14 +67,14 @@ export class DecisionDetailPage {
   navigateToProceedingDetail(obs: Observable<Proceeding>) {
     obs.subscribe(proceeding => {
       this.navCtrl.parent.select(1);
-      setTimeout(() => this.event.publish('EventProceedingDetailPage', {id: proceeding.id }), 500); // 500 ms delay : work-around
+      setTimeout(() => this.event.publish('EventProceedingDetailPage', {id: proceeding.id }), this.responseTimeMs); // delay : work-around
     });
   }
 
   navigateToActivityDetail(obs: Observable<Activity>) {
     obs.subscribe(activity => {
       this.navCtrl.parent.select(3);
-      setTimeout(() => this.event.publish('EventActivityDetailPage', {id: activity.id }), 500); // 500 ms delay : work-around
+      setTimeout(() => this.event.publish('EventActivityDetailPage', {id: activity.id }), this.responseTimeMs); // delay : work-around
     });
   }
 }
