@@ -30,6 +30,8 @@ export class ProceedingListPage {
       .map((proceedings:Proceeding[]) => this.sortByDate(proceedings));
     this.event.subscribe('EventProceedingDetailPage', (obj) => {
       let top:ViewController = this.navCtrl.last();
+      if (top.id === 'ProceedingDetailPage' && top.data.id !== obj.id)
+        this.navCtrl.pop();
       if (top.id !== 'ProceedingDetailPage' || top.data.id !== obj.id)
         this.navCtrl.push('ProceedingDetailPage', { id: obj.id });
     });

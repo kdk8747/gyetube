@@ -32,6 +32,8 @@ export class ReceiptListPage {
 
     this.event.subscribe('EventReceiptDetailPage', (obj) => {
       let top:ViewController = this.navCtrl.last();
+      if (top.id === 'ReceiptDetailPage' && top.data.id !== obj.id)
+        this.navCtrl.pop();
       if (top.id !== 'ReceiptDetailPage' || top.data.id !== obj.id)
         this.navCtrl.push('ReceiptDetailPage', { id: obj.id });
     });
