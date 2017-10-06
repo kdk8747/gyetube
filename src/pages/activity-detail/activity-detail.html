@@ -20,7 +20,10 @@
       <ion-row justify-content-start>
         <ion-col col-auto>
           <button ion-button clear icon-only (click)="navigateToUserDetail()">
-            <ion-avatar><img [src]="(creator | async)?.imageUrl"></ion-avatar>
+            <span *ngIf="!((creator | async)?.imageUrl)">{{(creator | async)?.name}}</span>
+            <ion-avatar *ngIf="(creator | async)?.imageUrl">
+              <img [src]="(creator | async)?.imageUrl">
+            </ion-avatar>
           </button>
         </ion-col>
         <ion-col>
@@ -33,10 +36,13 @@
     </ion-card-header>
 
     <ion-card-content>
-      <ion-buttons left *ngIf="participants.length">
+      <ion-buttons left *ngIf="participants.length > 1">
         {{ 'I18N_PARTICIPANTS' | translate}}:
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let participant of participants">
-          <ion-avatar><img [src]="(participant | async)?.imageUrl"></ion-avatar>
+          <span *ngIf="!((participant | async)?.imageUrl)">{{(participant | async)?.name}}</span>
+          <ion-avatar *ngIf="(participant | async)?.imageUrl">
+            <img [src]="(participant | async)?.imageUrl">
+          </ion-avatar>
         </button>
       </ion-buttons>
       <div style="height:10px"></div>
@@ -70,7 +76,7 @@
       </ion-toolbar>
     </ion-card>
 
-    <ion-card-content>
+    <ion-card-header>
       <p text-right>
         {{ (activity | async)?.elapsedTime }} {{ 'I18N_HOURS' | translate}}
         X {{ (activity | async)?.participants.length }} {{ 'I18N_PARTICIPANTS' | translate}}
@@ -79,6 +85,6 @@
       <p text-right>
         {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{(activity | async)?.totalDifference | number}}
       </p>
-    </ion-card-content>
+    </ion-card-header>
   </ion-card>
 </ion-content>

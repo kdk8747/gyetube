@@ -20,6 +20,9 @@
   "I18N_SIGN_IN_TOAST": "로그인 성공",
   "I18N_SIGN_OUT_TOAST": "현재 로그아웃 상태로 GrassCube를 사용 중입니다.",
 
+  "I18N_ATTENDEES": "참석자",
+  "I18N_DECISIONS": "결정사항",
+
   "I18N_CREATED_DATE": "생성일",
   "I18N_EXPIRY_DATE": "만료일",
   "I18N_ACCEPTERS": "찬성",

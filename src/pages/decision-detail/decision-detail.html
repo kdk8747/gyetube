@@ -16,34 +16,43 @@
       <ion-buttons>{{(decision | async)?.title}}</ion-buttons>
     </ion-toolbar>
 
-    <ion-card-header>
+    <ion-card-content>
       <p>{{ 'I18N_CREATED_DATE' | translate}}: {{(decision | async)?.createdDate | localizedDate}}</p>
       <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{(decision | async)?.expiryDate | localizedDate}}</p>
       <p>{{(decision | async)?.content}}</p>
-    </ion-card-header>
+    </ion-card-content>
 
     <ion-card-content>
       <ion-buttons left *ngIf="accepters.length">
         {{ 'I18N_ACCEPTERS' | translate}}:
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let accepter of accepters">
-          <ion-avatar><img [src]="(accepter | async)?.imageUrl"></ion-avatar>
+          <span *ngIf="!((accepter | async)?.imageUrl)">{{(accepter | async)?.name}}</span>
+          <ion-avatar *ngIf="(accepter | async)?.imageUrl">
+            <img [src]="(accepter | async)?.imageUrl">
+          </ion-avatar>
         </button>
       </ion-buttons>
       <ion-buttons left *ngIf="rejecters.length">
         {{ 'I18N_REJECTERS' | translate}}:
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let rejecter of rejecters">
-          <ion-avatar><img [src]="(rejecter | async)?.imageUrl"></ion-avatar>
+          <span *ngIf="!((rejecter | async)?.imageUrl)">{{(rejecter | async)?.name}}</span>
+          <ion-avatar *ngIf="(rejecter | async)?.imageUrl">
+            <img [src]="(rejecter | async)?.imageUrl">
+          </ion-avatar>
         </button>
       </ion-buttons>
       <ion-buttons left *ngIf="abstainers.length">
         {{ 'I18N_ABSTAINERS' | translate}}:
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let abstainer of abstainers">
-          <ion-avatar><img [src]="(abstainer | async)?.imageUrl"></ion-avatar>
+          <span *ngIf="!((abstainer | async)?.imageUrl)">{{(abstainer | async)?.name}}</span>
+          <ion-avatar *ngIf="(abstainer | async)?.imageUrl">
+            <img [src]="(abstainer | async)?.imageUrl">
+          </ion-avatar>
         </button>
       </ion-buttons>
     </ion-card-content>
 
-    <ion-card *ngIf="proceeding | async">
+    <ion-card *ngIf="proceeding && (proceeding | async)">
       <ion-toolbar>
         <ion-buttons>
           <p>{{ 'I18N_PROCEEDING' | translate }} - {{ (proceeding | async)?.title }}</p>
@@ -78,13 +87,13 @@
       </ion-toolbar>
     </ion-card>
 
-    <ion-card-content>
+    <ion-card-header>
       <p text-right>
         {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{(decision | async)?.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
       </p>
       <p text-right>
         {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{(decision | async)?.totalDifference | number}}
       </p>
-    </ion-card-content>
+    </ion-card-header>
   </ion-card>
 </ion-content>

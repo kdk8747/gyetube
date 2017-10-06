@@ -20,6 +20,9 @@
   "I18N_SIGN_IN_TOAST": "Successfully signed in",
   "I18N_SIGN_OUT_TOAST": "You're now using GrassCube signed out",
 
+  "I18N_ATTENDEES": "Attendee(s)",
+  "I18N_DECISIONS": "Decision(s)",
+
   "I18N_CREATED_DATE": "Created Date",
   "I18N_EXPIRY_DATE": "Expiry Date",
   "I18N_ACCEPTERS": "Accepter(s)",

@@ -1,16 +1,25 @@
 
 var receipts = [
-  { id: 1, creator: '1', modifiedDate: new Date(2016, 5, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 5, 24, 11, 33, 30, 0), memo: 'dummy1', difference: +3000000, imageUrl: 'dummy', parentActivity: 1 },
-  { id: 2, creator: '1', modifiedDate: new Date(2016, 5, 28, 11, 33, 30, 0), paymentDate: new Date(2016, 5, 28, 11, 33, 30, 0), memo: 'dummy1', difference: -20000, imageUrl: 'dummy', parentActivity: 2 },
-  { id: 3, creator: '1', modifiedDate: new Date(2016, 6, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 6, 24, 11, 33, 30, 0), memo: 'dummy1', difference: -150000, imageUrl: 'dummy', parentActivity: 3 },
-  { id: 4, creator: '1', modifiedDate: new Date(2016, 6, 27, 11, 33, 30, 0), paymentDate: new Date(2016, 6, 27, 11, 33, 30, 0), memo: 'dummy1', difference: +360000, imageUrl: 'dummy', parentActivity: 4 },
-  { id: 5, creator: '1', modifiedDate: new Date(2016, 7, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 7, 24, 11, 33, 30, 0), memo: 'dummy1', difference: -7500, imageUrl: 'dummy', parentActivity: 5 },
-  { id: 6, creator: '1', modifiedDate: new Date(2016, 7, 29, 11, 33, 30, 0), paymentDate: new Date(2016, 7, 29, 11, 33, 30, 0), memo: 'dummy1', difference: +360000, imageUrl: 'dummy', parentActivity: 6 },
-  { id: 7, creator: '1', modifiedDate: new Date(2016, 8, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 8, 24, 11, 33, 30, 0), memo: 'dummy1', difference: -20000, imageUrl: 'dummy', parentActivity: 7 },
-  { id: 8, creator: '1', modifiedDate: new Date(2016, 8, 25, 11, 33, 30, 0), paymentDate: new Date(2016, 8, 25, 11, 33, 30, 0), memo: 'dummy1', difference: +360000, imageUrl: 'dummy', parentActivity: 8 },
-  { id: 9, creator: '1', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 9, 24, 11, 33, 30, 0), memo: 'dummy1', difference: -20000, imageUrl: 'dummy', parentActivity: 9 },
-  { id: 10, creator: '1', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 9, 24, 11, 33, 30, 0), memo: 'dummy1', difference: +360000, imageUrl: 'dummy', parentActivity: 10 },
-  { id: 11, creator: '1', modifiedDate: new Date(2016, 10, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 10, 24, 11, 33, 30, 0), memo: 'dummy1', difference: +360000, imageUrl: 'dummy', parentActivity: 10 }
+  {
+    id: 1,
+    creator: 'dk',
+    modifiedDate: new Date("2016-10-06T19:30:00+09:00"),
+    paymentDate: new Date("2016-01-01T19:30:00+09:00"),
+    memo: '2015년 수원녹색당 이월금',
+    difference: +1229000,
+    imageUrl: ''
+    //parentActivity: 1
+  },
+  {
+    id: 2,
+    creator: 'dk',
+    modifiedDate: new Date("2016-10-06T19:30:00+09:00"),
+    paymentDate: new Date("2016-03-07T19:30:00+09:00"),
+    memo: '2016년 총선 선거기금',
+    difference: -1229000,
+    imageUrl: '',
+    //parentActivity: 1
+  },
 ];
 var receiptID = 12;
 

@@ -19,8 +19,12 @@
     <ion-card-header>
       <p>{{(proceeding | async)?.meetingDate | localizedDate:'short'}}</p>
       <ion-buttons left>
+        {{ 'I18N_ATTENDEES' | translate}}:
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let attendee of attendees">
-          <ion-avatar><img [src]="(attendee | async)?.imageUrl"></ion-avatar>
+          <span *ngIf="!((attendee | async)?.imageUrl)">{{(attendee | async)?.name}}</span>
+          <ion-avatar *ngIf="(attendee | async)?.imageUrl">
+            <img [src]="(attendee | async)?.imageUrl">
+          </ion-avatar>
         </button>
       </ion-buttons>
     </ion-card-header>
@@ -33,6 +37,15 @@
       <ion-toolbar>
         <ion-buttons>
           <p>{{ 'I18N_DECISION' | translate }}{{i+1}} - {{ (decision | async)?.title }}</p>
+          <p text-right>
+            {{ 'I18N_ELAPSED_TIME' | translate}}
+            {{ (decision | async)?.totalElapsedTime }}
+            {{ 'I18N_HOURS' | translate}}
+          </p>
+          <p text-right>
+            {{ 'I18N_DIFFERENCE' | translate}}
+            {{ (decision | async)?.totalDifference | number}}
+          </p>
         </ion-buttons>
         <ion-buttons right>
           <button ion-button icon-only (click)="navigateToDecisionDetail(decision)">

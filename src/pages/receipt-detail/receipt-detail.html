@@ -20,7 +20,10 @@
       <ion-row justify-content-start>
         <ion-col col-auto>
           <button ion-button clear icon-only (click)="navigateToUserDetail()">
-            <ion-avatar><img [src]="(creator | async)?.imageUrl"></ion-avatar>
+            <span *ngIf="!((creator | async)?.imageUrl)">{{(creator | async)?.name}}</span>
+            <ion-avatar *ngIf="(creator | async)?.imageUrl">
+              <img [src]="(creator | async)?.imageUrl">
+            </ion-avatar>
           </button>
         </ion-col>
         <ion-col>
@@ -35,7 +38,7 @@
       <p>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
     </ion-card-content>
 
-    <ion-card *ngIf="activity | async">
+    <ion-card *ngIf="activity && (activity | async)">
       <ion-toolbar>
         <ion-buttons>
           <p>{{ 'I18N_ACTIVITY' | translate }} - {{ (activity | async)?.title }}</p>

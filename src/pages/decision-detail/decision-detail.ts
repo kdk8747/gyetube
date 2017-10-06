@@ -22,7 +22,7 @@ export class DecisionDetailPage {
   abstainers: Observable<User>[] = [];
   accepters: Observable<User>[] = [];
   rejecters: Observable<User>[] = [];
-  proceeding: Observable<Proceeding>;
+  proceeding: Observable<Proceeding> = null;
   activities: Observable<Activity>[];
 
   constructor(
@@ -48,7 +48,8 @@ export class DecisionDetailPage {
       this.abstainers = decision.abstainers.map((id:string) => this.userService.getUser(id).share());
       this.accepters = decision.accepters.map((id:string) => this.userService.getUser(id).share());
       this.rejecters = decision.rejecters.map((id:string) => this.userService.getUser(id).share());
-      this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding).share();
+      if (decision.parentProceeding)
+        this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding).share();
       this.activities = decision.childActivities.map((id:number) => this.activityService.getActivity(this.groupId, id).share());
     });
   }

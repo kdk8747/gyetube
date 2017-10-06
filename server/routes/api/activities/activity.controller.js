@@ -1,15 +1,19 @@
 
 var activities = [
-  { id: 1, creator: '1', participants: ['1','2','3','4','5'], elapsedTime: 2, content: 'dummy content', modifiedDate: new Date(2016, 5, 24, 11, 33, 30, 0), activityDate: new Date(2016, 5, 24, 11, 33, 30, 0), title: 'hahaha', totalDifference: +3000000, parentDecision: 1, childReceipts: [1] },
-  { id: 2, creator: '1', participants: ['1','2','3','4','5'], elapsedTime: 2, content: 'dummy content', modifiedDate: new Date(2016, 6, 2, 11, 33, 30, 0), activityDate: new Date(2016, 6, 2, 11, 33, 30, 0), title: 'hohoho',   totalDifference: -20000,  parentDecision: 2, childReceipts: [2] },
-  { id: 3, creator: '1', participants: ['1','2','3','4','5'], elapsedTime: 2, content: 'dummy content', modifiedDate: new Date(2016, 6, 24, 11, 33, 30, 0), activityDate: new Date(2016, 6, 24, 11, 33, 30, 0), title: 'huhoho', totalDifference: -150000, parentDecision: 3, childReceipts: [3] },
-  { id: 4, creator: '1', participants: ['1','2','3','4','5'], elapsedTime: 2, content: 'dummy content', modifiedDate: new Date(2016, 7, 4, 11, 33, 30, 0), activityDate: new Date(2016, 7, 4, 11, 33, 30, 0), title: 'hohuho',   totalDifference: +360000, parentDecision: 4, childReceipts: [4] },
-  { id: 5, creator: '1', participants: ['1','2','3','4','5'], elapsedTime: 2, content: 'dummy content', modifiedDate: new Date(2016, 7, 24, 11, 33, 30, 0), activityDate: new Date(2016, 7, 24, 11, 33, 30, 0), title: 'hohohu', totalDifference: -7500,   parentDecision: 4, childReceipts: [5] },
-  { id: 6, creator: '1', participants: ['1','2','3','4','5'], elapsedTime: 2, content: 'dummy content', modifiedDate: new Date(2016, 8, 2, 11, 33, 30, 0), activityDate: new Date(2016, 8, 2, 11, 33, 30, 0), title: 'huhuhu',   totalDifference: +360000, parentDecision: 1, childReceipts: [6] },
-  { id: 7, creator: '1', participants: ['1','2','3','4','5'], elapsedTime: 2, content: 'dummy content', modifiedDate: new Date(2016, 8, 24, 11, 33, 30, 0), activityDate: new Date(2016, 8, 24, 11, 33, 30, 0), title: 'hohuha', totalDifference: -20000,  parentDecision: 5, childReceipts: [7] },
-  { id: 8, creator: '1', participants: ['1','2','3','4','5'], elapsedTime: 2, content: 'dummy content', modifiedDate: new Date(2016, 9, 4, 11, 33, 30, 0), activityDate: new Date(2016, 9, 4, 11, 33, 30, 0), title: 'hohoha',   totalDifference: +360000, parentDecision: 2, childReceipts: [8] },
-  { id: 9, creator: '1', participants: ['1','2','3','4','5'], elapsedTime: 2, content: 'dummy content', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), activityDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: 'hahoho', totalDifference: -20000,  parentDecision: 5, childReceipts: [9] },
-  { id: 10, creator: '1', participants: ['1','2','3','4','5'], elapsedTime: 2, content: 'dummy content', modifiedDate: new Date(2016, 10, 24, 11, 33, 30, 0), activityDate: new Date(2016, 10, 24, 11, 33, 30, 0), title: 'hahuhu', totalDifference: +720000, parentDecision: 1, childReceipts: [10, 11] }
+  {
+    id: 1,
+    creator: 'dk',
+    participants: ['yd','sj','dk','jy','ty', 'jh'],
+    elapsedTime: 2,
+    title: '수원녹색당 임시총회',
+    location: '행궁동 공존공간 1층',
+    content: '수원녹색당 임시총회',
+    modifiedDate: new Date(2017, 10, 6, 11, 33, 30, 0),
+    activityDate: new Date(2016, 3, 7, 19, 30, 0, 0),
+    totalDifference: 0,
+    parentDecision: 1,
+    childReceipts: []
+  },
 ];
 var activityID = 11;
 

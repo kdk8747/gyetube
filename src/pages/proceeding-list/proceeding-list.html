@@ -6,14 +6,18 @@
 
 
 <ion-content>
-    <ion-card *ngFor="let proceeding of proceedings | async" (click)="navigateToDetail(proceeding.id)">
-      <ion-card-header>
-        <ion-card-title>
-        {{proceeding.title}}
-        </ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        {{proceeding.content}}
-      </ion-card-content>
-    </ion-card>
+  <ion-card *ngFor="let proceeding of proceedings | async" (click)="navigateToDetail(proceeding.id)">
+    <ion-card-content>
+      <ion-row>
+        <ion-col>
+          <p>{{proceeding.createdDate | localizedDate}}</p>
+          <p>{{proceeding.title}}</p>
+        </ion-col>
+        <ion-col>
+          <p text-right> {{ proceeding.attendees.length }} {{ 'I18N_ATTENDEES' | translate}} </p>
+          <p text-right> {{ proceeding.childDecisions.length }} {{ 'I18N_DECISIONS' | translate}} </p>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

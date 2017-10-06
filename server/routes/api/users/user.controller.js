@@ -8,7 +8,14 @@ var users = [
   { id: '2', name: 'dog', imageUrl: 'http://isseysmith.co.uk/wp-content/uploads/2011/03/dog.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
   { id: '3', name: 'cat', imageUrl: 'https://3.bp.blogspot.com/-flSU2xF4YTA/UfLrruLRTWI/AAAAAAAAEd4/d-Nn6WpLCVI/s1600/Cute+Cats+6.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
   { id: '4', name: 'bunny', imageUrl: 'http://2.bp.blogspot.com/-T5kqWdFlMOc/UT2nUjplytI/AAAAAAAAH_4/tyZtroEd16I/s1600/funny+cute+animals-2013-00.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: '5', name: 'fox', imageUrl: 'http://3.bp.blogspot.com/-C_PqsweDoyk/UT2nSjQBHBI/AAAAAAAAH_k/IvQ52hybtXo/s1600/funny+cute+animals-2013-0.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} }
+  { id: '5', name: 'fox', imageUrl: 'http://3.bp.blogspot.com/-C_PqsweDoyk/UT2nSjQBHBI/AAAAAAAAH_k/IvQ52hybtXo/s1600/funny+cute+animals-2013-0.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
+  { id: 'yd', name: '최연두', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
+  { id: 'hk', name: '김희경', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
+  { id: 'dk', name: '김동규', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
+  { id: 'sj', name: '고성준', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
+  { id: 'jy', name: '신지연', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
+  { id: 'ty', name: '한태연', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
+  { id: 'jh', name: '한진희', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
 ];
 
 exports.authenticateNaver = passport.authenticate('naver');

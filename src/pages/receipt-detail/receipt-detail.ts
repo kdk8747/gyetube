@@ -20,7 +20,7 @@ export class ReceiptDetailPage {
   responseTimeMs: number = 500;
   receipt: Observable<Receipt>;
   creator: Observable<User>;
-  activity: Observable<Activity>;
+  activity: Observable<Activity> = null;
 
   constructor(
     public navCtrl: NavController,
@@ -42,7 +42,8 @@ export class ReceiptDetailPage {
       let receiveDate = (new Date()).getTime();
       this.responseTimeMs = receiveDate - sendDate;
       this.creator = this.userService.getUser(receipt.creator).share();
-      this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity).share();
+      if (receipt.parentActivity)
+        this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity).share();
     });
   }
 

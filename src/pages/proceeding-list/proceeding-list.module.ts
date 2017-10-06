@@ -3,6 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProceedingListPage } from './proceeding-list';
 import { ProceedingService } from '../../providers';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,8 @@ import { ProceedingService } from '../../providers';
   ],
   imports: [
     IonicPageModule.forChild(ProceedingListPage),
-    TranslateModule.forChild()
+    TranslateModule.forChild(),
+    PipesModule
   ],
   providers: [
     ProceedingService
