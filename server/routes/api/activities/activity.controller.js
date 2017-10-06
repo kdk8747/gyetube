@@ -8,8 +8,8 @@ var activities = [
     title: '수원녹색당 임시총회',
     location: '행궁동 공존공간 1층',
     content: '수원녹색당 임시총회',
-    modifiedDate: new Date(2017, 10, 6, 11, 33, 30, 0),
-    activityDate: new Date(2016, 3, 7, 19, 30, 0, 0),
+    modifiedDate: new Date("2017-10-06T11:30:00+09:00"),
+    activityDate: new Date("2016-03-07T19:30:00+09:00"),
     totalDifference: 0,
     parentDecision: 1,
     childReceipts: []

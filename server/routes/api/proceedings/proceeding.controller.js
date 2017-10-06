@@ -2,7 +2,7 @@ var proceedings = [
   {
     id: 1, prevId: 0,
     state: 0,
-    createdDate: new Date("2016-10-06T11:30:00+09:00"),
+    createdDate: new Date("2017-10-06T11:30:00+09:00"),
     meetingDate: new Date("2016-03-07T19:30:00+09:00"),
     title: '수원녹색당 임시총회',
     attendees: ['yd','sj','dk','jy','ty','jh'],
