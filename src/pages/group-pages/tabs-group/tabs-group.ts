@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { UserService, GroupService } from '../../providers';
-import { User, Group } from '../../models';
+import { UserService, GroupService } from '../../../providers';
+import { User, Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({

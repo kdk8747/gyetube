@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, ViewController } from 'ionic-angular';
-import { UtilService, ActivityService } from '../../providers';
-import { Activity } from '../../models';
+import { UtilService, ActivityService } from '../../../providers';
+import { Activity } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
