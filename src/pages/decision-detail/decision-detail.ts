@@ -52,8 +52,10 @@ export class DecisionDetailPage {
       this.rejecters = decision.rejecters.map((id:string) => this.userService.getUser(id).share());
       if (decision.parentProceeding)
         this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding).share();
-      this.activities = decision.childActivities.map((id:number) => this.activityService.getActivity(this.groupId, id).share());
-      this.receipts = decision.childReceipts.map((id:number) => this.receiptService.getReceipt(this.groupId, id).share());
+      if (decision.childActivities)
+        this.activities = decision.childActivities.map((id:number) => this.activityService.getActivity(this.groupId, id).share());
+      if (decision.childReceipts)
+        this.receipts = decision.childReceipts.map((id:number) => this.receiptService.getReceipt(this.groupId, id).share());
     });
   }
 

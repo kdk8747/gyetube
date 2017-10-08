@@ -19,6 +19,16 @@
           <p text-right *ngIf="decision.abstainers.length"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
         </ion-col>
       </ion-row>
+      <ion-row>
+        <ion-col>
+          <p text-right>
+            {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{decision.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
+          </p>
+          <p text-right>
+            {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{decision.totalDifference | number}}
+          </p>
+        </ion-col>
+      </ion-row>
     </ion-card-content>
   </ion-card>
 </ion-content>
