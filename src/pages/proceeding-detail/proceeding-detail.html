@@ -37,12 +37,21 @@
       <ion-toolbar>
         <ion-buttons>
           <p>{{ 'I18N_DECISION' | translate }}{{i+1}} - {{ (decision | async)?.title }}</p>
-          <p text-right>
+          <p text-right *ngIf="(decision | async)?.accepters.length">
+            {{ 'I18N_ACCEPTERS' | translate}} {{ (decision | async)?.accepters.length }}
+          </p>
+          <p text-right *ngIf="(decision | async)?.rejecters.length">
+            {{ 'I18N_REJECTERS' | translate}} {{ (decision | async)?.rejecters.length }}
+          </p>
+          <p text-right *ngIf="(decision | async)?.abstainers.length">
+            {{ 'I18N_ABSTAINERS' | translate}} {{ (decision | async)?.abstainers.length }}
+          </p>
+          <p text-right *ngIf="(decision | async)?.totalElapsedTime">
             {{ 'I18N_ELAPSED_TIME' | translate}}
             {{ (decision | async)?.totalElapsedTime }}
             {{ 'I18N_HOURS' | translate}}
           </p>
-          <p text-right>
+          <p text-right *ngIf="(decision | async)?.totalDifference">
             {{ 'I18N_DIFFERENCE' | translate}}
             {{ (decision | async)?.totalDifference | number}}
           </p>
