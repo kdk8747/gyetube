@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, DecisionService, UserService, ProceedingService, ActivityService } from '../../providers';
-import { Decision, User, Proceeding, Activity } from '../../models';
+import { UtilService, DecisionService, UserService, ProceedingService, ActivityService, ReceiptService } from '../../providers';
+import { Decision, User, Proceeding, Activity, Receipt } from '../../models';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -24,6 +24,7 @@ export class DecisionDetailPage {
   rejecters: Observable<User>[] = [];
   proceeding: Observable<Proceeding> = null;
   activities: Observable<Activity>[];
+  receipts: Observable<Receipt>[];
 
   constructor(
     public navCtrl: NavController,
@@ -33,7 +34,8 @@ export class DecisionDetailPage {
     public userService: UserService,
     public decisionService: DecisionService,
     public proceedingService: ProceedingService,
-    public activityService: ActivityService) {
+    public activityService: ActivityService,
+    public receiptService: ReceiptService) {
   }
 
   ionViewDidLoad() {
@@ -51,6 +53,7 @@ export class DecisionDetailPage {
       if (decision.parentProceeding)
         this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding).share();
       this.activities = decision.childActivities.map((id:number) => this.activityService.getActivity(this.groupId, id).share());
+      this.receipts = decision.childReceipts.map((id:number) => this.receiptService.getReceipt(this.groupId, id).share());
     });
   }
 
@@ -76,6 +79,13 @@ export class DecisionDetailPage {
     obs.subscribe(activity => {
       this.navCtrl.parent.select(3);
       setTimeout(() => this.event.publish('EventActivityDetailPage', {id: activity.id }), this.responseTimeMs); // delay : work-around
+    });
+  }
+
+  navigateToReceiptDetail(obs: Observable<Receipt>) {
+    obs.subscribe(receipt => {
+      this.navCtrl.parent.select(4);
+      setTimeout(() => this.event.publish('EventReceiptDetailPage', {id: receipt.id }), this.responseTimeMs); // delay : work-around
     });
   }
 }

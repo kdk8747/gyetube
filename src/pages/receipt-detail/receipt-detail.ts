@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, ReceiptService, UserService, ActivityService } from '../../providers';
-import { Receipt, User, Activity } from '../../models';
+import { UtilService, ReceiptService, UserService, ActivityService, DecisionService } from '../../providers';
+import { Receipt, User, Activity, Decision } from '../../models';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -21,6 +21,7 @@ export class ReceiptDetailPage {
   receipt: Observable<Receipt>;
   creator: Observable<User>;
   activity: Observable<Activity> = null;
+  decision: Observable<Decision> = null
 
   constructor(
     public navCtrl: NavController,
@@ -29,7 +30,8 @@ export class ReceiptDetailPage {
     public util: UtilService,
     public userService: UserService,
     public receiptService: ReceiptService,
-    public activityService: ActivityService) {
+    public activityService: ActivityService,
+    public decisionService: DecisionService) {
   }
 
   ionViewDidLoad() {
@@ -44,6 +46,8 @@ export class ReceiptDetailPage {
       this.creator = this.userService.getUser(receipt.creator).share();
       if (receipt.parentActivity)
         this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity).share();
+      if (receipt.parentDecision)
+        this.decision = this.decisionService.getDecision(this.groupId, receipt.parentDecision).share();
     });
   }
 
@@ -62,6 +66,13 @@ export class ReceiptDetailPage {
     obs.subscribe(activity => {
       this.navCtrl.parent.select(3);
       setTimeout(() => this.event.publish('EventActivityDetailPage', {id: activity.id }), this.responseTimeMs); // delay : work-around
+    });
+  }
+
+  navigateToDecisionDetail(obs: Observable<Decision>) {
+    obs.subscribe(decision => {
+      this.navCtrl.parent.select(2);
+      setTimeout(() => this.event.publish('EventDecisionDetailPage', {id: decision.id }), this.responseTimeMs); // delay : work-around
     });
   }
 }

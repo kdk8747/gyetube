@@ -14,6 +14,7 @@ export class Decision {
     public content: string,
     public parentProceeding: number,
     public childActivities: number[],
+    public childReceipts: number[],
     public totalElapsedTime: number,  // TODO
     public totalDifference: number    // TODO
   ) { }

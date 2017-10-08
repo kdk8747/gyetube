@@ -87,6 +87,23 @@
       </ion-toolbar>
     </ion-card>
 
+    <ion-card *ngFor="let receipt of receipts; let i=index">
+      <ion-toolbar>
+        <ion-buttons>
+          <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.memo }}</p>
+          <p text-right>
+            {{ 'I18N_DIFFERENCE' | translate}}
+            {{ (receipt | async)?.difference | number}}
+          </p>
+        </ion-buttons>
+        <ion-buttons right>
+          <button ion-button icon-only (click)="navigateToReceiptDetail(receipt)">
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card>
+
     <ion-card-header>
       <p text-right>
         {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{(decision | async)?.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}

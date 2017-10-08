@@ -14,9 +14,9 @@
           <p>{{decision.title}}</p>
         </ion-col>
         <ion-col>
-          <p text-right> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
-          <p text-right> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
-          <p text-right> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
+          <p text-right *ngIf="decision.accepters.length"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
+          <p text-right *ngIf="decision.rejecters.length"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
+          <p text-right *ngIf="decision.abstainers.length"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
         </ion-col>
       </ion-row>
     </ion-card-content>

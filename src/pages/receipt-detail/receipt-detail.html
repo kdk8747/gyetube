@@ -50,5 +50,18 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-card>
+
+    <ion-card *ngIf="decision && (decision | async)">
+      <ion-toolbar>
+        <ion-buttons>
+          <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
+        </ion-buttons>
+        <ion-buttons left>
+          <button ion-button icon-only (click)="navigateToDecisionDetail(decision)">
+              <ion-icon name="arrow-back"></ion-icon>
+            </button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card>
   </ion-card>
 </ion-content>

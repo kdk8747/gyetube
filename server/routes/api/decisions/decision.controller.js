@@ -3,13 +3,14 @@ var decisions = [
   {
     id: 1, prevId: 0,
     state: 0,
-    title: '(과거 활동 기록의 근거 유실됨)',
+    title: '(기록 유실됨)',
     createdDate: new Date("2017-10-06T19:30:00+09:00"),
     expiryDate: new Date("2017-10-13T19:30:00+09:00"),
     content: 'GrassCube를 이용하기 전에는 누가 어떤 회의에서 결정을 내렸는지 기록하지 않았습니다.',
     abstainers:[], accepters:[], rejecters:[],
     //parentProceeding: 1,
     childActivities: [1],
+    childReceipts: [],
     totalElapsedTime: 0,
     totalDifference: 0
   },
@@ -25,6 +26,7 @@ var decisions = [
     abstainers:[], accepters:['yd','sj','dk','jy','ty','jh'], rejecters:[],
     parentProceeding: 1,
     childActivities: [],
+    childReceipts: [],
     totalElapsedTime: 0,
     totalDifference: 0
   },
@@ -40,8 +42,9 @@ var decisions = [
     abstainers:['sj'], accepters:['dk','jy','jh'], rejecters:['yd','ty'],
     parentProceeding: 1,
     childActivities: [],
+    childReceipts: [2],
     totalElapsedTime: 0,
-    totalDifference: 0
+    totalDifference: -1229000
   },
   {
     id: 4, prevId: 0,
@@ -64,6 +67,7 @@ var decisions = [
     abstainers:[], accepters:['yd','sj','dk','jy','ty','jh'], rejecters:[],
     parentProceeding: 1,
     childActivities: [],
+    childReceipts: [],
     totalElapsedTime: 0,
     totalDifference: 0
   },
