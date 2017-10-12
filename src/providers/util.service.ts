@@ -27,8 +27,8 @@ export class UtilService {
   getCurrentGroupId(): string {
     if (!this.isNativeApp()) {
       let splits = window.location.href.split('/');
-      if (splits.length > 3) {
-        return splits[4];
+      if (splits.length > 5) {
+        return splits[6];
       }
     }
     return this.groupId;
