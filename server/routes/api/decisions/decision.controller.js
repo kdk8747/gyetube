@@ -23,7 +23,7 @@ var decisions = [
     content:
 '새운영위원 선출\n\
 김동규(연락담당), 고성준, 신지연(경기운영위참석), 한태연(친환경급식담당), 최연두(모임장소섭외/회계담당)',
-    abstainers:[], accepters:['yd','sj','dk','jy','ty','jh'], rejecters:[],
+    abstainers:[], accepters:['yd','sj','471891074','jy','ty','jh'], rejecters:[],
     parentProceeding: 1,
     childActivities: [],
     childReceipts: [],
@@ -39,7 +39,7 @@ var decisions = [
     content:
 '- 경기녹색당 예결산위원회 권고에 따라 2015년 수원녹색당 활동지원 이월금 1,229,000원을 2016년 총선 선거기금으로 전용 건으로\n\
 임시총회에서 표결에 붙였고 그 결과 이월금액을 총선기금으로 전용하기로 하였음.',
-    abstainers:['sj'], accepters:['dk','jy','jh'], rejecters:['yd','ty'],
+    abstainers:['sj'], accepters:['471891074','jy','jh'], rejecters:['yd','ty'],
     parentProceeding: 1,
     childActivities: [],
     childReceipts: [2],
@@ -64,7 +64,7 @@ var decisions = [
 2. 현수막 게시\n\
   총 20장 게시\n\
   정당연설회 전 정당연설회 인근 장소에 게시 예정.',
-    abstainers:[], accepters:['yd','sj','dk','jy','ty','jh'], rejecters:[],
+    abstainers:[], accepters:['yd','sj','471891074','jy','ty','jh'], rejecters:[],
     parentProceeding: 1,
     childActivities: [],
     childReceipts: [],

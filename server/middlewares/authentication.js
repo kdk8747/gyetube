@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-  if (req.method === 'GET') {
+  /*if (req.method === 'GET') {
     next();
     return;
-  }
-  // read the token from header 
+  }*/
+  // read the token from header
   let token = null;
   if (req.headers && req.headers.authorization) {
     let parts = req.headers.authorization.split(' ');
@@ -48,10 +48,10 @@ module.exports = (req, res, next) => {
   // process the promise
   p.then((decoded) => {
     req.decoded = decoded;
-    if (req.method === 'GET') {
+    /*if (req.method === 'GET') {
       next();
       return;
-    } else {
+    } else */{
       if (decoded.permissions.groups['suwongreenparty'] === 'admin') {
         next();
         return;

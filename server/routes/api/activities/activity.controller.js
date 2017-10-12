@@ -3,7 +3,7 @@ var activities = [
   {
     id: 1,
     creator: 'dk',
-    participants: ['yd','sj','dk','jy','ty', 'jh'],
+    participants: ['yd','sj','471891074','jy','ty', 'jh'],
     elapsedTime: 2,
     title: '수원녹색당 임시총회',
     location: '행궁동 공존공간 1층',

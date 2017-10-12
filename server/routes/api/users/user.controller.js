@@ -4,18 +4,18 @@ const jwt = require('jsonwebtoken');
 
 
 var users = [
-  { id: '1', name: 'giraffe', imageUrl: 'http://1.bp.blogspot.com/-Gr59j-9gCqE/UZYMhp4fqeI/AAAAAAAAIR0/RpelAMDWxJg/s1600/Giraffe-Cute-Pictires-2013-0.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: '2', name: 'dog', imageUrl: 'http://isseysmith.co.uk/wp-content/uploads/2011/03/dog.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: '3', name: 'cat', imageUrl: 'https://3.bp.blogspot.com/-flSU2xF4YTA/UfLrruLRTWI/AAAAAAAAEd4/d-Nn6WpLCVI/s1600/Cute+Cats+6.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: '4', name: 'bunny', imageUrl: 'http://2.bp.blogspot.com/-T5kqWdFlMOc/UT2nUjplytI/AAAAAAAAH_4/tyZtroEd16I/s1600/funny+cute+animals-2013-00.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: '5', name: 'fox', imageUrl: 'http://3.bp.blogspot.com/-C_PqsweDoyk/UT2nSjQBHBI/AAAAAAAAH_k/IvQ52hybtXo/s1600/funny+cute+animals-2013-0.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: 'yd', name: '최연두', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: 'hk', name: '김희경', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: 'dk', name: '김동규', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: 'sj', name: '고성준', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: 'jy', name: '신지연', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: 'ty', name: '한태연', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
-  { id: 'jh', name: '한진희', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': 'admin'}} },
+  { id: '1', name: 'giraffe', imageUrl: 'http://1.bp.blogspot.com/-Gr59j-9gCqE/UZYMhp4fqeI/AAAAAAAAIR0/RpelAMDWxJg/s1600/Giraffe-Cute-Pictires-2013-0.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': ['member']}} },
+  { id: '2', name: 'dog', imageUrl: 'http://isseysmith.co.uk/wp-content/uploads/2011/03/dog.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': ['member']}} },
+  { id: '3', name: 'cat', imageUrl: 'https://3.bp.blogspot.com/-flSU2xF4YTA/UfLrruLRTWI/AAAAAAAAEd4/d-Nn6WpLCVI/s1600/Cute+Cats+6.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': ['member']}} },
+  { id: '4', name: 'bunny', imageUrl: 'http://2.bp.blogspot.com/-T5kqWdFlMOc/UT2nUjplytI/AAAAAAAAH_4/tyZtroEd16I/s1600/funny+cute+animals-2013-00.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': ['member']}} },
+  { id: '5', name: 'fox', imageUrl: 'http://3.bp.blogspot.com/-C_PqsweDoyk/UT2nSjQBHBI/AAAAAAAAH_k/IvQ52hybtXo/s1600/funny+cute+animals-2013-0.jpg', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': ['member']}} },
+  { id: 'yd', name: '최연두', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': ['member']}} },
+  { id: 'hk', name: '김희경', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': ['member']}} },
+  { id: '471891074', name: '김동규', imageUrl: 'http://mud-kage.kakao.co.kr/14/dn/btqgWLt7ZtZ/lEmudQumElRfIWRrUvkItk/o.jpg', loggedInBy: 'kakao', permissions: {'groups': {'suwongreenparty': ['member','commitee'], 'examplelocalparty': ['reader']}} },
+  { id: 'sj', name: '고성준', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': ['member']}} },
+  { id: 'jy', name: '신지연', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': ['member']}} },
+  { id: 'ty', name: '한태연', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': ['member']}} },
+  { id: 'jh', name: '한진희', imageUrl: '', loggedInBy: 'naver', permissions: {'groups': {'suwongreenparty': ['member']}} },
 ];
 
 exports.authenticateNaver = passport.authenticate('naver');
@@ -29,11 +29,11 @@ function serialize(req, res, next) {
   debug(req.user);
   let i = users.findIndex(item => item.id === req.user.id);
   if (i >= 0) {
-    users[i] = req.user;
+    req.user.permissions = users[i].permissions.groups;
   }else{
+    req.user.permissions = {'groups': {}};
     users.push(req.user);
   }
-  req.user.permissions = {'groups': {'suwongreenparty': 'admin'}};
   next();
   /*
   db.updateOrCreate(req.user, function (err, user) {

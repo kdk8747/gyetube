@@ -5,7 +5,7 @@ var proceedings = [
     createdDate: new Date("2017-10-06T11:30:00+09:00"),
     meetingDate: new Date("2016-03-07T19:30:00+09:00"),
     title: '수원녹색당 임시총회',
-    attendees: ['yd','sj','dk','jy','ty','jh'],
+    attendees: ['yd','sj','471891074','jy','ty','jh'],
     content:
 '1. 새운영위원 선출\n\
   김동규(연락담당), 고성준, 신지연(경기운영위참석), 한태연(친환경급식담당), 최연두(모임장소섭외/회계담당)\n\
