@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header *ngIf="!loggedIn">
   <ion-navbar>
     <ion-buttons left>
       <h4><ion-icon name="cube"></ion-icon> {{ 'I18N_GRASSCUBE' | translate }}</h4>
@@ -29,7 +29,7 @@
 </ion-content>
 
 <ion-tabs *ngIf="loggedIn" tabsPlacement="bottom">
-  <ion-tab [root]="tab1Root" tabUrlPath="group-list"        [tabTitle]="('I18N_GROUPS' | translate) || '&nbsp;'" tabIcon="cube"></ion-tab>
-  <ion-tab [root]="tab2Root" tabUrlPath="unchecked-list"    [tabTitle]="('I18N_UNCHECKED' | translate) || '&nbsp;'" tabIcon="eye-off"></ion-tab>
-  <ion-tab [root]="tab3Root" tabUrlPath="notification-list" [tabTitle]="('I18N_NOTIFICATIONS' | translate) || '&nbsp;'" tabIcon="notifications"></ion-tab>
+  <ion-tab [root]="tab1Root" tabUrlPath="group"        [tabTitle]="('I18N_GROUPS' | translate) || '&nbsp;'" tabIcon="cube"></ion-tab>
+  <ion-tab [root]="tab2Root" tabUrlPath="unchecked"    [tabTitle]="('I18N_UNCHECKED' | translate) || '&nbsp;'" tabIcon="eye-off"></ion-tab>
+  <ion-tab [root]="tab3Root" tabUrlPath="notification" [tabTitle]="('I18N_NOTIFICATIONS' | translate) || '&nbsp;'" tabIcon="notifications"></ion-tab>
 </ion-tabs>

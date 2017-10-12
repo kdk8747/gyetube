@@ -5,7 +5,7 @@ import { Activity } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
-  segment: 'activity'
+  segment: 'list'
 })
 @Component({
   selector: 'page-activity-list',

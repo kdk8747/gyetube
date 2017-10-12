@@ -1,9 +1,29 @@
 <ion-header>
   <ion-navbar>
-    <ion-title> {{ 'I18N_GRASSCUBE' | translate }} - Group List </ion-title>
+    <ion-buttons left>
+      <h4><ion-icon name="cube"></ion-icon> {{ 'I18N_GRASSCUBE' | translate }}</h4>
+    </ion-buttons>
+    <ion-buttons right>
+      <button ion-button icon-only>
+        <ion-icon name="search"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="pushMenu()">
+        <ion-icon *ngIf="!loggedIn" name="contact"></ion-icon>
+        <ion-avatar *ngIf="loggedIn">
+          <img [src]="user.imageUrl">
+        </ion-avatar>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <h2>Group List Page</h2>
+  <ion-card *ngFor="let group of groups" (tap)="navigateToGroup(group)">
+    <ion-card-header>
+      {{(group | async)?.title}}
+    </ion-card-header>
+    <ion-card-content>
+      {{(group | async)?.description}} - (클릭)
+    </ion-card-content>
+  </ion-card>
 </ion-content>

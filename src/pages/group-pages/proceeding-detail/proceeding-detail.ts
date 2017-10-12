@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
-  segment: 'proceeding/:id'
+  segment: 'detail/:id'
   //defaultHistory: ['ProceedingListPage'] https://github.com/ionic-team/ionic/issues/10356
 })
 @Component({

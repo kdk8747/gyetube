@@ -1,6 +1,19 @@
 <ion-header>
   <ion-navbar>
-    <ion-title> {{ 'I18N_GRASSCUBE' | translate }} - Notification List </ion-title>
+    <ion-buttons left>
+      <h4><ion-icon name="cube"></ion-icon> {{ 'I18N_GRASSCUBE' | translate }}</h4>
+    </ion-buttons>
+    <ion-buttons right>
+      <button ion-button icon-only>
+        <ion-icon name="search"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="pushMenu()">
+        <ion-icon *ngIf="!loggedIn" name="contact"></ion-icon>
+        <ion-avatar *ngIf="loggedIn">
+          <img [src]="user.imageUrl">
+        </ion-avatar>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 

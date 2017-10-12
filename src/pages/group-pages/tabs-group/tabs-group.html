@@ -1,10 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons left>
-      <button ion-button icon-only (click)="popMenu()">
-        <ion-icon name="close"></ion-icon>
-        <h4>{{ (group | async)?.title }}</h4>
-      </button>
+      <h4>{{ (group | async)?.title }}</h4>
     </ion-buttons>
     <ion-buttons right>
       <button ion-button icon-only>
@@ -13,17 +10,17 @@
       <button ion-button icon-only (click)="pushMenu()">
         <ion-icon *ngIf="!loggedIn" name="contact"></ion-icon>
         <ion-avatar *ngIf="loggedIn">
-          <img [src]="user.imageUrl" >
+          <img [src]="user.imageUrl">
         </ion-avatar>
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-tabs tabsPlacement="bottom">
-  <ion-tab [root]="tab1Root" tabUrlPath="fixme"           [tabTitle]="('I18N_HOME' | translate) || '&nbsp;'" tabIcon="home"></ion-tab>
-  <ion-tab [root]="tab2Root" tabUrlPath="proceeding-list" [tabTitle]="('I18N_PROCEEDING' | translate) || '&nbsp;'" tabIcon="finger-print"></ion-tab>
-  <ion-tab [root]="tab3Root" tabUrlPath="decision-list"   [tabTitle]="('I18N_DECISION' | translate) || '&nbsp;'" tabIcon="attach"></ion-tab>
-  <ion-tab [root]="tab4Root" tabUrlPath="activity-list"   [tabTitle]="('I18N_ACTIVITY' | translate) || '&nbsp;'" tabIcon="bicycle"></ion-tab>
-  <ion-tab [root]="tab5Root" tabUrlPath="receipt-list"    [tabTitle]="('I18N_RECEIPT' | translate) || '&nbsp;'" tabIcon="calculator"></ion-tab>
+<ion-tabs tabsPlacement="top">
+  <ion-tab [root]="tab1Root" tabUrlPath="fixme" [tabTitle]="('I18N_HOME' | translate) || '&nbsp;'" tabIcon="home"></ion-tab>
+  <ion-tab [root]="tab2Root" tabUrlPath="proceeding" [tabTitle]="('I18N_PROCEEDING' | translate) || '&nbsp;'" tabIcon="finger-print"></ion-tab>
+  <ion-tab [root]="tab3Root" tabUrlPath="decision" [tabTitle]="('I18N_DECISION' | translate) || '&nbsp;'" tabIcon="attach"></ion-tab>
+  <ion-tab [root]="tab4Root" tabUrlPath="activity" [tabTitle]="('I18N_ACTIVITY' | translate) || '&nbsp;'" tabIcon="bicycle"></ion-tab>
+  <ion-tab [root]="tab5Root" tabUrlPath="receipt" [tabTitle]="('I18N_RECEIPT' | translate) || '&nbsp;'" tabIcon="calculator"></ion-tab>
 </ion-tabs>

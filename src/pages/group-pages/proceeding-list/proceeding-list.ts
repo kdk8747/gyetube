@@ -5,7 +5,7 @@ import { Proceeding } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
-  segment: 'proceeding'
+  segment: 'list'
 })
 @Component({
   selector: 'page-proceeding-list',

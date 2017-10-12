@@ -8,7 +8,7 @@ import 'rxjs/add/operator/toPromise';
 
 
 @IonicPage({
-  segment: 'activity/:id'
+  segment: 'detail/:id'
   //defaultHistory: ['ActivityListPage'] https://github.com/ionic-team/ionic/issues/10356
 })
 @Component({

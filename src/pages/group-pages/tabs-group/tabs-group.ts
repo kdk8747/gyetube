@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { UserService, GroupService } from '../../../providers';
 import { User, Group } from '../../../models';
@@ -28,6 +28,7 @@ export class TabsGroupPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public storage: Storage,
+    public event: Events,
     public userService: UserService,
     public groupService: GroupService
   ) {
@@ -57,11 +58,7 @@ export class TabsGroupPage {
   }
 
   pushMenu() {
-    this.navCtrl.push('MenuPage');
-  }
-
-  popMenu() {
-    this.navCtrl.setRoot('TabsMyPage');
+    this.event.publish('EventMenuPage');
   }
 
 }

@@ -5,7 +5,7 @@ import { Receipt } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
-  segment: 'receipt'
+  segment: 'list'
 })
 @Component({
   selector: 'page-receipt-list',

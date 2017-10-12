@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { UserService, GroupService, UtilService } from '../../../providers';
-import { User, Group } from '../../../models';
+import { GroupService, UserService, UtilService } from '../../../providers';
+import { Group, User } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
@@ -24,8 +24,9 @@ export class TabsMyPage {
   constructor(
     public navCtrl: NavController,
     public storage: Storage,
-    public userService: UserService,
+    public event: Events,
     public groupService: GroupService,
+    public userService: UserService,
     public util: UtilService
   ) {
     this.groups = this.groupService.getGroups();
@@ -33,7 +34,7 @@ export class TabsMyPage {
 
   pushGroup(group_id: string) {
     this.util.setCurrentGroupId(group_id);
-    this.navCtrl.setRoot('TabsGroupPage', {group_id: group_id });
+    this.navCtrl.push('TabsGroupPage', {group_id: group_id });
   }
 
   ionViewDidLoad() {
@@ -55,10 +56,23 @@ export class TabsMyPage {
         }
       }
     });
+
+    this.event.subscribe('EventMenuPage', (obj) => {
+      this.navCtrl.push('MenuPage');
+    });
+  }
+
+  ionViewWillUnload() {
+    this.event.unsubscribe('EventMenuPage');
   }
 
   pushMenu() {
     this.navCtrl.push('MenuPage');
   }
 
+  navigateToGroup(obs:Observable<Group>) {
+    obs.subscribe(group => {
+      this.navCtrl.push('TabsGroupPage', {group_id: group.id });
+    });
+  }
 }
