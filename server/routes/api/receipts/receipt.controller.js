@@ -40,50 +40,135 @@ var receipts2 = [
 var receiptID2 = 12;
 
 exports.getAll = (req, res) => {
-  if (req.params.group === 'suwongreenparty')
-    res.json(receipts);
-  else
+  if (req.params.group === 'examplelocalparty') {
     res.json(receipts2);
-}
-exports.getBalance = (req, res) => {
-  if (req.params.group === 'suwongreenparty')
-    res.json(0);
-  else
-    res.json(0);
-}
-exports.getByID = (req, res) => {
-  if (req.params.group === 'suwongreenparty')
-    res.json(receipts.find(item => item.id === +req.params.id));
-  else
-    res.json(receipts2.find(item => item.id === +req.params.id));
-}
-exports.updateByID = (req, res) => {
-  if (req.params.group === 'suwongreenparty'){
-    let i = receipts.findIndex(item => item.id === +req.params.id);
-    receipts[i] = req.body;
   }
-  else{
+  else if (req.params.group === 'suwongreenparty') {
+    if (req.decoded && req.params.group in req.decoded.permissions.groups)
+      res.json(receipts);
+    else
+      res.status(401).json({
+        success: false,
+        message: 'not logged in'
+      });
+  }
+  else
+    res.status(404).json({
+      success: false,
+      message: 'groupId: not found'
+    });
+}
+
+exports.getBalance = (req, res) => {
+  if (req.params.group === 'examplelocalparty') {
+    res.json(0);
+  }
+  else if (req.params.group === 'suwongreenparty') {
+    if (req.decoded && req.params.group in req.decoded.permissions.groups)
+      res.json(0);
+    else
+      res.status(401).json({
+        success: false,
+        message: 'not logged in'
+      });
+  }
+  else
+    res.status(404).json({
+      success: false,
+      message: 'groupId: not found'
+    });
+}
+
+exports.getByID = (req, res) => {
+  if (req.params.group === 'examplelocalparty') {
+    res.json(receipts2.find(item => item.id === +req.params.id));
+  }
+  else if (req.params.group === 'suwongreenparty') {
+    if (req.decoded && req.params.group in req.decoded.permissions.groups)
+      res.json(receipts.find(item => item.id === +req.params.id));
+    else
+      res.status(401).json({
+        success: false,
+        message: 'not logged in'
+      });
+  }
+  else
+    res.status(404).json({
+      success: false,
+      message: 'groupId: not found'
+    });
+}
+
+exports.updateByID = (req, res) => {
+  if (req.params.group === 'examplelocalparty') {
     let i = receipts2.findIndex(item => item.id === +req.params.id);
     receipts2[i] = req.body;
+    res.send();
   }
-  res.send();
+  else if (req.params.group === 'suwongreenparty') {
+    if (req.params.group in req.decoded.permissions.groups) {
+      let i = receipts.findIndex(item => item.id === +req.params.id);
+      receipts[i] = req.body;
+      res.send();
+    }
+    else
+      res.status(401).json({
+        success: false,
+        message: 'not logged in'
+      });
+  }
+  else
+    res.status(404).json({
+      success: false,
+      message: 'groupId: not found'
+    });
 }
+
 exports.create = (req, res) => {
   let newHero = req.body;
-  if (req.params.group === 'suwongreenparty'){
-    newHero['id'] = receiptID++;
-    receipts.push(newHero);
-  }
-  else{
+  if (req.params.group === 'examplelocalparty') {
     newHero['id'] = receiptID2++;
     receipts2.push(newHero);
+    res.json(newHero);
   }
-  res.json(newHero);
-}
-exports.deleteByID = (req, res) => {
-  if (req.params.group === 'suwongreenparty')
-    receipts = receipts.filter(h => h.id !== +req.params.id);
+  else if (req.params.group === 'suwongreenparty') {
+    if (req.params.group in req.decoded.permissions.groups) {
+      newHero['id'] = receiptID++;
+      receipts.push(newHero);
+      res.json(newHero);
+    }
+    else
+      res.status(401).json({
+        success: false,
+        message: 'not logged in'
+      });
+  }
   else
+    res.status(404).json({
+      success: false,
+      message: 'groupId: not found'
+    });
+}
+
+exports.deleteByID = (req, res) => {
+  if (req.params.group === 'examplelocalparty') {
     receipts2 = receipts2.filter(h => h.id !== +req.params.id);
-  res.send();
+    res.send();
+  }
+  else if (req.params.group === 'suwongreenparty') {
+    if (req.params.group in req.decoded.permissions.groups) {
+      receipts = receipts.filter(h => h.id !== +req.params.id);
+      res.send();
+    }
+    else
+      res.status(401).json({
+        success: false,
+        message: 'not logged in'
+      });
+  }
+  else
+    res.status(404).json({
+      success: false,
+      message: 'groupId: not found'
+    });
 }

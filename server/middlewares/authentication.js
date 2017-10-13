@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-  /*if (req.method === 'GET') {
+  if (req.method === 'GET') {
     next();
     return;
-  }*/
+  }
   // read the token from header
-  let token = null;
-  if (req.headers && req.headers.authorization) {
+  let token = req.headers['x-access-token'] || req.query.token || null;
+  if (token === null && req.headers && req.headers.authorization) {
     let parts = req.headers.authorization.split(' ');
     if (parts.length == 2) {
       let scheme = parts[0];
@@ -48,18 +48,6 @@ module.exports = (req, res, next) => {
   // process the promise
   p.then((decoded) => {
     req.decoded = decoded;
-    /*if (req.method === 'GET') {
-      next();
-      return;
-    } else */{
-      if (decoded.permissions.groups['suwongreenparty'] === 'admin') {
-        next();
-        return;
-      }
-    }
-    res.status(401).json({
-      success: false,
-      message: error.message
-    });
+    next();
   }).catch(onError);
 }
