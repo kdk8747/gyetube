@@ -35,7 +35,7 @@ export class GroupListPage {
         let tokens = token.split('.');
         if (tokens.length === 3) {
           let payload = JSON.parse(window.atob(tokens[1]));
-          for (let groupId in payload.permissions)
+          for (let groupId in payload.permissions.groups)
             this.groups.push(this.groupService.getGroup(groupId).share());
 
           let userId = payload.id;

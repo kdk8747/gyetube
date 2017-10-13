@@ -29,7 +29,7 @@ function serialize(req, res, next) {
   debug(req.user);
   let i = users.findIndex(item => item.id === req.user.id);
   if (i >= 0) {
-    req.user.permissions = users[i].permissions.groups;
+    req.user.permissions = users[i].permissions;
   }else{
     req.user.permissions = {'groups': {}};
     users.push(req.user);

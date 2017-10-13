@@ -27,12 +27,9 @@ export class UtilService {
   getCurrentGroupId(): string {
     if (!this.isNativeApp()) {
       let splits = window.location.href.split('/');
-      if (splits.length > 5) {
-        if (splits.length > 7)
-          return splits[4];
-        else
-          return splits[6];
-      }
+      let i = splits.findIndex((str:string) => str === 'group-page');
+      if (i >= 0)
+        return splits[i - 1];
     }
     return this.groupId;
   }

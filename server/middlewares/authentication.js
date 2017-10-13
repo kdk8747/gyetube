@@ -1,10 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-  if (req.method === 'GET') {
-    next();
-    return;
-  }
   // read the token from header
   let token = req.headers['x-access-token'] || req.query.token || null;
   if (token === null && req.headers && req.headers.authorization) {
@@ -21,6 +17,10 @@ module.exports = (req, res, next) => {
 
   // token does not exist
   if (!token) {
+    if (req.method === 'GET') {
+      next();
+      return;
+    }
     return res.status(401).json({
       success: false,
       message: 'not logged in'
