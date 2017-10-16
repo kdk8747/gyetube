@@ -48,6 +48,13 @@ export class TabsMyPage {
             (user: User) => {
               this.loggedIn = true;
               this.user = user;
+              this.util.convertToDataURLviaCanvas('http://reverse-proxy.grassroots.kr/' + user.imageUrl)
+              .then( base64Img => {
+                if (base64Img !== user.imageBase64){
+                  user.imageBase64 = base64Img;
+                  this.userService.update(user).subscribe(user => this.user = user);
+                }
+              });
             },
             (error: any) => {
               this.storage.clear();

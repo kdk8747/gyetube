@@ -10,7 +10,8 @@
       <button ion-button icon-only (click)="pushMenu()">
         <ion-icon *ngIf="!loggedIn" name="contact"></ion-icon>
         <ion-avatar *ngIf="loggedIn">
-          <img [src]="user.imageUrl" >
+          <img *ngIf="!user.imageBase64" [src]="user.imageUrl" >
+          <img *ngIf="user.imageBase64" [src]="user.imageBase64" >
         </ion-avatar>
       </button>
     </ion-buttons>

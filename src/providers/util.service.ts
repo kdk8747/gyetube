@@ -33,4 +33,26 @@ export class UtilService {
     }
     return this.groupId;
   }
+
+  convertToDataURLviaCanvas(url: string): Promise<string> {
+    return new Promise( (resolve, reject) => {
+      let img = new Image();
+      img.setAttribute('crossOrigin', 'anonymous');
+      img.onload = function(){
+        let canvas = <HTMLCanvasElement> document.createElement('CANVAS'),
+        ctx = canvas.getContext('2d'),
+        dataURL: string;
+        canvas.height = 37;
+        canvas.width = 37;
+        ctx.drawImage(img,
+          0, 0, img.width, img.height,
+          0, 0, canvas.width, canvas.height
+      );
+        dataURL = canvas.toDataURL('image/png');
+        canvas = null;
+        resolve(dataURL);
+      };
+      img.src = url;
+    });
+  }
 }
