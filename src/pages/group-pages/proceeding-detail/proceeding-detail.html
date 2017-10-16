@@ -23,7 +23,8 @@
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let attendee of attendees">
           <span *ngIf="!((attendee | async)?.imageUrl)">{{(attendee | async)?.name}}</span>
           <ion-avatar *ngIf="(attendee | async)?.imageUrl">
-            <img [src]="(attendee | async)?.imageUrl">
+            <img *ngIf="!((attendee | async)?.imageBase64)" [src]="(attendee | async)?.imageUrl">
+            <img *ngIf="((attendee | async)?.imageBase64)" [src]="(attendee | async)?.imageBase64">
           </ion-avatar>
         </button>
       </ion-buttons>

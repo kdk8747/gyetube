@@ -22,7 +22,8 @@
           <button ion-button clear icon-only (click)="navigateToUserDetail()">
             <span *ngIf="!((creator | async)?.imageUrl)">{{(creator | async)?.name}}</span>
             <ion-avatar *ngIf="(creator | async)?.imageUrl">
-              <img [src]="(creator | async)?.imageUrl">
+              <img *ngIf="!((creator | async)?.imageBase64)" [src]="(creator | async)?.imageUrl">
+              <img *ngIf="((creator | async)?.imageBase64)" [src]="(creator | async)?.imageBase64">
             </ion-avatar>
           </button>
         </ion-col>
@@ -41,7 +42,8 @@
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let participant of participants">
           <span *ngIf="!((participant | async)?.imageUrl)">{{(participant | async)?.name}}</span>
           <ion-avatar *ngIf="(participant | async)?.imageUrl">
-            <img [src]="(participant | async)?.imageUrl">
+            <img *ngIf="!((participant | async)?.imageBase64)" [src]="(participant | async)?.imageUrl">
+            <img *ngIf="((participant | async)?.imageBase64)" [src]="(participant | async)?.imageBase64">
           </ion-avatar>
         </button>
       </ion-buttons>

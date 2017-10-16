@@ -28,7 +28,8 @@
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let accepter of accepters">
           <span *ngIf="!((accepter | async)?.imageUrl)">{{(accepter | async)?.name}}</span>
           <ion-avatar *ngIf="(accepter | async)?.imageUrl">
-            <img [src]="(accepter | async)?.imageUrl">
+            <img *ngIf="!((accepter | async)?.imageBase64)" [src]="(accepter | async)?.imageUrl">
+            <img *ngIf="((accepter | async)?.imageBase64)" [src]="(accepter | async)?.imageBase64">
           </ion-avatar>
         </button>
       </ion-buttons>
@@ -37,7 +38,8 @@
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let rejecter of rejecters">
           <span *ngIf="!((rejecter | async)?.imageUrl)">{{(rejecter | async)?.name}}</span>
           <ion-avatar *ngIf="(rejecter | async)?.imageUrl">
-            <img [src]="(rejecter | async)?.imageUrl">
+            <img *ngIf="!((rejecter | async)?.imageBase64)" [src]="(rejecter | async)?.imageUrl">
+            <img *ngIf="((rejecter | async)?.imageBase64)" [src]="(rejecter | async)?.imageBase64">
           </ion-avatar>
         </button>
       </ion-buttons>
@@ -46,7 +48,8 @@
         <button ion-button clear icon-only (click)="navigateToUserDetail()" *ngFor="let abstainer of abstainers">
           <span *ngIf="!((abstainer | async)?.imageUrl)">{{(abstainer | async)?.name}}</span>
           <ion-avatar *ngIf="(abstainer | async)?.imageUrl">
-            <img [src]="(abstainer | async)?.imageUrl">
+            <img *ngIf="!((abstainer | async)?.imageBase64)" [src]="(abstainer | async)?.imageUrl">
+            <img *ngIf="((abstainer | async)?.imageBase64)" [src]="(abstainer | async)?.imageBase64">
           </ion-avatar>
         </button>
       </ion-buttons>
