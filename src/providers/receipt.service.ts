@@ -1,21 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/take';
-
 import { Receipt } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
+
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/publishLast';
+
 
 @Injectable()
 export class ReceiptService {
   private receiptsUrl = '/api/v1.0/receipts';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
+  private receipts = {};
+
   constructor(
     public http: AuthHttp
   ) { }
+
+  print() {
+    console.log('receipts: ');
+    for (let elem in this.receipts)
+      console.log(elem);
+  }
 
   getReceipts(group_id: string): Observable<Receipt[]> {
     const url = `${this.receiptsUrl}/${group_id}`;
@@ -24,12 +33,25 @@ export class ReceiptService {
       .take(1);
   }
 
+  cacheReceipts(group_id: string): void {
+    const url = `${this.receiptsUrl}/${group_id}`;
+    this.http.get(url)
+      .map(response => {
+        let receipts = response.json() as Receipt[];
+        receipts.map(receipt =>
+          this.receipts[group_id + receipt.id] = new Observable<Receipt>(obs => obs.next(receipt))
+        );
+      }).publishLast().connect();
+  }
+
   getReceipt(group_id: string, id: number): Observable<Receipt> {
     const url = `${this.receiptsUrl}/${group_id}/${id}`;
-    return this.http.get(url)
-      .map(response => response.json() as Receipt)
-      .take(1);
 
+    if (!this.receipts[group_id + id])
+      this.receipts[group_id + id] = this.http.get(url)
+        .map(response => response.json() as Receipt)
+        .publishLast().refCount();
+    return this.receipts[group_id + id];
   }
 
   update(group_id: string, receipt: Receipt): Observable<Receipt> {

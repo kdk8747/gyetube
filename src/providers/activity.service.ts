@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/publishLast';
 
 
 @Injectable()
@@ -13,9 +14,17 @@ export class ActivityService {
   private activitiesUrl = '/api/v1.0/activities';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
+  private activities = {};
+
   constructor(
     public http: AuthHttp
   ) { }
+
+  print() {
+    console.log('activities: ');
+    for (let elem in this.activities)
+      console.log(elem);
+  }
 
   getActivities(group_id: string): Observable<Activity[]> {
     const url = `${this.activitiesUrl}/${group_id}`;
@@ -24,12 +33,25 @@ export class ActivityService {
       .take(1);
   }
 
+  cacheActivities(group_id: string): void {
+    const url = `${this.activitiesUrl}/${group_id}`;
+    this.http.get(url)
+      .map(response => {
+        let activities = response.json() as Activity[];
+        activities.map(activity =>
+          this.activities[group_id + activity.id] = new Observable<Activity>(obs => obs.next(activity))
+        );
+      }).publishLast().connect();
+  }
+
   getActivity(group_id: string, id: number): Observable<Activity> {
     const url = `${this.activitiesUrl}/${group_id}/${id}`;
-    return this.http.get(url)
-      .map(response => response.json() as Activity)
-      .take(1);
 
+    if (!this.activities[group_id + id])
+      this.activities[group_id + id] = this.http.get(url)
+        .map(response => response.json() as Activity)
+        .publishLast().refCount();
+    return this.activities[group_id + id];
   }
 
   update(group_id: string, activity: Activity): Observable<Activity> {

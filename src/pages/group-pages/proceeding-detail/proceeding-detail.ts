@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, ProceedingService, DecisionService, UserService } from '../../../providers';
+import { UtilService, UserService, ProceedingService, DecisionService } from '../../../providers';
 import { Proceeding, User, Decision } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -36,13 +36,12 @@ export class ProceedingDetailPage {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
 
-    let sendDate = (new Date()).getTime();
-    this.proceeding = this.proceedingService.getProceeding(this.groupId, this.id).share();
+    this.proceeding = this.proceedingService.getProceeding(this.groupId, this.id);
     this.proceeding.subscribe((proceeding: Proceeding) => {
-      let receiveDate = (new Date()).getTime();
-      this.responseTimeMs = receiveDate - sendDate;
-      this.attendees = proceeding.attendees.map((id:string) => this.userService.getUser(id).share());
-      this.decisions = proceeding.childDecisions.map((id:number) => this.decisionService.getDecision(this.groupId,id).share());
+      this.attendees = proceeding.attendees.map((id: string) => this.userService.getUser(id));
+      if (this.attendees.length > 0)
+        this.attendees[0].subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
+      this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
     });
   }
 
@@ -60,7 +59,7 @@ export class ProceedingDetailPage {
   navigateToDecisionDetail(obs: Observable<Decision>) {
     obs.subscribe(decision => {
       this.navCtrl.parent.select(2);
-      setTimeout(() => this.event.publish('EventDecisionDetailPage', {id: decision.id }), this.responseTimeMs); // delay : work-around
+      setTimeout(() => this.event.publish('EventDecisionDetailPage', { id: decision.id }), this.responseTimeMs); // delay : work-around
     });
   }
 }

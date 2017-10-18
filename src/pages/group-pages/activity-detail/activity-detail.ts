@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, ActivityService, UserService, DecisionService, ReceiptService } from '../../../providers';
+import { UtilService, UserService, ActivityService, DecisionService, ReceiptService } from '../../../providers';
 import { Activity, User, Decision, Receipt } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -31,8 +31,8 @@ export class ActivityDetailPage {
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public activityService: ActivityService,
     public userService: UserService,
+    public activityService: ActivityService,
     public decisionService: DecisionService,
     public receiptService: ReceiptService) {
   }
@@ -41,15 +41,13 @@ export class ActivityDetailPage {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
 
-    let sendDate = (new Date()).getTime();
-    this.activity = this.activityService.getActivity(this.groupId, this.id).share();
+    this.activity = this.activityService.getActivity(this.groupId, this.id);
     this.activity.subscribe((activity: Activity) => {
-      let receiveDate = (new Date()).getTime();
-      this.responseTimeMs = receiveDate - sendDate;
-      this.creator = this.userService.getUser(activity.creator).share();
-      this.participants = activity.participants.map((id:string) => this.userService.getUser(id).share());
-      this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision).share();
-      this.receipts = activity.childReceipts.map((id:number) => this.receiptService.getReceipt(this.groupId, id).share());
+      this.creator = this.userService.getUser(activity.creator);
+      this.creator.subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
+      this.participants = activity.participants.map((id: string) => this.userService.getUser(id));
+      this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision);
+      this.receipts = activity.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
     });
   }
 
@@ -67,14 +65,14 @@ export class ActivityDetailPage {
   navigateToDecisionDetail(obs: Observable<Decision>) {
     obs.subscribe(decision => {
       this.navCtrl.parent.select(2);
-      setTimeout(() => this.event.publish('EventDecisionDetailPage', {id: decision.id }), this.responseTimeMs); // delay : work-around
+      setTimeout(() => this.event.publish('EventDecisionDetailPage', { id: decision.id }), this.responseTimeMs); // delay : work-around
     });
   }
 
   navigateToReceiptDetail(obs: Observable<Receipt>) {
     obs.subscribe(receipt => {
       this.navCtrl.parent.select(4);
-      setTimeout(() => this.event.publish('EventReceiptDetailPage', {id: receipt.id }), this.responseTimeMs); // delay : work-around
+      setTimeout(() => this.event.publish('EventReceiptDetailPage', { id: receipt.id }), this.responseTimeMs); // delay : work-around
     });
   }
 

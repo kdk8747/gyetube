@@ -10,7 +10,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 
-import { UserService, GroupService, UtilService } from '../providers';
+import { UserService, GroupService, UtilService, ProceedingService, DecisionService, ActivityService, ReceiptService } from '../providers';
 
 import { AuthModule } from './auth.module';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -52,6 +52,10 @@ export function HttpLoaderFactory(http: Http) {
     UserService,
     GroupService,
     UtilService,
+    ProceedingService,
+    DecisionService,
+    ActivityService,
+    ReceiptService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

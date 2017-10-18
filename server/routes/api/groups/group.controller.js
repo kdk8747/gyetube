@@ -1,7 +1,21 @@
 
 var groups = [
-  { id: 'suwongreenparty', title: '수원녹색당', description: '수원녹색당 그룹입니다.', imageUrl:'', createdDate: new Date(2017, 9, 25, 11, 33, 30, 0)},
-  { id: 'examplelocalparty', title: '예시 - 지역정당', description: '--당 그룹입니다.', imageUrl:'', createdDate: new Date(2017, 9, 6, 11, 33, 30, 0)}
+  {
+    id: 'suwongreenparty',
+    title: '수원녹색당',
+    description: '수원녹색당 그룹입니다.',
+    imageUrl:'',
+    createdDate: new Date(2017, 9, 25, 11, 33, 30, 0),
+    members: ['471891074', '2', '3', '4', '5']
+  },
+  {
+    id: 'examplelocalparty',
+    title: '예시 - 지역정당',
+    description: '--당 그룹입니다.',
+    imageUrl:'',
+    createdDate: new Date(2017, 9, 6, 11, 33, 30, 0),
+    members: ['1', '2', '3', '4', '5']
+  }
 ];
 
 exports.getAll = (req, res) => {

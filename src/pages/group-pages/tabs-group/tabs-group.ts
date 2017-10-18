@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { UserService, GroupService } from '../../../providers';
+import { UserService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService } from '../../../providers';
 import { User, Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -30,12 +30,24 @@ export class TabsGroupPage {
     public storage: Storage,
     public event: Events,
     public userService: UserService,
-    public groupService: GroupService
+    public groupService: GroupService,
+    public proceedingService: ProceedingService,
+    public decisionService: DecisionService,
+    public activityService: ActivityService,
+    public receiptService: ReceiptService
   ) {
   }
 
   ionViewDidLoad() {
     this.groupId = this.navParams.get('group_id');
+    this.group = this.groupService.getGroup(this.groupId);
+    this.group.subscribe((group: Group) => {
+      group.members.map(id => this.userService.cacheUser(id));
+      this.proceedingService.cacheProceedings(group.id);
+      this.decisionService.cacheDecisions(group.id);
+      this.activityService.cacheActivities(group.id);
+      this.receiptService.cacheReceipts(group.id);
+    });
     this.storage.get('currentUserToken').then((token: string) => {
       if (token) {
         let tokens = token.split('.');
@@ -54,7 +66,6 @@ export class TabsGroupPage {
         }
       }
     });
-    this.group = this.groupService.getGroup(this.groupId);
   }
 
   pushMenu() {

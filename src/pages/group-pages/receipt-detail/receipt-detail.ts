@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, ReceiptService, UserService, ActivityService, DecisionService } from '../../../providers';
+import { UtilService, UserService, ReceiptService, ActivityService, DecisionService } from '../../../providers';
 import { Receipt, User, Activity, Decision } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -38,16 +38,14 @@ export class ReceiptDetailPage {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
 
-    let sendDate = (new Date()).getTime();
-    this.receipt = this.receiptService.getReceipt(this.groupId, this.id).share();
+    this.receipt = this.receiptService.getReceipt(this.groupId, this.id);
     this.receipt.subscribe((receipt: Receipt) => {
-      let receiveDate = (new Date()).getTime();
-      this.responseTimeMs = receiveDate - sendDate;
-      this.creator = this.userService.getUser(receipt.creator).share();
+      this.creator = this.userService.getUser(receipt.creator);
+      this.creator.subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       if (receipt.parentActivity)
-        this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity).share();
+        this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity);
       if (receipt.parentDecision)
-        this.decision = this.decisionService.getDecision(this.groupId, receipt.parentDecision).share();
+        this.decision = this.decisionService.getDecision(this.groupId, receipt.parentDecision);
     });
   }
 
@@ -65,14 +63,14 @@ export class ReceiptDetailPage {
   navigateToActivityDetail(obs: Observable<Activity>) {
     obs.subscribe(activity => {
       this.navCtrl.parent.select(3);
-      setTimeout(() => this.event.publish('EventActivityDetailPage', {id: activity.id }), this.responseTimeMs); // delay : work-around
+      setTimeout(() => this.event.publish('EventActivityDetailPage', { id: activity.id }), this.responseTimeMs); // delay : work-around
     });
   }
 
   navigateToDecisionDetail(obs: Observable<Decision>) {
     obs.subscribe(decision => {
       this.navCtrl.parent.select(2);
-      setTimeout(() => this.event.publish('EventDecisionDetailPage', {id: decision.id }), this.responseTimeMs); // delay : work-around
+      setTimeout(() => this.event.publish('EventDecisionDetailPage', { id: decision.id }), this.responseTimeMs); // delay : work-around
     });
   }
 }
