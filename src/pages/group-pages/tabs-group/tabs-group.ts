@@ -69,7 +69,10 @@ export class TabsGroupPage {
   }
 
   pushMenu() {
-    this.event.publish('EventMenuPage');
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.push('MenuPage');
+    else
+      this.event.publish('EventMenuPage');
   }
 
 }
