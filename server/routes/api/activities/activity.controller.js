@@ -2,7 +2,7 @@
 var activities = [
   {
     id: 1,
-    creator: 'dk',
+    creator: '471891074',
     participants: ['yd', 'sj', '471891074', 'jy', 'ty', 'jh'],
     elapsedTime: 2,
     title: '수원녹색당 임시총회',
