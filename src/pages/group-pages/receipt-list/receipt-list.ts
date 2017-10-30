@@ -47,6 +47,10 @@ export class ReceiptListPage {
     this.navCtrl.push('ReceiptDetailPage', { id: receiptId });
   }
 
+  navigateToEditor() {
+    this.navCtrl.push('ReceiptEditorPage');
+  }
+
   sortByDateR(receipts: Receipt[]): Receipt[] {
     return receipts.sort((h1, h2) => {
       return h1.paymentDate < h2.paymentDate ? 1 :

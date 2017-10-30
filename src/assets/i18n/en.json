@@ -6,8 +6,11 @@
   "I18N_NOTIFICATIONS": "Notifications",
   "I18N_HOME": "Home",
   "I18N_PROCEEDING": "Proceeding",
+  "I18N_RELATED_PROCEEDING": "Related Proceeding",
   "I18N_DECISION": "Decision",
+  "I18N_RELATED_DECISION": "Related Decision",
   "I18N_ACTIVITY": "Activity",
+  "I18N_RELATED_ACTIVITY": "Related Activity",
   "I18N_RECEIPT": "Receipt",
   "I18N_ACCOUNT": "Account",
   "I18N_SIGN_IN": "SIGN IN",
@@ -38,5 +41,10 @@
 
   "I18N_PAYMENT_DATE": "Payment Date",
   "I18N_DIFFERENCE": "Difference",
-  "I18N_BALANCE": "Balance"
+  "I18N_MEMO": "Memo",
+  "I18N_BALANCE": "Balance",
+
+  "I18N_EDITOR": "Editor",
+  "I18N_UPLOAD": "Upload",
+  "I18N_SAVE": "Save"
 }

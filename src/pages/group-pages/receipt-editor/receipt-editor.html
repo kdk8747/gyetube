@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title> {{ 'I18N_GRASSCUBE' | translate }} - {{ 'I18N_RECEIPT' | translate }} - {{ 'I18N_EDITOR' | translate }} </ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-card>
+    <ion-toolbar>
+      <ion-buttons left>
+        <button ion-button icon-only (click)="popNavigation()">
+          <ion-icon name="arrow-up"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-buttons>{{ 'I18N_RECEIPT' | translate }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
+    </ion-toolbar>
+
+    <ion-item *ngIf="!isNative">
+      {{ 'I18N_RECEIPT' | translate }}
+      <input type="file" (change)="onChangeReceiptPhoto($event)" accept="image/*" />
+      <img src="" style="width: 400px; height: auto">
+    </ion-item>
+
+    <ion-list>
+      <ion-item *ngIf="isNative">
+        <ion-label>{{ 'I18N_RECEIPT' | translate }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{ 'I18N_PAYMENT_DATE' | translate }}</ion-label>
+        <ion-datetime displayFormat="YYYY MM DD, HH:mm" [(ngModel)]="paymentDate"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>{{ 'I18N_DIFFERENCE' | translate }}</ion-label>
+        <ion-input type="number" [(ngModel)]="difference"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>{{ 'I18N_MEMO' | translate }}</ion-label>
+        <ion-input type="text" [(ngModel)]="memo"></ion-input>
+      </ion-item>
+
+      <ion-list radio-group>
+        <ion-item>
+          <ion-label>{{ 'I18N_RELATED_DECISION' | translate }}</ion-label>
+          <ion-radio value="decision" (ionSelect)="activitySelected=false"></ion-radio>
+        </ion-item>
+        <ion-item *ngIf="!activitySelected">
+          <ion-select [(ngModel)]="parentDecision" [selectOptions]="{title: 'Related Decision', subTitle: 'choose it'}">
+            <ion-option *ngFor="let decision of decisions | async" [value]="decision.id">{{decision.title}}</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>{{ 'I18N_RELATED_ACTIVITY' | translate }}</ion-label>
+          <ion-radio value="activity" (ionSelect)="activitySelected=true" checked="true"></ion-radio>
+        </ion-item>
+        <ion-item *ngIf="activitySelected">
+          <ion-select [(ngModel)]="parentActivity" [selectOptions]="{title: 'Related Activity', subTitle: 'choose it'}">
+            <ion-option *ngFor="let activity of activities | async" [value]="activity.id">{{activity.title}}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+
+    </ion-list>
+    <ion-buttons right>
+      <!-- <button ion-button>{{ 'I18N_SAVE' | translate }}</button> -->
+      <button ion-button (tap)="onNewReceipt()">{{ 'I18N_UPLOAD' | translate }}</button>
+    </ion-buttons>
+  </ion-card>
+</ion-content>

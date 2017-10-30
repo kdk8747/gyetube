@@ -6,8 +6,11 @@
   "I18N_NOTIFICATIONS": "새소식",
   "I18N_HOME": "홈",
   "I18N_PROCEEDING": "회의록",
+  "I18N_RELATED_PROCEEDING": "관련 회의록",
   "I18N_DECISION": "결정사항",
+  "I18N_RELATED_DECISION": "관련 결정사항",
   "I18N_ACTIVITY": "활동",
+  "I18N_RELATED_ACTIVITY": "관련 활동",
   "I18N_RECEIPT": "영수증",
   "I18N_ACCOUNT": "계정",
   "I18N_SIGN_IN": "로그인",
@@ -38,5 +41,10 @@
 
   "I18N_PAYMENT_DATE": "지불일",
   "I18N_DIFFERENCE": "차액",
-  "I18N_BALANCE": "잔액"
+  "I18N_MEMO": "메모",
+  "I18N_BALANCE": "잔액",
+
+  "I18N_EDITOR": "편집",
+  "I18N_UPLOAD": "업로드",
+  "I18N_SAVE": "저장"
 }

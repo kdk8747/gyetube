@@ -128,12 +128,14 @@ exports.create = (req, res) => {
   let newHero = req.body;
   if (req.params.group === 'examplelocalparty') {
     newHero['id'] = receiptID2++;
+    newHero['creator'] = req.decoded.id;
     receipts2.push(newHero);
     res.json(newHero);
   }
   else if (req.params.group === 'suwongreenparty') {
     if (req.params.group in req.decoded.permissions.groups) {
       newHero['id'] = receiptID++;
+      newHero['creator'] = req.decoded.id;
       receipts.push(newHero);
       res.json(newHero);
     }

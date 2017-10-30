@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
 import { AmazonSignature } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
@@ -9,7 +10,8 @@ import 'rxjs/add/operator/take';
 @Injectable()
 export class AmazonService {
     constructor(
-      public http: AuthHttp
+      public authHttp: AuthHttp,
+      public http: Http
     ) { }
 
     getISO8601Date(date: Date) {
@@ -24,23 +26,23 @@ export class AmazonService {
         return dateStr;
     }
 
-    getAmazonSignatureForReceiptPOST(ISO8601Date: string): Observable<AmazonSignature> {
-        let url = `/api/v1.0/sign-s3/suwongreenparty/receipts?amz-date=${ISO8601Date}`;
-        return this.http.get(url)
+    getAmazonSignatureForReceiptPOST(groupID: string, ISO8601Date: string): Observable<AmazonSignature> {
+        let url = `/api/v1.0/sign-s3/${groupID}/receipts?amz-date=${ISO8601Date}`;
+        return this.authHttp.get(url)
             .map(response => response.json() as AmazonSignature)
             .take(1);
     }
 
-    getAmazonSignatureForPhotoPOST(ISO8601Date: string): Observable<AmazonSignature> {
-        let url = `/api/v1.0/sign-s3/suwongreenparty/photos?amz-date=${ISO8601Date}`;
-        return this.http.get(url)
+    getAmazonSignatureForPhotoPOST(groupID: string, ISO8601Date: string): Observable<AmazonSignature> {
+        let url = `/api/v1.0/sign-s3/${groupID}/photos?amz-date=${ISO8601Date}`;
+        return this.authHttp.get(url)
             .map(response => response.json() as AmazonSignature)
             .take(1);
     }
 
-    getAmazonSignatureForDocumentPOST(ISO8601Date: string): Observable<AmazonSignature> {
-        let url = `/api/v1.0/sign-s3/suwongreenparty/documents?amz-date=${ISO8601Date}`;
-        return this.http.get(url)
+    getAmazonSignatureForDocumentPOST(groupID: string, ISO8601Date: string): Observable<AmazonSignature> {
+        let url = `/api/v1.0/sign-s3/${groupID}/documents?amz-date=${ISO8601Date}`;
+        return this.authHttp.get(url)
             .map(response => response.json() as AmazonSignature)
             .take(1);
     }
