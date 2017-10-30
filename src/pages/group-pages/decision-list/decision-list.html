@@ -6,7 +6,7 @@
 
 
 <ion-content>
-  <ion-card *ngFor="let decision of decisions | async" (click)="navigateToDetail(decision.id)">
+  <ion-card *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
     <ion-card-content>
       <ion-row>
         <ion-col>

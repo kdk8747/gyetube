@@ -6,7 +6,7 @@
 
 
 <ion-content>
-  <ion-card *ngFor="let activity of activities | async" (click)="navigateToDetail(activity.id)">
+  <ion-card *ngFor="let activity of activities | async" (tap)="navigateToDetail(activity.id)">
     <ion-card-content>
       <ion-row>
         <ion-col>

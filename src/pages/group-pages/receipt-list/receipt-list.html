@@ -6,7 +6,7 @@
 
 
 <ion-content>
-  <ion-card *ngFor="let receipt of receipts | async" (click)="navigateToDetail(receipt.id)">
+  <ion-card *ngFor="let receipt of receipts | async" (tap)="navigateToDetail(receipt.id)">
     <ion-card-content>
       <ion-row>
         <ion-col>

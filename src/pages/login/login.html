@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons left>
-      <button ion-button icon-only (click)="popNavigation()">
+      <button ion-button icon-only (tap)="popNavigation()">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -11,15 +11,15 @@
 
 <ion-content>
   <ion-list inset>
-    <button ion-item (click)="login('naver')">
+    <button ion-item (tap)="login('naver')">
       <ion-icon name="log-in" item-left></ion-icon>
       {{ 'I18N_SIGN_IN_BY_NAVER' | translate }}
     </button>
-    <button ion-item (click)="login('kakao')">
+    <button ion-item (tap)="login('kakao')">
       <ion-icon name="log-in" item-left></ion-icon>
       {{ 'I18N_SIGN_IN_BY_KAKAO' | translate }}
     </button>
-    <button ion-item (click)="login('facebook')">
+    <button ion-item (tap)="login('facebook')">
       <ion-icon name="logo-facebook" item-left></ion-icon>
       {{ 'I18N_SIGN_IN_BY_FACEBOOK' | translate }}
     </button>

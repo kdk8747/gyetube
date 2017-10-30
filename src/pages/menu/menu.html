@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons left>
-      <button ion-button icon-only (click)="popNavigation()">
+      <button ion-button icon-only (tap)="popNavigation()">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -18,11 +18,11 @@
       <h2>{{user.name}}</h2>
       <p>{{user.loggedInBy}}</p>
     </ion-item>
-    <button *ngIf="!loggedIn" ion-item (click)="pushLogin()">
+    <button *ngIf="!loggedIn" ion-item (tap)="pushLogin()">
       <ion-icon name="contact" item-left></ion-icon>
       {{ 'I18N_SIGN_IN' | translate }}
     </button>
-    <button *ngIf="loggedIn" ion-item (click)="signOut()">
+    <button *ngIf="loggedIn" ion-item (tap)="signOut()">
       <ion-icon name="log-out" item-left></ion-icon>
       {{ 'I18N_SIGN_OUT' | translate }}
     </button>

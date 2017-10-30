@@ -7,7 +7,7 @@
       <button ion-button icon-only>
         <ion-icon name="search"></ion-icon>
       </button>
-      <button ion-button icon-only (click)="pushMenu()">
+      <button ion-button icon-only (tap)="pushMenu()">
         <ion-icon *ngIf="!loggedIn" name="contact"></ion-icon>
         <ion-avatar *ngIf="loggedIn">
           <img *ngIf="!user.imageBase64" [src]="user.imageUrl" >
@@ -19,7 +19,7 @@
 </ion-header>
 
 <ion-content *ngIf="!loggedIn">
-  <ion-card *ngFor="let group of groups | async" (click)="pushGroup(group.id)">
+  <ion-card *ngFor="let group of groups | async" (tap)="pushGroup(group.id)">
     <ion-card-header>
       {{group.title}}
     </ion-card-header>
