@@ -18,12 +18,12 @@
 </ion-header>
 
 <ion-content>
-  <ion-card *ngFor="let group of groups" (tap)="navigateToGroup(group)">
+  <ion-card *ngFor="let group of groups" (tap)="navigateToGroup(group.id)">
     <ion-card-header>
-      {{(group | async)?.title}}
+      {{group.title}}
     </ion-card-header>
     <ion-card-content>
-      {{(group | async)?.description}} - (클릭)
+      {{group.description}} - (클릭)
     </ion-card-content>
   </ion-card>
 </ion-content>

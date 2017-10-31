@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
-import { UserService } from '../../providers';
+import { UtilService } from '../../providers';
 import { User } from '../../models';
 
 @IonicPage({
@@ -21,7 +21,7 @@ export class MenuPage {
   constructor(
     public navCtrl: NavController,
     public storage: Storage,
-    public userService: UserService,
+    public util: UtilService,
     public toastCtrl: ToastController,
     public translate: TranslateService
   ) {
@@ -29,24 +29,13 @@ export class MenuPage {
   }
 
   ionViewDidLoad() {
-    this.storage.get('currentUserToken').then((token: string) => {
-      if (token) {
-        let tokens = token.split('.');
-        if (tokens.length === 3) {
-          let payload = JSON.parse(window.atob(tokens[1]));
-          let userId = payload.id;
-          this.userService.getUser(userId).subscribe(
-            (user: User) => {
-              this.loggedIn = true;
-              this.user = user;
-            },
-            (error: any) => {
-              this.storage.clear();
-              console.log(error);
-            });
-        }
-      }
-    });
+    this.util.getCurrentUser()
+      .then((user: User) => {
+        this.loggedIn = true;
+        this.user = user;
+      }).catch((error: any) => {
+        console.log(error);
+      });
   }
 
   popNavigation() {

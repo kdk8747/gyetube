@@ -38,31 +38,20 @@ export class TabsMyPage {
   }
 
   ionViewDidLoad() {
-    this.storage.get('currentUserToken').then((token: string) => {
-      if (token) {
-        let tokens = token.split('.');
-        if (tokens.length === 3) {
-          let payload = JSON.parse(window.atob(tokens[1]));
-          let userId = payload.id;
-          this.userService.getUser(userId).subscribe(
-            (user: User) => {
-              this.loggedIn = true;
-              this.user = user;
-              this.util.convertToDataURLviaCanvas('http://reverse-proxy.grassroots.kr/' + user.imageUrl)
-              .then( base64Img => {
-                if (base64Img !== user.imageBase64){
-                  user.imageBase64 = base64Img;
-                  this.userService.update(user).subscribe(user => this.user = user);
-                }
-              });
-            },
-            (error: any) => {
-              this.storage.clear();
-              console.log(error);
-            });
+    this.util.getCurrentUser()
+      .then((user: User) => {
+        this.loggedIn = true;
+        this.user = user;
+        return this.util.convertToDataURLviaCanvas('http://reverse-proxy.grassroots.kr/' + user.imageUrl);
+      }).then( base64Img => {
+        if (base64Img !== this.user.imageBase64){
+          this.user.imageBase64 = base64Img;
+          return this.userService.update(this.user).toPromise();
         }
-      }
-    });
+        return Promise.reject('user.imageBase64 has been updated already');
+      }).catch((error: any) => {
+        console.log(error);
+      });
 
     this.event.subscribe('EventMenuPage', (obj) => {
       this.navCtrl.push('MenuPage');

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
-import { UserService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService } from '../../../providers';
+import { UserService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService } from '../../../providers';
 import { User, Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -27,8 +26,8 @@ export class TabsGroupPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public storage: Storage,
     public event: Events,
+    public util: UtilService,
     public userService: UserService,
     public groupService: GroupService,
     public proceedingService: ProceedingService,
@@ -41,6 +40,7 @@ export class TabsGroupPage {
   ionViewDidLoad() {
     this.groupId = this.navParams.get('group_id');
     this.group = this.groupService.getGroup(this.groupId);
+
     this.group.subscribe((group: Group) => {
       group.members.map(id => this.userService.cacheUser(id));
       this.proceedingService.cacheProceedings(group.id);
@@ -48,24 +48,14 @@ export class TabsGroupPage {
       this.activityService.cacheActivities(group.id);
       this.receiptService.cacheReceipts(group.id);
     });
-    this.storage.get('currentUserToken').then((token: string) => {
-      if (token) {
-        let tokens = token.split('.');
-        if (tokens.length === 3) {
-          let payload = JSON.parse(window.atob(tokens[1]));
-          let userId = payload.id;
-          this.userService.getUser(userId).subscribe(
-            (user: User) => {
-              this.loggedIn = true;
-              this.user = user;
-            },
-            (error: any) => {
-              this.storage.clear();
-              console.log(error);
-            });
-        }
-      }
-    });
+
+    this.util.getCurrentUser()
+      .then((user: User) => {
+        this.loggedIn = true;
+        this.user = user;
+      }).catch((error: any) => {
+        console.log(error);
+      });
   }
 
   pushMenu() {
