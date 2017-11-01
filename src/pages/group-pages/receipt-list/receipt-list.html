@@ -22,7 +22,7 @@
   </ion-card>
 
   <div style="height:44px"></div>
-  <ion-fab right middle>
+  <ion-fab right middle *ngIf="creationPermitted">
     <button ion-fab (tap)="navigateToEditor()">
       <ion-icon name="add"></ion-icon>
     </button>

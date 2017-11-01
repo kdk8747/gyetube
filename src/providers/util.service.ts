@@ -40,13 +40,13 @@ export class UtilService {
     return this.groupId;
   }
 
-  getCurrentUser(): Promise<User> {
+  private getCurrentPayload(): Promise<any> {
     return this.storage.get('currentUserToken').then((token: string) => {
       if (token) {
         let tokens = token.split('.');
         if (tokens.length === 3) {
           let payload = JSON.parse(window.atob(tokens[1]));
-          return this.userService.getUser(payload.id).toPromise();
+          return Promise.resolve(payload);
         }
       }
       this.storage.clear();
@@ -54,21 +54,19 @@ export class UtilService {
     });
   }
 
+  getCurrentUser(): Promise<User> {
+    return this.getCurrentPayload().then(payload => {
+      return this.userService.getUser(payload.id).toPromise();
+    });
+  }
+
   getCurrentKnownGroups(): Promise<Group[]> {
-    return this.storage.get('currentUserToken').then((token: string) => {
-      if (token) {
-        let tokens = token.split('.');
-        if (tokens.length === 3) {
-          let payload = JSON.parse(window.atob(tokens[1]));
-          let groups: string[] = [];
-          for (let groupId in payload.permissions.groups)
-            groups.push(groupId);
-          return Promise.all(groups.map((groupId: string) =>
-            this.groupService.getGroup(groupId).toPromise()));
-        }
-      }
-      this.storage.clear();
-      return Promise.reject([]);
+    return this.getCurrentPayload().then(payload => {
+      let groups: string[] = [];
+      for (let groupId in payload.permissions.groups)
+        groups.push(groupId);
+      return Promise.all(groups.map((groupId: string) =>
+        this.groupService.getGroup(groupId).toPromise()));
     });
   }
 
@@ -92,5 +90,28 @@ export class UtilService {
       };
       img.src = url;
     });
+  }
+
+  canCreateReceipt(groupId: string): Promise<boolean> {
+    let groupRoles;
+    return this.groupService.getGroup(groupId).toPromise()
+      .then((group: Group) => {
+        groupRoles = group.roles;
+        return this.getCurrentPayload();
+      }).then(payload => {
+        if (groupId in payload.permissions.groups) {
+          let userRoles: string[] = payload.permissions.groups[groupId];
+
+          let ret = false;
+          for (let i = 0; i < userRoles.length; i++)
+            for (let j = 0; j < groupRoles.length; j++)
+              if (groupRoles[j].id == userRoles[i]) {
+                let crud: string = groupRoles[j].receipts;
+                ret = ret || crud.includes('c');
+              }
+          return ret;
+        }
+        return false;
+      });;
   }
 }

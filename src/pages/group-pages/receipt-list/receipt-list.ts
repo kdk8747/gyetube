@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, ViewController } from 'ionic-angular';
-import { UtilService, ReceiptService } from '../../../providers';
-import { Receipt } from '../../../models';
+import { UtilService, GroupService, ReceiptService } from '../../../providers';
+import { Group, Receipt } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
@@ -15,17 +15,24 @@ export class ReceiptListPage {
 
   groupId: string;
   receipts: Observable<Receipt[]>;
+  creationPermitted: boolean = false;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
+    public groupService: GroupService,
     public receiptService: ReceiptService) {
   }
 
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
+    this.util.canCreateReceipt(this.groupId)
+      .then(bool => this.creationPermitted = bool)
+      .catch((error: any) => {
+        console.log(error);
+      });;
     this.receipts = this.receiptService.getReceipts(this.groupId)
       .map((receipts: Receipt[]) => this.sortByDateR(receipts))
       .map((receipts: Receipt[]) => this.setBalance(receipts));
