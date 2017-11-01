@@ -26,9 +26,6 @@ export class ReceiptListPage {
   }
 
   ionViewDidLoad() {
-    /mobile/i.test(navigator.userAgent) && setTimeout(function () {
-      window.scrollTo(0, 1);
-    }, 1000);
     this.groupId = 'examplelocalparty';//safari test this.util.getCurrentGroupId();
     this.util.canCreateReceipt(this.groupId)
       .then(bool => this.creationPermitted = bool)
@@ -75,5 +72,10 @@ export class ReceiptListPage {
       }
     }
     return receipts;
+  }
+
+  onScroll(event) {
+    console.log(event);
+    window.scrollTo(0,1);
   }
 }

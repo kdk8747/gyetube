@@ -5,7 +5,7 @@
 </ion-header>
 -->
 
-<ion-content>
+<ion-content (ionScroll)="onScroll($event)">
   <ion-card *ngFor="let receipt of receipts | async" (tap)="navigateToDetail(receipt.id)">
     <ion-card-content>
       <ion-row>
