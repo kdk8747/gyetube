@@ -1,11 +1,11 @@
-<!-- <ion-header>
+<ion-header>
   <ion-navbar>
     <ion-title> {{ 'I18N_GRASSCUBE' | translate }} - {{ 'I18N_RECEIPT' | translate }} </ion-title>
   </ion-navbar>
 </ion-header>
--->
 
-<ion-content (ionScroll)="onScroll($event)">
+
+<ion-content>
   <ion-card *ngFor="let receipt of receipts | async" (tap)="navigateToDetail(receipt.id)">
     <ion-card-content>
       <ion-row>

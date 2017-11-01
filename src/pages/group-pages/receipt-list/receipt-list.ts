@@ -26,7 +26,7 @@ export class ReceiptListPage {
   }
 
   ionViewDidLoad() {
-    this.groupId = 'examplelocalparty';//safari test this.util.getCurrentGroupId();
+    this.groupId = this.util.getCurrentGroupId();
     this.util.canCreateReceipt(this.groupId)
       .then(bool => this.creationPermitted = bool)
       .catch((error: any) => {
@@ -72,10 +72,5 @@ export class ReceiptListPage {
       }
     }
     return receipts;
-  }
-
-  onScroll(event) {
-    console.log(event);
-    window.scrollTo(0,1);
   }
 }
