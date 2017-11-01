@@ -26,6 +26,7 @@ export class ReceiptListPage {
   }
 
   ionViewDidLoad() {
+    window.scrollTo(0,1);
     this.groupId = 'examplelocalparty';//safari test this.util.getCurrentGroupId();
     this.util.canCreateReceipt(this.groupId)
       .then(bool => this.creationPermitted = bool)
