@@ -12,7 +12,7 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 })
 export class MyApp {
   // make TabsPage the root (or first) page
-  rootPage: string = 'TabsMyPage';
+  rootPage: string = 'ReceiptListPage'; //safari test 'TabsMyPage';
 
   constructor(
     public platform: Platform,
