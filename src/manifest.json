@@ -2,7 +2,7 @@
   "name": "Ionic",
   "short_name": "Ionic",
   "start_url": "index.html",
-  "display": "fullscreen",
+  "display": "standalone",
   "icons": [{
     "src": "assets/imgs/logo.png",
     "sizes": "512x512",
