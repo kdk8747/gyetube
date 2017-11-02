@@ -26,7 +26,7 @@ export class LoginPage {
     public translate: TranslateService
   ) { }
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     if (!this.util.isNativeApp()) {
       let splits = window.location.href.split('token=');
       if (splits.length > 1) {
