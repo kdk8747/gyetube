@@ -100,12 +100,14 @@ exports.create = (req, res) => {
   let newActivity = req.body;
   if (req.params.group === 'examplelocalparty') {
     newActivity['id'] = activityID2++;
+    newActivity['creator'] = req.decoded.id;
     activities2.push(newActivity);
     res.json(newActivity);
   }
   else if (req.params.group === 'suwongreenparty') {
     if (req.params.group in req.decoded.permissions.groups) {
       newActivity['id'] = activityID++;
+      newActivity['creator'] = req.decoded.id;
       activities.push(newActivity);
       res.json(newActivity);
     }

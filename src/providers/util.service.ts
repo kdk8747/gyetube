@@ -92,7 +92,7 @@ export class UtilService {
     });
   }
 
-  canCreateReceipt(groupId: string): Promise<boolean> {
+  isPermitted(query_crud: string, category: string, groupId: string): Promise<boolean> {
     let groupRoles;
     return this.groupService.getGroup(groupId).toPromise()
       .then((group: Group) => {
@@ -106,8 +106,20 @@ export class UtilService {
           for (let i = 0; i < userRoles.length; i++)
             for (let j = 0; j < groupRoles.length; j++)
               if (groupRoles[j].id == userRoles[i]) {
-                let crud: string = groupRoles[j].receipts;
-                ret = ret || crud.includes('c');
+                let crud: string = '';
+                switch(category) {
+                  case 'proceedings': crud = groupRoles[j].proceedings; break;
+                  case 'decisions': crud = groupRoles[j].decisions; break;
+                  case 'activities': crud = groupRoles[j].activities; break;
+                  case 'receipts': crud = groupRoles[j].receipts; break;
+                }
+                switch(query_crud) {
+                  case 'create': ret = ret || crud.includes('c'); break;
+                  case 'read':   ret = ret || crud.includes('r'); break;
+                  case 'update': ret = ret || crud.includes('u'); break;
+                  case 'delete': ret = ret || crud.includes('d'); break;
+                }
+
               }
           return ret;
         }

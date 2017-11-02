@@ -39,6 +39,11 @@
   "I18N_PARTICIPANTS": "Participant(s)",
   "I18N_TOTAL_DIFFERENCE": "Total Difference",
 
+  "I18N_PHOTOS": "Photos",
+  "I18N_DOCUMENTS": "Documents",
+  "I18N_TITLE": "Title",
+  "I18N_DESCRIPTION": "Description",
+
   "I18N_PAYMENT_DATE": "Payment Date",
   "I18N_DIFFERENCE": "Difference",
   "I18N_MEMO": "Memo",

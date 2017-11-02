@@ -39,6 +39,11 @@
   "I18N_PARTICIPANTS": "참가자",
   "I18N_TOTAL_DIFFERENCE": "총 차액",
 
+  "I18N_PHOTOS": "사진",
+  "I18N_DOCUMENTS": "문서",
+  "I18N_TITLE": "제목",
+  "I18N_DESCRIPTION": "설명",
+
   "I18N_PAYMENT_DATE": "지불일",
   "I18N_DIFFERENCE": "차액",
   "I18N_MEMO": "메모",

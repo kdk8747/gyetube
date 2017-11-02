@@ -27,7 +27,7 @@ export class ReceiptListPage {
 
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
-    this.util.canCreateReceipt(this.groupId)
+    this.util.isPermitted('create', 'receipts', this.groupId)
       .then(bool => this.creationPermitted = bool)
       .catch((error: any) => {
         console.log(error);

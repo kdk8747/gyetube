@@ -15,6 +15,7 @@ export class ActivityListPage {
 
   groupId: string;
   activities: Observable<Activity[]>;
+  creationPermitted: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -26,6 +27,11 @@ export class ActivityListPage {
 
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
+    this.util.isPermitted('create', 'activities', this.groupId)
+      .then(bool => this.creationPermitted = bool)
+      .catch((error: any) => {
+        console.log(error);
+      });;
     this.activities = this.activityService.getActivities(this.groupId)
       .map((activities: Activity[]) => this.sortByDateA(activities));
 
@@ -44,6 +50,10 @@ export class ActivityListPage {
 
   navigateToDetail(activityId: number) {
     this.navCtrl.push('ActivityDetailPage', { id: activityId });
+  }
+
+  navigateToEditor() {
+    this.navCtrl.push('ActivityEditorPage');
   }
 
   sortByDateA(activities: Activity[]): Activity[] {
