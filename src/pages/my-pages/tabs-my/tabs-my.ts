@@ -37,7 +37,7 @@ export class TabsMyPage {
     this.navCtrl.push('TabsGroupPage', {group_id: group_id });
   }
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     this.util.getCurrentUser()
       .then((user: User) => {
         this.loggedIn = true;
@@ -52,7 +52,9 @@ export class TabsMyPage {
       }).catch((error: any) => {
         console.log(error);
       });
+  }
 
+  ionViewDidLoad() {
     this.event.subscribe('EventMenuPage', (obj) => {
       this.navCtrl.push('MenuPage');
     });
