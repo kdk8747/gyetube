@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
 import { UtilService } from '../../providers';
+import { Cookies } from 'js-cookie';
 
 @IonicPage({
   segment: 'login',
@@ -31,7 +32,9 @@ export class LoginPage {
       let splits = window.location.href.split('token=');
       if (splits.length > 1) {
         console.log(splits[1]);
-        this.afterLoggedIn(splits[1]);
+        this.afterLoggedIn(splits[1]).catch(() => {
+          Cookies.set('currentUserToken', splits[1]);  // fallback for safari private mode.
+        });
       }
       else {
         console.log('no token');
@@ -51,8 +54,8 @@ export class LoginPage {
     if (this.util.isNativeApp()) {
       this.loginWithNativeApp(url).then((eventUrl: string) => {
         let token = eventUrl.split('=')[1].split('&')[0];
-        this.afterLoggedIn(token);
-      }, (err: string) => {
+        return this.afterLoggedIn(token);
+      }).catch((err: string) => {
         console.log(err);
       });
     }
@@ -78,8 +81,8 @@ export class LoginPage {
     window.open(url, '_self');
   }
 
-  afterLoggedIn(token: string) {
-    this.storage.set('currentUserToken', token)
+  afterLoggedIn(token: string): Promise<void> {
+    return this.storage.set('currentUserToken', token)
       .then(() => {
         this.translate.get('I18N_SIGN_IN_TOAST').subscribe(
           (value) => {

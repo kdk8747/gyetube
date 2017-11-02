@@ -55,6 +55,7 @@
         "ionic-angular": "3.8.0",
         "ionic-plugin-keyboard": "^2.2.1",
         "ionicons": "3.0.0",
+        "js-cookie": "2.2.0",
         "pm2": "2.6.1",
         "rxjs": "5.4.0",
         "sw-toolbox": "3.6.0",
