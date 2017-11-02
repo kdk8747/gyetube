@@ -19,7 +19,7 @@
 </ion-header>
 
 <ion-content *ngIf="!loggedIn">
-  <ion-card *ngFor="let group of groups | async" (tap)="pushGroup(group.id)">
+  <ion-card *ngFor="let group of groups | async" (tap)="navigateToTabsGroupPage(group.id)">
     <ion-card-header>
       {{group.title}}
     </ion-card-header>

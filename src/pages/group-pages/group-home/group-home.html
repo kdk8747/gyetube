@@ -6,5 +6,8 @@
 
 
 <ion-content padding>
-  <h2>Group Home Page</h2>
+  <img [src]="(group | async)?.imageUrl">
+  <p>{{ (group | async)?.description }}</p>
+
+  <div style="height:44px"></div>
 </ion-content>

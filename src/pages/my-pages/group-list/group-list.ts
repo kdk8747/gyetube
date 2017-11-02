@@ -44,6 +44,7 @@ export class GroupListPage {
   }
 
   navigateToGroup(group_id: string) {
+    this.util.setCurrentGroupId(group_id);
     this.navCtrl.push('TabsGroupPage', {group_id: group_id });
   }
 }

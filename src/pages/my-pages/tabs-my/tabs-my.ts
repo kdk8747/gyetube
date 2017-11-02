@@ -32,7 +32,7 @@ export class TabsMyPage {
     this.groups = this.groupService.getGroups();
   }
 
-  pushGroup(group_id: string) {
+  navigateToTabsGroupPage(group_id: string) {
     this.util.setCurrentGroupId(group_id);
     this.navCtrl.push('TabsGroupPage', {group_id: group_id });
   }
@@ -64,11 +64,5 @@ export class TabsMyPage {
 
   pushMenu() {
     this.navCtrl.push('MenuPage');
-  }
-
-  navigateToGroup(obs:Observable<Group>) {
-    obs.subscribe(group => {
-      this.navCtrl.push('TabsGroupPage', {group_id: group.id });
-    });
   }
 }

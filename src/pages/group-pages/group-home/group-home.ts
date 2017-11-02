@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { UtilService, GroupService } from '../../../providers';
+import { Group } from '../../../models';
+import { Observable } from 'rxjs/Observable';
+
 
 @IonicPage({
   segment: 'fixme'
@@ -10,11 +14,21 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class GroupHomePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  groupId: string = '';
+  id: number;
+  group: Observable<Group>;
+
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public util: UtilService,
+    public groupService: GroupService
+  ) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad GroupHomePage');
+    this.groupId = this.util.getCurrentGroupId();
+    this.group = this.groupService.getGroup(this.groupId);
   }
 
 }
