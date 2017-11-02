@@ -18,6 +18,7 @@ export class ReceiptDetailPage {
   groupId: string;
   id: number;
   responseTimeMs: number = 500;
+  imageUrl: string = '';
   receipt: Observable<Receipt>;
   creator: Observable<User>;
   activity: Observable<Activity> = null;
@@ -40,6 +41,7 @@ export class ReceiptDetailPage {
 
     this.receipt = this.receiptService.getReceipt(this.groupId, this.id);
     this.receipt.subscribe((receipt: Receipt) => {
+      this.imageUrl = receipt.imageUrl;
       this.creator = this.userService.getUser(receipt.creator);
       this.creator.subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       if (receipt.parentActivity)
