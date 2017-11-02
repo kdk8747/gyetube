@@ -7,7 +7,7 @@ export class Activity {
     public participants: string[],
     public elapsedTime: number,
     public title: string,
-    public content: string,
+    public description: string,
     public imageUrls: string[],
     public documentUrls: string[],
     public parentDecision: number,

@@ -19,7 +19,7 @@
     <ion-card-content>
       <p>{{ 'I18N_CREATED_DATE' | translate}}: {{(decision | async)?.createdDate | localizedDate}}</p>
       <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{(decision | async)?.expiryDate | localizedDate}}</p>
-      <p>{{(decision | async)?.content}}</p>
+      <p>{{(decision | async)?.description}}</p>
     </ion-card-content>
 
     <ion-card-content>

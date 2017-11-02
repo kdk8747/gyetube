@@ -6,7 +6,7 @@ var proceedings = [
     meetingDate: new Date("2016-03-07T19:30:00+09:00"),
     title: '수원녹색당 임시총회',
     attendees: ['yd', 'sj', '471891074', 'jy', 'ty', 'jh'],
-    content:
+    description:
     '1. 새운영위원 선출\n\
   김동규(연락담당), 고성준, 신지연(경기운영위참석), 한태연(친환경급식담당), 최연두(모임장소섭외/회계담당)\n\
 \n\
@@ -31,11 +31,11 @@ var proceedings = [
 var proceedingID = 6;
 
 var proceedings2 = [
-  { id: 1, prevId: 0, state: 0, createdDate: new Date(2016, 5, 24, 11, 33, 30, 0), meetingDate: new Date(2016, 5, 24, 11, 33, 30, 0), title: '5월 정기 회의', attendees: ['1', '2', '3', '4', '5'], content: 'blah blah', childDecisions: [1] },
-  { id: 2, prevId: 0, state: 0, createdDate: new Date(2016, 6, 24, 11, 33, 30, 0), meetingDate: new Date(2016, 6, 24, 11, 33, 30, 0), title: '6월 정기 회의', attendees: ['1', '2', '3', '4', '5'], content: 'blah blah', childDecisions: [2] },
-  { id: 3, prevId: 0, state: 0, createdDate: new Date(2016, 7, 24, 11, 33, 30, 0), meetingDate: new Date(2016, 7, 24, 11, 33, 30, 0), title: '7월 정기 회의', attendees: ['1', '2', '3', '4', '5'], content: 'blah blah', childDecisions: [3] },
-  { id: 4, prevId: 0, state: 0, createdDate: new Date(2016, 8, 24, 11, 33, 30, 0), meetingDate: new Date(2016, 8, 24, 11, 33, 30, 0), title: '8월 정기 회의', attendees: ['1', '2', '3', '4', '5'], content: 'blah blah', childDecisions: [4] },
-  { id: 5, prevId: 0, state: 0, createdDate: new Date(2016, 9, 24, 11, 33, 30, 0), meetingDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: '9월 정기 회의', attendees: ['1', '2', '3', '4', '5'], content: 'blah blah', childDecisions: [5] }
+  { id: 1, prevId: 0, state: 0, createdDate: new Date(2016, 5, 24, 11, 33, 30, 0), meetingDate: new Date(2016, 5, 24, 11, 33, 30, 0), title: '5월 정기 회의', attendees: ['1', '2', '3', '4', '5'], description: 'blah blah', childDecisions: [1] },
+  { id: 2, prevId: 0, state: 0, createdDate: new Date(2016, 6, 24, 11, 33, 30, 0), meetingDate: new Date(2016, 6, 24, 11, 33, 30, 0), title: '6월 정기 회의', attendees: ['1', '2', '3', '4', '5'], description: 'blah blah', childDecisions: [2] },
+  { id: 3, prevId: 0, state: 0, createdDate: new Date(2016, 7, 24, 11, 33, 30, 0), meetingDate: new Date(2016, 7, 24, 11, 33, 30, 0), title: '7월 정기 회의', attendees: ['1', '2', '3', '4', '5'], description: 'blah blah', childDecisions: [3] },
+  { id: 4, prevId: 0, state: 0, createdDate: new Date(2016, 8, 24, 11, 33, 30, 0), meetingDate: new Date(2016, 8, 24, 11, 33, 30, 0), title: '8월 정기 회의', attendees: ['1', '2', '3', '4', '5'], description: 'blah blah', childDecisions: [4] },
+  { id: 5, prevId: 0, state: 0, createdDate: new Date(2016, 9, 24, 11, 33, 30, 0), meetingDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: '9월 정기 회의', attendees: ['1', '2', '3', '4', '5'], description: 'blah blah', childDecisions: [5] }
 ];
 var proceedingID2 = 6;
 

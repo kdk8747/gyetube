@@ -11,7 +11,7 @@ export class Decision {
     public accepters: string[],
     public rejecters: string[],
     public title: string,
-    public content: string,
+    public description: string,
     public parentProceeding: number,
     public childActivities: number[],
     public childReceipts: number[],

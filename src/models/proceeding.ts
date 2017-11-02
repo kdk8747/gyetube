@@ -9,7 +9,7 @@ export class Proceeding {
     public meetingDate: string,
     public title: string,
     public attendees: string[],
-    public content: string,
+    public description: string,
     public childDecisions: number[]
   ) { }
 }

@@ -31,7 +31,7 @@
     </ion-card-header>
 
     <ion-card-content>
-      <p>{{(proceeding | async)?.content}}</p>
+      <p>{{(proceeding | async)?.description}}</p>
     </ion-card-content>
 
     <ion-card *ngFor="let decision of decisions; let i=index">
