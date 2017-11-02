@@ -38,10 +38,11 @@ export class ActivityService {
     this.http.get(url)
       .map(response => {
         let activities = response.json() as Activity[];
-        activities.map(activity =>
-          this.activities[group_id + activity.id] = new Observable<Activity>(obs => obs.next(activity))
-        );
-      }).publishLast().connect();
+        activities.map(activity => {
+          if (!this.activities[group_id + activity.id])
+            this.activities[group_id + activity.id] = new Observable<Activity>(obs => obs.next(activity))
+        });
+      }).publishLast().connect(); // connect(): immediately fetch
   }
 
   getActivity(group_id: string, id: number): Observable<Activity> {

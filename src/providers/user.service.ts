@@ -61,9 +61,10 @@ export class UserService {
         let receiveDate = (new Date()).getTime();
         this.responseTimeMs = receiveDate - sendDate;
         let user = response.json() as User;
-        this.users[id] = new Observable<User>(obs => obs.next(user));
+        if (!this.users[id])
+          this.users[id] = new Observable<User>(obs => obs.next(user));
       })
-      .publishLast().connect();
+      .publishLast().connect(); // connect(): immediately fetch
   }
 
   update(user: User): Observable<User> {

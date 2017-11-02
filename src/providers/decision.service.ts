@@ -38,10 +38,11 @@ export class DecisionService {
     this.http.get(url)
       .map(response => {
         let decisions = response.json() as Decision[];
-        decisions.map(decision =>
-          this.decisions[group_id + decision.id] = new Observable<Decision>(obs => obs.next(decision))
-        );
-      }).publishLast().connect();
+        decisions.map(decision => {
+          if (!this.decisions[group_id + decision.id])
+            this.decisions[group_id + decision.id] = new Observable<Decision>(obs => obs.next(decision))
+        });
+      }).publishLast().connect(); // connect(): immediately fetch
   }
 
   getDecision(group_id: string, id: number): Observable<Decision> {

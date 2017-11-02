@@ -40,10 +40,11 @@ export class ProceedingService {
     this.http.get(url)
       .map(response => {
         let proceedings = response.json() as Proceeding[];
-        proceedings.map(proceeding =>
-          this.proceedings[group_id + proceeding.id] = new Observable<Proceeding>(obs => obs.next(proceeding))
-        );
-      }).publishLast().connect();
+        proceedings.map(proceeding => {
+          if (!this.proceedings[group_id + proceeding.id])
+            this.proceedings[group_id + proceeding.id] = new Observable<Proceeding>(obs => obs.next(proceeding))
+        });
+      }).publishLast().connect(); // connect(): immediately fetch
   }
 
   getProceeding(group_id: string, id: number): Observable<Proceeding> {
