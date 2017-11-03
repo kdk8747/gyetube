@@ -52,10 +52,7 @@ export class ReceiptDetailPage {
   }
 
   popNavigation() {
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('ReceiptListPage');
-    else
-      this.navCtrl.pop();
+    this.navCtrl.setRoot('ReceiptListPage');
   }
 
   navigateToUserDetail() {

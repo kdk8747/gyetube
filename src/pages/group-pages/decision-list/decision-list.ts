@@ -30,8 +30,6 @@ export class DecisionListPage {
     this.decisions = this.decisionService.getDecisions(this.groupId);
     this.event.subscribe('EventDecisionDetailPage', (obj) => {
       let top:ViewController = this.navCtrl.last();
-      if (top.id === 'DecisionDetailPage' && top.data.id !== obj.id)
-        this.navCtrl.pop();
       if (top.id !== 'DecisionDetailPage' || top.data.id !== obj.id)
         this.navCtrl.push('DecisionDetailPage', { id: obj.id });
     });

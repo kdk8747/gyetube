@@ -52,10 +52,7 @@ export class ActivityDetailPage {
   }
 
   popNavigation() {
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('ActivityListPage');
-    else
-      this.navCtrl.pop();
+    this.navCtrl.setRoot('ActivityListPage');
   }
 
   navigateToUserDetail() {

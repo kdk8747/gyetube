@@ -46,10 +46,7 @@ export class ProceedingDetailPage {
   }
 
   popNavigation() {
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('ProceedingListPage');
-    else
-      this.navCtrl.pop();
+    this.navCtrl.setRoot('ProceedingListPage');
   }
 
   navigateToUserDetail() {

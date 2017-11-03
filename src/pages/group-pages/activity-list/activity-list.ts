@@ -37,8 +37,6 @@ export class ActivityListPage {
 
     this.event.subscribe('EventActivityDetailPage', (obj) => {
       let top:ViewController = this.navCtrl.last();
-      if (top.id === 'ActivityDetailPage' && top.data.id !== obj.id)
-        this.navCtrl.pop();
       if (top.id !== 'ActivityDetailPage' || top.data.id !== obj.id)
         this.navCtrl.push('ActivityDetailPage', { id: obj.id });
     });
