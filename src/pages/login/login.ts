@@ -44,7 +44,7 @@ export class LoginPage {
 
   popNavigation() {
     if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('TabsMyPage');
+      this.navCtrl.setRoot('GroupListPage');
     else
       this.navCtrl.pop();
   }

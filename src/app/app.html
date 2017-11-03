@@ -1,1 +1,77 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle="left" start>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+    <ion-buttons left>
+      <h4><ion-icon name="cube"  color="secondary"></ion-icon> {{ 'I18N_GRASSCUBE' | translate }}</h4>
+    </ion-buttons>
+
+    <ion-buttons right>
+      <button ion-button icon-only>
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <button ion-button icon-only menuToggle="right" (tap)="menu.close('menu')" end>
+      <ion-icon *ngIf="!loggedIn" name="contact"></ion-icon>
+      <ion-avatar *ngIf="loggedIn">
+        <img *ngIf="!user.imageBase64" [src]="user.imageUrl">
+        <img *ngIf="user.imageBase64" [src]="user.imageBase64">
+      </ion-avatar>
+    </button>
+  </ion-navbar>
+</ion-header>
+
+
+
+
+<ion-split-pane>
+  <ion-menu id="menu" [content]="content" side="left">
+    <ion-content>
+      <ion-list inset>
+        <button ion-item> </button>
+        <button ion-item *ngFor="let p of pages" (click)="menu.close(); nav.setRoot(p.component);">
+          <ion-icon [name]="p.icon" item-left></ion-icon>
+          {{p.title | translate}}
+        </button>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <ion-nav [root]="rootPage" main #content swipeBackEnabled="false"></ion-nav>
+</ion-split-pane>
+
+
+
+
+<ion-menu id="user-menu" [content]="content" side="right">
+  <ion-content>
+    <ion-list>
+      <ion-item *ngIf="loggedIn">
+        <ion-avatar item-start>
+          <img [src]="user.imageUrl">
+        </ion-avatar>
+        <h2>{{user.name}}</h2>
+        <p>{{user.loggedInBy}}</p>
+      </ion-item>
+      <button *ngIf="!loggedIn" ion-item (tap)="menu.close(); nav.setRoot('LoginPage');">
+        <ion-icon name="contact" item-left></ion-icon>
+        {{ 'I18N_SIGN_IN' | translate }}
+      </button>
+      <button *ngIf="loggedIn" ion-item (tap)="signOut()">
+        <ion-icon name="log-out" item-left></ion-icon>
+        {{ 'I18N_SIGN_OUT' | translate }}
+      </button>
+      <button ion-item>
+        <ion-icon name="settings" item-left></ion-icon>
+        {{ 'I18N_SETTINGS' | translate }}
+      </button>
+      <button ion-item>
+        <ion-icon name="lock" item-left></ion-icon>
+        {{ 'I18N_TERMS_AND_PRIVACY_POLICY' | translate }}
+      </button>
+    </ion-list>
+  </ion-content>
+</ion-menu>

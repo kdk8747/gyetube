@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar></ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngFor="let group of groups" (tap)="navigateToGroup(group.id)">
+    <ion-card-header>
+      {{group.title}}
+    </ion-card-header>
+    <ion-card-content>
+      {{group.description}} - (클릭)
+    </ion-card-content>
+  </ion-card>
+</ion-content>

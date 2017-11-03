@@ -1,5 +1,8 @@
 <ion-header>
   <ion-toolbar>
+  </ion-toolbar>
+
+  <ion-toolbar>
     <ion-buttons left>
       <button ion-button icon-only (tap)="popNavigation()">
         <ion-icon name="close"></ion-icon>
@@ -10,7 +13,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-list inset>
+  <ion-list>
     <button ion-item (tap)="login('naver')">
       <ion-icon name="log-in" item-left></ion-icon>
       {{ 'I18N_SIGN_IN_BY_NAVER' | translate }}
