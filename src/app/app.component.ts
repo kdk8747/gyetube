@@ -7,7 +7,7 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { UtilService, UserService } from '../providers';
-import { User, Group } from '../models';
+import { User } from '../models';
 
 @Component({
   templateUrl: 'app.html'

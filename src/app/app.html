@@ -1,15 +1,19 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons left>
-      <h4 *ngIf="!groupTitle">
-        <ion-icon name="cube" color="secondary"></ion-icon>
-        {{ 'I18N_GRASSCUBE' | translate }}
-      </h4>
+      <span *ngIf="!groupTitle">
+        <button ion-button icon-only>
+          <ion-icon name="cube" color="secondary"></ion-icon>
+        </button>
+        <button ion-button color="dark">
+          <h4>{{ 'I18N_GRASSCUBE' | translate }}</h4>
+        </button>
+      </span>
       <span *ngIf="groupTitle">
         <button ion-button icon-only (tap)="groupTitle=null; popNavigation();">
           <ion-icon name="arrow-back"></ion-icon>
         </button>
-        <button ion-button>
+        <button ion-button color="dark">
           <h4>{{ groupTitle }}</h4>
         </button>
       </span>
@@ -33,11 +37,10 @@
 
 
 <ion-split-pane>
-  <ion-menu [content]="content" side="left">
+  <ion-menu [content]="content">
     <ion-content>
       <ion-list>
-        <button ion-item> </button>
-        <button ion-item> </button>
+        <ion-list-header></ion-list-header> <!-- need blank space -->
         <button ion-item *ngFor="let p of pages" (click)="menu.close(); nav.setRoot(p.component);">
           <ion-icon [name]="p.icon" item-left></ion-icon>
           {{ p.title | translate }}
