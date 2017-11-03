@@ -1,24 +1,8 @@
 <ion-header>
   <ion-toolbar></ion-toolbar>
-  <ion-navbar>
-    <ion-buttons left>
-      {{ (group | async)?.title }}
-    </ion-buttons>
-    <ion-buttons right>
-      <button ion-button icon-only>
-        <ion-icon name="search"></ion-icon>
-      </button>
-      <button ion-button icon-only (tap)="pushMenu()">
-        <ion-icon *ngIf="!loggedIn" name="contact"></ion-icon>
-        <ion-avatar *ngIf="loggedIn">
-          <img [src]="user.imageUrl">
-        </ion-avatar>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
 </ion-header>
 
-<ion-tabs tabsPlacement="top">
+<ion-tabs tabsPlacement="bottom">
   <ion-tab [root]="tab1Root" tabUrlPath="fixme" [tabTitle]="('I18N_HOME' | translate) || '&nbsp;'" tabIcon="home"></ion-tab>
   <ion-tab [root]="tab2Root" tabUrlPath="proceeding" [tabTitle]="('I18N_PROCEEDING' | translate) || '&nbsp;'" tabIcon="finger-print"></ion-tab>
   <ion-tab [root]="tab3Root" tabUrlPath="decision" [tabTitle]="('I18N_DECISION' | translate) || '&nbsp;'" tabIcon="attach"></ion-tab>

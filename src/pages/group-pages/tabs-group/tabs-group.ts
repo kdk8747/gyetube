@@ -42,6 +42,7 @@ export class TabsGroupPage {
     this.group = this.groupService.getGroup(this.groupId);
 
     this.group.subscribe((group: Group) => {
+      this.event.publish('TabsGroupPageLoaded', {title: group.title});
       group.members.map(id => this.userService.cacheUser(id));
       this.proceedingService.cacheProceedings(group.id);
       this.decisionService.cacheDecisions(group.id);

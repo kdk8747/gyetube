@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { InAppBrowser, InAppBrowserEvent } from '@ionic-native/in-app-browser';
-import { IonicPage, NavController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, ToastController, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { EnvVariables } from '../../app/environment-variables/environment-variables.token';
@@ -8,8 +8,7 @@ import { UtilService } from '../../providers';
 import { Cookies } from 'js-cookie';
 
 @IonicPage({
-  segment: 'login',
-  defaultHistory: ['TabsMyPage']
+  segment: 'login'
 })
 @Component({
   selector: 'page-login',
@@ -23,6 +22,7 @@ export class LoginPage {
     @Inject(EnvVariables) public envVariables,
     public iab: InAppBrowser,
     public storage: Storage,
+    public event: Events,
     public toastCtrl: ToastController,
     public translate: TranslateService
   ) { }
@@ -91,6 +91,7 @@ export class LoginPage {
               message: value
             });
             toast.present();
+            this.event.publish('LoginSucceed');
             this.popNavigation();
           });
       });

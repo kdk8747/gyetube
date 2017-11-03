@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, MenuController, Nav } from 'ionic-angular';
+import { Platform, MenuController, Nav, Events } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
@@ -21,7 +21,7 @@ export class MyApp {
   pages: Array<{title: string, icon: string, component: string}>;
   loggedIn: boolean = false;
   user: User = null;
-  groups: Group[] = [];
+  groupTitle: string = null;
 
 
   constructor(
@@ -32,6 +32,7 @@ export class MyApp {
 
     public menu: MenuController,
     public storage: Storage,
+    public event: Events,
     public util: UtilService,
     public userService: UserService,
     public toastCtrl: ToastController
@@ -44,6 +45,27 @@ export class MyApp {
       { title: 'I18N_UNCHECKED', icon: 'eye-off', component: 'UncheckedListPage' },
       { title: 'I18N_NOTIFICATIONS', icon: 'notifications', component: 'NotificationListPage' }
     ];
+
+    this.event.subscribe('LoginSucceed', () => {
+      this.util.getCurrentUser()
+        .then((user: User) => {
+          this.loggedIn = true;
+          this.user = user;
+          return this.util.convertToDataURLviaCanvas('http://reverse-proxy.grassroots.kr/' + user.imageUrl);
+        }).then( base64Img => {
+          if (base64Img !== this.user.imageBase64){
+            this.user.imageBase64 = base64Img;
+            return this.userService.update(this.user).toPromise();
+          }
+          return Promise.reject('user.imageBase64 has been updated already');
+        }).catch((error: any) => {
+          console.log(error);
+        });
+    });
+
+    this.event.subscribe('TabsGroupPageLoaded', (obj) => {
+      this.groupTitle = obj.title;
+    });
   }
 
   initializeApp() {
@@ -76,38 +98,11 @@ export class MyApp {
     });
   }
 
-  ionViewDidLoad() {
-    this.util.getCurrentUser()
-      .then((user: User) => {
-        this.loggedIn = true;
-        this.user = user;
-      }).catch((error: any) => {
-        console.log(error);
-      });
-
-    this.util.getCurrentKnownGroups()
-      .then((groups: Group[]) => {
-        this.groups = groups;
-      }).catch((error: any) => {
-        console.log(error);
-      });
-  }
-
-  ionViewDidEnter() {
-    this.util.getCurrentUser()
-      .then((user: User) => {
-        this.loggedIn = true;
-        this.user = user;
-        return this.util.convertToDataURLviaCanvas('http://reverse-proxy.grassroots.kr/' + user.imageUrl);
-      }).then( base64Img => {
-        if (base64Img !== this.user.imageBase64){
-          this.user.imageBase64 = base64Img;
-          return this.userService.update(this.user).toPromise();
-        }
-        return Promise.reject('user.imageBase64 has been updated already');
-      }).catch((error: any) => {
-        console.log(error);
-      });
+  popNavigation() {
+    if (this.nav.length() == 1)
+      this.nav.setRoot('GroupListPage');
+    else
+      this.nav.pop();
   }
 
   signOut() {
@@ -120,7 +115,7 @@ export class MyApp {
               message: value
             });
             toast.present();
-            //this.nav.setRoot('TabsMyPage'); // DO NOT USE this.popNavigation(); because of user profile refresh issue.
+            this.loggedIn = false;
           });
       });
   }
