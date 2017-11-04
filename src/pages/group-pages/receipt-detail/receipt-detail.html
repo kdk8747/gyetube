@@ -35,7 +35,7 @@
     </ion-card-header>
 
     <ion-card-content>
-      <img [hidden]="!imageUrl.includes('http')" [src]="imageUrl" style="width: auto; height: auto">
+      <img *ngIf="imageUrl.includes('http')" [src]="imageUrl" style="width: auto; height: auto">
       <p>{{ 'I18N_PAYMENT_DATE' | translate}} {{(receipt | async)?.paymentDate | localizedDate:'short'}}</p>
       <p>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
     </ion-card-content>
