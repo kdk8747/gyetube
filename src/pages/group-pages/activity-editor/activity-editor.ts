@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
-  segment: 'editor'
+  segment: 'activity-editor'
 })
 @Component({
   selector: 'page-activity-editor',

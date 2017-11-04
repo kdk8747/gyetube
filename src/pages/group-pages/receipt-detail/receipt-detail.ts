@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
-  segment: 'detail/:id'
+  segment: 'receipt-detail/:id'
   //defaultHistory: ['ReceiptListPage'] https://github.com/ionic-team/ionic/issues/10356
 })
 @Component({

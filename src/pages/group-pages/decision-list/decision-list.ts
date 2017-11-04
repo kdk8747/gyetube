@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
-  segment: 'list'
+  segment: 'decision-list'
 })
 @Component({
   selector: 'page-decision-list',

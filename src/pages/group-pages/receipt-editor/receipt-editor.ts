@@ -6,7 +6,7 @@ import { Receipt, Activity, Decision, AmazonSignature } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
-  segment: 'editor'
+  segment: 'receipt-editor'
 })
 @Component({
   selector: 'page-receipt-editor',
