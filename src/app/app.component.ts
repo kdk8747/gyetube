@@ -71,11 +71,15 @@ export class MyApp {
     });
 
     this.event.subscribe('HideHeader', () => {
-      this.renderer.setElementStyle(this.element.nativeElement.children[0], 'top', '-56px');
+      this.renderer.setElementStyle(this.element.nativeElement.children[0], 'opacity', '0');
+      this.renderer.setElementStyle(this.element.nativeElement.children[0], 'z-index', '0');
+      //this.renderer.setElementStyle(this.element.nativeElement.children[0], 'top', '-56px'); // too slow at mobile web
     });
 
     this.event.subscribe('ShowHeader', ()=>{
-      this.renderer.setElementStyle(this.element.nativeElement.children[0], 'top', '0px');
+      this.renderer.setElementStyle(this.element.nativeElement.children[0], 'opacity', '1');
+      this.renderer.setElementStyle(this.element.nativeElement.children[0], 'z-index', '10');
+      //this.renderer.setElementStyle(this.element.nativeElement.children[0], 'top', '0px');
     });
   }
 
