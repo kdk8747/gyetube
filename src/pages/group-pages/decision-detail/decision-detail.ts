@@ -56,6 +56,7 @@ export class DecisionDetailPage {
       if (decision.childReceipts)
         this.receipts = decision.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
     });
+    this.event.publish('ShowHeader');
   }
 
   popNavigation() {

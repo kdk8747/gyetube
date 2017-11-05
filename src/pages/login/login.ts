@@ -40,6 +40,7 @@ export class LoginPage {
         console.log('no token');
       }
     }
+    this.event.publish('ShowHeader');
   }
 
   popNavigation() {

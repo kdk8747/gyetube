@@ -33,6 +33,7 @@ export class ProceedingListPage {
       if (top.id !== 'ProceedingDetailPage' || top.data.id !== obj.id)
         this.navCtrl.push('ProceedingDetailPage', { id: obj.id });
     });
+    this.event.publish('ShowHeader');
   }
 
   ionViewWillUnload() {

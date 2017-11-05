@@ -68,12 +68,4 @@ export class TabsGroupPage {
       this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'opacity', '1');
     });
   }
-
-  pushMenu() {
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.push('MenuPage');
-    else
-      this.event.publish('EventMenuPage');
-  }
-
 }

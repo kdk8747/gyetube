@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { PhotoLibrary } from '@ionic-native/photo-library';
 import { UtilService, ActivityService, DecisionService, AmazonService } from '../../../providers';
 import { Activity, Decision, AmazonSignature } from '../../../models';
@@ -31,7 +31,8 @@ export class ActivityEditorPage {
     constructor(
       public navCtrl: NavController,
       public navParams: NavParams,
-      private photoLibrary: PhotoLibrary,
+      public photoLibrary: PhotoLibrary,
+      public event: Events,
       public util: UtilService,
       public activityService: ActivityService,
       public decisionService: DecisionService,
@@ -64,8 +65,8 @@ export class ActivityEditorPage {
           error: err => { console.log('could not get photos'); },
           complete: () => { console.log('done getting photos'); }
         });
-      })
-        .catch(err => console.log('permissions weren\'t granted'));
+      }).catch(err => console.log('permissions weren\'t granted'));
+      this.event.publish('ShowHeader');
     }
 
     popNavigation() {

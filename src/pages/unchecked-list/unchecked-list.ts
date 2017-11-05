@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, Events } from 'ionic-angular';
 import { UtilService } from '../../providers';
 
 @IonicPage({
@@ -13,11 +13,12 @@ export class UncheckedListPage {
 
   constructor(
     public navCtrl: NavController,
+    public event: Events,
     public util: UtilService
   ) {
-
   }
 
   ionViewDidLoad() {
+    this.event.publish('ShowHeader');
   }
 }

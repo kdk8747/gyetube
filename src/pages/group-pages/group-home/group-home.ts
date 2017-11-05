@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, GroupService } from '../../../providers';
 import { Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
@@ -22,6 +22,7 @@ export class GroupHomePage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public util: UtilService,
+    public event: Events,
     public groupService: GroupService
   ) {
   }
@@ -29,6 +30,7 @@ export class GroupHomePage {
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
     this.group = this.groupService.getGroup(this.groupId);
+    this.event.publish('ShowHeader');
   }
 
 }

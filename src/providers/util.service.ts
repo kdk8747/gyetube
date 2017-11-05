@@ -129,7 +129,7 @@ export class UtilService {
   }
 
   onContentScroll(event) {
-    if (event.velocityY > 12.0 || event.scrollTop < 56) {
+    if (event.velocityY > 10.0 || event.scrollTop < 56) {
       this.event.publish('ShowHeader', {h: event.contentHeight});
     }
     else if (event.directionY == 'down') {
