@@ -122,6 +122,11 @@ export class MyApp {
     this.groupTitle = null;
   }
 
+  onMenuItemPush(page: string) {
+    if (this.nav.last().id !== page)
+      this.nav.push(page);
+  }
+
   signOut() {
     this.storage.clear()
       .then(() => {

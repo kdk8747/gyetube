@@ -56,7 +56,7 @@
           <h2>{{ user.name }}</h2>
           <p>{{ user.loggedInBy }}</p>
         </ion-item>
-        <button *ngIf="!loggedIn" ion-item (tap)="onMenuItem(); nav.setRoot('LoginPage');">
+        <button *ngIf="!loggedIn" ion-item (tap)="onMenuItem(); onMenuItemPush('LoginPage');">
           <ion-icon name="contact" item-left></ion-icon>
           {{ 'I18N_SIGN_IN' | translate }}
         </button>
