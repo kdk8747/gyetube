@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UserService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService } from '../../../providers';
 import { User, Group } from '../../../models';
@@ -24,6 +24,8 @@ export class TabsGroupPage {
   group: Observable<Group>;
 
   constructor(
+    public element: ElementRef,
+    public renderer: Renderer,
     public navCtrl: NavController,
     public navParams: NavParams,
     public event: Events,
@@ -57,6 +59,14 @@ export class TabsGroupPage {
       }).catch((error: any) => {
         console.log(error);
       });
+
+    this.event.subscribe('HideHeader', (obj) => {
+      this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'opacity', '0');
+    });
+
+    this.event.subscribe('ShowHeader', (obj)=>{
+      this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'opacity', '1');
+    });
   }
 
   pushMenu() {

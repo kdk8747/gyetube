@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Platform, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { GroupService, UserService } from './';
 import { User, Group } from '../models';
@@ -14,6 +14,7 @@ export class UtilService {
   constructor(
     public platform: Platform,
     public storage: Storage,
+    public event: Events,
     public groupService: GroupService,
     public userService: UserService,
   ) { }
@@ -125,5 +126,14 @@ export class UtilService {
         }
         return false;
       });;
+  }
+
+  onContentScroll(event) {
+    if (event.velocityY > 12.0 || event.scrollTop < 56) {
+      this.event.publish('ShowHeader', {h: event.contentHeight});
+    }
+    else if (event.directionY == 'down') {
+      this.event.publish('HideHeader', {h: event.contentHeight});
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
+import { UtilService } from '../../providers';
 
 @IonicPage({
   segment: 'notification-list'
@@ -11,7 +12,8 @@ import { IonicPage, NavController } from 'ionic-angular';
 export class NotificationListPage {
 
   constructor(
-    public navCtrl: NavController
+    public navCtrl: NavController,
+    public util: UtilService
   ) {
 
   }

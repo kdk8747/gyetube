@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef, Renderer } from '@angular/core';
 import { Platform, MenuController, Nav, Events } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -29,6 +29,9 @@ export class MyApp {
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     public translate: TranslateService,
+
+    public element: ElementRef,
+    public renderer: Renderer,
 
     public menu: MenuController,
     public storage: Storage,
@@ -65,6 +68,14 @@ export class MyApp {
 
     this.event.subscribe('TabsGroupPageLoaded', (obj) => {
       this.groupTitle = obj.title;
+    });
+
+    this.event.subscribe('HideHeader', () => {
+      this.renderer.setElementStyle(this.element.nativeElement.children[0], 'top', '-56px');
+    });
+
+    this.event.subscribe('ShowHeader', ()=>{
+      this.renderer.setElementStyle(this.element.nativeElement.children[0], 'top', '0px');
     });
   }
 
@@ -103,6 +114,12 @@ export class MyApp {
       this.nav.setRoot('GroupListPage');
     else
       this.nav.pop();
+  }
+
+  onMenuItem() {
+    this.menu.close();
+    this.event.publish('ShowHeader');
+    this.groupTitle = null;
   }
 
   signOut() {

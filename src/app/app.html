@@ -25,7 +25,7 @@
       </button>
     </ion-buttons>
 
-    <button ion-button icon-only menuToggle (tap)="menu.close()" end>
+    <button ion-button icon-only menuToggle end>
       <ion-icon *ngIf="!loggedIn" name="contact"></ion-icon>
       <ion-avatar *ngIf="loggedIn">
         <img *ngIf="!user.imageBase64" [src]="user.imageUrl">
@@ -41,7 +41,7 @@
     <ion-content>
       <ion-list>
         <ion-list-header></ion-list-header> <!-- need blank space -->
-        <button ion-item *ngFor="let p of pages" (click)="menu.close(); nav.setRoot(p.component);">
+        <button ion-item *ngFor="let p of pages" (click)="onMenuItem(); nav.setRoot(p.component);">
           <ion-icon [name]="p.icon" item-left></ion-icon>
           {{ p.title | translate }}
         </button>
@@ -56,16 +56,16 @@
           <h2>{{ user.name }}</h2>
           <p>{{ user.loggedInBy }}</p>
         </ion-item>
-        <button *ngIf="!loggedIn" ion-item (tap)="menu.close(); nav.setRoot('LoginPage');">
+        <button *ngIf="!loggedIn" ion-item (tap)="onMenuItem(); nav.setRoot('LoginPage');">
           <ion-icon name="contact" item-left></ion-icon>
           {{ 'I18N_SIGN_IN' | translate }}
         </button>
-        <button *ngIf="loggedIn" ion-item (tap)="signOut()">
+        <button *ngIf="loggedIn" ion-item (tap)="onMenuItem(); signOut()">
           <ion-icon name="log-out" item-left></ion-icon>
           {{ 'I18N_SIGN_OUT' | translate }}
         </button>
         <button ion-item>
-          <ion-icon name="settings" item-left (tap)="nav.push('TabsGroupPage')"></ion-icon>
+          <ion-icon name="settings" item-left></ion-icon>
           {{ 'I18N_SETTINGS' | translate }}
         </button>
         <button ion-item>

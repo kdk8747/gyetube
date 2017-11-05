@@ -1,11 +1,5 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title> {{ 'I18N_GRASSCUBE' | translate }} - {{ 'I18N_ACTIVITY' | translate }} </ion-title>
-  </ion-navbar>
-</ion-header>
-
-
-<ion-content>
+<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
+  <div style="height:56px"></div>
   <ion-card *ngFor="let activity of activities | async" (tap)="navigateToDetail(activity.id)">
     <ion-card-content>
       <ion-row>
