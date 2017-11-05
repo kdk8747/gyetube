@@ -62,10 +62,12 @@ export class TabsGroupPage {
 
     this.event.subscribe('HideHeader', (obj) => {
       this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'opacity', '0');
+      this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'z-index', '0');
     });
 
     this.event.subscribe('ShowHeader', (obj)=>{
       this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'opacity', '1');
+      this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'z-index', '10');
     });
   }
 }
