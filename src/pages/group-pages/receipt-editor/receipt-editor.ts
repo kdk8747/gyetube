@@ -22,7 +22,7 @@ export class ReceiptEditorPage {
   decisions: Observable<Decision[]>;
   activitySelected: boolean = true;
 
-  paymentDate: string;
+  paymentDate: string = this.util.toIsoStringWithTimezoneOffset(new Date());
   difference: string;
   title: string = '';
   parentDecision: string = '';

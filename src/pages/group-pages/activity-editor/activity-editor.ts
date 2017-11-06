@@ -22,7 +22,7 @@ export class ActivityEditorPage {
     decisions: Observable<Decision[]>;
     activitySelected: boolean = true;
 
-    activityDate: string = new Date().toUTCString();
+    activityDate: string = this.util.toIsoStringWithTimezoneOffset(new Date());
     elapsedTime: number = 0;
     title: string = '';
     description: string = '';
