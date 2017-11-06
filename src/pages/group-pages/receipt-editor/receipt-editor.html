@@ -21,16 +21,16 @@
         <ion-label>{{ 'I18N_RECEIPT' | translate }}</ion-label>
       </ion-item>
       <ion-item>
+        <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
+        <ion-input type="text" text-right [(ngModel)]="title"></ion-input>
+      </ion-item>
+      <ion-item>
         <ion-label>{{ 'I18N_PAYMENT_DATE' | translate }}</ion-label>
         <ion-datetime displayFormat="YYYY MM DD, HH:mm" [(ngModel)]="paymentDate"></ion-datetime>
       </ion-item>
       <ion-item>
         <ion-label>{{ 'I18N_DIFFERENCE' | translate }}</ion-label>
-        <ion-input type="number" [(ngModel)]="difference"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>{{ 'I18N_MEMO' | translate }}</ion-label>
-        <ion-input type="text" [(ngModel)]="memo"></ion-input>
+        <ion-input type="number" text-right [(ngModel)]="difference"></ion-input>
       </ion-item>
 
       <ion-list radio-group>

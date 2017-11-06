@@ -24,7 +24,7 @@ export class ReceiptEditorPage {
 
   paymentDate: string;
   difference: string;
-  memo: string = '';
+  title: string = '';
   parentDecision: string = '';
   parentActivity: string = '';
 
@@ -98,10 +98,10 @@ export class ReceiptEditorPage {
 
   onNewReceipt(): void {
     if (!(this.parentActivity || this.parentDecision) || !this.paymentDate || !this.difference || +this.difference == 0) return;
-    this.memo = this.memo.trim();
+    this.title = this.title.trim();
 
     let newReceipt = new Receipt(0, new Date(Date.now()).toISOString(), this.paymentDate, '',
-        this.memo, +this.difference, 0,
+        this.title, +this.difference, 0,
         '', +this.parentActivity, +this.parentDecision);
 
     let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
