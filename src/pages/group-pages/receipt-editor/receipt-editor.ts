@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { PhotoLibrary } from '@ionic-native/photo-library';
 import { UtilService, ReceiptService, ActivityService, DecisionService, AmazonService } from '../../../providers';
 import { Receipt, Activity, Decision, AmazonSignature } from '../../../models';
@@ -97,27 +97,28 @@ export class ReceiptEditorPage {
   }
 
   onNewReceipt(): void {
-    if (!(this.parentActivity || this.parentDecision) || !this.paymentDate || !this.difference || +this.difference == 0) return;
+    if (!((this.activitySelected && this.parentActivity) || (!this.activitySelected && this.parentDecision))
+      || !this.paymentDate || !this.difference || +this.difference == 0) return;
     this.title = this.title.trim();
 
     let newReceipt = new Receipt(0, new Date(Date.now()).toISOString(), this.paymentDate, '',
-        this.title, +this.difference, 0,
-        '', +this.parentActivity, +this.parentDecision);
+      this.title, +this.difference, 0,
+      '', +this.parentActivity, +this.parentDecision);
 
     let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
     this.amazonService.getAmazonSignatureForReceiptPOST(this.groupId, dateForSign).toPromise()
-        .then((amzSign: AmazonSignature) => this.amazonService.postFile(this.newReceiptImageFile, dateForSign, amzSign).toPromise())
-        .then((xml: string) => {
-            let regexp = /<Location>(.+)<\/Location>/;
-            let result = regexp.exec(xml);
-            if (result.length < 2) return Promise.reject('Unknown XML format');
-            newReceipt.imageUrl = result[1];
-            return this.receiptService.create(this.groupId, newReceipt).toPromise();
-        })
-        .then(() => {
-            this.popNavigation();
-        })
-        .catch(() => { console.log('new receipt failed') });
+      .then((amzSign: AmazonSignature) => this.amazonService.postFile(this.newReceiptImageFile, dateForSign, amzSign).toPromise())
+      .then((xml: string) => {
+        let regexp = /<Location>(.+)<\/Location>/;
+        let result = regexp.exec(xml);
+        if (result.length < 2) return Promise.reject('Unknown XML format');
+        newReceipt.imageUrl = result[1];
+        return this.receiptService.create(this.groupId, newReceipt).toPromise();
+      })
+      .then(() => {
+        this.popNavigation();
+      })
+      .catch(() => { console.log('new receipt failed') });
 
   }
 }
