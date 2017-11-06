@@ -127,6 +127,8 @@ export class MyApp {
   }
 
   onMenuItemPush(page: string) {
+    this.menu.close();
+    this.event.publish('ShowHeader');
     if (this.nav.last().id !== page)
       this.nav.push(page);
   }
