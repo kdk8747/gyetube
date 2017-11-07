@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PhotoLibrary } from '@ionic-native/photo-library';
 import { UtilService, ReceiptService, ActivityService, DecisionService, AmazonService } from '../../../providers';
 import { Receipt, Activity, Decision, AmazonSignature } from '../../../models';
@@ -22,15 +23,15 @@ export class ReceiptEditorPage {
   decisions: Observable<Decision[]>;
   activitySelected: boolean = true;
 
-  paymentDate: string = this.util.toIsoStringWithTimezoneOffset(new Date());
-  difference: string;
-  title: string = '';
-  parentDecision: string = '';
+  form: FormGroup;
+  submitAttempt: boolean = false;
   parentActivity: string = '';
+  parentDecision: string = '';
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public formBuilder: FormBuilder,
     public photoLibrary: PhotoLibrary,
     public event: Events,
     public util: UtilService,
@@ -39,6 +40,12 @@ export class ReceiptEditorPage {
     public decisionService: DecisionService,
     public amazonService: AmazonService
   ) {
+
+    this.form = formBuilder.group({
+      title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
+      paymentDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
+      difference: ['0', Validators.compose([Validators.pattern('[0-9-]*'), Validators.required])]
+    });
   }
 
   ionViewDidLoad() {
@@ -96,29 +103,36 @@ export class ReceiptEditorPage {
     }
   }
 
-  onNewReceipt(): void {
+  onSave(): void {
+    this.submitAttempt = true;
+
     if (!((this.activitySelected && this.parentActivity) || (!this.activitySelected && this.parentDecision))
-      || !this.paymentDate || !this.difference || +this.difference == 0) return;
-    this.title = this.title.trim();
+      || !this.form.valid) return;
+    this.form.value.title = this.form.value.title.trim();
 
-    let newReceipt = new Receipt(0, new Date(Date.now()).toISOString(), this.paymentDate, '',
-      this.title, +this.difference, 0,
-      '', +this.parentActivity, +this.parentDecision);
+    let newReceipt = new Receipt(0, new Date(Date.now()).toISOString(), this.form.value.paymentDate, '',
+      this.form.value.title, +this.form.value.difference, 0, '',
+      this.activitySelected ? +this.parentActivity : 0,
+      this.activitySelected ? 0 : +this.parentDecision);
 
-    let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
-    this.amazonService.getAmazonSignatureForReceiptPOST(this.groupId, dateForSign).toPromise()
-      .then((amzSign: AmazonSignature) => this.amazonService.postFile(this.newReceiptImageFile, dateForSign, amzSign).toPromise())
-      .then((xml: string) => {
-        let regexp = /<Location>(.+)<\/Location>/;
-        let result = regexp.exec(xml);
-        if (result.length < 2) return Promise.reject('Unknown XML format');
-        newReceipt.imageUrl = result[1];
-        return this.receiptService.create(this.groupId, newReceipt).toPromise();
-      })
-      .then(() => {
-        this.popNavigation();
-      })
-      .catch(() => { console.log('new receipt failed') });
-
+    if (!this.newReceiptImageFile) {
+      this.receiptService.create(this.groupId, newReceipt).toPromise()
+        .then(() => this.popNavigation())
+        .catch(() => { console.log('new receipt failed') });
+    }
+    else {
+      let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
+      this.amazonService.getAmazonSignatureForReceiptPOST(this.groupId, dateForSign).toPromise()
+        .then((amzSign: AmazonSignature) => this.amazonService.postFile(this.newReceiptImageFile, dateForSign, amzSign).toPromise())
+        .then((xml: string) => {
+          let regexp = /<Location>(.+)<\/Location>/;
+          let result = regexp.exec(xml);
+          if (result.length < 2) return Promise.reject('Unknown XML format');
+          newReceipt.imageUrl = result[1];
+          return this.receiptService.create(this.groupId, newReceipt).toPromise();
+        })
+        .then(() => this.popNavigation())
+        .catch(() => { console.log('new receipt failed') });
+    }
   }
 }
