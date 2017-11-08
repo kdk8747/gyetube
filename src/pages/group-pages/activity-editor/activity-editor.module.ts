@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivityEditorPage } from './activity-editor';
-import { PhotoLibrary } from '@ionic-native/photo-library';
 import { AmazonService } from '../../../providers';
 
 @NgModule({
@@ -14,7 +13,6 @@ import { AmazonService } from '../../../providers';
     TranslateModule.forChild()
   ],
   providers: [
-    PhotoLibrary,
     AmazonService
   ]
 })

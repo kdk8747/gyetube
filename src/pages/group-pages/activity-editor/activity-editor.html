@@ -13,8 +13,9 @@
     <form [formGroup]="form">
       <ion-list>
         <ion-item *ngIf="!isNative">
-          {{ 'I18N_PHOTOS' | translate }} {{ 'I18N_OR' | translate }} {{ 'I18N_DOCUMENTS' | translate }}
-          <input type="file" multiple (change)="onChangeActivityPhotos($event)" />
+          {{ 'I18N_PHOTOS' | translate }}<!-- {{ 'I18N_OR' | translate }} {{ 'I18N_DOCUMENTS' | translate }} -->
+          <input type="file" (change)="onChangeActivityPhoto($event)" accept="image/*" />
+          <img src="" style="width: auto; height: auto">
         </ion-item>
         <ion-item *ngIf="isNative">
           <ion-label>{{ 'I18N_PHOTOS' | translate }}</ion-label>

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PhotoLibrary } from '@ionic-native/photo-library';
 import { UtilService, ActivityService, DecisionService, AmazonService } from '../../../providers';
 import { Activity, Decision, AmazonSignature } from '../../../models';
 import { Observable } from 'rxjs/Observable';
@@ -16,132 +15,128 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ActivityEditorPage {
 
-    groupId: string;
-    isNative: boolean = false;
-    newActivityFiles: File[];
-    //previewSrc: string = '';
-    decisions: Observable<Decision[]>;
+  groupId: string;
+  isNative: boolean = false;
+  newActivityImageFile: File = null;
+  decisions: Observable<Decision[]>;
 
-    form: FormGroup;
-    submitAttempt: boolean = false;
+  form: FormGroup;
+  submitAttempt: boolean = false;
 
-    constructor(
-      public navCtrl: NavController,
-      public navParams: NavParams,
-      public formBuilder: FormBuilder,
-      public photoLibrary: PhotoLibrary,
-      public event: Events,
-      public util: UtilService,
-      public activityService: ActivityService,
-      public decisionService: DecisionService,
-      public amazonService: AmazonService
-    ) {
-      this.form = formBuilder.group({
-        activityDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
-        elapsedTime: ['', Validators.required],
-        title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
-        description: ['', Validators.compose([Validators.maxLength(1024), Validators.required])],
-        parentDecision: ['', Validators.required],
-      });
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public formBuilder: FormBuilder,
+    public event: Events,
+    public util: UtilService,
+    public activityService: ActivityService,
+    public decisionService: DecisionService,
+    public amazonService: AmazonService
+  ) {
+    this.form = formBuilder.group({
+      activityDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
+      elapsedTime: ['', Validators.required],
+      title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
+      description: ['', Validators.compose([Validators.maxLength(1024), Validators.required])],
+      parentDecision: ['', Validators.required],
+    });
+  }
+
+  ionViewDidLoad() {
+    this.groupId = this.util.getCurrentGroupId();
+    this.isNative = this.util.isNativeApp();
+
+    this.decisions = this.decisionService.getDecisions(this.groupId);
+    this.event.publish('ShowHeader');
+  }
+
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ActivityListPage');
+    else
+      this.navCtrl.pop();
+  }
+
+  onChangeActivityPhoto(event: any) {
+    /*let fileList = event.target.files;
+    this.newActivityFiles = [];
+    for (let i = 0; i < fileList.length; i++) {
+      this.newActivityFiles.push(event.target.files[i] as File);
+    }*/
+
+    this.newActivityImageFile = event.target.files[0] as File;
+
+    let preview = event.srcElement.nextElementSibling;
+    let file: File = this.newActivityImageFile;
+    let reader = new FileReader();
+
+    reader.onloadend = function () {
+      preview.src = reader.result;
     }
 
-    ionViewDidLoad() {
-      this.groupId = this.util.getCurrentGroupId();
-      this.isNative = this.util.isNativeApp();
-
-      this.decisions = this.decisionService.getDecisions(this.groupId);
-
-      this.photoLibrary.requestAuthorization().then(() => {
-        this.photoLibrary.getLibrary().subscribe({
-          next: library => {
-            library.forEach(function (libraryItem) {
-              console.log(libraryItem.id);          // ID of the photo
-              console.log(libraryItem.photoURL);    // Cross-platform access to photo
-              console.log(libraryItem.thumbnailURL);// Cross-platform access to thumbnail
-              console.log(libraryItem.fileName);
-              console.log(libraryItem.width);
-              console.log(libraryItem.height);
-              console.log(libraryItem.creationDate);
-              console.log(libraryItem.latitude);
-              console.log(libraryItem.longitude);
-              console.log(libraryItem.albumIds);    // array of ids of appropriate AlbumItem, only of includeAlbumsData was used
-            });
-          },
-          error: err => { console.log('could not get photos'); },
-          complete: () => { console.log('done getting photos'); }
-        });
-      }).catch(err => console.log('permissions weren\'t granted'));
-      this.event.publish('ShowHeader');
+    if (file) {
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = "";
     }
+  }
 
-    popNavigation() {
-      if (this.navCtrl.length() == 1)
-        this.navCtrl.setRoot('ActivityListPage');
-      else
-        this.navCtrl.pop();
+  onSave(): void {
+    this.submitAttempt = true;
+
+    if (!this.form.valid) return;
+    this.form.value.title = this.form.value.title.trim();
+
+    let newActivity = new Activity(0, new Date(Date.now()).toISOString(), this.form.value.activityDate, '',
+      [], this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
+      +this.form.value.parentDecision, [], 0);
+
+
+    if (!this.newActivityImageFile) {
+      this.activityService.create(this.groupId, newActivity).toPromise()
+        .then(() => this.popNavigation())
+        .catch(() => { console.log('new receipt failed') });
     }
-
-    onChangeActivityPhotos(event: any) {
-      let fileList = event.target.files;
-      this.newActivityFiles = [];
-      for (let i = 0; i < fileList.length; i++) {
-          this.newActivityFiles.push(event.target.files[i] as File);
-      }
-      /*
-      this.newActivityImageFile = event.target.files[0] as File;
-
-      let preview = document.querySelector('img');
-      let file: File = this.newActivityImageFile;
-      let reader = new FileReader();
-
-      reader.onloadend = function () {
-        preview.src = reader.result;
-      }
-
-      if (file) {
-        reader.readAsDataURL(file);
-      } else {
-        preview.src = "";
-      }*/
-    }
-
-    onSave(): void {
-      this.submitAttempt = true;
-
-      if (!this.form.valid) return;
-      this.form.value.title = this.form.value.title.trim();
-
-      let newActivity = new Activity(0, new Date(Date.now()).toISOString(), this.form.value.activityDate, '',
-          [], this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
-          +this.form.value.parentDecision, [], 0);
-
+    else {
       let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
-      let amzSignForPhoto: AmazonSignature = null;
-      this.amazonService.getAmazonSignatureForPhotoPOST(this.groupId, dateForSign).toPromise()
-          .then((amzSign: AmazonSignature) => {
-              amzSignForPhoto = amzSign;
-              return this.amazonService.getAmazonSignatureForDocumentPOST(this.groupId, dateForSign).toPromise();
-          })
-          .then((amzSignForDocument: AmazonSignature) => Promise.all(this.newActivityFiles.map(file => {
-              let amzSign = file.type.substr(0, 5) == 'image' ? amzSignForPhoto : amzSignForDocument;
-              return this.amazonService.postFile(file, dateForSign, amzSign).toPromise()
-                  .then((xml: string) => {
-                      let regexp = /<Location>(.+)<\/Location>/;
-                      let result = regexp.exec(xml);
-                      if (result.length < 2) return Promise.reject('Unknown XML format');
-
-                      if (file.type.substr(0, 5) == 'image')
-                          newActivity.imageUrls.push(result[1]);
-                      else
-                          newActivity.documentUrls.push(result[1]);
-                      return Promise.resolve();
-                  })
-          })))
-          .then(() => this.activityService.create(this.groupId, newActivity).toPromise())
-          .then(() => {
-              this.popNavigation();
-          })
-          .catch(() => { console.log('new receipt failed') });
-
+      this.amazonService.getAmazonSignatureForReceiptPOST(this.groupId, dateForSign).toPromise()
+        .then((amzSign: AmazonSignature) => this.amazonService.postFile(this.newActivityImageFile, dateForSign, amzSign).toPromise())
+        .then((xml: string) => {
+          let regexp = /<Location>(.+)<\/Location>/;
+          let result = regexp.exec(xml);
+          if (result.length < 2) return Promise.reject('Unknown XML format');
+          newActivity.imageUrls.push(result[1]);
+          return this.activityService.create(this.groupId, newActivity).toPromise();
+        })
+        .then(() => this.popNavigation())
+        .catch(() => { console.log('new receipt failed') });
     }
+    /*
+  let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
+  let amzSignForPhoto: AmazonSignature = null;
+  this.amazonService.getAmazonSignatureForPhotoPOST(this.groupId, dateForSign).toPromise()
+    .then((amzSign: AmazonSignature) => {
+      amzSignForPhoto = amzSign;
+      return this.amazonService.getAmazonSignatureForDocumentPOST(this.groupId, dateForSign).toPromise();
+    })
+    .then((amzSignForDocument: AmazonSignature) => Promise.all(this.newActivityFiles.map(file => {
+      let amzSign = file.type.substr(0, 5) == 'image' ? amzSignForPhoto : amzSignForDocument;
+      return this.amazonService.postFile(file, dateForSign, amzSign).toPromise()
+        .then((xml: string) => {
+          let regexp = /<Location>(.+)<\/Location>/;
+          let result = regexp.exec(xml);
+          if (result.length < 2) return Promise.reject('Unknown XML format');
+
+          if (file.type.substr(0, 5) == 'image')
+            newActivity.imageUrls.push(result[1]);
+          else
+            newActivity.documentUrls.push(result[1]);
+          return Promise.resolve();
+        })
+    })))
+    .then(() => this.activityService.create(this.groupId, newActivity).toPromise())
+    .then(() => this.popNavigation())
+    .catch(() => { console.log('new receipt failed') });*/
+
+  }
 }
