@@ -10,7 +10,7 @@ var activities = [
     description: '수원녹색당 임시총회',
     modifiedDate: new Date("2017-10-06T11:30:00+09:00"),
     activityDate: new Date("2016-03-07T19:30:00+09:00"),
-    imageUrls: ['http://cfile29.uf.tistory.com/image/264ED6395174B648342845','http://cfile29.uf.tistory.com/image/264ED6395174B648342845','http://cfile29.uf.tistory.com/image/264ED6395174B648342845'],
+    imageUrls: [],
     documentUrls: [],
     parentDecision: 1,
     childReceipts: [],
@@ -20,16 +20,16 @@ var activities = [
 var activityID = 11;
 
 var activities2 = [
-  { id: 1, creator: '1', participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 5, 24, 11, 33, 30, 0), activityDate: new Date(2016, 5, 24, 11, 33, 30, 0), title: '5월 정기회의', totalDifference: +3000000, parentDecision: 1, childReceipts: [1] },
-  { id: 2, creator: '1', participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 6, 2, 11, 33, 30, 0), activityDate: new Date(2016, 6, 2, 11, 33, 30, 0), title: 'hohoho', totalDifference: -20000, parentDecision: 2, childReceipts: [2] },
-  { id: 3, creator: '1', participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 6, 24, 11, 33, 30, 0), activityDate: new Date(2016, 6, 24, 11, 33, 30, 0), title: '6월 정기회의', totalDifference: -150000, parentDecision: 3, childReceipts: [3] },
-  { id: 4, creator: '1', participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 7, 4, 11, 33, 30, 0), activityDate: new Date(2016, 7, 4, 11, 33, 30, 0), title: 'hohuho', totalDifference: +360000, parentDecision: 4, childReceipts: [4] },
-  { id: 5, creator: '1', participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 7, 24, 11, 33, 30, 0), activityDate: new Date(2016, 7, 24, 11, 33, 30, 0), title: '7월 정기회의', totalDifference: -7500, parentDecision: 4, childReceipts: [5] },
-  { id: 6, creator: '1', participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 8, 2, 11, 33, 30, 0), activityDate: new Date(2016, 8, 2, 11, 33, 30, 0), title: 'huhuhu', totalDifference: +360000, parentDecision: 1, childReceipts: [6] },
-  { id: 7, creator: '1', participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 8, 24, 11, 33, 30, 0), activityDate: new Date(2016, 8, 24, 11, 33, 30, 0), title: '8월 정기회의', totalDifference: -20000, parentDecision: 5, childReceipts: [7] },
-  { id: 8, creator: '1', participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 9, 4, 11, 33, 30, 0), activityDate: new Date(2016, 9, 4, 11, 33, 30, 0), title: 'hohoha', totalDifference: +360000, parentDecision: 2, childReceipts: [8] },
-  { id: 9, creator: '1', participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), activityDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: '9월 정기회의', totalDifference: -20000, parentDecision: 5, childReceipts: [9] },
-  { id: 10, creator: '1', participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 10, 24, 11, 33, 30, 0), activityDate: new Date(2016, 10, 24, 11, 33, 30, 0), title: '10월 정기회의', totalDifference: +720000, parentDecision: 1, childReceipts: [10, 11] }
+  { id: 1, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 5, 24, 11, 33, 30, 0), activityDate: new Date(2016, 5, 24, 11, 33, 30, 0), title: '5월 정기회의', totalDifference: +3000000, parentDecision: 1, childReceipts: [1] },
+  { id: 2, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 6, 2, 11, 33, 30, 0), activityDate: new Date(2016, 6, 2, 11, 33, 30, 0), title: 'hohoho', totalDifference: -20000, parentDecision: 2, childReceipts: [2] },
+  { id: 3, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 6, 24, 11, 33, 30, 0), activityDate: new Date(2016, 6, 24, 11, 33, 30, 0), title: '6월 정기회의', totalDifference: -150000, parentDecision: 3, childReceipts: [3] },
+  { id: 4, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 7, 4, 11, 33, 30, 0), activityDate: new Date(2016, 7, 4, 11, 33, 30, 0), title: 'hohuho', totalDifference: +360000, parentDecision: 4, childReceipts: [4] },
+  { id: 5, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 7, 24, 11, 33, 30, 0), activityDate: new Date(2016, 7, 24, 11, 33, 30, 0), title: '7월 정기회의', totalDifference: -7500, parentDecision: 4, childReceipts: [5] },
+  { id: 6, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 8, 2, 11, 33, 30, 0), activityDate: new Date(2016, 8, 2, 11, 33, 30, 0), title: 'huhuhu', totalDifference: +360000, parentDecision: 1, childReceipts: [6] },
+  { id: 7, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 8, 24, 11, 33, 30, 0), activityDate: new Date(2016, 8, 24, 11, 33, 30, 0), title: '8월 정기회의', totalDifference: -20000, parentDecision: 5, childReceipts: [7] },
+  { id: 8, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 9, 4, 11, 33, 30, 0), activityDate: new Date(2016, 9, 4, 11, 33, 30, 0), title: 'hohoha', totalDifference: +360000, parentDecision: 2, childReceipts: [8] },
+  { id: 9, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), activityDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: '9월 정기회의', totalDifference: -20000, parentDecision: 5, childReceipts: [9] },
+  { id: 10, creator: '1', imageUrls: ['http://cfile29.uf.tistory.com/image/264ED6395174B648342845'], documentUrls: ['https://s3.ap-northeast-2.amazonaws.com/grassroots-groups/suwongreenparty/documents/test.html'], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 10, 24, 11, 33, 30, 0), activityDate: new Date(2016, 10, 24, 11, 33, 30, 0), title: '10월 정기회의', totalDifference: +720000, parentDecision: 1, childReceipts: [10, 11] }
 ];
 var activityID2 = 11;
 
