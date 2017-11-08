@@ -10,9 +10,11 @@ var activities = [
     description: '수원녹색당 임시총회',
     modifiedDate: new Date("2017-10-06T11:30:00+09:00"),
     activityDate: new Date("2016-03-07T19:30:00+09:00"),
-    totalDifference: 0,
+    imageUrls: ['http://cfile29.uf.tistory.com/image/264ED6395174B648342845','http://cfile29.uf.tistory.com/image/264ED6395174B648342845','http://cfile29.uf.tistory.com/image/264ED6395174B648342845'],
+    documentUrls: [],
     parentDecision: 1,
-    childReceipts: []
+    childReceipts: [],
+    totalDifference: 0
   },
 ];
 var activityID = 11;

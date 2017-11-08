@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PhotoLibrary } from '@ionic-native/photo-library';
 import { UtilService, ActivityService, DecisionService, AmazonService } from '../../../providers';
 import { Activity, Decision, AmazonSignature } from '../../../models';
@@ -20,17 +21,14 @@ export class ActivityEditorPage {
     newActivityFiles: File[];
     //previewSrc: string = '';
     decisions: Observable<Decision[]>;
-    activitySelected: boolean = true;
 
-    activityDate: string = this.util.toIsoStringWithTimezoneOffset(new Date());
-    elapsedTime: number = 0;
-    title: string = '';
-    description: string = '';
-    parentDecision: string = '';
+    form: FormGroup;
+    submitAttempt: boolean = false;
 
     constructor(
       public navCtrl: NavController,
       public navParams: NavParams,
+      public formBuilder: FormBuilder,
       public photoLibrary: PhotoLibrary,
       public event: Events,
       public util: UtilService,
@@ -38,6 +36,13 @@ export class ActivityEditorPage {
       public decisionService: DecisionService,
       public amazonService: AmazonService
     ) {
+      this.form = formBuilder.group({
+        activityDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
+        elapsedTime: ['', Validators.required],
+        title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
+        description: ['', Validators.compose([Validators.maxLength(1024), Validators.required])],
+        parentDecision: ['', Validators.required],
+      });
     }
 
     ionViewDidLoad() {
@@ -71,7 +76,7 @@ export class ActivityEditorPage {
 
     popNavigation() {
       if (this.navCtrl.length() == 1)
-        this.navCtrl.setRoot('ReceiptListPage');
+        this.navCtrl.setRoot('ActivityListPage');
       else
         this.navCtrl.pop();
     }
@@ -100,14 +105,15 @@ export class ActivityEditorPage {
       }*/
     }
 
-    onNewReceipt(): void {
-      if (!this.parentDecision || !this.activityDate || this.elapsedTime < 0 || !this.title || !this.description) return;
-      this.title = this.title.trim();
-      console.log(this.activityDate);
+    onSave(): void {
+      this.submitAttempt = true;
 
-      let newActivity = new Activity(0, new Date(Date.now()).toISOString(), this.activityDate, '',
-          [], this.elapsedTime, this.title, this.description, [], [],
-          +this.parentDecision, [], 0);
+      if (!this.form.valid) return;
+      this.form.value.title = this.form.value.title.trim();
+
+      let newActivity = new Activity(0, new Date(Date.now()).toISOString(), this.form.value.activityDate, '',
+          [], this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
+          +this.form.value.parentDecision, [], 0);
 
       let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
       let amzSignForPhoto: AmazonSignature = null;

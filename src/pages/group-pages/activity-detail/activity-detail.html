@@ -26,12 +26,15 @@
           <p>{{(activity | async)?.modifiedDate | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>
-      <p>{{ 'I18N_ACTIVITY_DATE' | translate}}: {{(activity | async)?.activityDate | localizedDate:'short'}}</p>
-      <p>{{ 'I18N_ELAPSED_TIME' | translate }}: {{(activity | async)?.elapsedTime}} {{ 'I18N_HOURS' | translate }}</p>
     </ion-card-header>
 
     <ion-card-content>
-      <ion-buttons left *ngIf="participants.length > 1">
+      <p>{{(activity | async)?.description}}</p>
+      <div style="height:10px"></div>
+      <img *ngIf="(activity | async)?.imageUrls.length > 0" [src]="(activity | async)?.imageUrls[0]" style="width: auto; height: auto">
+      <div style="height:10px"></div>
+      <p>{{ 'I18N_ACTIVITY_DATE' | translate}}: {{(activity | async)?.activityDate | localizedDate:'short'}}</p>
+      <ion-buttons left *ngIf="participants.length > 0">
         {{ 'I18N_PARTICIPANTS' | translate}}:
         <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let participant of participants">
           <span *ngIf="!((participant | async)?.imageUrl)">{{(participant | async)?.name}}</span>
@@ -41,8 +44,6 @@
           </ion-avatar>
         </button>
       </ion-buttons>
-      <div style="height:10px"></div>
-      <p>{{(activity | async)?.description}}</p>
     </ion-card-content>
 
     <ion-card *ngIf="decision | async">
@@ -61,7 +62,7 @@
     <ion-card *ngFor="let receipt of receipts; let i=index">
       <ion-toolbar>
         <ion-buttons>
-          <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.memo }}</p>
+          <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
           <p text-right>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
         </ion-buttons>
         <ion-buttons right>

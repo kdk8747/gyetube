@@ -13,6 +13,7 @@
     <ion-card-content>
       <p>{{ 'I18N_CREATED_DATE' | translate}}: {{(decision | async)?.createdDate | localizedDate}}</p>
       <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{(decision | async)?.expiryDate | localizedDate}}</p>
+      <div style="height:10px"></div>
       <p>{{(decision | async)?.description}}</p>
     </ion-card-content>
 
@@ -87,7 +88,7 @@
     <ion-card *ngFor="let receipt of receipts; let i=index">
       <ion-toolbar>
         <ion-buttons>
-          <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.memo }}</p>
+          <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
           <p text-right>
             {{ 'I18N_DIFFERENCE' | translate}}
             {{ (receipt | async)?.difference | number}}

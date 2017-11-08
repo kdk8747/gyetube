@@ -44,7 +44,7 @@ export class ReceiptEditorPage {
     this.form = formBuilder.group({
       title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
       paymentDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
-      difference: ['0', Validators.compose([Validators.pattern('[0-9-]*'), Validators.required])]
+      difference: ['', Validators.compose([Validators.pattern('[0-9-]*'), Validators.required])]
     });
   }
 
