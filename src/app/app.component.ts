@@ -81,6 +81,8 @@ export class MyApp {
       this.renderer.setElementStyle(this.element.nativeElement.children[0], 'z-index', '10');
       //this.renderer.setElementStyle(this.element.nativeElement.children[0], 'top', '0px');
     });
+
+    this.event.publish('LoginSucceed');
   }
 
   initializeApp() {
