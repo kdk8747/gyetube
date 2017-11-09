@@ -41,7 +41,7 @@
           <ion-radio value="decision" (ionSelect)="activitySelected=false"></ion-radio>
         </ion-item>
         <ion-item *ngIf="!activitySelected">
-          <ion-select [(ngModel)]="parentDecision" [selectOptions]="{title: 'Related Decision', subTitle: 'choose it'}" [class.invalid]="!parentDecision && submitAttempt">
+          <ion-select [(ngModel)]="parentDecision" [selectOptions]="{title: ('I18N_RELATED_DECISION' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}" [class.invalid]="!parentDecision && submitAttempt">
             <ion-option *ngFor="let decision of decisions | async" [value]="decision.id">{{decision.title}}</ion-option>
           </ion-select>
         </ion-item>
@@ -51,7 +51,7 @@
           <ion-radio value="activity" (ionSelect)="activitySelected=true" checked="true"></ion-radio>
         </ion-item>
         <ion-item *ngIf="activitySelected">
-          <ion-select [(ngModel)]="parentActivity" [selectOptions]="{title: 'Related Activity', subTitle: 'choose it'}" [class.invalid]="!parentActivity && submitAttempt">
+          <ion-select [(ngModel)]="parentActivity" [selectOptions]="{title: ('I18N_RELATED_ACTIVITY' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}" [class.invalid]="!parentActivity && submitAttempt">
             <ion-option *ngFor="let activity of activities | async" [value]="activity.id">{{activity.title}}</ion-option>
           </ion-select>
         </ion-item>

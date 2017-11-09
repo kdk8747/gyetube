@@ -26,8 +26,21 @@
   "I18N_SIGN_IN_TOAST": "로그인 성공",
   "I18N_SIGN_OUT_TOAST": "현재 로그아웃 상태로 GrassCube를 사용 중입니다.",
 
+  "I18N_PHOTOS": "사진",
+  "I18N_OR": "또는",
+  "I18N_DOCUMENTS": "문서",
+  "I18N_TITLE": "제목",
+  "I18N_DESCRIPTION": "설명",
+  "I18N_SELECT_ALL": "모두 고르세요.",
+  "I18N_SELECT_ONE": "고르세요.",
+  "I18N_EDITOR": "편집",
+  "I18N_UPLOAD": "업로드",
+  "I18N_SAVE": "저장",
+
+  "I18N_MEETING_DATE": "회의 시각",
   "I18N_ATTENDEES": "참석자",
   "I18N_DECISIONS": "결정사항",
+  "I18N_ADD": "추가",
 
   "I18N_CREATED_DATE": "생성일",
   "I18N_EXPIRY_DATE": "만료일",
@@ -42,17 +55,7 @@
   "I18N_PARTICIPANTS": "참가자",
   "I18N_TOTAL_DIFFERENCE": "총 차액",
 
-  "I18N_PHOTOS": "사진",
-  "I18N_OR": "또는",
-  "I18N_DOCUMENTS": "문서",
-  "I18N_TITLE": "제목",
-  "I18N_DESCRIPTION": "설명",
-
   "I18N_PAYMENT_DATE": "지불일",
   "I18N_DIFFERENCE": "차액",
-  "I18N_BALANCE": "잔액",
-
-  "I18N_EDITOR": "편집",
-  "I18N_UPLOAD": "업로드",
-  "I18N_SAVE": "저장"
+  "I18N_BALANCE": "잔액"
 }

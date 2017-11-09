@@ -1,0 +1,74 @@
+<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
+  <div style="height:56px"></div>
+  <ion-card>
+    <ion-toolbar>
+      <ion-buttons left>
+        <button ion-button icon-only (click)="popNavigation()">
+          <ion-icon name="arrow-up"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-buttons>{{ 'I18N_DECISION' | translate }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
+    </ion-toolbar>
+
+    <form [formGroup]="form">
+      <ion-list>
+        <ion-item>
+          <ion-label>{{ 'I18N_EXPIRY_DATE' | translate }}</ion-label>
+          <ion-datetime formControlName="expiryDate" displayFormat="YYYY MM DD, HH:mm" [class.invalid]="!form.controls.expiryDate.valid && (form.controls.expiryDate.dirty || submitAttempt)"></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
+          <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>{{ 'I18N_DESCRIPTION' | translate }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-textarea formControlName="description" [class.invalid]="!form.controls.description.valid && (form.controls.description.dirty || submitAttempt)"></ion-textarea>
+        </ion-item>
+
+
+        <ion-item>
+          <ion-label>{{ 'I18N_ACCEPTERS' | translate }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-select formControlName="accepters" multiple="true" [selectOptions]="{title: ('I18N_ACCEPTERS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
+            [class.invalid]="!this.isValidAccepters() && (form.controls.accepters.dirty || submitAttempt)">
+            <ion-option *ngFor="let user of users" [value]="(user | async)?.id">
+              {{(user | async)?.name}}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>{{ 'I18N_REJECTERS' | translate }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-select formControlName="rejecters" multiple="true" [selectOptions]="{title: ('I18N_REJECTERS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
+            [class.invalid]="!this.isValidRejecters() && (form.controls.rejecters.dirty || submitAttempt)">
+            <ion-option *ngFor="let user of users" [value]="(user | async)?.id">
+              {{(user | async)?.name}}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>{{ 'I18N_ABSTAINERS' | translate }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-select formControlName="abstainers" multiple="true" [selectOptions]="{title: ('I18N_ABSTAINERS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
+            [class.invalid]="!this.isValidAbstainers() && (form.controls.abstainers.dirty || submitAttempt)">
+            <ion-option *ngFor="let user of users" [value]="(user | async)?.id">
+              {{(user | async)?.name}}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+
+      </ion-list>
+    </form>
+    <ion-buttons right>
+      <button ion-button (tap)="onSave()">{{ 'I18N_SAVE' | translate }}</button>
+    </ion-buttons>
+  </ion-card>
+</ion-content>

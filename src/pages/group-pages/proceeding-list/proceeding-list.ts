@@ -15,6 +15,7 @@ export class ProceedingListPage {
 
   groupId: string;
   proceedings: Observable<Proceeding[]>;
+  creationPermitted: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -26,6 +27,11 @@ export class ProceedingListPage {
 
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
+    this.util.isPermitted('create', 'proceedings', this.groupId)
+      .then(bool => this.creationPermitted = bool)
+      .catch((error: any) => {
+        console.log(error);
+      });;
     this.proceedings = this.proceedingService.getProceedings(this.groupId)
       .map((proceedings:Proceeding[]) => this.sortByDate(proceedings));
     this.event.subscribe('EventProceedingDetailPage', (obj) => {
@@ -42,6 +48,10 @@ export class ProceedingListPage {
 
   navigateToDetail(proceedingId: number) {
     this.navCtrl.push('ProceedingDetailPage', { id: proceedingId });
+  }
+
+  navigateToEditor() {
+    this.navCtrl.push('ProceedingEditorPage');
   }
 
   sortByDate(proceedings:Proceeding[]): Proceeding[] {

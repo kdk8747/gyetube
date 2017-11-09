@@ -47,8 +47,8 @@ export class DecisionDetailPage {
       this.abstainers = decision.abstainers.map((id: string) => this.userService.getUser(id));
       this.accepters = decision.accepters.map((id: string) => this.userService.getUser(id));
       this.rejecters = decision.rejecters.map((id: string) => this.userService.getUser(id));
-      if (this.rejecters.length > 0)
-        this.rejecters[0].subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
+      if (this.accepters.length > 0)
+        this.accepters[0].subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       if (decision.parentProceeding)
         this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding);
       if (decision.childActivities)

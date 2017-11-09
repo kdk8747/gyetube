@@ -14,4 +14,10 @@
       </ion-row>
     </ion-card-content>
   </ion-card>
+
+  <ion-fab right middle *ngIf="creationPermitted">
+    <button ion-fab (tap)="navigateToEditor()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>

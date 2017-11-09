@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, ActivityService, DecisionService, AmazonService } from '../../../providers';
-import { Activity, Decision, AmazonSignature } from '../../../models';
+import { UtilService, UserService, GroupService, ActivityService, DecisionService, AmazonService } from '../../../providers';
+import { User, Group, Activity, Decision, AmazonSignature } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -19,6 +19,7 @@ export class ActivityEditorPage {
   isNative: boolean = false;
   newActivityImageFile: File = null;
   decisions: Observable<Decision[]>;
+  users: Observable<User>[];
 
   form: FormGroup;
   submitAttempt: boolean = false;
@@ -29,15 +30,18 @@ export class ActivityEditorPage {
     public formBuilder: FormBuilder,
     public event: Events,
     public util: UtilService,
+    public userService: UserService,
+    public groupService: GroupService,
     public activityService: ActivityService,
     public decisionService: DecisionService,
     public amazonService: AmazonService
   ) {
     this.form = formBuilder.group({
       activityDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
-      elapsedTime: ['', Validators.required],
+      elapsedTime: ['', Validators.compose([Validators.pattern('[0-9]*'), Validators.required])],
       title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
       description: ['', Validators.compose([Validators.maxLength(1024), Validators.required])],
+      participants: [[], Validators.compose([Validators.minLength(1), Validators.required])],
       parentDecision: ['', Validators.required],
     });
   }
@@ -46,6 +50,10 @@ export class ActivityEditorPage {
     this.groupId = this.util.getCurrentGroupId();
     this.isNative = this.util.isNativeApp();
 
+    this.groupService.getGroup(this.groupId)
+      .subscribe((group: Group) => {
+        this.users = group.members.map(id => this.userService.getUser(id));
+      });
     this.decisions = this.decisionService.getDecisions(this.groupId);
     this.event.publish('ShowHeader');
   }
@@ -86,9 +94,10 @@ export class ActivityEditorPage {
 
     if (!this.form.valid) return;
     this.form.value.title = this.form.value.title.trim();
+    this.form.value.description = this.form.value.description.trim();
 
     let newActivity = new Activity(0, new Date(Date.now()).toISOString(), this.form.value.activityDate, '',
-      [], this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
+      this.form.value.participants, this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
       +this.form.value.parentDecision, [], 0);
 
 

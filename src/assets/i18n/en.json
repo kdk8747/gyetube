@@ -26,8 +26,21 @@
   "I18N_SIGN_IN_TOAST": "Successfully signed in",
   "I18N_SIGN_OUT_TOAST": "You're now using GrassCube signed out",
 
+  "I18N_PHOTOS": "Photos",
+  "I18N_OR": "or",
+  "I18N_DOCUMENTS": "Documents",
+  "I18N_TITLE": "Title",
+  "I18N_DESCRIPTION": "Description",
+  "I18N_SELECT_ALL": "Select All.",
+  "I18N_SELECT_ONE": "Select One.",
+  "I18N_EDITOR": "Editor",
+  "I18N_UPLOAD": "Upload",
+  "I18N_SAVE": "Save",
+
+  "I18N_MEETING_DATE": "Meeting Date",
   "I18N_ATTENDEES": "Attendee(s)",
   "I18N_DECISIONS": "Decision(s)",
+  "I18N_ADD": "Add",
 
   "I18N_CREATED_DATE": "Created Date",
   "I18N_EXPIRY_DATE": "Expiry Date",
@@ -42,17 +55,7 @@
   "I18N_PARTICIPANTS": "Participant(s)",
   "I18N_TOTAL_DIFFERENCE": "Total Difference",
 
-  "I18N_PHOTOS": "Photos",
-  "I18N_OR": "or",
-  "I18N_DOCUMENTS": "Documents",
-  "I18N_TITLE": "Title",
-  "I18N_DESCRIPTION": "Description",
-
   "I18N_PAYMENT_DATE": "Payment Date",
   "I18N_DIFFERENCE": "Difference",
-  "I18N_BALANCE": "Balance",
-
-  "I18N_EDITOR": "Editor",
-  "I18N_UPLOAD": "Upload",
-  "I18N_SAVE": "Save"
+  "I18N_BALANCE": "Balance"
 }
