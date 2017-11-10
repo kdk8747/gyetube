@@ -64,6 +64,10 @@ export class DecisionDetailPage {
     this.event.publish('ShowHeader');
   }
 
+  ionViewWillUnload() {
+    this.event.unsubscribe('DecisionTabClear');
+  }
+
   popNavigation() {
     this.navCtrl.setRoot('DecisionListPage');
   }
