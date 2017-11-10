@@ -27,6 +27,7 @@ export class DecisionListPage {
   }
 
   ionViewDidLoad() {
+    this.editMode = this.navParams.get('editMode');
     this.groupId = this.util.getCurrentGroupId();
     this.decisions = this.decisionService.getDecisions(this.groupId);
 

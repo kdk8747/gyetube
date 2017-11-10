@@ -56,6 +56,11 @@ export class DecisionDetailPage {
       if (decision.childReceipts)
         this.receipts = decision.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
     });
+
+    this.event.subscribe('DecisionEditModeOn', () => {
+      this.navCtrl.setRoot('DecisionListPage', {editMode: true});
+    });
+
     this.event.publish('ShowHeader');
   }
 

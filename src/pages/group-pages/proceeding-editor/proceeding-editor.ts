@@ -45,11 +45,12 @@ export class ProceedingEditorPage {
 
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
-    this.responseTimeMs = this.userService.getResponseTimeMs();
 
     this.groupService.getGroup(this.groupId)
       .subscribe((group: Group) => {
         this.users = group.members.map(id => this.userService.getUser(id));
+        if (this.users.length > 0)
+          this.users[0].subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       });
     this.event.publish('ShowHeader');
   }
