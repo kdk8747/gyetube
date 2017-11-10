@@ -50,6 +50,37 @@
             <button ion-button (tap)="onAddDecisions()"> {{ 'I18N_ADD' | translate }} </button>
           </ion-col>
         </ion-row>
+        <ion-card *ngFor="let decision of decisionChangesetService.decisions">
+          <ion-toolbar>
+            <ion-buttons>
+              {{decision.title}}
+            </ion-buttons>
+          </ion-toolbar>
+          <ion-card-content>
+            <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{decision.expiryDate | localizedDate}}</p>
+            <div style="height:10px"></div>
+            <p>{{decision.description}}</p>
+            <div style="height:10px"></div>
+            <ion-buttons left *ngIf="decision.accepters.length">
+              {{ 'I18N_ACCEPTERS' | translate}}:
+              <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let accepter of decision.accepters">
+                <span>{{(userService.getUser(accepter) | async)?.name}}</span>
+              </button>
+            </ion-buttons>
+            <ion-buttons left *ngIf="decision.rejecters.length">
+              {{ 'I18N_REJECTERS' | translate}}:
+              <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let rejecter of decision.rejecters">
+                <span>{{(userService.getUser(rejecter) | async)?.name}}</span>
+              </button>
+            </ion-buttons>
+            <ion-buttons left *ngIf="decision.abstainers.length">
+              {{ 'I18N_ABSTAINERS' | translate}}:
+              <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let abstainer of decision.abstainers">
+                <span>{{(userService.getUser(abstainer) | async)?.name}}</span>
+              </button>
+            </ion-buttons>
+          </ion-card-content>
+        </ion-card>
 
       </ion-list>
     </form>

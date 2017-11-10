@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProceedingEditorPage } from './proceeding-editor';
-import { DecisionChangesetService } from '../../../providers';
+import { PipesModule } from '../../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -10,10 +10,8 @@ import { DecisionChangesetService } from '../../../providers';
   ],
   imports: [
     IonicPageModule.forChild(ProceedingEditorPage),
-    TranslateModule.forChild()
-  ],
-  providers: [
-    DecisionChangesetService
+    TranslateModule.forChild(),
+    PipesModule
   ]
 })
 export class ProceedingEditorPageModule {}

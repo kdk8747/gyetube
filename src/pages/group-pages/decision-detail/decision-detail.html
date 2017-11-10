@@ -15,9 +15,7 @@
       <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{(decision | async)?.expiryDate | localizedDate}}</p>
       <div style="height:10px"></div>
       <p>{{(decision | async)?.description}}</p>
-    </ion-card-content>
-
-    <ion-card-content>
+      <div style="height:10px"></div>
       <ion-buttons left *ngIf="accepters.length">
         {{ 'I18N_ACCEPTERS' | translate}}:
         <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let accepter of accepters">

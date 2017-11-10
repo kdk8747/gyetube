@@ -61,6 +61,10 @@ export class ProceedingEditorPage {
       this.navCtrl.pop();
   }
 
+  navigateToUserDetail() {
+    ;
+  }
+
   onAddDecisions(): void {
     this.navCtrl.parent.select(2);
     setTimeout(() => this.event.publish('DecisionEditModeOn'), this.responseTimeMs);
@@ -83,7 +87,7 @@ export class ProceedingEditorPage {
       .then((proceeding: Proceeding) => {
         return Promise.all(this.decisionChangesetService.decisions.map(decision => {
           decision.parentProceeding = proceeding.id;
-          return this.decisionService.create(this.groupId, decision);
+          return this.decisionService.create(this.groupId, decision).toPromise();
         }));
       })
       .then(() => this.popNavigation())
