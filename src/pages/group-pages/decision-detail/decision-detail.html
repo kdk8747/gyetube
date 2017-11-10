@@ -11,7 +11,7 @@
     </ion-toolbar>
 
     <ion-card-content>
-      <p>{{ 'I18N_CREATED_DATE' | translate}}: {{(decision | async)?.createdDate | localizedDate}}</p>
+      <p>{{ 'I18N_MEETING_DATE' | translate}}: {{(decision | async)?.meetingDate | localizedDate}}</p>
       <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{(decision | async)?.expiryDate | localizedDate}}</p>
       <div style="height:10px"></div>
       <p>{{(decision | async)?.description}}</p>

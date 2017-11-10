@@ -5,7 +5,7 @@ export class Decision {
     public id: number,
     public prevId: number, // 0: unused
     public state: State,
-    public createdDate: string,
+    public meetingDate: string,  // equals to parentProceeding.meetingDate
     public expiryDate: string,
     public abstainers: string[],
     public accepters: string[],
