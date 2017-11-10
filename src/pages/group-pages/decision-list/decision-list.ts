@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, ViewController } from 'ionic-angular';
-import { UtilService, DecisionService } from '../../../providers';
+import { UtilService, DecisionService, DecisionChangesetService } from '../../../providers';
 import { Decision } from '../../../models';
+import { State } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -23,7 +24,9 @@ export class DecisionListPage {
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public decisionService: DecisionService) {
+    public decisionService: DecisionService,
+    public decisionChangesetService: DecisionChangesetService
+  ) {
   }
 
   ionViewDidLoad() {
@@ -55,11 +58,29 @@ export class DecisionListPage {
   }
 
   navigateToDetail(decisionId: number) {
-    this.navCtrl.push('DecisionDetailPage', { id: decisionId });
+    if (!this.editMode)
+      this.navCtrl.push('DecisionDetailPage', { id: decisionId });
   }
 
   navigateToEditor() {
     this.navCtrl.push('DecisionEditorPage');
   }
 
+  navigateToEditorForUpdate(id: number) {
+    this.navCtrl.push('DecisionEditorPage', {id: id});
+  }
+
+  onDelete(decision: Decision): void {
+    let found = this.decisionChangesetService.decisions.findIndex(item => item.prevId == decision.id);
+
+    decision.prevId = decision.id;
+    decision.id = 0;
+    decision.state = State.STATE_DELETED;
+    if (found != -1)
+      this.decisionChangesetService.decisions[found] = decision;
+    else
+      this.decisionChangesetService.decisions.push(decision);
+    this.navCtrl.parent.select(1);
+    this.event.publish('DecisionEditModeOff');
+  }
 }

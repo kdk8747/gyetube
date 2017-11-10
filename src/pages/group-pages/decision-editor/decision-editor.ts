@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, UserService, GroupService, DecisionChangesetService } from '../../../providers';
+import { UtilService, UserService, GroupService, DecisionService, DecisionChangesetService } from '../../../providers';
 import { User, Group, Decision } from '../../../models';
 import { State } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
@@ -16,6 +16,7 @@ import { Observable } from 'rxjs/Observable';
 export class DecisionEditorPage {
 
   groupId: string;
+  id: number;
   responseTimeMs: number = 500;
   users: Observable<User>[];
 
@@ -31,6 +32,7 @@ export class DecisionEditorPage {
     public util: UtilService,
     public userService: UserService,
     public groupService: GroupService,
+    public decisionService: DecisionService,
     public decisionChangesetService: DecisionChangesetService
   ) {
     this.form = formBuilder.group({
@@ -44,6 +46,7 @@ export class DecisionEditorPage {
   }
 
   ionViewDidLoad() {
+    this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
     this.responseTimeMs = this.userService.getResponseTimeMs();
 
@@ -51,6 +54,18 @@ export class DecisionEditorPage {
       .subscribe((group: Group) => {
         this.users = group.members.map(id => this.userService.getUser(id));
       });
+
+    if (this.id) {
+      this.decisionService.getDecision(this.groupId, this.id)
+        .subscribe((decision: Decision) => {
+          this.form.controls['expiryDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(decision.expiryDate)));
+          this.form.controls['title'].setValue(decision.title);
+          this.form.controls['description'].setValue(decision.description);
+          this.form.controls['accepters'].setValue(decision.accepters);
+          this.form.controls['rejecters'].setValue(decision.rejecters);
+          this.form.controls['abstainers'].setValue(decision.abstainers);
+        });
+    }
     this.event.publish('ShowHeader');
   }
 
@@ -104,6 +119,10 @@ export class DecisionEditorPage {
       this.form.value.rejecters,
       this.form.value.title, this.form.value.description, 0, [], [], 0, 0);
 
+    if (this.id) {
+      newDecision.prevId = this.id;
+      newDecision.state = State.STATE_UPDATED;
+    }
     this.decisionChangesetService.decisions.push(newDecision);
     this.navCtrl.parent.select(1);
     this.event.publish('DecisionEditModeOff');

@@ -7,7 +7,8 @@
           <ion-icon name="arrow-up"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-buttons>{{ 'I18N_DECISION' | translate }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
+      <ion-buttons *ngIf="id == undefined">{{ 'I18N_DECISION' | translate }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
+      <ion-buttons *ngIf="id != undefined">{{ 'I18N_DECISION' | translate }} {{ id }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
     </ion-toolbar>
 
     <form [formGroup]="form">

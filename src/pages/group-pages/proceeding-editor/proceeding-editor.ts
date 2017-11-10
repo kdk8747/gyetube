@@ -14,6 +14,7 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'proceeding-editor.html',
 })
 export class ProceedingEditorPage {
+  stateEnum = State;
 
   groupId: string;
   responseTimeMs: number = 500;
