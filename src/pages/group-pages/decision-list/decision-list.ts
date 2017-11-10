@@ -72,14 +72,15 @@ export class DecisionListPage {
 
   onDelete(decision: Decision): void {
     let found = this.decisionChangesetService.decisions.findIndex(item => item.prevId == decision.id);
+    let newDecision = JSON.parse(JSON.stringify(decision)) as Decision;
 
-    decision.prevId = decision.id;
-    decision.id = 0;
-    decision.state = State.STATE_DELETED;
+    newDecision.prevId = decision.id;
+    newDecision.id = 0;
+    newDecision.state = State.STATE_DELETED;
     if (found != -1)
-      this.decisionChangesetService.decisions[found] = decision;
+      this.decisionChangesetService.decisions[found] = newDecision;
     else
-      this.decisionChangesetService.decisions.push(decision);
+      this.decisionChangesetService.decisions.push(newDecision);
     this.navCtrl.parent.select(1);
     this.event.publish('DecisionEditModeOff');
   }

@@ -122,8 +122,15 @@ export class DecisionEditorPage {
     if (this.id) {
       newDecision.prevId = this.id;
       newDecision.state = State.STATE_UPDATED;
+      let found = this.decisionChangesetService.decisions.findIndex(item => item.prevId == this.id);
+      if (found != -1)
+        this.decisionChangesetService.decisions[found] = newDecision;
+      else
+        this.decisionChangesetService.decisions.push(newDecision);
     }
-    this.decisionChangesetService.decisions.push(newDecision);
+    else
+      this.decisionChangesetService.decisions.push(newDecision);
+
     this.navCtrl.parent.select(1);
     this.event.publish('DecisionEditModeOff');
     this.popNavigation();
