@@ -41,6 +41,7 @@
   "I18N_ATTENDEES": "참석자",
   "I18N_DECISIONS": "결정사항",
   "I18N_ADD": "추가",
+  "I18N_CANCEL": "취소",
 
   "I18N_CREATED_DATE": "생성일",
   "I18N_EXPIRY_DATE": "만료일",
