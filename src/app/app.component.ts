@@ -45,7 +45,7 @@ export class MyApp {
     // set our app's pages
     this.pages = [
       { title: 'I18N_GROUPS', icon: 'cube', component: 'GroupListPage' },
-      { title: 'I18N_UNCHECKED', icon: 'eye-off', component: 'UncheckedListPage' },
+      { title: 'I18N_UNCHECKED', icon: 'checkmark-circle', component: 'UncheckedListPage' },
       { title: 'I18N_NOTIFICATIONS', icon: 'notifications', component: 'NotificationListPage' }
     ];
 
