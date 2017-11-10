@@ -17,7 +17,6 @@ export class ProceedingEditorPage {
   stateEnum = State;
 
   groupId: string;
-  responseTimeMs: number = 500;
   users: Observable<User>[];
 
   form: FormGroup;
@@ -50,8 +49,6 @@ export class ProceedingEditorPage {
     this.groupService.getGroup(this.groupId)
       .subscribe((group: Group) => {
         this.users = group.members.map(id => this.userService.getUser(id));
-        if (this.users.length > 0)
-          this.users[0].subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       });
     this.event.publish('ShowHeader');
   }
@@ -69,7 +66,8 @@ export class ProceedingEditorPage {
 
   onAddDecisions(): void {
     this.navCtrl.parent.select(2);
-    setTimeout(() => this.event.publish('DecisionEditModeOn'), this.responseTimeMs);
+    this.decisionChangesetService.isActivated = true;
+    this.event.publish('DecisionTabClear');
   }
 
   onSave(): void {

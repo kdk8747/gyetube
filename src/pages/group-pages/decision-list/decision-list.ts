@@ -16,7 +16,6 @@ import { Observable } from 'rxjs/Observable';
 export class DecisionListPage {
 
   groupId: string;
-  editMode: boolean = false;
   decisions: Observable<Decision[]>;
 
   constructor(
@@ -30,7 +29,6 @@ export class DecisionListPage {
   }
 
   ionViewDidLoad() {
-    this.editMode = this.navParams.get('editMode');
     this.groupId = this.util.getCurrentGroupId();
     this.decisions = this.decisionService.getDecisions(this.groupId);
 
@@ -39,26 +37,15 @@ export class DecisionListPage {
       if (top.id !== 'DecisionDetailPage' || top.data.id !== obj.id)
         this.navCtrl.push('DecisionDetailPage', { id: obj.id });
     });
-
-    this.event.subscribe('DecisionEditModeOn', (obj) => {
-      this.editMode = true;
-    });
-
-    this.event.subscribe('DecisionEditModeOff', (obj) => {
-      this.editMode = false;
-    });
-
     this.event.publish('ShowHeader');
   }
 
   ionViewWillUnload() {
     this.event.unsubscribe('EventDecisionDetailPage');
-    this.event.unsubscribe('DecisionEditModeOn');
-    this.event.unsubscribe('DecisionEditModeOff');
   }
 
   navigateToDetail(decisionId: number) {
-    if (!this.editMode)
+    if (!this.decisionChangesetService.isActivated)
       this.navCtrl.push('DecisionDetailPage', { id: decisionId });
   }
 
@@ -82,6 +69,6 @@ export class DecisionListPage {
     else
       this.decisionChangesetService.decisions.push(newDecision);
     this.navCtrl.parent.select(1);
-    this.event.publish('DecisionEditModeOff');
+    this.decisionChangesetService.isActivated = false;
   }
 }

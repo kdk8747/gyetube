@@ -14,7 +14,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col *ngIf="editMode">
+        <ion-col *ngIf="this.decisionChangesetService.isActivated">
           <button ion-button icon-only (tap)="navigateToEditorForUpdate(decision.id)">
             <ion-icon name="create"></ion-icon>
           </button>
@@ -34,7 +34,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-fab right middle *ngIf="editMode">
+  <ion-fab right middle *ngIf="this.decisionChangesetService.isActivated">
     <button ion-fab (tap)="navigateToEditor()">
       <ion-icon name="add"></ion-icon>
     </button>

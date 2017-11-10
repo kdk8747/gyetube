@@ -132,7 +132,7 @@ export class DecisionEditorPage {
       this.decisionChangesetService.decisions.push(newDecision);
 
     this.navCtrl.parent.select(1);
-    this.event.publish('DecisionEditModeOff');
+    this.decisionChangesetService.isActivated = false;
     this.popNavigation();
   }
 
