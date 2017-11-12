@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, ViewController, FabContainer } from 'ionic-angular';
 import { UtilService, DecisionService, DecisionChangesetService } from '../../../providers';
 import { Decision } from '../../../models';
 import { State } from '../../../app/constants';
@@ -14,6 +14,7 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'decision-list.html',
 })
 export class DecisionListPage {
+  stateEnum = State;
   timelineMode: boolean = false;
 
   groupId: string;
@@ -31,10 +32,10 @@ export class DecisionListPage {
 
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
-    this.decisions = this.decisionService.getDecisions(this.groupId);
+    this.refreshDecisions();
 
     this.event.subscribe('EventDecisionDetailPage', (obj) => {
-      let top:ViewController = this.navCtrl.last();
+      let top: ViewController = this.navCtrl.last();
       if (top.id !== 'DecisionDetailPage' || top.data.id !== obj.id)
         this.navCtrl.push('DecisionDetailPage', { id: obj.id });
     });
@@ -58,7 +59,30 @@ export class DecisionListPage {
   }
 
   navigateToEditorForUpdate(id: number) {
-    this.navCtrl.push('DecisionEditorPage', {id: id});
+    this.navCtrl.push('DecisionEditorPage', { id: id });
+  }
+
+  sortByDate(decisions: Decision[]): Decision[] {
+    return decisions.sort((h1, h2) => {
+      return h1.meetingDate < h2.meetingDate ? 1 :
+        (h1.meetingDate > h2.meetingDate ? -1 : 0);
+    });
+  }
+
+  filterPastDecisions(decisions: Decision[]): Decision[] {
+    let decisionIdToIndex = {};
+    for (let i = 0; i < decisions.length; i++)
+      decisionIdToIndex[decisions[i].id] = i;
+
+    let visitedIndex = new Array<boolean>(decisions.length).fill(false);
+    for (let i = 0; i < decisions.length; i++) {
+      if (decisions[i].prevId && decisionIdToIndex[decisions[i].prevId])
+        visitedIndex[decisionIdToIndex[decisions[i].prevId]] = true;
+      if (decisions[i].state == State.STATE_DELETED)
+        visitedIndex[decisionIdToIndex[decisions[i].id]] = true;
+    }
+
+    return decisions.filter(decision => !visitedIndex[decisionIdToIndex[decision.id]]);
   }
 
   onDelete(decision: Decision): void {
@@ -74,5 +98,16 @@ export class DecisionListPage {
       this.decisionChangesetService.decisions.push(newDecision);
     this.navCtrl.parent.select(1);
     this.decisionChangesetService.isActivated = false;
+  }
+
+  refreshDecisions () {
+    this.decisions = this.decisionService.getDecisions(this.groupId)
+      .map((decisions: Decision[]) =>
+      this.timelineMode ? this.sortByDate(decisions) : this.sortByDate(this.filterPastDecisions(decisions)));
+  }
+
+  onFAB (fab: FabContainer) {
+    fab.close();
+    this.refreshDecisions();
   }
 }
