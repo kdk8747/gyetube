@@ -61,6 +61,9 @@ export class DecisionDetailPage {
       this.navCtrl.setRoot('DecisionListPage');
     });
 
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

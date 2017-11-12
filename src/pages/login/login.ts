@@ -40,6 +40,9 @@ export class LoginPage {
         console.log('no token');
       }
     }
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

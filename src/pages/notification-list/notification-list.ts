@@ -19,6 +19,9 @@ export class NotificationListPage {
   }
 
   ionViewDidLoad() {
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 }

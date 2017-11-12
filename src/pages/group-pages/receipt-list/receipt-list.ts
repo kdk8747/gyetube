@@ -41,6 +41,9 @@ export class ReceiptListPage {
       if (top.id !== 'ReceiptDetailPage' || top.data.id !== obj.id)
         this.navCtrl.push('ReceiptDetailPage', { id: obj.id });
     });
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

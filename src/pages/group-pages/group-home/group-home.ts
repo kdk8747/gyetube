@@ -30,6 +30,9 @@ export class GroupHomePage {
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
     this.group = this.groupService.getGroup(this.groupId);
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

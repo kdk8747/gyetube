@@ -19,6 +19,9 @@ export class UncheckedListPage {
   }
 
   ionViewDidLoad() {
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 }

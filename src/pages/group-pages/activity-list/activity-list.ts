@@ -40,6 +40,9 @@ export class ActivityListPage {
       if (top.id !== 'ActivityDetailPage' || top.data.id !== obj.id)
         this.navCtrl.push('ActivityDetailPage', { id: obj.id });
     });
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

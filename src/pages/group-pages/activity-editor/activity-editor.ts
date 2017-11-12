@@ -55,6 +55,9 @@ export class ActivityEditorPage {
         this.users = group.members.map(id => this.userService.getUser(id));
       });
     this.decisions = this.decisionService.getDecisions(this.groupId);
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

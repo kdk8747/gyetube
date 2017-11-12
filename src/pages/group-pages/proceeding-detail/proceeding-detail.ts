@@ -43,6 +43,9 @@ export class ProceedingDetailPage {
         this.attendees[0].subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
     });
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

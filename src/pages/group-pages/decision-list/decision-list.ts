@@ -38,6 +38,9 @@ export class DecisionListPage {
       if (top.id !== 'DecisionDetailPage' || top.data.id !== obj.id)
         this.navCtrl.push('DecisionDetailPage', { id: obj.id });
     });
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, Events } from 'ionic-angular';
 import { UtilService, GroupService } from '../../providers';
 import { Group } from '../../models';
 
@@ -16,6 +16,7 @@ export class GroupListPage {
 
   constructor(
     public navCtrl: NavController,
+    public event: Events,
     public util: UtilService,
     public groupService: GroupService
   ) {
@@ -25,6 +26,10 @@ export class GroupListPage {
     this.groupService.getGroups().subscribe((groups: Group[]) => {
       this.groups = groups;
     });
+  }
+
+  ionViewDidEnter() {
+    this.event.publish('ShowHeader');
   }
 
   navigateToGroup(group_id: string) {

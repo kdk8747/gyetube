@@ -51,6 +51,9 @@ export class ReceiptEditorPage {
 
     this.activities = this.activityService.getActivities(this.groupId);
     this.decisions = this.decisionService.getDecisions(this.groupId);
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

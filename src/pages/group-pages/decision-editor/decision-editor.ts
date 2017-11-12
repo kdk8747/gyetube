@@ -66,6 +66,9 @@ export class DecisionEditorPage {
           this.form.controls['abstainers'].setValue(decision.abstainers);
         });
     }
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

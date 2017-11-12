@@ -39,6 +39,9 @@ export class ProceedingListPage {
       if (top.id !== 'ProceedingDetailPage' || top.data.id !== obj.id)
         this.navCtrl.push('ProceedingDetailPage', { id: obj.id });
     });
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

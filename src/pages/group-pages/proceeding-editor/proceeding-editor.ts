@@ -50,6 +50,9 @@ export class ProceedingEditorPage {
       .subscribe((group: Group) => {
         this.users = group.members.map(id => this.userService.getUser(id));
       });
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

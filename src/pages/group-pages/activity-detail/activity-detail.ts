@@ -49,6 +49,9 @@ export class ActivityDetailPage {
       this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision);
       this.receipts = activity.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
     });
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 

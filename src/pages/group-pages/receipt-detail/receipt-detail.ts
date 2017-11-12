@@ -49,6 +49,9 @@ export class ReceiptDetailPage {
       if (receipt.parentDecision)
         this.decision = this.decisionService.getDecision(this.groupId, receipt.parentDecision);
     });
+  }
+
+  ionViewDidEnter() {
     this.event.publish('ShowHeader');
   }
 
