@@ -88,6 +88,8 @@ export class ProceedingEditorPage {
     this.proceedingService.create(this.groupId, newProceeding).toPromise()
       .then((proceeding: Proceeding) => {
         return Promise.all(this.decisionChangesetService.decisions.map(decision => {
+          decision.childActivities = [];
+          decision.childReceipts = [];
           decision.parentProceeding = proceeding.id;
           return this.decisionService.create(this.groupId, decision).toPromise();
         }));
