@@ -59,10 +59,7 @@ export class ActivityEditorPage {
   }
 
   popNavigation() {
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('ActivityListPage');
-    else
-      this.navCtrl.pop();
+    this.navCtrl.setRoot('ActivityListPage');
   }
 
   onChangeActivityPhoto(event: any) {

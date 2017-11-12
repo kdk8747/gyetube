@@ -55,10 +55,7 @@ export class ReceiptEditorPage {
   }
 
   popNavigation() {
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('ReceiptListPage');
-    else
-      this.navCtrl.pop();
+    this.navCtrl.setRoot('ReceiptListPage');
   }
 
   onChangeReceiptPhoto(event: any) {

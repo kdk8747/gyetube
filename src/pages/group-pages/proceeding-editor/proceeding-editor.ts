@@ -56,10 +56,7 @@ export class ProceedingEditorPage {
   popNavigation() {
     this.decisionChangesetService.isActivated = false;
     this.decisionChangesetService.decisions = [];
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('ProceedingListPage');
-    else
-      this.navCtrl.pop();
+    this.navCtrl.setRoot('ProceedingListPage');
   }
 
   navigateToUserDetail() {
