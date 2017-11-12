@@ -14,6 +14,7 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'decision-list.html',
 })
 export class DecisionListPage {
+  timelineMode: boolean = false;
 
   groupId: string;
   decisions: Observable<Decision[]>;

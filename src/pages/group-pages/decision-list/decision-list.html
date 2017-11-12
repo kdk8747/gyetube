@@ -39,4 +39,11 @@
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
+  <ion-fab right middle *ngIf="!this.decisionChangesetService.isActivated" #fab>
+    <button ion-fab><ion-icon name="eye"></ion-icon></button>
+    <ion-fab-list>
+      <button ion-fab (tap)="timelineMode = true; fab.close()" [class.selectedFAB]="timelineMode"><ion-icon name="film"></ion-icon></button>
+      <button ion-fab (tap)="timelineMode = false; fab.close()" [class.selectedFAB]="!timelineMode"><ion-icon name="attach"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
 </ion-content>
