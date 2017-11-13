@@ -58,7 +58,8 @@ export class ActivityEditorPage {
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   popNavigation() {

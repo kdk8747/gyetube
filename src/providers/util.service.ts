@@ -130,10 +130,12 @@ export class UtilService {
 
   onContentScroll(event) {
     if (event.velocityY > 10.0 || event.scrollTop < 56) {
-      this.event.publish('ShowHeader', {h: event.contentHeight});
+      this.event.publish('App_ShowHeader');
+      this.event.publish('TabsGroup_ShowTab');
     }
     else if (event.directionY == 'down') {
-      this.event.publish('HideHeader', {h: event.contentHeight});
+      this.event.publish('App_HideHeader');
+      this.event.publish('TabsGroup_HideTab');
     }
   }
 

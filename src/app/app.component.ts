@@ -49,7 +49,7 @@ export class MyApp {
       { title: 'I18N_NOTIFICATIONS', icon: 'notifications', component: 'NotificationListPage' }
     ];
 
-    this.event.subscribe('LoginSucceed', () => {
+    this.event.subscribe('App_ShowAvatarToHeader', () => {
       this.util.getCurrentUser()
         .then((user: User) => {
           this.loggedIn = true;
@@ -66,23 +66,23 @@ export class MyApp {
         });
     });
 
-    this.event.subscribe('TabsGroupPageLoaded', (obj) => {
+    this.event.subscribe('App_ShowGroupTitleHeader', (obj) => {
       this.groupTitle = obj.title;
     });
 
-    this.event.subscribe('HideHeader', () => {
+    this.event.subscribe('App_HideHeader', () => {
       this.renderer.setElementStyle(this.element.nativeElement.children[0], 'opacity', '0');
       this.renderer.setElementStyle(this.element.nativeElement.children[0], 'z-index', '0');
       //this.renderer.setElementStyle(this.element.nativeElement.children[0], 'top', '-56px'); // too slow at mobile web
     });
 
-    this.event.subscribe('ShowHeader', ()=>{
+    this.event.subscribe('App_ShowHeader', ()=>{
       this.renderer.setElementStyle(this.element.nativeElement.children[0], 'opacity', '1');
       this.renderer.setElementStyle(this.element.nativeElement.children[0], 'z-index', '10');
       //this.renderer.setElementStyle(this.element.nativeElement.children[0], 'top', '0px');
     });
 
-    this.event.publish('LoginSucceed');
+    this.event.publish('App_ShowAvatarToHeader');
   }
 
   initializeApp() {
@@ -124,13 +124,13 @@ export class MyApp {
 
   onMenuItem() {
     this.menu.close();
-    this.event.publish('ShowHeader');
+    this.event.publish('App_ShowHeader');
     this.groupTitle = null;
   }
 
   onMenuItemPush(page: string) {
     this.menu.close();
-    this.event.publish('ShowHeader');
+    this.event.publish('App_ShowHeader');
     if (this.nav.last().id !== page)
       this.nav.push(page);
   }

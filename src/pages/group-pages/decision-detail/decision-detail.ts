@@ -17,7 +17,6 @@ export class DecisionDetailPage {
 
   groupId: string;
   id: number;
-  responseTimeMs: number = 500;
   decision: Observable<Decision>;
   abstainers: Observable<User>[] = [];
   accepters: Observable<User>[] = [];
@@ -47,8 +46,6 @@ export class DecisionDetailPage {
       this.abstainers = decision.abstainers.map((id: string) => this.userService.getUser(id));
       this.accepters = decision.accepters.map((id: string) => this.userService.getUser(id));
       this.rejecters = decision.rejecters.map((id: string) => this.userService.getUser(id));
-      if (this.accepters.length > 0)
-        this.accepters[0].subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       if (decision.parentProceeding)
         this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding);
       if (decision.childActivities)
@@ -56,19 +53,11 @@ export class DecisionDetailPage {
       if (decision.childReceipts)
         this.receipts = decision.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
     });
-
-    this.event.subscribe('DecisionTabClear', () => {
-      this.navCtrl.setRoot('DecisionListPage');
-    });
-
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
-  }
-
-  ionViewWillUnload() {
-    this.event.unsubscribe('DecisionTabClear');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   popNavigation() {
@@ -84,22 +73,19 @@ export class DecisionDetailPage {
 
   navigateToProceedingDetail(obs: Observable<Proceeding>) {
     obs.subscribe(proceeding => {
-      this.navCtrl.parent.select(1);
-      setTimeout(() => this.event.publish('EventProceedingDetailPage', { id: proceeding.id }), this.responseTimeMs); // delay : work-around
+      this.event.publish('TabsGroup_ProceedingDetail', { id: proceeding.id });
     });
   }
 
   navigateToActivityDetail(obs: Observable<Activity>) {
     obs.subscribe(activity => {
-      this.navCtrl.parent.select(3);
-      setTimeout(() => this.event.publish('EventActivityDetailPage', { id: activity.id }), this.responseTimeMs); // delay : work-around
+      this.event.publish('TabsGroup_ActivityDetail', { id: activity.id });
     });
   }
 
   navigateToReceiptDetail(obs: Observable<Receipt>) {
     obs.subscribe(receipt => {
-      this.navCtrl.parent.select(4);
-      setTimeout(() => this.event.publish('EventReceiptDetailPage', { id: receipt.id }), this.responseTimeMs); // delay : work-around
+      this.event.publish('TabsGroup_ReceiptDetail', { id: receipt.id });
     });
   }
 }

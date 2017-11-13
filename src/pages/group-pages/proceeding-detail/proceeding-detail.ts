@@ -17,7 +17,6 @@ export class ProceedingDetailPage {
 
   groupId: string;
   id: number;
-  responseTimeMs: number = 500;
   proceeding: Observable<Proceeding>;
   attendees: Observable<User>[];
   decisions: Observable<Decision>[];
@@ -39,18 +38,20 @@ export class ProceedingDetailPage {
     this.proceeding = this.proceedingService.getProceeding(this.groupId, this.id);
     this.proceeding.subscribe((proceeding: Proceeding) => {
       this.attendees = proceeding.attendees.map((id: string) => this.userService.getUser(id));
-      if (this.attendees.length > 0)
-        this.attendees[0].subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
     });
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   popNavigation() {
-    this.navCtrl.setRoot('ProceedingListPage');
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ProceedingListPage');
+    else
+      this.navCtrl.pop();
   }
 
   navigateToUserDetail() {
@@ -59,8 +60,7 @@ export class ProceedingDetailPage {
 
   navigateToDecisionDetail(obs: Observable<Decision>) {
     obs.subscribe(decision => {
-      this.navCtrl.parent.select(2);
-      setTimeout(() => this.event.publish('EventDecisionDetailPage', { id: decision.id }), this.responseTimeMs); // delay : work-around
+      this.event.publish('TabsGroup_DecisionDetail', { id: decision.id });
     });
   }
 }

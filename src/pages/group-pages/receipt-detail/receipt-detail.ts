@@ -17,12 +17,11 @@ export class ReceiptDetailPage {
 
   groupId: string;
   id: number;
-  responseTimeMs: number = 500;
   imageUrl: string = '';
   receipt: Observable<Receipt>;
   creator: Observable<User>;
   activity: Observable<Activity> = null;
-  decision: Observable<Decision> = null
+  decision: Observable<Decision> = null;
 
   constructor(
     public navCtrl: NavController,
@@ -43,7 +42,6 @@ export class ReceiptDetailPage {
     this.receipt.subscribe((receipt: Receipt) => {
       this.imageUrl = receipt.imageUrl;
       this.creator = this.userService.getUser(receipt.creator);
-      this.creator.subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       if (receipt.parentActivity)
         this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity);
       if (receipt.parentDecision)
@@ -52,11 +50,15 @@ export class ReceiptDetailPage {
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   popNavigation() {
-    this.navCtrl.setRoot('ReceiptListPage');
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ReceiptListPage');
+    else
+      this.navCtrl.pop();
   }
 
   navigateToUserDetail() {
@@ -65,15 +67,13 @@ export class ReceiptDetailPage {
 
   navigateToActivityDetail(obs: Observable<Activity>) {
     obs.subscribe(activity => {
-      this.navCtrl.parent.select(3);
-      setTimeout(() => this.event.publish('EventActivityDetailPage', { id: activity.id }), this.responseTimeMs); // delay : work-around
+      this.event.publish('TabsGroup_ActivityDetail', { id: activity.id });
     });
   }
 
   navigateToDecisionDetail(obs: Observable<Decision>) {
     obs.subscribe(decision => {
-      this.navCtrl.parent.select(2);
-      setTimeout(() => this.event.publish('EventDecisionDetailPage', { id: decision.id }), this.responseTimeMs); // delay : work-around
+      this.event.publish('TabsGroup_DecisionDetail', { id: decision.id });
     });
   }
 }

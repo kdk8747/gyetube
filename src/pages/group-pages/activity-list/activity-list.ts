@@ -34,20 +34,11 @@ export class ActivityListPage {
       });;
     this.activities = this.activityService.getActivities(this.groupId)
       .map((activities: Activity[]) => this.sortByDateA(activities));
-
-    this.event.subscribe('EventActivityDetailPage', (obj) => {
-      let top:ViewController = this.navCtrl.last();
-      if (top.id !== 'ActivityDetailPage' || top.data.id !== obj.id)
-        this.navCtrl.push('ActivityDetailPage', { id: obj.id });
-    });
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
-  }
-
-  ionViewWillUnload() {
-    this.event.unsubscribe('EventActivityDetailPage');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   navigateToDetail(activityId: number) {

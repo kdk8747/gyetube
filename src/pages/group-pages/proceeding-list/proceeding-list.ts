@@ -34,19 +34,11 @@ export class ProceedingListPage {
       });;
     this.proceedings = this.proceedingService.getProceedings(this.groupId)
       .map((proceedings:Proceeding[]) => this.sortByDate(proceedings));
-    this.event.subscribe('EventProceedingDetailPage', (obj) => {
-      let top:ViewController = this.navCtrl.last();
-      if (top.id !== 'ProceedingDetailPage' || top.data.id !== obj.id)
-        this.navCtrl.push('ProceedingDetailPage', { id: obj.id });
-    });
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
-  }
-
-  ionViewWillUnload() {
-    this.event.unsubscribe('EventProceedingDetailPage');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   navigateToDetail(proceedingId: number) {

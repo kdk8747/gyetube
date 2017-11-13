@@ -33,19 +33,18 @@ export class DecisionListPage {
     this.groupId = this.util.getCurrentGroupId();
     this.refreshDecisions();
 
-    this.event.subscribe('EventDecisionDetailPage', (obj) => {
-      let top: ViewController = this.navCtrl.last();
-      if (top.id !== 'DecisionDetailPage' || top.data.id !== obj.id)
-        this.navCtrl.push('DecisionDetailPage', { id: obj.id });
+    this.event.subscribe('DecisionList_Refresh', () => {
+      this.refreshDecisions();
     });
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   ionViewWillUnload() {
-    this.event.unsubscribe('EventDecisionDetailPage');
+    this.event.unsubscribe('DecisionList_Refresh');
   }
 
   navigateToDetail(decisionId: number) {

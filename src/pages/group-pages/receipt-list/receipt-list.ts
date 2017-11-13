@@ -35,20 +35,11 @@ export class ReceiptListPage {
     this.receipts = this.receiptService.getReceipts(this.groupId)
       .map((receipts: Receipt[]) => this.sortByDateR(receipts))
       .map((receipts: Receipt[]) => this.setBalance(receipts));
-
-    this.event.subscribe('EventReceiptDetailPage', (obj) => {
-      let top:ViewController = this.navCtrl.last();
-      if (top.id !== 'ReceiptDetailPage' || top.data.id !== obj.id)
-        this.navCtrl.push('ReceiptDetailPage', { id: obj.id });
-    });
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
-  }
-
-  ionViewWillUnload() {
-    this.event.unsubscribe('EventReceiptDetailPage');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   navigateToDetail(receiptId: number) {

@@ -43,7 +43,8 @@ export class LoginPage {
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   popNavigation() {
@@ -95,7 +96,7 @@ export class LoginPage {
               message: value
             });
             toast.present();
-            this.event.publish('LoginSucceed');
+            this.event.publish('App_ShowAvatarToHeader');
             this.popNavigation();
           });
       });

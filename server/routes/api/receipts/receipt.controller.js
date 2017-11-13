@@ -7,8 +7,9 @@ var receipts = [
     paymentDate: new Date("2016-01-01T19:30:00+09:00"),
     title: '2015년 수원녹색당 이월금',
     difference: +1229000,
-    imageUrl: ''
+    imageUrl: '',
     //parentActivity: 1
+    parentDecision: 1
   },
   {
     id: 2,

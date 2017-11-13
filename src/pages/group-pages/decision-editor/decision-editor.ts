@@ -69,7 +69,8 @@ export class DecisionEditorPage {
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   isValidVoters(): boolean {

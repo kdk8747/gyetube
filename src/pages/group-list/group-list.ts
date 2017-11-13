@@ -29,7 +29,8 @@ export class GroupListPage {
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   navigateToGroup(group_id: string) {

@@ -53,7 +53,8 @@ export class ProceedingEditorPage {
   }
 
   ionViewDidEnter() {
-    this.event.publish('ShowHeader');
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 
   popNavigation() {
@@ -67,9 +68,9 @@ export class ProceedingEditorPage {
   }
 
   onAddDecisions(): void {
-    this.navCtrl.parent.select(2);
     this.sharedDataService.decisionEditMode = true;
-    this.event.publish('DecisionTabClear');
+    this.navCtrl.parent.select(2);
+    this.navCtrl.parent._tabs[2].setRoot('DecisionListPage');
   }
 
   onSave(): void {
