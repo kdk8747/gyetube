@@ -47,11 +47,11 @@
             </ion-item>
           </ion-col>
           <ion-col>
-            <button ion-button *ngIf="!decisionChangesetService.isActivated" (tap)="onAddDecisions()"> {{ 'I18N_ADD' | translate }} </button>
-            <button ion-button *ngIf="decisionChangesetService.isActivated" (tap)="decisionChangesetService.isActivated = false"> {{ 'I18N_CANCEL' | translate }} </button>
+            <button ion-button *ngIf="!sharedDataService.decisionEditMode" (tap)="onAddDecisions()"> {{ 'I18N_ADD' | translate }} </button>
+            <button ion-button *ngIf="sharedDataService.decisionEditMode" (tap)="sharedDataService.decisionEditMode = false"> {{ 'I18N_CANCEL' | translate }} </button>
           </ion-col>
         </ion-row>
-        <ion-card *ngFor="let decision of decisionChangesetService.decisions">
+        <ion-card *ngFor="let decision of sharedDataService.decisionChangesets">
           <ion-toolbar [ngSwitch]="decision.state">
             <ion-buttons *ngSwitchCase="stateEnum.STATE_NEW_ONE">
               New - {{decision.title}}

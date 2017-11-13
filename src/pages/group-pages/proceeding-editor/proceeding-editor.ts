@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, UserService, GroupService, ProceedingService, DecisionService, DecisionChangesetService } from '../../../providers';
+import { UtilService, UserService, GroupService, ProceedingService, DecisionService, SharedDataService } from '../../../providers';
 import { User, Group, Proceeding } from '../../../models';
 import { State } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
@@ -33,7 +33,7 @@ export class ProceedingEditorPage {
     public groupService: GroupService,
     public proceedingService: ProceedingService,
     public decisionService: DecisionService,
-    public decisionChangesetService: DecisionChangesetService
+    public sharedDataService: SharedDataService
   ) {
     this.form = formBuilder.group({
       meetingDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
@@ -57,8 +57,8 @@ export class ProceedingEditorPage {
   }
 
   popNavigation() {
-    this.decisionChangesetService.isActivated = false;
-    this.decisionChangesetService.decisions = [];
+    this.sharedDataService.decisionEditMode = false;
+    this.sharedDataService.decisionChangesets = [];
     this.navCtrl.setRoot('ProceedingListPage');
   }
 
@@ -68,7 +68,7 @@ export class ProceedingEditorPage {
 
   onAddDecisions(): void {
     this.navCtrl.parent.select(2);
-    this.decisionChangesetService.isActivated = true;
+    this.sharedDataService.decisionEditMode = true;
     this.event.publish('DecisionTabClear');
   }
 
@@ -87,7 +87,7 @@ export class ProceedingEditorPage {
 
     this.proceedingService.create(this.groupId, newProceeding).toPromise()
       .then((proceeding: Proceeding) => {
-        return Promise.all(this.decisionChangesetService.decisions.map(decision => {
+        return Promise.all(this.sharedDataService.decisionChangesets.map(decision => {
           decision.childActivities = [];
           decision.childReceipts = [];
           decision.parentProceeding = proceeding.id;

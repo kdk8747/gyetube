@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, ViewController, FabContainer } from 'ionic-angular';
-import { UtilService, DecisionService, DecisionChangesetService } from '../../../providers';
+import { UtilService, DecisionService, SharedDataService } from '../../../providers';
 import { Decision } from '../../../models';
 import { State } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
@@ -15,7 +15,6 @@ import { Observable } from 'rxjs/Observable';
 })
 export class DecisionListPage {
   stateEnum = State;
-  timelineMode: boolean = false;
 
   groupId: string;
   decisions: Observable<Decision[]>;
@@ -26,7 +25,7 @@ export class DecisionListPage {
     public event: Events,
     public util: UtilService,
     public decisionService: DecisionService,
-    public decisionChangesetService: DecisionChangesetService
+    public sharedDataService: SharedDataService
   ) {
   }
 
@@ -50,7 +49,7 @@ export class DecisionListPage {
   }
 
   navigateToDetail(decisionId: number) {
-    if (!this.decisionChangesetService.isActivated)
+    if (!this.sharedDataService.decisionEditMode)
       this.navCtrl.push('DecisionDetailPage', { id: decisionId });
   }
 
@@ -86,24 +85,24 @@ export class DecisionListPage {
   }
 
   onDelete(decision: Decision): void {
-    let found = this.decisionChangesetService.decisions.findIndex(item => item.prevId == decision.id);
+    let found = this.sharedDataService.decisionChangesets.findIndex(item => item.prevId == decision.id);
     let newDecision = JSON.parse(JSON.stringify(decision)) as Decision;
 
     newDecision.prevId = decision.id;
     newDecision.id = 0;
     newDecision.state = State.STATE_DELETED;
     if (found != -1)
-      this.decisionChangesetService.decisions[found] = newDecision;
+      this.sharedDataService.decisionChangesets[found] = newDecision;
     else
-      this.decisionChangesetService.decisions.push(newDecision);
+      this.sharedDataService.decisionChangesets.push(newDecision);
     this.navCtrl.parent.select(1);
-    this.decisionChangesetService.isActivated = false;
+    this.sharedDataService.decisionEditMode = false;
   }
 
   refreshDecisions () {
     this.decisions = this.decisionService.getDecisions(this.groupId)
       .map((decisions: Decision[]) =>
-      this.timelineMode ? this.sortByDate(decisions) : this.sortByDate(this.filterPastDecisions(decisions)));
+      this.sharedDataService.decisionListTimelineMode ? this.sortByDate(decisions) : this.sortByDate(this.filterPastDecisions(decisions)));
   }
 
   onFAB (fab: FabContainer) {

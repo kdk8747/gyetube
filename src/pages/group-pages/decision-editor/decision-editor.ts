@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, UserService, GroupService, DecisionService, DecisionChangesetService } from '../../../providers';
+import { UtilService, UserService, GroupService, DecisionService, SharedDataService } from '../../../providers';
 import { User, Group, Decision } from '../../../models';
 import { State } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
@@ -33,7 +33,7 @@ export class DecisionEditorPage {
     public userService: UserService,
     public groupService: GroupService,
     public decisionService: DecisionService,
-    public decisionChangesetService: DecisionChangesetService
+    public sharedDataService: SharedDataService
   ) {
     this.form = formBuilder.group({
       expiryDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
@@ -125,17 +125,17 @@ export class DecisionEditorPage {
     if (this.id) {
       newDecision.prevId = this.id;
       newDecision.state = State.STATE_UPDATED;
-      let found = this.decisionChangesetService.decisions.findIndex(item => item.prevId == this.id);
+      let found = this.sharedDataService.decisionChangesets.findIndex(item => item.prevId == this.id);
       if (found != -1)
-        this.decisionChangesetService.decisions[found] = newDecision;
+        this.sharedDataService.decisionChangesets[found] = newDecision;
       else
-        this.decisionChangesetService.decisions.push(newDecision);
+        this.sharedDataService.decisionChangesets.push(newDecision);
     }
     else
-      this.decisionChangesetService.decisions.push(newDecision);
+      this.sharedDataService.decisionChangesets.push(newDecision);
 
     this.navCtrl.parent.select(1);
-    this.decisionChangesetService.isActivated = false;
+    this.sharedDataService.decisionEditMode = false;
     this.popNavigation();
   }
 

@@ -2,7 +2,7 @@
   <div style="height:56px"></div>
   <ion-card *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
     <ion-card-content>
-      <ion-toolbar *ngIf="timelineMode" [ngSwitch]="decision.state">
+      <ion-toolbar *ngIf="sharedDataService.decisionListTimelineMode" [ngSwitch]="decision.state">
         <ion-buttons *ngSwitchCase="stateEnum.STATE_NEW_ONE">
           New - {{decision.title}}
         </ion-buttons>
@@ -25,7 +25,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col *ngIf="this.decisionChangesetService.isActivated">
+        <ion-col *ngIf="sharedDataService.decisionEditMode">
           <button ion-button icon-only (tap)="navigateToEditorForUpdate(decision.id)">
             <ion-icon name="create"></ion-icon>
           </button>
@@ -45,20 +45,20 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-fab right middle *ngIf="this.decisionChangesetService.isActivated">
+  <ion-fab right middle *ngIf="sharedDataService.decisionEditMode">
     <button ion-fab (tap)="navigateToEditor()">
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
-  <ion-fab right middle *ngIf="!this.decisionChangesetService.isActivated" #fab>
+  <ion-fab right middle *ngIf="!sharedDataService.decisionEditMode" #fab>
     <button ion-fab>
       <ion-icon name="eye"></ion-icon>
     </button>
     <ion-fab-list>
-      <button ion-fab (tap)="timelineMode = true; onFAB(fab)" [class.selectedFAB]="timelineMode">
+      <button ion-fab (tap)="sharedDataService.decisionListTimelineMode = true; onFAB(fab)" [class.selectedFAB]="sharedDataService.decisionListTimelineMode">
         <ion-icon name="film"></ion-icon>
       </button>
-      <button ion-fab (tap)="timelineMode = false; onFAB(fab)" [class.selectedFAB]="!timelineMode">
+      <button ion-fab (tap)="sharedDataService.decisionListTimelineMode = false; onFAB(fab)" [class.selectedFAB]="!sharedDataService.decisionListTimelineMode">
         <ion-icon name="attach"></ion-icon>
       </button>
     </ion-fab-list>
