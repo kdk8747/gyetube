@@ -18,8 +18,6 @@ export class TabsGroupPage {
   tab4Root: string = 'ActivityListPage';
   tab5Root: string = 'ReceiptListPage';
 
-  loggedIn: boolean = false;
-  user: User;
   groupId: string = '';
   group: Observable<Group>;
   responseTimeMs: number = 500;
@@ -47,20 +45,13 @@ export class TabsGroupPage {
     this.group.subscribe((group: Group) => {
       this.event.publish('App_ShowGroupTitleHeader', { title: group.title });
       group.members.map(id => this.userService.cacheUser(id));
+      if (group.members.length > 0)
+        this.userService.getUser(group.members[0]).subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       this.proceedingService.cacheProceedings(group.id);
       this.decisionService.cacheDecisions(group.id);
       this.activityService.cacheActivities(group.id);
       this.receiptService.cacheReceipts(group.id);
     });
-
-    this.util.getCurrentUser()
-      .then((user: User) => {
-        this.responseTimeMs = this.userService.getResponseTimeMs();
-        this.loggedIn = true;
-        this.user = user;
-      }).catch((error: any) => {
-        console.log(error);
-      });
 
     this.event.subscribe('TabsGroup_HideTab', (obj) => {
       this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'opacity', '0');
@@ -120,9 +111,5 @@ export class TabsGroupPage {
     this.event.unsubscribe('TabsGroup_DecisionDetail');
     this.event.unsubscribe('TabsGroup_ActivityDetail');
     this.event.unsubscribe('TabsGroup_ReceiptDetail');
-  }
-
-  ionViewDidEnter() {
-    console.log('tab enter');
   }
 }
