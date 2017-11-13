@@ -59,7 +59,10 @@ export class ReceiptEditorPage {
   }
 
   popNavigation() {
-    this.navCtrl.setRoot('ReceiptListPage');
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ReceiptListPage');
+    else
+      this.navCtrl.pop();
   }
 
   onChangeReceiptPhoto(event: any) {
@@ -94,7 +97,7 @@ export class ReceiptEditorPage {
 
     if (!this.newReceiptImageFile) {
       this.receiptService.create(this.groupId, newReceipt).toPromise()
-        .then(() => this.popNavigation())
+        .then(() => this.navCtrl.setRoot('ReceiptListPage'))
         .catch(() => { console.log('new receipt failed') });
     }
     else {
@@ -108,7 +111,7 @@ export class ReceiptEditorPage {
           newReceipt.imageUrl = result[1];
           return this.receiptService.create(this.groupId, newReceipt).toPromise();
         })
-        .then(() => this.popNavigation())
+        .then(() => this.navCtrl.setRoot('ReceiptListPage'))
         .catch(() => { console.log('new receipt failed') });
     }
   }

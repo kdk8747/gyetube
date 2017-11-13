@@ -60,7 +60,10 @@ export class ProceedingEditorPage {
   popNavigation() {
     this.sharedDataService.decisionEditMode = false;
     this.sharedDataService.decisionChangesets = [];
-    this.navCtrl.setRoot('ProceedingListPage');
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ProceedingListPage');
+    else
+      this.navCtrl.pop();
   }
 
   navigateToUserDetail() {
@@ -95,8 +98,11 @@ export class ProceedingEditorPage {
           return this.decisionService.create(this.groupId, decision).toPromise();
         }));
       })
-      .then(() => this.popNavigation())
-      .catch(() => { console.log('new proceeding failed') });
+      .then(() => {
+        this.sharedDataService.decisionEditMode = false;
+        this.sharedDataService.decisionChangesets = [];
+        this.event.publish('DecisionList_Refresh');
+      }).catch(() => { console.log('new proceeding failed') });
   }
 
 }

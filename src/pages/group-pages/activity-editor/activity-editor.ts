@@ -63,7 +63,10 @@ export class ActivityEditorPage {
   }
 
   popNavigation() {
-    this.navCtrl.setRoot('ActivityListPage');
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ActivityListPage');
+    else
+      this.navCtrl.pop();
   }
 
   onChangeActivityPhoto(event: any) {
@@ -104,7 +107,7 @@ export class ActivityEditorPage {
 
     if (!this.newActivityImageFile) {
       this.activityService.create(this.groupId, newActivity).toPromise()
-        .then(() => this.popNavigation())
+        .then(() => this.navCtrl.setRoot('ActivityListPage'))
         .catch(() => { console.log('new receipt failed') });
     }
     else {
@@ -118,7 +121,7 @@ export class ActivityEditorPage {
           newActivity.imageUrls.push(result[1]);
           return this.activityService.create(this.groupId, newActivity).toPromise();
         })
-        .then(() => this.popNavigation())
+        .then(() => this.navCtrl.setRoot('ActivityListPage'))
         .catch(() => { console.log('new receipt failed') });
     }
     /*
