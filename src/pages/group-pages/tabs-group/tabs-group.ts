@@ -1,7 +1,7 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, ViewController } from 'ionic-angular';
 import { UserService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService } from '../../../providers';
-import { User, Group } from '../../../models';
+import { Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({

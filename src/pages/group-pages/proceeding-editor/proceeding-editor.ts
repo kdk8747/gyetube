@@ -102,6 +102,7 @@ export class ProceedingEditorPage {
         this.sharedDataService.decisionEditMode = false;
         this.sharedDataService.decisionChangesets = [];
         this.event.publish('DecisionList_Refresh');
+        this.navCtrl.setRoot('ProceedingListPage');
       }).catch(() => { console.log('new proceeding failed') });
   }
 
