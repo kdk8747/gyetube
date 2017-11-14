@@ -1,17 +1,27 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
   <ion-card>
+    <ion-toolbar *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE">
+      <ion-buttons>
+        {{'I18N_PENDING' | translate}} -
+        <span *ngIf="needYou(proceeding)">
+          <ion-icon name="alert" color="danger"></ion-icon>
+          {{user?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}
+        </span>
+        {{'I18N_VERIFIED' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
+      </ion-buttons>
+    </ion-toolbar>
     <ion-toolbar>
       <ion-buttons left>
         <button ion-button icon-only (tap)="popNavigation()">
           <ion-icon name="arrow-up"></ion-icon>
         </button>
       </ion-buttons>
-      <ion-buttons>{{ (proceeding | async)?.title }}</ion-buttons>
+      <ion-buttons>{{ proceeding?.title }}</ion-buttons>
     </ion-toolbar>
 
     <ion-card-header>
-      <p>{{(proceeding | async)?.meetingDate | localizedDate:'short'}}</p>
+      <p>{{proceeding?.meetingDate | localizedDate:'short'}}</p>
       <ion-buttons left>
         {{ 'I18N_ATTENDEES' | translate}}:
         <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let attendee of attendees">
@@ -22,10 +32,20 @@
           </ion-avatar>
         </button>
       </ion-buttons>
+      <ion-buttons left *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE">
+        {{ 'I18N_VERIFIED' | translate}}:
+        <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let reviewer of reviewers">
+          <span *ngIf="!((reviewer | async)?.imageUrl)">{{(reviewer | async)?.name}}</span>
+          <ion-avatar *ngIf="(reviewer | async)?.imageUrl">
+            <img *ngIf="!((reviewer | async)?.imageBase64)" [src]="(reviewer | async)?.imageUrl">
+            <img *ngIf="((reviewer | async)?.imageBase64)" [src]="(reviewer | async)?.imageBase64">
+          </ion-avatar>
+        </button>
+      </ion-buttons>
     </ion-card-header>
 
     <ion-card-content>
-      <p>{{(proceeding | async)?.description}}</p>
+      <p class="pre-wrap">{{proceeding?.description}}</p>
     </ion-card-content>
 
     <ion-card *ngFor="let decision of decisions; let i=index">
@@ -33,6 +53,7 @@
         <ion-buttons>
           <ion-col>
           <p>{{ 'I18N_DECISION' | translate }}{{i+1}} - {{ (decision | async)?.title }}</p>
+          <p class="pre-wrap">{{ (decision | async)?.description }}</p>
           <p text-right *ngIf="(decision | async)?.accepters.length">
             {{ 'I18N_ACCEPTERS' | translate}} {{ (decision | async)?.accepters.length }}
           </p>
@@ -62,5 +83,10 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-card>
+
+    <ion-buttons right *ngIf="needYou(proceeding)">
+      <!-- <button ion-button>{{ 'I18N_SAVE' | translate }}</button> -->
+      <button ion-button (tap)="onVerified()">{{ 'I18N_VERIFIED' | translate }}</button>
+    </ion-buttons>
   </ion-card>
 </ion-content>

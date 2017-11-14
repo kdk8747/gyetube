@@ -1,6 +1,16 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
   <ion-card *ngFor="let proceeding of proceedings | async" (tap)="navigateToDetail(proceeding.id)">
+    <ion-toolbar *ngIf="proceeding.state == stateEnum.STATE_PENDING_CREATE">
+      <ion-buttons>
+        {{'I18N_PENDING' | translate}} -
+        <span *ngIf="needYou(proceeding)">
+          <ion-icon name="alert" color="danger"></ion-icon>
+          {{user?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}
+        </span>
+        {{'I18N_VERIFIED' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
+      </ion-buttons>
+    </ion-toolbar>
     <ion-card-content>
       <ion-row>
         <ion-col>

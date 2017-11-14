@@ -81,7 +81,7 @@ export class DecisionListPage {
 
     newDecision.prevId = decision.id;
     newDecision.id = 0;
-    newDecision.state = State.STATE_DELETED;
+    newDecision.state = State.STATE_PENDING_DELETE;
     if (found != -1)
       this.sharedDataService.decisionChangesets[found] = newDecision;
     else

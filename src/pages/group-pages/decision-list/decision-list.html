@@ -1,18 +1,21 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
   <ion-card *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
+    <ion-toolbar *ngIf="sharedDataService.decisionListTimelineMode" [ngSwitch]="decision.state">
+      <ion-buttons *ngSwitchCase="stateEnum.STATE_NEW_ONE">
+        New - {{decision.title}}
+      </ion-buttons>
+      <ion-buttons *ngSwitchCase="stateEnum.STATE_UPDATED">
+        Update - {{decision.title}}
+      </ion-buttons>
+      <ion-buttons *ngSwitchCase="stateEnum.STATE_DELETED">
+        Delete - {{decision.title}}
+      </ion-buttons>
+      <ion-buttons *ngSwitchDefault>
+        Pending - {{decision.title}}
+      </ion-buttons>
+    </ion-toolbar>
     <ion-card-content>
-      <ion-toolbar *ngIf="sharedDataService.decisionListTimelineMode" [ngSwitch]="decision.state">
-        <ion-buttons *ngSwitchCase="stateEnum.STATE_NEW_ONE">
-          New - {{decision.title}}
-        </ion-buttons>
-        <ion-buttons *ngSwitchCase="stateEnum.STATE_UPDATED">
-          Update - {{decision.title}}
-        </ion-buttons>
-        <ion-buttons *ngSwitchCase="stateEnum.STATE_DELETED">
-          Delete - {{decision.title}}
-        </ion-buttons>
-      </ion-toolbar>
       <ion-row>
         <ion-col>
           <p>{{decision.meetingDate | localizedDate}}</p>

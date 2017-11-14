@@ -8,24 +8,7 @@ var proceedings = [
     attendees: ['yd', 'sj', 'kk471891074', 'jy', 'ty', 'jh'],
     reviewers: ['yd', 'sj', 'kk471891074', 'jy', 'ty', 'jh'],
     description:
-    '1. 새운영위원 선출\n\
-  김동규(연락담당), 고성준, 신지연(경기운영위참석), 한태연(친환경급식담당), 최연두(모임장소섭외/회계담당)\n\
-\n\
-2. 전년도 수원녹색당 활동지원이월금 2016 총선 선거기금 전용\n\
-  - 경기녹색당 예결산위원회 권고에 따라 2015년 수원녹색당 활동지원 이월금 1,229,000원을 2016년 총선 선거기금으로 전용 건으로\n\
-  임시총회에서 표결에 붙였고 그 결과 이월금액을 총선기금으로 전용하기로 하였음.\n\
-  \n\
-3. 3월 정당연설회 & 현수막 게시 - 3월 한달간 매주 일요일 마다 정당연설회와 현수막을 설치하기로 결정함.\n\
-\n\
-3.1. 정당연설회 일정\n\
-  3/13(일)-오후1시 수원역, 오후3시 행궁동광장\n\
-  3/20(일)-오후1시 북수원홈플러스, 오후3시 영통홈플러스\n\
-  3/27(일)-오후1시 수원역\n\
- * 상황에 따라 장소 추가 및 변동사항이 있을 수 있음.\n\
-\n\
-3.2. 현수막 게시\n\
-  총 20장 게시\n\
-  정당연설회 전 정당연설회 인근 장소에 게시 예정.',
+    '-',
     childDecisions: [2, 3, 4]
   }
 ];
@@ -82,15 +65,24 @@ exports.getByID = (req, res) => {
 
 exports.updateByID = (req, res) => {
   if (req.params.group === 'examplelocalparty') {
-    let i = proceedings2.findIndex(item => item.id === +req.params.id);
-    proceedings2[i] = req.body;
-    res.send();
+    res.status(401).json({
+      success: false,
+      message: 'not allowed'
+    });
   }
   else if (req.params.group === 'suwongreenparty') {
     if (req.params.group in req.decoded.permissions.groups) {
       let i = proceedings.findIndex(item => item.id === +req.params.id);
-      proceedings[i] = req.body;
-      res.send();
+      if (i != -1){
+        if (proceedings[i].attendees.find(item => item === req.decoded.id)
+          && !proceedings[i].reviewers.find(item => item === req.decoded.id)) {
+          proceedings[i].reviewers.push(req.decoded.id);
+        }
+
+        if (proceedings[i].attendees.length == proceedings[i].reviewers.length)
+          proceedings[i].state = 0; // NEW_ONE
+      }
+      res.json(proceedings[i]);
     }
     else
       res.status(401).json({

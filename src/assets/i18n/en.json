@@ -37,6 +37,12 @@
   "I18N_UPLOAD": "Upload",
   "I18N_SAVE": "Save",
 
+  "I18N_PENDING": "Pending",
+  "I18N_DELETED": "Deleted",
+  "I18N_UPDATED": "Updated",
+  "I18N_NEED_YOUR_REVIEW": "Need Your Review",
+  "I18N_VERIFIED": "Verified",
+
   "I18N_MEETING_DATE": "Meeting Date",
   "I18N_ATTENDEES": "Attendee(s)",
   "I18N_DECISIONS": "Decision(s)",

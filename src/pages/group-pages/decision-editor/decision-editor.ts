@@ -115,7 +115,7 @@ export class DecisionEditorPage {
     this.form.value.title = this.form.value.title.trim();
     this.form.value.description = this.form.value.description.trim();
 
-    let newDecision = new Decision(0, 0, State.STATE_NEW_ONE,
+    let newDecision = new Decision(0, 0, 0, State.STATE_PENDING_CREATE,
       new Date(Date.now()).toISOString(),
       this.form.value.expiryDate,
       this.form.value.abstainers,
@@ -125,7 +125,7 @@ export class DecisionEditorPage {
 
     if (this.id) {
       newDecision.prevId = this.id;
-      newDecision.state = State.STATE_UPDATED;
+      newDecision.state = State.STATE_PENDING_UPDATE;
       let found = this.sharedDataService.decisionChangesets.findIndex(item => item.prevId == this.id);
       if (found != -1)
         this.sharedDataService.decisionChangesets[found] = newDecision;

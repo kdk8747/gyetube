@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, ProceedingService } from '../../../providers';
-import { Proceeding } from '../../../models';
+import { User, Proceeding } from '../../../models';
+import { State } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
@@ -12,8 +13,10 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'proceeding-list.html',
 })
 export class ProceedingListPage {
+  stateEnum = State;
 
   groupId: string;
+  user: User;
   proceedings: Observable<Proceeding[]>;
   creationPermitted: boolean = false;
 
@@ -27,13 +30,17 @@ export class ProceedingListPage {
 
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
+    this.util.getCurrentUser()
+      .then((user) => this.user = user)
+      .catch((err) => console.log(err));
+
     this.util.isPermitted('create', 'proceedings', this.groupId)
       .then(bool => this.creationPermitted = bool)
       .catch((error: any) => {
         console.log(error);
       });;
     this.proceedings = this.proceedingService.getProceedings(this.groupId)
-      .map((proceedings:Proceeding[]) => this.sortByDate(proceedings));
+      .map((proceedings: Proceeding[]) => this.sortByDate(proceedings));
   }
 
   ionViewDidEnter() {
@@ -49,11 +56,16 @@ export class ProceedingListPage {
     this.navCtrl.push('ProceedingEditorPage');
   }
 
-  sortByDate(proceedings:Proceeding[]): Proceeding[] {
+  sortByDate(proceedings: Proceeding[]): Proceeding[] {
     return proceedings.sort((h1, h2) => {
       return h1.meetingDate < h2.meetingDate ? 1 :
         (h1.meetingDate > h2.meetingDate ? -1 : 0);
     });
   }
 
+  needYou(proceeding: Proceeding): boolean {
+    return proceeding && this.user && proceeding.state == this.stateEnum.STATE_PENDING_CREATE
+      && proceeding.attendees.findIndex(attendee => attendee == this.user.id) != -1
+      && proceeding.reviewers.findIndex(attendee => attendee == this.user.id) == -1;
+  }
 }

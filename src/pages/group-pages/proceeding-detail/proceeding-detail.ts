@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, UserService, ProceedingService, DecisionService } from '../../../providers';
 import { Proceeding, User, Decision } from '../../../models';
+import { State } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -14,11 +15,14 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'proceeding-detail.html',
 })
 export class ProceedingDetailPage {
+  stateEnum = State;
 
   groupId: string;
   id: number;
-  proceeding: Observable<Proceeding>;
+  user: User;
+  proceeding: Proceeding = null;
   attendees: Observable<User>[];
+  reviewers: Observable<User>[];
   decisions: Observable<Decision>[];
 
   constructor(
@@ -35,11 +39,18 @@ export class ProceedingDetailPage {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
 
-    this.proceeding = this.proceedingService.getProceeding(this.groupId, this.id);
-    this.proceeding.subscribe((proceeding: Proceeding) => {
-      this.attendees = proceeding.attendees.map((id: string) => this.userService.getUser(id));
-      this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
-    });
+    this.util.getCurrentUser()
+      .then((user) => {
+        this.user = user;
+
+        this.proceedingService.getProceeding(this.groupId, this.id)
+          .subscribe((proceeding: Proceeding) => {
+            this.proceeding = proceeding;
+            this.attendees = proceeding.attendees.map((id: string) => this.userService.getUser(id));
+            this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
+            this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
+          });
+      }).catch((err) => console.log(err));
   }
 
   ionViewDidEnter() {
@@ -62,5 +73,21 @@ export class ProceedingDetailPage {
     obs.subscribe(decision => {
       this.event.publish('TabsGroup_DecisionDetail', { id: decision.id });
     });
+  }
+
+  needYou(proceeding: Proceeding): boolean {
+    return proceeding && this.user && proceeding.state == this.stateEnum.STATE_PENDING_CREATE
+      && proceeding.attendees.findIndex(attendee => attendee == this.user.id) != -1
+      && proceeding.reviewers.findIndex(attendee => attendee == this.user.id) == -1;
+  }
+
+  onVerified() {
+    this.proceedingService.update(this.groupId, this.proceeding.id)
+      .subscribe(proceeding => {
+        this.proceeding = proceeding;
+        this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
+        if (proceeding.attendees.length == proceeding.reviewers.length)
+          this.navCtrl.setRoot('ProceedingListPage');
+      });
   }
 }

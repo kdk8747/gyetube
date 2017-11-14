@@ -37,6 +37,12 @@
   "I18N_UPLOAD": "업로드",
   "I18N_SAVE": "저장",
 
+  "I18N_PENDING": "미결",
+  "I18N_DELETED": "삭제됨",
+  "I18N_UPDATED": "수정됨",
+  "I18N_NEED_YOUR_REVIEW": "당신의 검토가 필요합니다.",
+  "I18N_VERIFIED": "확인함",
+
   "I18N_MEETING_DATE": "회의 시각",
   "I18N_ATTENDEES": "참석자",
   "I18N_DECISIONS": "결정사항",
