@@ -106,40 +106,23 @@ exports.updateByID = (req, res) => {
 }
 
 exports.create = (req, res) => {
-  let newProceeding = req.body;
   if (req.params.group === 'examplelocalparty') {
-    newProceeding['id'] = proceedingID2++;
-    proceedings2.push(newProceeding);
-    res.json(newProceeding);
+    res.status(401).json({
+      success: false,
+      message: 'not allowed'
+    });
   }
   else if (req.params.group === 'suwongreenparty') {
     if (req.params.group in req.decoded.permissions.groups) {
-      newProceeding['id'] = proceedingID++;
+      let newProceeding = req.body;
+      newProceeding.id = proceedingID++;
+      if(+newProceeding.prevId > 0)
+        proceedings.find(item => item.id === +newProceeding.prevId).nextId = newProceeding.id;
+
+      newProceeding.childDecisions = []; // TODO
+
       proceedings.push(newProceeding);
       res.json(newProceeding);
-    }
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
-      success: false,
-      message: 'groupId: not found'
-    });
-}
-
-exports.deleteByID = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    proceedings2 = proceedings2.filter(h => h.id !== +req.params.id);
-    res.send();
-  }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups) {
-      proceedings = proceedings.filter(h => h.id !== +req.params.id);
-      res.send();
     }
     else
       res.status(401).json({

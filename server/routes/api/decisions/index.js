@@ -5,7 +5,5 @@ const controller = require('./decision.controller');
 router.get('/:group/', controller.getAll);
 router.get('/:group/:id', controller.getByID);
 router.put('/:group/:id', controller.updateByID);
-router.post('/:group/', controller.create);
-router.delete('/:group/:id', controller.deleteByID);
 
 module.exports = router;

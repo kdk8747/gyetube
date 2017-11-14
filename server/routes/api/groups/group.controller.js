@@ -10,7 +10,7 @@ var groups = [
     roles: [
       {id: 'anyone', name:'아무나', proceedings:'____', decisions:'____', activities:'_r__', receipts:'_r__'},
       {id: 'member', name:'당원', proceedings:'_ru_', decisions:'_ru_', activities:'crud', receipts:'crud'},
-      {id: 'commitee', name:'운영위원', proceedings:'cru_', decisions:'cru_', activities:'crud', receipts:'crud'}
+      {id: 'commitee', name:'운영위원', proceedings:'cru_', decisions:'_ru_', activities:'crud', receipts:'crud'}
     ]
   },
   {
@@ -23,7 +23,7 @@ var groups = [
     roles: [
       {id: 'anyone', name:'아무나', proceedings:'_r__', decisions:'_r__', activities:'_r__', receipts:'_r__'},
       {id: 'member', name:'구성원', proceedings:'_ru_', decisions:'_ru_', activities:'crud', receipts:'crud'},
-      {id: 'commitee', name:'운영위원', proceedings:'cru_', decisions:'cru_', activities:'crud', receipts:'crud'}
+      {id: 'commitee', name:'운영위원', proceedings:'cru_', decisions:'_ru_', activities:'crud', receipts:'crud'}
     ]
   }
 ];

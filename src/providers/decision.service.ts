@@ -62,19 +62,4 @@ export class DecisionService {
       .map(() => decision)
       .take(1);
   }
-
-  create(group_id: string, decision: Decision): Observable<Decision> {
-    const url = `${this.decisionsUrl}/${group_id}`;
-    return this.http
-      .post(url, JSON.stringify(decision), { headers: this.headers })
-      .map(response => response.json() as Decision)
-      .take(1);
-  }
-
-  delete(group_id: string, id: number): Observable<void> {
-    const url = `${this.decisionsUrl}/${group_id}/${id}`;
-    return this.http.delete(url, { headers: this.headers })
-      .map(() => null)
-      .take(1);
-  }
 }

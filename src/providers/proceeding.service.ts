@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { Proceeding } from '../models';
+import { Proceeding, ProceedingCreation } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -57,26 +57,19 @@ export class ProceedingService {
     return this.proceedings[group_id + id];
   }
 
-  update(group_id: string, proceeding: Proceeding): Observable<Proceeding> {
-    const url = `${this.proceedingsUrl}/${group_id}/${proceeding.id}`;
-    return this.http
-      .put(url, JSON.stringify(proceeding), { headers: this.headers })
-      .map(() => proceeding)
-      .take(1);
+  update(group_id: string, proceeding_id: number): Observable<Proceeding> {
+    const url = `${this.proceedingsUrl}/${group_id}/${proceeding_id}`;
+    return this.proceedings[group_id + proceeding_id] = this.http
+      .put(url, '', { headers: this.headers })
+      .map(response => response.json() as Proceeding)
+      .publishLast().refCount();
   }
 
-  create(group_id: string, proceeding: Proceeding): Observable<Proceeding> {
+  create(group_id: string, proceeding: ProceedingCreation): Observable<ProceedingCreation> {
     const url = `${this.proceedingsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(proceeding), { headers: this.headers })
-      .map(response => response.json() as Proceeding)
-      .take(1);
-  }
-
-  delete(group_id: string, id: number): Observable<void> {
-    const url = `${this.proceedingsUrl}/${group_id}/${id}`;
-    return this.http.delete(url, { headers: this.headers })
-      .map(() => null)
+      .map(response => response.json() as ProceedingCreation)
       .take(1);
   }
 }
