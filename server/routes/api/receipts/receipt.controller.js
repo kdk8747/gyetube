@@ -2,7 +2,7 @@
 var receipts = [
   {
     id: 1,
-    creator: '471891074',
+    creator: 'kk471891074',
     modifiedDate: new Date("2017-10-06T19:30:00+09:00"),
     paymentDate: new Date("2016-01-01T19:30:00+09:00"),
     title: '2015년 수원녹색당 이월금',
@@ -13,7 +13,7 @@ var receipts = [
   },
   {
     id: 2,
-    creator: '471891074',
+    creator: 'kk471891074',
     modifiedDate: new Date("2017-10-06T19:30:00+09:00"),
     paymentDate: new Date("2016-03-07T19:30:00+09:00"),
     title: '2016년 총선 선거기금',

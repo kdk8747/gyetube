@@ -6,7 +6,7 @@ var groups = [
     description: '수원녹색당 그룹입니다.',
     imageUrl:'http://cfile29.uf.tistory.com/image/264ED6395174B648342845',
     createdDate: new Date("2017-10-06T19:30:00+09:00"),
-    members: ['471891074', 'yd', 'hk', 'sj', 'jy', 'ty', 'jh'],
+    members: ['kk471891074', 'fb1461221603961141', 'nv9aab5d64e21c0330c235916dcdf03c78fc00d92debf6ae63a6cb2076a1f66da8', 'yd', 'hk', 'sj', 'jy', 'ty', 'jh'],
     roles: [
       {id: 'anyone', name:'아무나', proceedings:'____', decisions:'____', activities:'_r__', receipts:'_r__'},
       {id: 'member', name:'당원', proceedings:'_ru_', decisions:'_ru_', activities:'crud', receipts:'crud'},

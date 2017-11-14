@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, ViewController, FabContainer } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, FabContainer } from 'ionic-angular';
 import { UtilService, DecisionService, SharedDataService } from '../../../providers';
 import { Decision } from '../../../models';
 import { State } from '../../../app/constants';
@@ -68,19 +68,11 @@ export class DecisionListPage {
   }
 
   filterPastDecisions(decisions: Decision[]): Decision[] {
-    let decisionIdToIndex = {};
-    for (let i = 0; i < decisions.length; i++)
-      decisionIdToIndex[decisions[i].id] = i;
-
-    let visitedIndex = new Array<boolean>(decisions.length).fill(false);
-    for (let i = 0; i < decisions.length; i++) {
-      if (decisions[i].prevId && decisionIdToIndex[decisions[i].prevId])
-        visitedIndex[decisionIdToIndex[decisions[i].prevId]] = true;
-      if (decisions[i].state == State.STATE_DELETED)
-        visitedIndex[decisionIdToIndex[decisions[i].id]] = true;
-    }
-
-    return decisions.filter(decision => !visitedIndex[decisionIdToIndex[decision.id]]);
+    return decisions.filter(decision =>
+      (decision.state == State.STATE_NEW_ONE || decision.state == State.STATE_UPDATED)
+      && new Date(decision.expiryDate).getTime() < new Date(Date.now()).getTime()
+      && decision.nextId == 0
+    );
   }
 
   onDelete(decision: Decision): void {

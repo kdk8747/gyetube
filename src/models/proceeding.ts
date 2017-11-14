@@ -4,6 +4,7 @@ export class Proceeding {
   constructor(
     public id: number,
     public prevId: number, // 0: unused
+    public nextId: number, // 0: unused
     public state: State,
     public createdDate: string,
     public meetingDate: string,

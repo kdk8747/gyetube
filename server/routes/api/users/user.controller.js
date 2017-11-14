@@ -61,10 +61,28 @@ var users = [
     notifications: []
   },
   {
-    id: '471891074', name: '김동규',
+    id: 'kk471891074', name: '김동규k',
     imageBase64: '',
     imageUrl: 'http://mud-kage.kakao.co.kr/14/dn/btqgWLt7ZtZ/lEmudQumElRfIWRrUvkItk/o.jpg',
     loggedInBy: 'kakao',
+    permissions: { 'groups': { 'suwongreenparty': ['member', 'commitee'], 'examplelocalparty': ['reader'] } },
+    uncheckedDecisions: [{group:'suwongreenparty', id:1} ],
+    notifications: []
+  },
+  {
+    id: 'fb1461221603961141', name: '김동규f',
+    imageBase64: '',
+    imageUrl: 'https://scontent.xx.fbcdn.net/v/t1.0-1/c39.36.447.447/s50x50/270593_131294310287217_1556067_n.jpg?oh=a537f2fa448d849d1d1e6995b989aa6c&oe=5AA1F9D9',
+    loggedInBy: 'facebook',
+    permissions: { 'groups': { 'suwongreenparty': ['member', 'commitee'], 'examplelocalparty': ['reader'] } },
+    uncheckedDecisions: [{group:'suwongreenparty', id:1} ],
+    notifications: []
+  },
+  {
+    id: 'nv9aab5d64e21c0330c235916dcdf03c78fc00d92debf6ae63a6cb2076a1f66da8', name: '김동규n',
+    imageBase64: '',
+    imageUrl: 'https://ssl.pstatic.net/static/pwe/address/img_profile.png',
+    loggedInBy: 'naver',
     permissions: { 'groups': { 'suwongreenparty': ['member', 'commitee'], 'examplelocalparty': ['reader'] } },
     uncheckedDecisions: [{group:'suwongreenparty', id:1} ],
     notifications: []

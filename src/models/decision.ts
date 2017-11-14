@@ -4,6 +4,7 @@ export class Decision {
   constructor(
     public id: number,
     public prevId: number, // 0: unused
+    public nextId: number, // 0: unused
     public state: State,
     public meetingDate: string,  // equals to parentProceeding.meetingDate
     public expiryDate: string,

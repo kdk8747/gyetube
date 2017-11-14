@@ -18,7 +18,7 @@ exports.initialize = () => {
 
             debug(_profile);
             done(null, {
-                id: String(_profile.id),
+                id: 'nv' + String(_profile.id),
                 name: _profile.nickname,
                 imageUrl: _profile.profile_image,
                 loggedInBy: 'naver'
@@ -36,7 +36,7 @@ exports.initialize = () => {
 
             debug(_profile);
             done(null, {
-                id: String(_profile.id),
+                id: 'kk' + String(_profile.id),
                 name: _profile.properties.nickname,
                 imageUrl: _profile.properties.thumbnail_image,
                 loggedInBy: 'kakao'
@@ -55,7 +55,7 @@ exports.initialize = () => {
 
             debug(_profile);
             done(null, {
-                id: String(_profile.id),
+                id: 'fb' + String(_profile.id),
                 name: _profile.name,
                 imageUrl: _profile.picture.data.url,
                 loggedInBy: 'facebook'
