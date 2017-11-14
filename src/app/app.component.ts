@@ -136,6 +136,8 @@ export class MyApp {
   }
 
   signOut() {
+    this.menu.close();
+    this.event.publish('App_ShowHeader');
     this.storage.clear()
       .then(() => {
         this.translate.get('I18N_SIGN_OUT_TOAST').subscribe(

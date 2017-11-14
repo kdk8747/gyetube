@@ -60,7 +60,7 @@
           <ion-icon name="contact" item-left></ion-icon>
           {{ 'I18N_SIGN_IN' | translate }}
         </button>
-        <button *ngIf="loggedIn" ion-item (tap)="onMenuItem(); signOut()">
+        <button *ngIf="loggedIn" ion-item (tap)="signOut()">
           <ion-icon name="log-out" item-left></ion-icon>
           {{ 'I18N_SIGN_OUT' | translate }}
         </button>
