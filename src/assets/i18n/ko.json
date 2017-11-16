@@ -40,6 +40,9 @@
   "I18N_EDITOR": "편집",
   "I18N_UPLOAD": "업로드",
   "I18N_SAVE": "저장",
+  "I18N_PREV": "이전",
+  "I18N_NEXT": "다음",
+  "I18N_REVISION": "수정판",
 
 
   "I18N_MEETING_DATE": "회의 시각",

@@ -3,28 +3,9 @@
   <ion-card *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
     <ion-card-content>
       <ion-row>
-        <span *ngIf="sharedDataService.decisionListTimelineMode" [ngSwitch]="decision.state">
-          <p *ngSwitchCase="stateEnum.STATE_CREATED">
-            {{ 'I18N_CREATED' | translate}} - {{decision.title}}
-          </p>
-          <p *ngSwitchCase="stateEnum.STATE_UPDATED">
-            {{ 'I18N_UPDATED' | translate}} - {{decision.title}}
-          </p>
-          <p *ngSwitchCase="stateEnum.STATE_DELETED">
-            {{ 'I18N_DELETED' | translate}} - {{decision.title}}
-          </p>
-          <p *ngSwitchCase="stateEnum.STATE_PENDING_CREATE">
-            {{ 'I18N_PENDING_CREATE' | translate}} - {{decision.title}}
-          </p>
-          <p *ngSwitchCase="stateEnum.STATE_PENDING_UPDATE">
-            {{ 'I18N_PENDING_UPDATE' | translate}} - {{decision.title}}
-          </p>
-          <p *ngSwitchCase="stateEnum.STATE_PENDING_DELETE">
-            {{ 'I18N_PENDING_DELETE' | translate}} - {{decision.title}}
-          </p>
-          <p *ngSwitchDefault>
-            Unknown - {{decision.title}}
-          </p>
+        <span *ngIf="sharedDataService.decisionListTimelineMode">
+          <state-label [state]="decision.state"></state-label>
+          {{decision.title}}
         </span>
         <p *ngIf="!sharedDataService.decisionListTimelineMode">{{decision.title}}</p>
       </ion-row>

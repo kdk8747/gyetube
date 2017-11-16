@@ -14,7 +14,6 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'decision-list.html',
 })
 export class DecisionListPage {
-  stateEnum = State;
 
   groupId: string;
   decisions: Observable<Decision[]>;
@@ -76,7 +75,9 @@ export class DecisionListPage {
   }
 
   filterDeletedDecisions(decisions: Decision[]): Decision[] {
-    return decisions.filter(decision => decision.state != State.STATE_DELETED);
+    return decisions.filter(decision =>
+      (decision.state == State.STATE_CREATED || decision.state == State.STATE_UPDATED)
+    );
   }
 
   onDelete(decision: Decision): void {

@@ -71,6 +71,14 @@ export class ProceedingDetailPage {
     ;
   }
 
+  navigateToPrev() {
+    this.navCtrl.setRoot('ProceedingDetailPage', { id: this.proceeding.prevId });
+  }
+
+  navigateToNext() {
+    this.navCtrl.setRoot('ProceedingDetailPage', { id: this.proceeding.nextId });
+  }
+
   navigateToDecisionDetail(obs: Observable<Decision>) {
     obs.subscribe(decision => {
       this.event.publish('TabsGroup_DecisionDetail', { id: decision.id });
@@ -78,7 +86,7 @@ export class ProceedingDetailPage {
   }
 
   needYou(proceeding: Proceeding): boolean {
-    return proceeding && this.user && proceeding.state == this.stateEnum.STATE_PENDING_CREATE
+    return proceeding && this.user && proceeding.state == State.STATE_PENDING_CREATE
       && proceeding.nextId == 0
       && proceeding.attendees.findIndex(attendee => attendee == this.user.id) != -1
       && proceeding.reviewers.findIndex(attendee => attendee == this.user.id) == -1;

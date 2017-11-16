@@ -40,6 +40,9 @@
   "I18N_EDITOR": "Editor",
   "I18N_UPLOAD": "Upload",
   "I18N_SAVE": "Save",
+  "I18N_PREV": "Prev",
+  "I18N_NEXT": "Next",
+  "I18N_REVISION": "Revision",
 
 
   "I18N_MEETING_DATE": "Meeting Date",

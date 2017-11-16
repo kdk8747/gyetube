@@ -3,6 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { DecisionDetailPage } from './decision-detail';
 import { PipesModule } from '../../../pipes/pipes.module';
+import { ComponentsModule } from '../../../components/components.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { PipesModule } from '../../../pipes/pipes.module';
   imports: [
     IonicPageModule.forChild(DecisionDetailPage),
     TranslateModule.forChild(),
-    PipesModule
+    PipesModule,
+    ComponentsModule
   ],
 })
 export class DecisionDetailPageModule {}
