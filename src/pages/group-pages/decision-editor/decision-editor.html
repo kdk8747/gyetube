@@ -19,7 +19,7 @@
         </ion-item>
         <ion-item>
           <ion-label>{{ 'I18N_EXPIRY_DATE' | translate }}</ion-label>
-          <ion-datetime formControlName="expiryDate" displayFormat="YYYY MM DD, HH:mm" [class.invalid]="!form.controls.expiryDate.valid && (form.controls.expiryDate.dirty || submitAttempt)"></ion-datetime>
+          <ion-datetime formControlName="expiryDate" displayFormat="YYYY MM DD, HH:mm" max="2100" [class.invalid]="!form.controls.expiryDate.valid && (form.controls.expiryDate.dirty || submitAttempt)"></ion-datetime>
         </ion-item>
 
         <ion-item>
