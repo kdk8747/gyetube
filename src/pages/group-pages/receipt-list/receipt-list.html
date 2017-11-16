@@ -3,10 +3,14 @@
   <ion-card *ngFor="let receipt of receipts | async" (tap)="navigateToDetail(receipt.id)">
     <ion-card-content>
       <ion-row>
+        <p>{{receipt.title}}</p>
+      </ion-row>
+      <ion-row>
         <ion-col>
           <p>{{receipt.paymentDate | localizedDate}}</p>
-          <p>{{receipt.title}}</p>
         </ion-col>
+      </ion-row>
+      <ion-row>
         <ion-col>
           <p text-left>{{ 'I18N_DIFFERENCE' | translate}} {{receipt.difference | number}}</p>
           <p text-right>{{ 'I18N_BALANCE' | translate}} {{receipt.balance | number}}</p>

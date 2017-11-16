@@ -13,12 +13,12 @@
     <form [formGroup]="form">
       <ion-list>
         <ion-item>
-          <ion-label>{{ 'I18N_MEETING_DATE' | translate }}</ion-label>
-          <ion-datetime formControlName="meetingDate" displayFormat="YYYY MM DD, HH:mm" [class.invalid]="!form.controls.meetingDate.valid && (form.controls.meetingDate.dirty || submitAttempt)"></ion-datetime>
-        </ion-item>
-        <ion-item>
           <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
           <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{ 'I18N_MEETING_DATE' | translate }}</ion-label>
+          <ion-datetime formControlName="meetingDate" displayFormat="YYYY MM DD, HH:mm" [class.invalid]="!form.controls.meetingDate.valid && (form.controls.meetingDate.dirty || submitAttempt)"></ion-datetime>
         </ion-item>
 
         <ion-item>
@@ -52,22 +52,29 @@
           </ion-col>
         </ion-row>
         <ion-card *ngFor="let decision of sharedDataService.decisionChangesets">
-          <ion-toolbar [ngSwitch]="decision.state">
-            <ion-buttons *ngSwitchCase="stateEnum.STATE_NEW_ONE">
-              New - {{decision.title}}
+          <ion-toolbar>
+            <ion-buttons *ngIf="decision.state == stateEnum.STATE_PENDING_CREATE">
+              {{ 'I18N_CREATE' | translate}} - {{decision.title}}
             </ion-buttons>
-            <ion-buttons *ngSwitchCase="stateEnum.STATE_UPDATED">
-              Update - {{decision.title}}
+            <ion-buttons *ngIf="decision.state == stateEnum.STATE_PENDING_UPDATE">
+              {{ 'I18N_UPDATE' | translate}} - {{decision.title}}
             </ion-buttons>
-            <ion-buttons *ngSwitchCase="stateEnum.STATE_DELETED">
-              Delete - {{decision.title}}
+            <ion-buttons *ngIf="decision.state == stateEnum.STATE_PENDING_DELETE">
+              {{ 'I18N_DELETE' | translate}} - {{decision.title}}
+            </ion-buttons>
+            <ion-buttons right>
+              <button ion-button icon-only (tap)="onClose(decision.id)">
+                <ion-icon name="close"></ion-icon>
+              </button>
             </ion-buttons>
           </ion-toolbar>
           <ion-card-content>
-            <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{decision.expiryDate | localizedDate}}</p>
-            <div style="height:10px"></div>
-            <p>{{decision.description}}</p>
-            <div style="height:10px"></div>
+            <span *ngIf="decision.state != stateEnum.STATE_PENDING_DELETE">
+              <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{decision.expiryDate | localizedDate}}</p>
+              <div style="height:10px"></div>
+              <p>{{decision.description}}</p>
+              <div style="height:10px"></div>
+            </span>
             <ion-buttons left *ngIf="decision.accepters.length">
               {{ 'I18N_ACCEPTERS' | translate}}:
               <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let accepter of decision.accepters">

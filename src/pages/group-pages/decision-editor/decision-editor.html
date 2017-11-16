@@ -14,12 +14,12 @@
     <form [formGroup]="form">
       <ion-list>
         <ion-item>
-          <ion-label>{{ 'I18N_EXPIRY_DATE' | translate }}</ion-label>
-          <ion-datetime formControlName="expiryDate" displayFormat="YYYY MM DD, HH:mm" [class.invalid]="!form.controls.expiryDate.valid && (form.controls.expiryDate.dirty || submitAttempt)"></ion-datetime>
-        </ion-item>
-        <ion-item>
           <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
           <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{ 'I18N_EXPIRY_DATE' | translate }}</ion-label>
+          <ion-datetime formControlName="expiryDate" displayFormat="YYYY MM DD, HH:mm" [class.invalid]="!form.controls.expiryDate.valid && (form.controls.expiryDate.dirty || submitAttempt)"></ion-datetime>
         </ion-item>
 
         <ion-item>

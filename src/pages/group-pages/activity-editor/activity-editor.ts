@@ -37,9 +37,9 @@ export class ActivityEditorPage {
     public amazonService: AmazonService
   ) {
     this.form = formBuilder.group({
+      title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
       activityDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
       elapsedTime: ['', Validators.compose([Validators.pattern('[0-9]*'), Validators.required])],
-      title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
       description: ['', Validators.compose([Validators.maxLength(1024), Validators.required])],
       participants: [[], Validators.compose([Validators.minLength(1), Validators.required])],
       parentDecision: ['', Validators.required],

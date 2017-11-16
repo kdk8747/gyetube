@@ -3,12 +3,12 @@
   <ion-card>
     <ion-toolbar *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE">
       <ion-buttons>
-        {{'I18N_PENDING' | translate}} -
+        {{'I18N_PENDING_CREATE' | translate}} -
         <span *ngIf="needYou(proceeding)">
           <ion-icon name="alert" color="danger"></ion-icon>
           {{user?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}
         </span>
-        {{'I18N_VERIFIED' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
+        {{'I18N_SUBMIT' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
       </ion-buttons>
     </ion-toolbar>
     <ion-toolbar>
@@ -33,7 +33,7 @@
         </button>
       </ion-buttons>
       <ion-buttons left *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE">
-        {{ 'I18N_VERIFIED' | translate}}:
+        {{ 'I18N_REVIEWED_BY' | translate}}:
         <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let reviewer of reviewers">
           <span *ngIf="!((reviewer | async)?.imageUrl)">{{(reviewer | async)?.name}}</span>
           <ion-avatar *ngIf="(reviewer | async)?.imageUrl">
@@ -85,8 +85,18 @@
     </ion-card>
 
     <ion-buttons right *ngIf="needYou(proceeding)">
-      <!-- <button ion-button>{{ 'I18N_SAVE' | translate }}</button> -->
-      <button ion-button (tap)="onVerified()">{{ 'I18N_VERIFIED' | translate }}</button>
+      <ion-list radio-group no-lines>
+        <ion-item>
+          <ion-label>{{ 'I18N_VERIFIED_GOOD' | translate }}</ion-label>
+          <ion-radio (ionSelect)="verifiedGood=true" checked="true"></ion-radio>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>{{ 'I18N_NEED_TO_REVISE' | translate }}</ion-label>
+          <ion-radio (ionSelect)="verifiedGood=false"></ion-radio>
+        </ion-item>
+      </ion-list>
+      <button ion-button (tap)="onSubmit()">{{ 'I18N_SUBMIT' | translate }}</button>
     </ion-buttons>
   </ion-card>
 </ion-content>

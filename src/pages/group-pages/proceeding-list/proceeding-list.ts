@@ -40,7 +40,7 @@ export class ProceedingListPage {
         console.log(error);
       });;
     this.proceedings = this.proceedingService.getProceedings(this.groupId)
-      .map((proceedings: Proceeding[]) => this.sortByDate(proceedings));
+      .map((proceedings: Proceeding[]) => this.sortByDate(this.filterDeletedProceedings(proceedings)));
   }
 
   ionViewDidEnter() {
@@ -63,8 +63,13 @@ export class ProceedingListPage {
     });
   }
 
+  filterDeletedProceedings(proceedings: Proceeding[]): Proceeding[] {
+    return proceedings.filter(proceeding => proceeding.nextId == 0);
+  }
+
   needYou(proceeding: Proceeding): boolean {
     return proceeding && this.user && proceeding.state == this.stateEnum.STATE_PENDING_CREATE
+      && proceeding.nextId == 0
       && proceeding.attendees.findIndex(attendee => attendee == this.user.id) != -1
       && proceeding.reviewers.findIndex(attendee => attendee == this.user.id) == -1;
   }

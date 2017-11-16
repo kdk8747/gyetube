@@ -1,6 +1,7 @@
+const decisionController = require('../decisions/decision.controller');
 var proceedings = [
   {
-    id: 1, prevId: 0,
+    id: 1, prevId: 0, nextId: 0,
     state: 0,
     createdDate: new Date("2017-10-06T11:30:00+09:00"),
     meetingDate: new Date("2016-03-07T19:30:00+09:00"),
@@ -72,17 +73,22 @@ exports.updateByID = (req, res) => {
   }
   else if (req.params.group === 'suwongreenparty') {
     if (req.params.group in req.decoded.permissions.groups) {
-      let i = proceedings.findIndex(item => item.id === +req.params.id);
-      if (i != -1){
-        if (proceedings[i].attendees.find(item => item === req.decoded.id)
-          && !proceedings[i].reviewers.find(item => item === req.decoded.id)) {
-          proceedings[i].reviewers.push(req.decoded.id);
+      let found = proceedings.find(item => item.id === +req.params.id);
+      if (found && found.nextId == 0){
+        if (found.attendees.find(item => item === req.decoded.id)
+          && !found.reviewers.find(item => item === req.decoded.id)) {
+          found.reviewers.push(req.decoded.id);
         }
 
-        if (proceedings[i].attendees.length == proceedings[i].reviewers.length)
-          proceedings[i].state = 0; // NEW_ONE
+        if (found.attendees.length == found.reviewers.length){
+          found.state = 0; // NEW_ONE
+          for (let j = 0; j < found.childDecisions.length; j ++) {
+            req.body = found.childDecisions[j];
+            decisionController.overThePendingState(req);
+          }
+        }
       }
-      res.json(proceedings[i]);
+      res.json(found);
     }
     else
       res.status(401).json({
@@ -108,10 +114,29 @@ exports.create = (req, res) => {
     if (req.params.group in req.decoded.permissions.groups) {
       let newProceeding = req.body;
       newProceeding.id = proceedingID++;
-      if(+newProceeding.prevId > 0)
-        proceedings.find(item => item.id === +newProceeding.prevId).nextId = newProceeding.id;
+      if(+newProceeding.prevId > 0) {
+        let prev = proceedings.find(item => item.id === +newProceeding.prevId);
+        if (prev.nextId == 0) {
+          prev.nextId = newProceeding.id;
+        }
+        else {
+          res.status(405).json({
+            success: false,
+            message: 'The target proceeding is already revised'
+          });
+          return;
+        }
+      }
 
-      newProceeding.childDecisions = []; // TODO
+      if (newProceeding.childDecisions) {
+        let childIdList = [];
+        for (let i = 0; i < newProceeding.childDecisions.length; i ++) {
+          req.body = newProceeding.childDecisions[i];
+          let id = decisionController.create(req, newProceeding.id);
+          if (id) childIdList.push(id);
+        }
+        newProceeding.childDecisions = childIdList;
+      }
 
       proceedings.push(newProceeding);
       res.json(newProceeding);

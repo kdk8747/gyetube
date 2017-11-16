@@ -65,11 +65,11 @@ export class ProceedingService {
       .publishLast().refCount();
   }
 
-  create(group_id: string, proceeding: ProceedingCreation): Observable<ProceedingCreation> {
+  create(group_id: string, proceeding: ProceedingCreation): Observable<Proceeding> {
     const url = `${this.proceedingsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(proceeding), { headers: this.headers })
-      .map(response => response.json() as ProceedingCreation)
+      .map(response => response.json() as Proceeding)
       .take(1);
   }
 }

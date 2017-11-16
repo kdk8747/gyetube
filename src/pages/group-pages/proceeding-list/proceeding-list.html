@@ -3,19 +3,21 @@
   <ion-card *ngFor="let proceeding of proceedings | async" (tap)="navigateToDetail(proceeding.id)">
     <ion-toolbar *ngIf="proceeding.state == stateEnum.STATE_PENDING_CREATE">
       <ion-buttons>
-        {{'I18N_PENDING' | translate}} -
+        {{'I18N_PENDING_CREATE' | translate}} -
         <span *ngIf="needYou(proceeding)">
           <ion-icon name="alert" color="danger"></ion-icon>
           {{user?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}
         </span>
-        {{'I18N_VERIFIED' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
+        {{'I18N_SUBMIT' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
       </ion-buttons>
     </ion-toolbar>
     <ion-card-content>
       <ion-row>
+        <p>{{proceeding.title}}</p>
+      </ion-row>
+      <ion-row>
         <ion-col>
           <p>{{proceeding.meetingDate | localizedDate}}</p>
-          <p>{{proceeding.title}}</p>
         </ion-col>
         <ion-col>
           <p text-right> {{ proceeding.attendees.length }} {{ 'I18N_ATTENDEES' | translate}} </p>

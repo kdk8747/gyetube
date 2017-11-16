@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, UserService, GroupService, ProceedingService, DecisionService, SharedDataService } from '../../../providers';
-import { User, Group, ProceedingCreation } from '../../../models';
+import { User, Group, ProceedingCreation, Proceeding } from '../../../models';
 import { State } from '../../../app/constants';
 
 @IonicPage({
@@ -16,6 +16,7 @@ export class ProceedingEditorPage {
   stateEnum = State;
 
   groupId: string;
+  id: number;
   users: User[] = [];
 
   form: FormGroup;
@@ -35,14 +36,15 @@ export class ProceedingEditorPage {
     public sharedDataService: SharedDataService
   ) {
     this.form = formBuilder.group({
-      meetingDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
       title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
+      meetingDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
       description: ['', Validators.compose([Validators.maxLength(1024), Validators.required])],
       attendees: [[], Validators.compose([Validators.minLength(2), Validators.required])]
     });
   }
 
   ionViewDidLoad() {
+    this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
 
     this.groupService.getGroup(this.groupId)
@@ -53,6 +55,20 @@ export class ProceedingEditorPage {
             (err) => console.log('error: ' + err));
         });
       });
+
+    if (this.id) {
+      this.proceedingService.getProceeding(this.groupId, this.id)
+        .subscribe((proceeding: Proceeding) => {
+          this.form.controls['meetingDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(proceeding.meetingDate)));
+          this.form.controls['title'].setValue(proceeding.title);
+          this.form.controls['description'].setValue(proceeding.description);
+          this.form.controls['attendees'].setValue(proceeding.attendees);
+          this.sharedDataService.decisionChangesets = [];
+          proceeding.childDecisions.map(id =>
+            this.decisionService.getDecision(this.groupId, id)
+              .subscribe(decision => this.sharedDataService.decisionChangesets.push(decision)));
+        });
+    }
   }
 
   ionViewDidEnter() {
@@ -74,9 +90,15 @@ export class ProceedingEditorPage {
   }
 
   onAddDecisions(): void {
+    this.sharedDataService.decisionListTimelineMode = true;
     this.sharedDataService.decisionEditMode = true;
     this.navCtrl.parent.select(2);
     this.navCtrl.parent._tabs[2].setRoot('DecisionListPage');
+  }
+
+  onClose(decisionId: number): void {
+    this.sharedDataService.decisionChangesets =
+      this.sharedDataService.decisionChangesets.filter(item => item.id != decisionId);
   }
 
   onSave(): void {
@@ -87,6 +109,7 @@ export class ProceedingEditorPage {
     this.form.value.description = this.form.value.description.trim();
 
     let childDecisions = this.sharedDataService.decisionChangesets.map(decision => {
+      decision.meetingDate = this.form.value.meetingDate;
       decision.childActivities = [];
       decision.childReceipts = [];
       return decision;
@@ -98,8 +121,13 @@ export class ProceedingEditorPage {
       [],
       this.form.value.title, this.form.value.description, childDecisions);
 
+    if (this.id) {
+      newProceeding.prevId = this.id;
+    }
     this.proceedingService.create(this.groupId, newProceeding)
-      .subscribe(() => {
+      .subscribe((proceeding: Proceeding) => {
+        for (let i = 0; i < proceeding.childDecisions.length; i++)
+          this.decisionService.cacheDecision(this.groupId, proceeding.childDecisions[i]);
         this.sharedDataService.decisionEditMode = false;
         this.sharedDataService.decisionChangesets = [];
         this.event.publish('DecisionList_Refresh');

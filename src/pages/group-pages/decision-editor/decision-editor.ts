@@ -17,7 +17,6 @@ export class DecisionEditorPage {
 
   groupId: string;
   id: number;
-  responseTimeMs: number = 500;
   users: Observable<User>[];
 
   form: FormGroup;
@@ -36,8 +35,8 @@ export class DecisionEditorPage {
     public sharedDataService: SharedDataService
   ) {
     this.form = formBuilder.group({
-      expiryDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
       title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
+      expiryDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
       description: ['', Validators.compose([Validators.maxLength(1024), Validators.required])],
       accepters: [[]],
       rejecters: [[]],
@@ -48,7 +47,6 @@ export class DecisionEditorPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
-    this.responseTimeMs = this.userService.getResponseTimeMs();
 
     this.groupService.getGroup(this.groupId)
       .subscribe((group: Group) => {
@@ -124,9 +122,10 @@ export class DecisionEditorPage {
       this.form.value.title, this.form.value.description, 0, [], [], 0, 0);
 
     if (this.id) {
+      newDecision.id = this.id;
       newDecision.prevId = this.id;
       newDecision.state = State.STATE_PENDING_UPDATE;
-      let found = this.sharedDataService.decisionChangesets.findIndex(item => item.prevId == this.id);
+      let found = this.sharedDataService.decisionChangesets.findIndex(item => item.id == this.id);
       if (found != -1)
         this.sharedDataService.decisionChangesets[found] = newDecision;
       else

@@ -1,30 +1,31 @@
 {
   "I18N_GRASSCUBE": "GrassCube",
   "I18N_OUR_LIVELIHOOD_PROCEEDINGS": "우리 살림 회의록",
-  "I18N_GROUPS": "그룹",
-  "I18N_UNCHECKED": "미확인",
-  "I18N_NOTIFICATIONS": "새소식",
+
 
   "I18N_HOME": "홈",
   "I18N_PROCEEDING": "회의록",
-  "I18N_RELATED_PROCEEDING": "관련 회의록",
   "I18N_DECISION": "결정사항",
-  "I18N_RELATED_DECISION": "관련 결정사항",
   "I18N_ACTIVITY": "활동",
-  "I18N_RELATED_ACTIVITY": "관련 활동",
   "I18N_RECEIPT": "영수증",
 
+
+  "I18N_GROUPS": "그룹",
+  "I18N_UNCHECKED": "미확인",
+  "I18N_NOTIFICATIONS": "새소식",
   "I18N_ACCOUNT": "계정",
   "I18N_SIGN_IN": "로그인",
   "I18N_SIGN_OUT": "로그아웃",
   "I18N_SETTINGS": "설정",
   "I18N_TERMS_AND_PRIVACY_POLICY": "서비스 약관 및 개인정보처리방침",
 
+
   "I18N_SIGN_IN_BY_NAVER": "네이버로 로그인",
   "I18N_SIGN_IN_BY_KAKAO": "카카오로 로그인",
   "I18N_SIGN_IN_BY_FACEBOOK": "페이스북으로 로그인",
   "I18N_SIGN_IN_TOAST": "로그인 성공",
   "I18N_SIGN_OUT_TOAST": "현재 로그아웃 상태로 GrassCube를 사용 중입니다.",
+
 
   "I18N_PHOTOS": "사진",
   "I18N_OR": "또는",
@@ -33,21 +34,29 @@
   "I18N_DESCRIPTION": "설명",
   "I18N_SELECT_ALL": "모두 고르세요.",
   "I18N_SELECT_ONE": "고르세요.",
+  "I18N_RELATED_PROCEEDING": "관련 회의록",
+  "I18N_RELATED_DECISION": "관련 결정사항",
+  "I18N_RELATED_ACTIVITY": "관련 활동",
   "I18N_EDITOR": "편집",
   "I18N_UPLOAD": "업로드",
   "I18N_SAVE": "저장",
 
-  "I18N_PENDING": "미결",
-  "I18N_DELETED": "삭제됨",
-  "I18N_UPDATED": "수정됨",
-  "I18N_NEED_YOUR_REVIEW": "당신의 검토가 필요합니다.",
-  "I18N_VERIFIED": "확인함",
 
   "I18N_MEETING_DATE": "회의 시각",
   "I18N_ATTENDEES": "참석자",
   "I18N_DECISIONS": "결정사항",
+  "I18N_NEED_YOUR_REVIEW": "당신의 검토가 필요합니다.",
+  "I18N_REVIEWED_BY": "검토자",
+  "I18N_VERIFIED_GOOD": "확인 완료 - 양호함",
+  "I18N_NEED_TO_REVISE": "수정 필요",
+  "I18N_SUBMIT": "제출",
+
   "I18N_ADD": "추가",
   "I18N_CANCEL": "취소",
+  "I18N_CREATE": "새 글",
+  "I18N_UPDATE": "수정",
+  "I18N_DELETE": "삭제",
+
 
   "I18N_CREATED_DATE": "생성일",
   "I18N_EXPIRY_DATE": "만료일",
@@ -55,12 +64,20 @@
   "I18N_REJECTERS": "반대",
   "I18N_ABSTAINERS": "기권",
   "I18N_TOTAL_ELAPSED_TIME": "총 소요 시간",
+  "I18N_CREATED": "새 글",
+  "I18N_UPDATED": "수정됨",
+  "I18N_DELETED": "삭제됨",
+  "I18N_PENDING_CREATE": "계류중인 새 글",
+  "I18N_PENDING_UPDATE": "계류중인 수정",
+  "I18N_PENDING_DELETE": "계류중인 삭제",
+
 
   "I18N_ACTIVITY_DATE": "활동 시각",
   "I18N_ELAPSED_TIME": "소요 시간",
   "I18N_HOURS": "시간",
   "I18N_PARTICIPANTS": "참가자",
   "I18N_TOTAL_DIFFERENCE": "총 차액",
+
 
   "I18N_PAYMENT_DATE": "지불일",
   "I18N_DIFFERENCE": "차액",

@@ -1,25 +1,36 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
   <ion-card *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
-    <ion-toolbar *ngIf="sharedDataService.decisionListTimelineMode" [ngSwitch]="decision.state">
-      <ion-buttons *ngSwitchCase="stateEnum.STATE_NEW_ONE">
-        New - {{decision.title}}
-      </ion-buttons>
-      <ion-buttons *ngSwitchCase="stateEnum.STATE_UPDATED">
-        Update - {{decision.title}}
-      </ion-buttons>
-      <ion-buttons *ngSwitchCase="stateEnum.STATE_DELETED">
-        Delete - {{decision.title}}
-      </ion-buttons>
-      <ion-buttons *ngSwitchDefault>
-        Pending - {{decision.title}}
-      </ion-buttons>
-    </ion-toolbar>
     <ion-card-content>
+      <ion-row>
+        <span *ngIf="sharedDataService.decisionListTimelineMode" [ngSwitch]="decision.state">
+          <p *ngSwitchCase="stateEnum.STATE_CREATED">
+            {{ 'I18N_CREATED' | translate}} - {{decision.title}}
+          </p>
+          <p *ngSwitchCase="stateEnum.STATE_UPDATED">
+            {{ 'I18N_UPDATED' | translate}} - {{decision.title}}
+          </p>
+          <p *ngSwitchCase="stateEnum.STATE_DELETED">
+            {{ 'I18N_DELETED' | translate}} - {{decision.title}}
+          </p>
+          <p *ngSwitchCase="stateEnum.STATE_PENDING_CREATE">
+            {{ 'I18N_PENDING_CREATE' | translate}} - {{decision.title}}
+          </p>
+          <p *ngSwitchCase="stateEnum.STATE_PENDING_UPDATE">
+            {{ 'I18N_PENDING_UPDATE' | translate}} - {{decision.title}}
+          </p>
+          <p *ngSwitchCase="stateEnum.STATE_PENDING_DELETE">
+            {{ 'I18N_PENDING_DELETE' | translate}} - {{decision.title}}
+          </p>
+          <p *ngSwitchDefault>
+            Unknown - {{decision.title}}
+          </p>
+        </span>
+        <p *ngIf="!sharedDataService.decisionListTimelineMode">{{decision.title}}</p>
+      </ion-row>
       <ion-row>
         <ion-col>
           <p>{{decision.meetingDate | localizedDate}}</p>
-          <p>{{decision.title}}</p>
         </ion-col>
         <ion-col>
           <p text-right *ngIf="decision.accepters.length"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>

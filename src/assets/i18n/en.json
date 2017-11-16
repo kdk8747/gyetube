@@ -1,30 +1,31 @@
 {
   "I18N_GRASSCUBE": "GrassCube",
   "I18N_OUR_LIVELIHOOD_PROCEEDINGS": "Our Livelihood Prodeedings",
-  "I18N_GROUPS": "Groups",
-  "I18N_UNCHECKED": "Unchecked",
-  "I18N_NOTIFICATIONS": "Notifications",
+
 
   "I18N_HOME": "Home",
   "I18N_PROCEEDING": "Proceeding",
-  "I18N_RELATED_PROCEEDING": "Related Proceeding",
   "I18N_DECISION": "Decision",
-  "I18N_RELATED_DECISION": "Related Decision",
   "I18N_ACTIVITY": "Activity",
-  "I18N_RELATED_ACTIVITY": "Related Activity",
   "I18N_RECEIPT": "Receipt",
 
+
+  "I18N_GROUPS": "Groups",
+  "I18N_UNCHECKED": "Unchecked",
+  "I18N_NOTIFICATIONS": "Notifications",
   "I18N_ACCOUNT": "Account",
   "I18N_SIGN_IN": "SIGN IN",
   "I18N_SIGN_OUT": "SIGN OUT",
   "I18N_SETTINGS": "Settings",
   "I18N_TERMS_AND_PRIVACY_POLICY": "Terms & privacy policy",
 
+
   "I18N_SIGN_IN_BY_NAVER": "Sign in by Naver",
   "I18N_SIGN_IN_BY_KAKAO": "Sign in by Kakao",
   "I18N_SIGN_IN_BY_FACEBOOK": "Sign in by Facebook",
   "I18N_SIGN_IN_TOAST": "Successfully signed in",
   "I18N_SIGN_OUT_TOAST": "You're now using GrassCube signed out",
+
 
   "I18N_PHOTOS": "Photos",
   "I18N_OR": "or",
@@ -33,21 +34,29 @@
   "I18N_DESCRIPTION": "Description",
   "I18N_SELECT_ALL": "Select All.",
   "I18N_SELECT_ONE": "Select One.",
+  "I18N_RELATED_PROCEEDING": "Related Proceeding",
+  "I18N_RELATED_DECISION": "Related Decision",
+  "I18N_RELATED_ACTIVITY": "Related Activity",
   "I18N_EDITOR": "Editor",
   "I18N_UPLOAD": "Upload",
   "I18N_SAVE": "Save",
 
-  "I18N_PENDING": "Pending",
-  "I18N_DELETED": "Deleted",
-  "I18N_UPDATED": "Updated",
-  "I18N_NEED_YOUR_REVIEW": "Need Your Review",
-  "I18N_VERIFIED": "Verified",
 
   "I18N_MEETING_DATE": "Meeting Date",
   "I18N_ATTENDEES": "Attendee(s)",
   "I18N_DECISIONS": "Decision(s)",
+  "I18N_NEED_YOUR_REVIEW": "Need Your Review",
+  "I18N_REVIEWED_BY": "Reviewed by",
+  "I18N_VERIFIED_GOOD": "Verified - Good",
+  "I18N_NEED_TO_REVISE": "Need to Revise",
+  "I18N_SUBMIT": "Submit",
+
   "I18N_ADD": "Add",
   "I18N_CANCEL": "Cancel",
+  "I18N_CREATE": "Create",
+  "I18N_UPDATE": "Update",
+  "I18N_DELETE": "Delete",
+
 
   "I18N_CREATED_DATE": "Created Date",
   "I18N_EXPIRY_DATE": "Expiry Date",
@@ -55,12 +64,20 @@
   "I18N_REJECTERS": "Rejecter(s)",
   "I18N_ABSTAINERS": "Abstainer(s)",
   "I18N_TOTAL_ELAPSED_TIME": "Total Elapsed Time",
+  "I18N_CREATED": "Created",
+  "I18N_UPDATED": "Updated",
+  "I18N_DELETED": "Deleted",
+  "I18N_PENDING_CREATE": "Pending Create",
+  "I18N_PENDING_UPDATE": "Pending Update",
+  "I18N_PENDING_DELETE": "Pending Delete",
+
 
   "I18N_ACTIVITY_DATE": "Activity Date",
   "I18N_ELAPSED_TIME": "Elapsed Time",
   "I18N_HOURS": "hour(s)",
   "I18N_PARTICIPANTS": "Participant(s)",
   "I18N_TOTAL_DIFFERENCE": "Total Difference",
+
 
   "I18N_PAYMENT_DATE": "Payment Date",
   "I18N_DIFFERENCE": "Difference",

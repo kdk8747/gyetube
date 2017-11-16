@@ -69,19 +69,23 @@ export class DecisionListPage {
 
   filterPastDecisions(decisions: Decision[]): Decision[] {
     return decisions.filter(decision =>
-      (decision.state == State.STATE_NEW_ONE || decision.state == State.STATE_UPDATED)
-      && new Date(decision.expiryDate).getTime() < new Date(Date.now()).getTime()
+      (decision.state == State.STATE_CREATED || decision.state == State.STATE_UPDATED)
+      && new Date(decision.expiryDate).getTime() > new Date(Date.now()).getTime()
       && decision.nextId == 0
     );
   }
 
+  filterDeletedDecisions(decisions: Decision[]): Decision[] {
+    return decisions.filter(decision => decision.state != State.STATE_DELETED);
+  }
+
   onDelete(decision: Decision): void {
-    let found = this.sharedDataService.decisionChangesets.findIndex(item => item.prevId == decision.id);
+    let found = this.sharedDataService.decisionChangesets.findIndex(item => item.id == decision.id);
     let newDecision = JSON.parse(JSON.stringify(decision)) as Decision;
 
     newDecision.prevId = decision.id;
-    newDecision.id = 0;
     newDecision.state = State.STATE_PENDING_DELETE;
+    newDecision.description = '';
     if (found != -1)
       this.sharedDataService.decisionChangesets[found] = newDecision;
     else
@@ -90,13 +94,15 @@ export class DecisionListPage {
     this.sharedDataService.decisionEditMode = false;
   }
 
-  refreshDecisions () {
+  refreshDecisions() {
     this.decisions = this.decisionService.getDecisions(this.groupId)
       .map((decisions: Decision[]) =>
-      this.sharedDataService.decisionListTimelineMode ? this.sortByDate(decisions) : this.sortByDate(this.filterPastDecisions(decisions)));
+        this.sharedDataService.decisionListTimelineMode ?
+          this.sortByDate(this.filterDeletedDecisions(decisions)) :
+          this.sortByDate(this.filterPastDecisions(decisions)));
   }
 
-  onFAB (fab: FabContainer) {
+  onFAB(fab: FabContainer) {
     fab.close();
     this.refreshDecisions();
   }

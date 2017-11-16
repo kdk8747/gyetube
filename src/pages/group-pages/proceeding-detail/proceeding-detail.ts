@@ -16,6 +16,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ProceedingDetailPage {
   stateEnum = State;
+  verifiedGood: boolean = true;
 
   groupId: string;
   id: number;
@@ -77,17 +78,21 @@ export class ProceedingDetailPage {
 
   needYou(proceeding: Proceeding): boolean {
     return proceeding && this.user && proceeding.state == this.stateEnum.STATE_PENDING_CREATE
+      && proceeding.nextId == 0
       && proceeding.attendees.findIndex(attendee => attendee == this.user.id) != -1
       && proceeding.reviewers.findIndex(attendee => attendee == this.user.id) == -1;
   }
 
-  onVerified() {
-    this.proceedingService.update(this.groupId, this.proceeding.id)
-      .subscribe(proceeding => {
-        this.proceeding = proceeding;
-        this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
-        if (proceeding.attendees.length == proceeding.reviewers.length)
-          this.navCtrl.setRoot('ProceedingListPage');
-      });
+  onSubmit() {
+    if (this.verifiedGood) {
+      this.proceedingService.update(this.groupId, this.proceeding.id)
+        .subscribe((proceeding: Proceeding) => {
+          this.proceeding = proceeding;
+          this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
+        });
+    }
+    else {
+      this.navCtrl.push('ProceedingEditorPage', { id: this.id });
+    }
   }
 }

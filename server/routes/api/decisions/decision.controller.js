@@ -1,7 +1,7 @@
 
 var decisions = [
   {
-    id: 1, prevId: 0,
+    id: 1, prevId: 0, nextId: 0,
     state: 0,
     title: '(기록 유실됨)',
     meetingDate: new Date("2017-10-06T19:30:00+09:00"),
@@ -15,7 +15,7 @@ var decisions = [
     totalDifference: 0
   },
   {
-    id: 2, prevId: 0,
+    id: 2, prevId: 0, nextId: 0,
     state: 0,
     title: '새 운영위원 선출',
     meetingDate: new Date("2016-03-07T19:30:00+09:00"),
@@ -31,7 +31,7 @@ var decisions = [
     totalDifference: 0
   },
   {
-    id: 3, prevId: 0,
+    id: 3, prevId: 0, nextId: 0,
     state: 0,
     title: '전년도 활동지원이월금 2016 총선기금 전용',
     meetingDate: new Date("2016-03-07T19:30:00+09:00"),
@@ -47,7 +47,7 @@ var decisions = [
     totalDifference: -1229000
   },
   {
-    id: 4, prevId: 0,
+    id: 4, prevId: 0, nextId: 0,
     state: 0,
     title: '3월 정당연설회 & 현수막 게시',
     meetingDate: new Date("2016-03-07T19:30:00+09:00"),
@@ -146,4 +146,47 @@ exports.updateByID = (req, res) => {
       success: false,
       message: 'groupId: not found'
     });
+}
+
+exports.create = (req, parentId) => {
+  if (req.params.group === 'examplelocalparty') {
+  }
+  else if (req.params.group === 'suwongreenparty') {
+    if (req.params.group in req.decoded.permissions.groups) {
+      let newDecision = req.body;
+      let found = decisions.find(item => item.id == +newDecision.id
+        && item.prevId == +newDecision.prevId
+        && item.nextId == +newDecision.nextId
+        && item.state == +newDecision.state
+        && item.title == newDecision.title
+        && item.description == newDecision.description
+      );
+      if (found && newDecision.state > 2) {
+        found.parentProceeding = parentId;
+      }
+      else {
+        newDecision.id = decisionID++;
+        newDecision.parentProceeding = parentId;
+        decisions.push(newDecision);
+      }
+      return newDecision.id;
+    }
+  }
+  return 0;
+}
+
+exports.overThePendingState = (req) => {
+  if (req.params.group === 'examplelocalparty') {
+  }
+  else if (req.params.group === 'suwongreenparty') {
+    if (req.params.group in req.decoded.permissions.groups) {
+      let id = req.body;
+      let found = decisions.find(item => item.id === +id);
+      if (found && found.state > 2){
+        found.state -= 3;
+        if (+found.prevId > 0)
+          decisions.find(item => item.id === +found.prevId).nextId = found.id;
+      }
+    }
+  }
 }

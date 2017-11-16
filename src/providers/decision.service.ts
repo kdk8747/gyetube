@@ -39,8 +39,7 @@ export class DecisionService {
       .map(response => {
         let decisions = response.json() as Decision[];
         decisions.map(decision => {
-          if (!this.decisions[group_id + decision.id])
-            this.decisions[group_id + decision.id] = new Observable<Decision>(obs => obs.next(decision))
+          this.decisions[group_id + decision.id] = new Observable<Decision>(obs => obs.next(decision))
         });
       }).publishLast().connect(); // connect(): immediately fetch
   }
@@ -53,6 +52,15 @@ export class DecisionService {
         .map(response => response.json() as Decision)
         .publishLast().refCount();
     return this.decisions[group_id + id];
+  }
+
+  cacheDecision(group_id: string, id: number): void {
+    const url = `${this.decisionsUrl}/${group_id}/${id}`;
+    this.http.get(url)
+      .map(response => {
+        let decision = response.json() as Decision;
+        this.decisions[group_id + decision.id] = new Observable<Decision>(obs => obs.next(decision))
+      }).publishLast().connect(); // connect(): immediately fetch
   }
 
   update(group_id: string, decision: Decision): Observable<Decision> {

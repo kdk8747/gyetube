@@ -22,16 +22,16 @@
           <ion-label>{{ 'I18N_PHOTOS' | translate }}</ion-label>
         </ion-item>
         <ion-item>
+          <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
+          <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
+        </ion-item>
+        <ion-item>
           <ion-label>{{ 'I18N_ACTIVITY_DATE' | translate }}</ion-label>
           <ion-datetime formControlName="activityDate" displayFormat="YYYY MM DD, HH:mm" [class.invalid]="!form.controls.activityDate.valid && (form.controls.activityDate.dirty || submitAttempt)"></ion-datetime>
         </ion-item>
         <ion-item>
           <ion-label>{{ 'I18N_ELAPSED_TIME' | translate }}</ion-label>
           <ion-input formControlName="elapsedTime" type="number" text-right [class.invalid]="!form.controls.elapsedTime.valid && (form.controls.elapsedTime.dirty || submitAttempt)"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
-          <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
         </ion-item>
 
         <ion-item>
