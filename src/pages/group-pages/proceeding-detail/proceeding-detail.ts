@@ -17,6 +17,7 @@ import { Observable } from 'rxjs/Observable';
 export class ProceedingDetailPage {
   stateEnum = State;
   verifiedGood: boolean = true;
+  needRefreshList: boolean = false;
 
   groupId: string;
   id: number;
@@ -60,7 +61,7 @@ export class ProceedingDetailPage {
   }
 
   popNavigation() {
-    if (this.navCtrl.length() == 1)
+    if (this.navCtrl.length() == 1 || this.needRefreshList)
       this.navCtrl.setRoot('ProceedingListPage');
     else
       this.navCtrl.pop();
@@ -89,6 +90,7 @@ export class ProceedingDetailPage {
         .subscribe((proceeding: Proceeding) => {
           this.proceeding = proceeding;
           this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
+          this.needRefreshList = true;
         });
     }
     else {
