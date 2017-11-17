@@ -1,49 +1,49 @@
 <ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-      <ion-row justify-content-start>
-        <ion-col col-auto>
-          <button ion-button clear icon-only (tap)="navigateToUserDetail()">
-            <span *ngIf="!((creator | async)?.imageUrl)">{{(creator | async)?.name}}</span>
-            <ion-avatar *ngIf="(creator | async)?.imageUrl">
-              <img *ngIf="!((creator | async)?.imageBase64)" [src]="(creator | async)?.imageUrl">
-              <img *ngIf="((creator | async)?.imageBase64)" [src]="(creator | async)?.imageBase64">
-            </ion-avatar>
-          </button>
-        </ion-col>
-        <ion-col>
-          <p>{{(creator | async)?.name}}</p>
-          <p>{{(receipt | async)?.modifiedDate | localizedDate:'short'}}</p>
-        </ion-col>
-      </ion-row>
+  <ion-row justify-content-start>
+    <ion-col col-auto>
+      <button ion-button clear icon-only (tap)="navigateToUserDetail()">
+        <span *ngIf="!((creator | async)?.imageUrl)">{{(creator | async)?.name}}</span>
+        <ion-avatar *ngIf="(creator | async)?.imageUrl">
+          <img *ngIf="!((creator | async)?.imageBase64)" [src]="(creator | async)?.imageUrl">
+          <img *ngIf="((creator | async)?.imageBase64)" [src]="(creator | async)?.imageBase64">
+        </ion-avatar>
+      </button>
+    </ion-col>
+    <ion-col>
+      <p>{{(creator | async)?.name}}</p>
+      <p>{{(receipt | async)?.modifiedDate | localizedDate:'short'}}</p>
+    </ion-col>
+  </ion-row>
 
-      <img *ngIf="imageUrl.includes('http')" [src]="imageUrl" style="width: auto; height: auto">
-      <p>{{ 'I18N_PAYMENT_DATE' | translate}} {{(receipt | async)?.paymentDate | localizedDate:'short'}}</p>
-      <p>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
+  <img *ngIf="imageUrl.includes('http')" [src]="imageUrl" style="width: auto; height: auto">
+  <p>{{ 'I18N_PAYMENT_DATE' | translate}} {{(receipt | async)?.paymentDate | localizedDate:'short'}}</p>
+  <p>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
 
-    <ion-card *ngIf="activity && (activity | async)">
-      <ion-toolbar>
-        <ion-buttons>
-          <p>{{ 'I18N_ACTIVITY' | translate }} - {{ (activity | async)?.title }}</p>
-        </ion-buttons>
-        <ion-buttons left>
-          <button ion-button icon-only (tap)="navigateToActivityDetail(activity)">
-              <ion-icon name="arrow-back"></ion-icon>
-            </button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card>
+  <ion-card *ngIf="activity && (activity | async)">
+    <ion-toolbar>
+      <ion-buttons>
+        <p>{{ 'I18N_ACTIVITY' | translate }} - {{ (activity | async)?.title }}</p>
+      </ion-buttons>
+      <ion-buttons left>
+        <button ion-button icon-only (tap)="navigateToActivityDetail(activity)">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-card>
 
-    <ion-card *ngIf="decision && (decision | async)">
-      <ion-toolbar>
-        <ion-buttons>
-          <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
-        </ion-buttons>
-        <ion-buttons left>
-          <button ion-button icon-only (tap)="navigateToDecisionDetail(decision)">
-              <ion-icon name="arrow-back"></ion-icon>
-            </button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card>
+  <ion-card *ngIf="decision && (decision | async)">
+    <ion-toolbar>
+      <ion-buttons>
+        <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
+      </ion-buttons>
+      <ion-buttons left>
+        <button ion-button icon-only (tap)="navigateToDecisionDetail(decision)">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-card>
 </ion-content>

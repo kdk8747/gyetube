@@ -1,69 +1,70 @@
 <ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-      <ion-row justify-content-start>
-        <ion-col col-auto>
-          <button ion-button clear icon-only (tap)="navigateToUserDetail()">
-            <span *ngIf="!((creator | async)?.imageUrl)">{{(creator | async)?.name}}</span>
-            <ion-avatar *ngIf="(creator | async)?.imageUrl">
-              <img *ngIf="!((creator | async)?.imageBase64)" [src]="(creator | async)?.imageUrl">
-              <img *ngIf="((creator | async)?.imageBase64)" [src]="(creator | async)?.imageBase64">
-            </ion-avatar>
-          </button>
-        </ion-col>
-        <ion-col>
-          <p>{{(creator | async)?.name}}</p>
-          <p>{{(activity | async)?.modifiedDate | localizedDate:'short'}}</p>
-        </ion-col>
-      </ion-row>
+  <ion-row justify-content-start>
+    <ion-col col-auto>
+      <button ion-button clear icon-only (tap)="navigateToUserDetail()">
+        <span *ngIf="!((creator | async)?.imageUrl)">{{(creator | async)?.name}}</span>
+        <ion-avatar *ngIf="(creator | async)?.imageUrl">
+          <img *ngIf="!((creator | async)?.imageBase64)" [src]="(creator | async)?.imageUrl">
+          <img *ngIf="((creator | async)?.imageBase64)" [src]="(creator | async)?.imageBase64">
+        </ion-avatar>
+      </button>
+    </ion-col>
+    <ion-col>
+      <p>{{(creator | async)?.name}}</p>
+      <p>{{(activity | async)?.modifiedDate | localizedDate:'short'}}</p>
+    </ion-col>
+  </ion-row>
 
-      <p>{{(activity | async)?.description}}</p>
-      <div style="height:10px"></div>
-      <img *ngIf="(activity | async)?.imageUrls.length > 0" [src]="(activity | async)?.imageUrls[0]" style="width: auto; height: auto">
-      <div style="height:10px"></div>
-      <p>{{ 'I18N_ACTIVITY_DATE' | translate}}: {{(activity | async)?.activityDate | localizedDate:'short'}}</p>
-      <ion-buttons left *ngIf="participants.length > 0">
-        {{ 'I18N_PARTICIPANTS' | translate}}:
-        <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let participant of participants">
-          <span *ngIf="!((participant | async)?.imageUrl)">{{(participant | async)?.name}}</span>
-          <ion-avatar *ngIf="(participant | async)?.imageUrl">
-            <img *ngIf="!((participant | async)?.imageBase64)" [src]="(participant | async)?.imageUrl">
-            <img *ngIf="((participant | async)?.imageBase64)" [src]="(participant | async)?.imageBase64">
-          </ion-avatar>
+  <p>{{(activity | async)?.description}}</p>
+  <div style="height:10px"></div>
+  <img *ngIf="(activity | async)?.imageUrls.length > 0" [src]="(activity | async)?.imageUrls[0]" style="width: auto; height: auto">
+  <div style="height:10px"></div>
+  <p>{{ 'I18N_ACTIVITY_DATE' | translate}}: {{(activity | async)?.activityDate | localizedDate:'short'}}</p>
+  <ion-buttons left *ngIf="participants.length > 0">
+    {{ 'I18N_PARTICIPANTS' | translate}}:
+    <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let participant of participants">
+      <span *ngIf="!((participant | async)?.imageUrl)">{{(participant | async)?.name}}</span>
+      <ion-avatar *ngIf="(participant | async)?.imageUrl">
+        <img *ngIf="!((participant | async)?.imageBase64)" [src]="(participant | async)?.imageUrl">
+        <img *ngIf="((participant | async)?.imageBase64)" [src]="(participant | async)?.imageBase64">
+      </ion-avatar>
+    </button>
+  </ion-buttons>
+
+  <ion-card *ngIf="decision | async">
+    <ion-toolbar>
+      <ion-buttons>
+        <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
+      </ion-buttons>
+      <ion-buttons left>
+        <button ion-button icon-only (tap)="navigateToDecisionDetail(decision)">
+          <ion-icon name="arrow-back"></ion-icon>
         </button>
       </ion-buttons>
+    </ion-toolbar>
+  </ion-card>
 
-    <ion-card *ngIf="decision | async">
-      <ion-toolbar>
-        <ion-buttons>
-          <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
-        </ion-buttons>
-        <ion-buttons left>
-          <button ion-button icon-only (tap)="navigateToDecisionDetail(decision)">
-            <ion-icon name="arrow-back"></ion-icon>
-          </button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card>
+  <ion-card *ngFor="let receipt of receipts; let i=index">
+    <ion-toolbar>
+      <ion-buttons>
+        <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
+        <p text-right>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
+      </ion-buttons>
+      <ion-buttons right>
+        <button ion-button icon-only (tap)="navigateToReceiptDetail(receipt)">
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-card>
 
-    <ion-card *ngFor="let receipt of receipts; let i=index">
-      <ion-toolbar>
-        <ion-buttons>
-          <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
-          <p text-right>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
-        </ion-buttons>
-        <ion-buttons right>
-          <button ion-button icon-only (tap)="navigateToReceiptDetail(receipt)">
-            <ion-icon name="arrow-forward"></ion-icon>
-          </button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card>
-
-      <p text-right>
-        {{ (activity | async)?.elapsedTime }} {{ 'I18N_HOURS' | translate}} X {{ (activity | async)?.participants.length }} {{ 'I18N_PARTICIPANTS' | translate}} = {{ (activity | async)?.elapsedTime * (activity | async)?.participants.length }} {{ 'I18N_HOURS' | translate}}
-      </p>
-      <p text-right>
-        {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{(activity | async)?.totalDifference | number}}
-      </p>
+  <p text-right>
+    {{ (activity | async)?.elapsedTime }} {{ 'I18N_HOURS' | translate}} X {{ (activity | async)?.participants.length }} {{ 'I18N_PARTICIPANTS'
+    | translate}} = {{ (activity | async)?.elapsedTime * (activity | async)?.participants.length }} {{ 'I18N_HOURS' | translate}}
+  </p>
+  <p text-right>
+    {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{(activity | async)?.totalDifference | number}}
+  </p>
 </ion-content>
