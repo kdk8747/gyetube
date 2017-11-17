@@ -1,5 +1,5 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, Nav } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, ViewController, Nav } from 'ionic-angular';
 import { UserService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
 import { Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
@@ -68,11 +68,11 @@ export class TabsGroupPage {
       let childNav: Nav = this.navCtrl.getActiveChildNavs()[0]._tabs[1];
       if (childNav.length() == 0) {
         this.navCtrl.getActiveChildNavs()[0].select(1);
-        setTimeout(() => childNav.setRoot('ProceedingDetailPage', { id: obj.id }), this.responseTimeMs);
+        setTimeout(() => childNav.setRoot('ProceedingDetailPage', obj), this.responseTimeMs);
       }
       else {
+        this.setRootToChildNav(childNav, 'ProceedingDetailPage', obj);
         this.navCtrl.getActiveChildNavs()[0].select(1);
-        childNav.setRoot('ProceedingDetailPage', { id: obj.id });
       }
     });
 
@@ -80,10 +80,10 @@ export class TabsGroupPage {
       let childNav: Nav = this.navCtrl.getActiveChildNavs()[0]._tabs[2];
       if (childNav.length() == 0) {
         this.navCtrl.getActiveChildNavs()[0].select(2);
-        setTimeout(() => childNav.setRoot('DecisionDetailPage', { id: obj.id }), this.responseTimeMs);
+        setTimeout(() => childNav.setRoot('DecisionDetailPage', obj), this.responseTimeMs);
       }
       else {
-        childNav.setRoot('DecisionDetailPage', { id: obj.id });
+        this.setRootToChildNav(childNav, 'DecisionDetailPage', obj);
         this.navCtrl.getActiveChildNavs()[0].select(2);
       }
     });
@@ -92,10 +92,10 @@ export class TabsGroupPage {
       let childNav: Nav = this.navCtrl.getActiveChildNavs()[0]._tabs[3];
       if (childNav.length() == 0) {
         this.navCtrl.getActiveChildNavs()[0].select(3);
-        setTimeout(() => childNav.setRoot('ActivityDetailPage', { id: obj.id }), this.responseTimeMs);
+        setTimeout(() => childNav.setRoot('ActivityDetailPage', obj), this.responseTimeMs);
       }
       else {
-        childNav.setRoot('ActivityDetailPage', { id: obj.id });
+        this.setRootToChildNav(childNav, 'ActivityDetailPage', obj);
         this.navCtrl.getActiveChildNavs()[0].select(3);
       }
     });
@@ -104,10 +104,10 @@ export class TabsGroupPage {
       let childNav: Nav = this.navCtrl.getActiveChildNavs()[0]._tabs[4];
       if (childNav.length() == 0) {
         this.navCtrl.getActiveChildNavs()[0].select(4);
-        setTimeout(() => childNav.setRoot('ReceiptDetailPage', { id: obj.id }), this.responseTimeMs);
+        setTimeout(() => childNav.setRoot('ReceiptDetailPage', obj), this.responseTimeMs);
       }
       else {
-        childNav.setRoot('ReceiptDetailPage', { id: obj.id });
+        this.setRootToChildNav(childNav, 'ReceiptDetailPage', obj);
         this.navCtrl.getActiveChildNavs()[0].select(4);
       }
     });
@@ -120,5 +120,11 @@ export class TabsGroupPage {
     this.event.unsubscribe('TabsGroup_DecisionDetail');
     this.event.unsubscribe('TabsGroup_ActivityDetail');
     this.event.unsubscribe('TabsGroup_ReceiptDetail');
+  }
+
+  setRootToChildNav(childNav: Nav, page: string, obj: any) {
+    let top: ViewController = childNav.last();
+    if (top.id !== page || top.data.id !== obj.id)
+      childNav.setRoot(page, obj);
   }
 }
