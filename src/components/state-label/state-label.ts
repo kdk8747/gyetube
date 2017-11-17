@@ -3,7 +3,7 @@ import { State } from '../../app/constants';
 
 
 @Component({
-  selector: 'state-label',
+  selector: 'grasscube-state-label',
   templateUrl: 'state-label.html'
 })
 export class StateLabelComponent {

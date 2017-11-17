@@ -1,6 +1,6 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, ViewController } from 'ionic-angular';
-import { UserService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService } from '../../../providers';
+import { UserService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
 import { Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -34,7 +34,8 @@ export class TabsGroupPage {
     public proceedingService: ProceedingService,
     public decisionService: DecisionService,
     public activityService: ActivityService,
-    public receiptService: ReceiptService
+    public receiptService: ReceiptService,
+    public sharedDataService: SharedDataService
   ) {
   }
 
@@ -43,7 +44,7 @@ export class TabsGroupPage {
     this.group = this.groupService.getGroup(this.groupId);
 
     this.group.subscribe((group: Group) => {
-      this.event.publish('App_ShowGroupTitleHeader', { title: group.title });
+      this.sharedDataService.headerGroupTitle = group.title;
       group.members.map(id => this.userService.cacheUser(id));
       if (group.members.length > 0)
         this.userService.getUser(group.members[0]).subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());

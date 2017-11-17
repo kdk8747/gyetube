@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, UserService, ProceedingService, DecisionService } from '../../../providers';
+import { UtilService, UserService, ProceedingService, DecisionService, SharedDataService } from '../../../providers';
 import { Proceeding, User, Decision } from '../../../models';
 import { State } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
@@ -17,7 +17,6 @@ import { Observable } from 'rxjs/Observable';
 export class ProceedingDetailPage {
   stateEnum = State;
   verifiedGood: boolean = true;
-  needRefreshList: boolean = false;
 
   groupId: string;
   id: number;
@@ -34,7 +33,9 @@ export class ProceedingDetailPage {
     public util: UtilService,
     public userService: UserService,
     public decisionService: DecisionService,
-    public proceedingService: ProceedingService) {
+    public proceedingService: ProceedingService,
+    public sharedDataService: SharedDataService
+  ) {
   }
 
   ionViewDidLoad() {
@@ -48,6 +49,7 @@ export class ProceedingDetailPage {
         this.proceedingService.getProceeding(this.groupId, this.id)
           .subscribe((proceeding: Proceeding) => {
             this.proceeding = proceeding;
+            this.sharedDataService.headerDetailTitle = proceeding.title;
             this.attendees = proceeding.attendees.map((id: string) => this.userService.getUser(id));
             this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
             this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
@@ -58,13 +60,6 @@ export class ProceedingDetailPage {
   ionViewDidEnter() {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-  }
-
-  popNavigation() {
-    if (this.navCtrl.length() == 1 || this.needRefreshList)
-      this.navCtrl.setRoot('ProceedingListPage');
-    else
-      this.navCtrl.pop();
   }
 
   navigateToUserDetail() {
@@ -98,7 +93,6 @@ export class ProceedingDetailPage {
         .subscribe((proceeding: Proceeding) => {
           this.proceeding = proceeding;
           this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
-          this.needRefreshList = true;
         });
     }
     else {

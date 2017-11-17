@@ -1,0 +1,37 @@
+<ion-content>
+  <ion-list>
+    <ion-list-header></ion-list-header>
+    <!-- need blank space -->
+    <button ion-item *ngFor="let p of pages" (click)="onMenuItem(); nav.setRoot(p.component);">
+      <ion-icon [name]="p.icon" item-left></ion-icon>
+      {{ p.title | translate }}
+    </button>
+
+    <ion-list-header>
+      {{ 'I18N_ACCOUNT' | translate }}
+    </ion-list-header>
+    <ion-item *ngIf="sharedDataService.loggedIn">
+      <ion-avatar item-start>
+        <img [src]="sharedDataService.loggedInUser.imageUrl">
+      </ion-avatar>
+      <h2>{{ sharedDataService.loggedInUser.name }}</h2>
+      <p>{{ sharedDataService.loggedInUser.loggedInBy }}</p>
+    </ion-item>
+    <button *ngIf="!sharedDataService.loggedIn" ion-item (tap)="onMenuItemPush('LoginPage');">
+      <ion-icon name="contact" item-left></ion-icon>
+      {{ 'I18N_SIGN_IN' | translate }}
+    </button>
+    <button *ngIf="sharedDataService.loggedIn" ion-item (tap)="signOut()">
+      <ion-icon name="log-out" item-left></ion-icon>
+      {{ 'I18N_SIGN_OUT' | translate }}
+    </button>
+    <button ion-item>
+      <ion-icon name="settings" item-left></ion-icon>
+      {{ 'I18N_SETTINGS' | translate }}
+    </button>
+    <button ion-item>
+      <ion-icon name="lock" item-left></ion-icon>
+      {{ 'I18N_TERMS_AND_PRIVACY_POLICY' | translate }}
+    </button>
+  </ion-list>
+</ion-content>

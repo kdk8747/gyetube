@@ -1,121 +1,103 @@
-<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
+<ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
-  <ion-card>
-    <ion-toolbar *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE && proceeding?.nextId == 0">
-      <ion-buttons>
-        {{'I18N_PENDING_CREATE' | translate}} -
-        <span *ngIf="needYou(proceeding)">
-          <ion-icon name="alert" color="danger"></ion-icon>
-          {{user?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}
-        </span>
-        {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
-      </ion-buttons>
-    </ion-toolbar>
-
-    <ion-toolbar>
-      <ion-buttons right>
-        <button ion-button icon-only (tap)="popNavigation()">
-          <ion-icon name="close"></ion-icon>
-        </button>
-      </ion-buttons>
-      <ion-buttons>
-        <state-label [state]="proceeding?.state"></state-label>
-        {{ proceeding?.title }}
-      </ion-buttons>
-    </ion-toolbar>
-
-    <ion-card-header>
-      <p>{{proceeding?.meetingDate | localizedDate:'short'}}</p>
-      <ion-buttons left>
-        {{ 'I18N_ATTENDEES' | translate}}:
-        <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let attendee of attendees">
-          <span *ngIf="!((attendee | async)?.imageUrl)">{{(attendee | async)?.name}}</span>
-          <ion-avatar *ngIf="(attendee | async)?.imageUrl">
-            <img *ngIf="!((attendee | async)?.imageBase64)" [src]="(attendee | async)?.imageUrl">
-            <img *ngIf="((attendee | async)?.imageBase64)" [src]="(attendee | async)?.imageBase64">
-          </ion-avatar>
-        </button>
-      </ion-buttons>
-      <ion-buttons left *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE">
-        {{ 'I18N_REVIEWED_BY' | translate}}:
-        <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let reviewer of reviewers">
-          <span *ngIf="!((reviewer | async)?.imageUrl)">{{(reviewer | async)?.name}}</span>
-          <ion-avatar *ngIf="(reviewer | async)?.imageUrl">
-            <img *ngIf="!((reviewer | async)?.imageBase64)" [src]="(reviewer | async)?.imageUrl">
-            <img *ngIf="((reviewer | async)?.imageBase64)" [src]="(reviewer | async)?.imageBase64">
-          </ion-avatar>
-        </button>
-      </ion-buttons>
-    </ion-card-header>
-
-    <ion-card-content>
-      <p class="pre-wrap">{{proceeding?.description}}</p>
-    </ion-card-content>
-
-    <ion-card *ngFor="let decision of decisions; let i=index">
-      <ion-toolbar>
-        <ion-buttons>
-          <ion-col>
-            <p>{{ 'I18N_DECISION' | translate }}{{i+1}} - {{ (decision | async)?.title }}</p>
-            <p class="pre-wrap">{{ (decision | async)?.description }}</p>
-            <p text-right *ngIf="(decision | async)?.accepters.length">
-              {{ 'I18N_ACCEPTERS' | translate}} {{ (decision | async)?.accepters.length }}
-            </p>
-            <p text-right *ngIf="(decision | async)?.rejecters.length">
-              {{ 'I18N_REJECTERS' | translate}} {{ (decision | async)?.rejecters.length }}
-            </p>
-            <p text-right *ngIf="(decision | async)?.abstainers.length">
-              {{ 'I18N_ABSTAINERS' | translate}} {{ (decision | async)?.abstainers.length }}
-            </p>
-          </ion-col>
-          <ion-col>
-            <p text-right *ngIf="(decision | async)?.totalElapsedTime">
-              {{ 'I18N_ELAPSED_TIME' | translate}} {{ (decision | async)?.totalElapsedTime }} {{ 'I18N_HOURS' | translate}}
-            </p>
-            <p text-right *ngIf="(decision | async)?.totalDifference">
-              {{ 'I18N_DIFFERENCE' | translate}} {{ (decision | async)?.totalDifference | number}}
-            </p>
-          </ion-col>
-        </ion-buttons>
-        <ion-buttons right>
-          <button ion-button icon-only (tap)="navigateToDecisionDetail(decision)">
-            <ion-icon name="arrow-forward"></ion-icon>
-          </button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card>
-
-    <ion-buttons right *ngIf="needYou(proceeding)">
-      <ion-list radio-group no-lines>
-        <ion-item>
-          <ion-label>{{ 'I18N_VERIFIED_GOOD' | translate }}</ion-label>
-          <ion-radio (ionSelect)="verifiedGood=true" checked="true"></ion-radio>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>{{ 'I18N_NEED_TO_REVISE' | translate }}</ion-label>
-          <ion-radio (ionSelect)="verifiedGood=false"></ion-radio>
-        </ion-item>
-      </ion-list>
-      <button ion-button (tap)="onSubmit()">{{ 'I18N_SUBMIT' | translate }}</button>
+  <ion-toolbar *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE && proceeding?.nextId == 0">
+    <ion-buttons>
+      {{'I18N_PENDING_CREATE' | translate}} -
+      <span *ngIf="needYou(proceeding)">
+        <ion-icon name="alert" color="danger"></ion-icon>
+        {{user?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}
+      </span>
+      {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
     </ion-buttons>
+  </ion-toolbar>
 
-    <ion-toolbar *ngIf="proceeding?.prevId || proceeding?.nextId">
-      <ion-buttons left *ngIf="proceeding?.prevId">
-        <button ion-button icon-only (tap)="navigateToPrev()">
-          <ion-icon name="arrow-back"></ion-icon>
-          {{ 'I18N_PREV' | translate}}
-        </button>
+  <p>{{proceeding?.meetingDate | localizedDate:'short'}}</p>
+  <ion-buttons left>
+    {{ 'I18N_ATTENDEES' | translate}}:
+    <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let attendee of attendees">
+      <span *ngIf="!((attendee | async)?.imageUrl)">{{(attendee | async)?.name}}</span>
+      <ion-avatar *ngIf="(attendee | async)?.imageUrl">
+        <img *ngIf="!((attendee | async)?.imageBase64)" [src]="(attendee | async)?.imageUrl">
+        <img *ngIf="((attendee | async)?.imageBase64)" [src]="(attendee | async)?.imageBase64">
+      </ion-avatar>
+    </button>
+  </ion-buttons>
+  <ion-buttons left *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE">
+    {{ 'I18N_REVIEWED_BY' | translate}}:
+    <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let reviewer of reviewers">
+      <span *ngIf="!((reviewer | async)?.imageUrl)">{{(reviewer | async)?.name}}</span>
+      <ion-avatar *ngIf="(reviewer | async)?.imageUrl">
+        <img *ngIf="!((reviewer | async)?.imageBase64)" [src]="(reviewer | async)?.imageUrl">
+        <img *ngIf="((reviewer | async)?.imageBase64)" [src]="(reviewer | async)?.imageBase64">
+      </ion-avatar>
+    </button>
+  </ion-buttons>
+
+  <p class="pre-wrap">{{proceeding?.description}}</p>
+
+  <ion-card *ngFor="let decision of decisions; let i=index">
+    <ion-toolbar>
+      <ion-buttons>
+        <ion-col>
+          <p>{{ 'I18N_DECISION' | translate }}{{i+1}} - {{ (decision | async)?.title }}</p>
+          <p class="pre-wrap">{{ (decision | async)?.description }}</p>
+          <p text-right *ngIf="(decision | async)?.accepters.length">
+            {{ 'I18N_ACCEPTERS' | translate}} {{ (decision | async)?.accepters.length }}
+          </p>
+          <p text-right *ngIf="(decision | async)?.rejecters.length">
+            {{ 'I18N_REJECTERS' | translate}} {{ (decision | async)?.rejecters.length }}
+          </p>
+          <p text-right *ngIf="(decision | async)?.abstainers.length">
+            {{ 'I18N_ABSTAINERS' | translate}} {{ (decision | async)?.abstainers.length }}
+          </p>
+        </ion-col>
+        <ion-col>
+          <p text-right *ngIf="(decision | async)?.totalElapsedTime">
+            {{ 'I18N_ELAPSED_TIME' | translate}} {{ (decision | async)?.totalElapsedTime }} {{ 'I18N_HOURS' | translate}}
+          </p>
+          <p text-right *ngIf="(decision | async)?.totalDifference">
+            {{ 'I18N_DIFFERENCE' | translate}} {{ (decision | async)?.totalDifference | number}}
+          </p>
+        </ion-col>
       </ion-buttons>
-      <ion-buttons center>
-        <p text-center>{{ 'I18N_REVISION' | translate}}</p>
-      </ion-buttons>
-      <ion-buttons right *ngIf="proceeding?.nextId">
-        <button ion-button icon-only (tap)="navigateToNext()">
-            {{ 'I18N_NEXT' | translate}}
+      <ion-buttons right>
+        <button ion-button icon-only (tap)="navigateToDecisionDetail(decision)">
           <ion-icon name="arrow-forward"></ion-icon>
         </button>
       </ion-buttons>
     </ion-toolbar>
   </ion-card>
+
+  <ion-buttons right *ngIf="needYou(proceeding)">
+    <ion-list radio-group no-lines>
+      <ion-item>
+        <ion-label>{{ 'I18N_VERIFIED_GOOD' | translate }}</ion-label>
+        <ion-radio (ionSelect)="verifiedGood=true" checked="true"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>{{ 'I18N_NEED_TO_REVISE' | translate }}</ion-label>
+        <ion-radio (ionSelect)="verifiedGood=false"></ion-radio>
+      </ion-item>
+    </ion-list>
+    <button ion-button (tap)="onSubmit()">{{ 'I18N_SUBMIT' | translate }}</button>
+  </ion-buttons>
+
+  <ion-toolbar *ngIf="proceeding?.prevId || proceeding?.nextId">
+    <ion-buttons left *ngIf="proceeding?.prevId">
+      <button ion-button icon-only (tap)="navigateToPrev()">
+        <ion-icon name="arrow-back"></ion-icon>
+        {{ 'I18N_PREV' | translate}}
+      </button>
+    </ion-buttons>
+    <ion-buttons center>
+      <p text-center>{{ 'I18N_REVISION' | translate}}</p>
+    </ion-buttons>
+    <ion-buttons right *ngIf="proceeding?.nextId">
+      <button ion-button icon-only (tap)="navigateToNext()">
+        {{ 'I18N_NEXT' | translate}}
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-content>

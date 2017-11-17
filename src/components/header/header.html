@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons left>
+      <span *ngIf="!sharedDataService.headerGroupTitle">
+        <button ion-button icon-only>
+          <ion-icon name="cube" color="secondary"></ion-icon>
+        </button>
+        <button ion-button color="dark">
+          <h4>{{ 'I18N_GRASSCUBE' | translate }}</h4>
+        </button>
+      </span>
+      <span *ngIf="sharedDataService.headerGroupTitle">
+        <button ion-button icon-only (tap)="popNavigation();">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+        <button ion-button color="dark" *ngIf="!sharedDataService.headerDetailTitle">
+          <h4 class="overflow-me">{{ sharedDataService.headerGroupTitle }}</h4>
+        </button>
+        <button ion-button color="dark" *ngIf="sharedDataService.headerDetailTitle">
+          <span class="overflow-me">{{ sharedDataService.headerDetailTitle }}</span>
+        </button>
+      </span>
+    </ion-buttons>
+
+    <ion-buttons right>
+      <button ion-button icon-only>
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <button ion-button icon-only menuToggle end>
+      <ion-icon *ngIf="!sharedDataService.loggedIn" name="contact"></ion-icon>
+      <ion-avatar *ngIf="sharedDataService.loggedIn">
+        <img *ngIf="!sharedDataService.loggedInUser.imageBase64" [src]="sharedDataService.loggedInUser.imageUrl">
+        <img *ngIf="sharedDataService.loggedInUser.imageBase64" [src]="sharedDataService.loggedInUser.imageBase64">
+      </ion-avatar>
+    </button>
+  </ion-navbar>
+</ion-header>
