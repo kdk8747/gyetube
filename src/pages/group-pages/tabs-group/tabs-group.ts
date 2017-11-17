@@ -1,5 +1,5 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UserService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
 import { Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
@@ -20,7 +20,6 @@ export class TabsGroupPage {
 
   groupId: string = '';
   group: Observable<Group>;
-  responseTimeMs: number = 500;
 
   constructor(
     public element: ElementRef,
@@ -46,8 +45,6 @@ export class TabsGroupPage {
     this.group.subscribe((group: Group) => {
       this.sharedDataService.headerGroupTitle = group.title;
       group.members.map(id => this.userService.cacheUser(id));
-      if (group.members.length > 0)
-        this.userService.getUser(group.members[0]).subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       this.proceedingService.cacheProceedings(group.id);
       this.decisionService.cacheDecisions(group.id);
       this.activityService.cacheActivities(group.id);
@@ -65,43 +62,27 @@ export class TabsGroupPage {
     });
 
     this.event.subscribe('TabsGroup_ProceedingDetail', (obj) => {
+      let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[1];
       this.navCtrl.getActiveChildNavs()[0].select(1);
-      setTimeout(() => {
-        let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[1];
-        let top: ViewController = childNav.last();
-        if (top.id !== 'ProceedingDetailPage' || top.data.id !== obj.id)
-          childNav.setRoot('ProceedingDetailPage', { id: obj.id });
-      }, this.responseTimeMs);
+      childNav.setRoot('ProceedingDetailPage', { id: obj.id });
     });
 
     this.event.subscribe('TabsGroup_DecisionDetail', (obj) => {
+      let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[2];
       this.navCtrl.getActiveChildNavs()[0].select(2);
-      setTimeout(() => {
-        let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[2];
-        let top: ViewController = childNav.last();
-        if (top.id !== 'DecisionDetailPage' || top.data.id !== obj.id)
-          childNav.setRoot('DecisionDetailPage', { id: obj.id });
-      }, this.responseTimeMs);
+      childNav.setRoot('DecisionDetailPage', { id: obj.id });
     });
 
     this.event.subscribe('TabsGroup_ActivityDetail', (obj) => {
+      let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[3];
       this.navCtrl.getActiveChildNavs()[0].select(3);
-      setTimeout(() => {
-        let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[3];
-        let top: ViewController = childNav.last();
-        if (top.id !== 'ActivityDetailPage' || top.data.id !== obj.id)
-          childNav.setRoot('ActivityDetailPage', { id: obj.id });
-      }, this.responseTimeMs);
+      childNav.setRoot('ActivityDetailPage', { id: obj.id });
     });
 
     this.event.subscribe('TabsGroup_ReceiptDetail', (obj) => {
+      let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[4];
       this.navCtrl.getActiveChildNavs()[0].select(4);
-      setTimeout(() => {
-        let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[4];
-        let top: ViewController = childNav.last();
-        if (top.id !== 'ReceiptDetailPage' || top.data.id !== obj.id)
-          childNav.setRoot('ReceiptDetailPage', { id: obj.id });
-      }, this.responseTimeMs);
+      childNav.setRoot('ReceiptDetailPage', { id: obj.id });
     });
   }
 
