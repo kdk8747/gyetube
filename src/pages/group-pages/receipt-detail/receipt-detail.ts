@@ -42,7 +42,6 @@ export class ReceiptDetailPage {
 
     this.receipt = this.receiptService.getReceipt(this.groupId, this.id);
     this.receipt.subscribe((receipt: Receipt) => {
-      this.sharedDataService.headerDetailTitle = receipt.title;
       this.imageUrl = receipt.imageUrl;
       this.creator = this.userService.getUser(receipt.creator);
       if (receipt.parentActivity)
@@ -53,6 +52,7 @@ export class ReceiptDetailPage {
   }
 
   ionViewDidEnter() {
+    this.receipt.subscribe(receipt => this.sharedDataService.headerDetailTitle = receipt.title);
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }

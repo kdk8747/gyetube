@@ -45,7 +45,6 @@ export class DecisionDetailPage {
 
     this.decision = this.decisionService.getDecision(this.groupId, this.id);
     this.decision.subscribe((decision: Decision) => {
-      this.sharedDataService.headerDetailTitle = decision.title;
       this.abstainers = decision.abstainers.map((id: string) => this.userService.getUser(id));
       this.accepters = decision.accepters.map((id: string) => this.userService.getUser(id));
       this.rejecters = decision.rejecters.map((id: string) => this.userService.getUser(id));
@@ -59,6 +58,7 @@ export class DecisionDetailPage {
   }
 
   ionViewDidEnter() {
+    this.decision.subscribe(decision => this.sharedDataService.headerDetailTitle = decision.title);
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }

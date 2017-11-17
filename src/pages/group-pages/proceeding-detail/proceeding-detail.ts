@@ -20,8 +20,8 @@ export class ProceedingDetailPage {
 
   groupId: string;
   id: number;
-  user: User;
   proceeding: Proceeding = null;
+  proceedingObs: Observable<Proceeding>;
   attendees: Observable<User>[];
   reviewers: Observable<User>[];
   decisions: Observable<Decision>[];
@@ -42,22 +42,18 @@ export class ProceedingDetailPage {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
 
-    this.util.getCurrentUser()
-      .then((user) => {
-        this.user = user;
-
-        this.proceedingService.getProceeding(this.groupId, this.id)
-          .subscribe((proceeding: Proceeding) => {
-            this.proceeding = proceeding;
-            this.sharedDataService.headerDetailTitle = proceeding.title;
-            this.attendees = proceeding.attendees.map((id: string) => this.userService.getUser(id));
-            this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
-            this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
-          });
-      }).catch((err) => console.log(err));
+    this.proceedingObs = this.proceedingService.getProceeding(this.groupId, this.id);
+    this.proceedingObs.subscribe((proceeding: Proceeding) => {
+      this.proceeding = proceeding;
+      this.attendees = proceeding.attendees.map((id: string) => this.userService.getUser(id));
+      this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
+      this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
+    });
   }
 
   ionViewDidEnter() {
+
+    this.proceedingObs.subscribe(proceeding => this.sharedDataService.headerDetailTitle = proceeding.title);
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }
@@ -81,10 +77,10 @@ export class ProceedingDetailPage {
   }
 
   needYou(proceeding: Proceeding): boolean {
-    return proceeding && this.user && proceeding.state == State.STATE_PENDING_CREATE
+    return proceeding && this.sharedDataService.loggedInUser && proceeding.state == State.STATE_PENDING_CREATE
       && proceeding.nextId == 0
-      && proceeding.attendees.findIndex(attendee => attendee == this.user.id) != -1
-      && proceeding.reviewers.findIndex(attendee => attendee == this.user.id) == -1;
+      && proceeding.attendees.findIndex(attendee => attendee == this.sharedDataService.loggedInUser.id) != -1
+      && proceeding.reviewers.findIndex(attendee => attendee == this.sharedDataService.loggedInUser.id) == -1;
   }
 
   onSubmit() {

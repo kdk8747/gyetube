@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, ReceiptService } from '../../../providers';
+import { UtilService, ReceiptService, SharedDataService } from '../../../providers';
 import { Receipt } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -22,7 +22,9 @@ export class ReceiptListPage {
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public receiptService: ReceiptService) {
+    public receiptService: ReceiptService,
+    public sharedDataService: SharedDataService
+  ) {
   }
 
   ionViewDidLoad() {
@@ -38,6 +40,7 @@ export class ReceiptListPage {
   }
 
   ionViewDidEnter() {
+    this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }

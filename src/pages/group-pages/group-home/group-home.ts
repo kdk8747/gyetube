@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, GroupService } from '../../../providers';
+import { UtilService, GroupService, SharedDataService } from '../../../providers';
 import { Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -23,7 +23,8 @@ export class GroupHomePage {
     public navParams: NavParams,
     public util: UtilService,
     public event: Events,
-    public groupService: GroupService
+    public groupService: GroupService,
+    public sharedDataService: SharedDataService
   ) {
   }
 
@@ -33,6 +34,7 @@ export class GroupHomePage {
   }
 
   ionViewDidEnter() {
+    this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }

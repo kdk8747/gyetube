@@ -38,6 +38,7 @@ export class DecisionListPage {
   }
 
   ionViewDidEnter() {
+    this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }

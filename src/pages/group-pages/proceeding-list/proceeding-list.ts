@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, ProceedingService } from '../../../providers';
+import { UtilService, ProceedingService, SharedDataService } from '../../../providers';
 import { User, Proceeding } from '../../../models';
 import { State } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
@@ -25,7 +25,9 @@ export class ProceedingListPage {
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public proceedingService: ProceedingService) {
+    public proceedingService: ProceedingService,
+    public sharedDataService: SharedDataService
+  ) {
   }
 
   ionViewDidLoad() {
@@ -44,6 +46,7 @@ export class ProceedingListPage {
   }
 
   ionViewDidEnter() {
+    this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }

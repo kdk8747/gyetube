@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, ActivityService } from '../../../providers';
+import { UtilService, ActivityService, SharedDataService } from '../../../providers';
 import { Activity } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -22,7 +22,9 @@ export class ActivityListPage {
     public navParams: NavParams,
     public util: UtilService,
     public event: Events,
-    public activityService: ActivityService) {
+    public activityService: ActivityService,
+    public sharedDataService: SharedDataService
+  ) {
   }
 
   ionViewDidLoad() {
@@ -37,6 +39,7 @@ export class ActivityListPage {
   }
 
   ionViewDidEnter() {
+    this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }
