@@ -57,13 +57,6 @@ export class ActivityDetailPage {
     this.event.publish('TabsGroup_ShowTab');
   }
 
-  popNavigation() {
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('ActivityListPage');
-    else
-      this.navCtrl.pop();
-  }
-
   navigateToUserDetail() {
     ;
   }

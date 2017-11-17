@@ -57,13 +57,6 @@ export class ReceiptDetailPage {
     this.event.publish('TabsGroup_ShowTab');
   }
 
-  popNavigation() {
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('ReceiptListPage');
-    else
-      this.navCtrl.pop();
-  }
-
   navigateToUserDetail() {
     ;
   }

@@ -63,13 +63,6 @@ export class DecisionDetailPage {
     this.event.publish('TabsGroup_ShowTab');
   }
 
-  popNavigation() {
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('DecisionListPage');
-    else
-      this.navCtrl.pop();
-  }
-
   navigateToUserDetail() {
     ;
   }
