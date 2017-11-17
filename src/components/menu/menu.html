@@ -1,7 +1,16 @@
 <ion-content>
   <ion-list>
-    <ion-list-header></ion-list-header>
-    <!-- need blank space -->
+    <ion-toolbar>
+      <ion-buttons>
+        <button ion-button icon-only>
+          <ion-icon name="cube" color="secondary"></ion-icon>
+        </button>
+        <button ion-button color="dark">
+          <h4>{{ 'I18N_GRASSCUBE' | translate }}</h4>
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
+
     <button ion-item *ngFor="let p of pages" (click)="onMenuItem(); nav.setRoot(p.component);">
       <ion-icon [name]="p.icon" item-left></ion-icon>
       {{ p.title | translate }}
