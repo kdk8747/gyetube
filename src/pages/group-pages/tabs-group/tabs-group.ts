@@ -20,6 +20,7 @@ export class TabsGroupPage {
 
   groupId: string = '';
   group: Observable<Group>;
+  responseTimeMs: number = 500;
 
   constructor(
     public element: ElementRef,
@@ -45,6 +46,8 @@ export class TabsGroupPage {
     this.group.subscribe((group: Group) => {
       this.sharedDataService.headerGroupTitle = group.title;
       group.members.map(id => this.userService.cacheUser(id));
+      if (group.members.length > 0)
+        this.userService.getUser(group.members[0]).subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
       this.proceedingService.cacheProceedings(group.id);
       this.decisionService.cacheDecisions(group.id);
       this.activityService.cacheActivities(group.id);
@@ -63,26 +66,26 @@ export class TabsGroupPage {
 
     this.event.subscribe('TabsGroup_ProceedingDetail', (obj) => {
       let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[1];
-      this.navCtrl.getActiveChildNavs()[0].select(1);
       childNav.setRoot('ProceedingDetailPage', { id: obj.id });
+      setTimeout(this.navCtrl.getActiveChildNavs()[0].select(1), this.responseTimeMs);
     });
 
     this.event.subscribe('TabsGroup_DecisionDetail', (obj) => {
       let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[2];
-      this.navCtrl.getActiveChildNavs()[0].select(2);
       childNav.setRoot('DecisionDetailPage', { id: obj.id });
+      setTimeout(this.navCtrl.getActiveChildNavs()[0].select(2), this.responseTimeMs);
     });
 
     this.event.subscribe('TabsGroup_ActivityDetail', (obj) => {
       let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[3];
-      this.navCtrl.getActiveChildNavs()[0].select(3);
       childNav.setRoot('ActivityDetailPage', { id: obj.id });
+      setTimeout(this.navCtrl.getActiveChildNavs()[0].select(3), this.responseTimeMs);
     });
 
     this.event.subscribe('TabsGroup_ReceiptDetail', (obj) => {
       let childNav = this.navCtrl.getActiveChildNavs()[0]._tabs[4];
-      this.navCtrl.getActiveChildNavs()[0].select(4);
       childNav.setRoot('ReceiptDetailPage', { id: obj.id });
+      setTimeout(this.navCtrl.getActiveChildNavs()[0].select(4), this.responseTimeMs);
     });
   }
 
