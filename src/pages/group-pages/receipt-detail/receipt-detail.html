@@ -1,16 +1,6 @@
-<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
+<ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
-  <ion-card>
-    <ion-toolbar>
-      <ion-buttons right>
-        <button ion-button icon-only (tap)="popNavigation()">
-          <ion-icon name="close"></ion-icon>
-        </button>
-      </ion-buttons>
-      <ion-buttons>{{(receipt | async)?.title}}</ion-buttons>
-    </ion-toolbar>
 
-    <ion-card-header>
       <ion-row justify-content-start>
         <ion-col col-auto>
           <button ion-button clear icon-only (tap)="navigateToUserDetail()">
@@ -26,13 +16,10 @@
           <p>{{(receipt | async)?.modifiedDate | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>
-    </ion-card-header>
 
-    <ion-card-content>
       <img *ngIf="imageUrl.includes('http')" [src]="imageUrl" style="width: auto; height: auto">
       <p>{{ 'I18N_PAYMENT_DATE' | translate}} {{(receipt | async)?.paymentDate | localizedDate:'short'}}</p>
       <p>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
-    </ion-card-content>
 
     <ion-card *ngIf="activity && (activity | async)">
       <ion-toolbar>
@@ -59,5 +46,4 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-card>
-  </ion-card>
 </ion-content>

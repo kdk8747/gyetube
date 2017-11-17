@@ -1,19 +1,6 @@
-<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
+<ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
-  <ion-card>
-    <ion-toolbar>
-      <ion-buttons right>
-        <button ion-button icon-only (tap)="popNavigation()">
-          <ion-icon name="close"></ion-icon>
-        </button>
-      </ion-buttons>
-      <ion-buttons>
-        <state-label [state]="(decision | async)?.state"></state-label>
-        {{(decision | async)?.title}}
-      </ion-buttons>
-    </ion-toolbar>
 
-    <ion-card-content>
       <p>{{ 'I18N_MEETING_DATE' | translate}}: {{(decision | async)?.meetingDate | localizedDate}}</p>
       <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{(decision | async)?.expiryDate | localizedDate}}</p>
       <div style="height:10px"></div>
@@ -49,7 +36,6 @@
           </ion-avatar>
         </button>
       </ion-buttons>
-    </ion-card-content>
 
     <ion-card *ngIf="proceeding && (proceeding | async)">
       <ion-toolbar>
@@ -103,13 +89,10 @@
       </ion-toolbar>
     </ion-card>
 
-    <ion-card-header>
       <p text-right>
         {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{(decision | async)?.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
       </p>
       <p text-right>
         {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{(decision | async)?.totalDifference | number}}
       </p>
-    </ion-card-header>
-  </ion-card>
 </ion-content>

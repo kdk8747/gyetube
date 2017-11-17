@@ -1,5 +1,6 @@
 <ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
+
   <ion-toolbar *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE && proceeding?.nextId == 0">
     <ion-buttons>
       {{'I18N_PENDING_CREATE' | translate}} -

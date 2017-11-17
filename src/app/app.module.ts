@@ -3,7 +3,8 @@ import { HttpModule, Http } from '@angular/http';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-import { ComponentsModule } from '../components/components.module';
+import { HeaderComponentModule } from '../components/header/header.module';
+import { MenuComponentModule } from '../components/menu/menu.module';
 import { EnvironmentsModule } from './environment-variables/environment-variables.module';
 import { IonicStorageModule } from '@ionic/storage';
 
@@ -30,7 +31,8 @@ export function HttpLoaderFactory(http: Http) {
   imports: [
     BrowserModule,
     HttpModule,
-    ComponentsModule,
+    HeaderComponentModule,
+    MenuComponentModule,
     AuthModule,
     TranslateModule.forRoot({
       loader: {

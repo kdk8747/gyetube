@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, UserService, ActivityService, DecisionService, ReceiptService } from '../../../providers';
+import { UtilService, UserService, ActivityService, DecisionService, ReceiptService, SharedDataService } from '../../../providers';
 import { Activity, User, Decision, Receipt } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -33,7 +33,9 @@ export class ActivityDetailPage {
     public userService: UserService,
     public activityService: ActivityService,
     public decisionService: DecisionService,
-    public receiptService: ReceiptService) {
+    public receiptService: ReceiptService,
+    public sharedDataService: SharedDataService
+  ) {
   }
 
   ionViewDidLoad() {
@@ -42,6 +44,7 @@ export class ActivityDetailPage {
 
     this.activity = this.activityService.getActivity(this.groupId, this.id);
     this.activity.subscribe((activity: Activity) => {
+      this.sharedDataService.headerDetailTitle = activity.title;
       this.creator = this.userService.getUser(activity.creator);
       this.participants = activity.participants.map((id: string) => this.userService.getUser(id));
       this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision);

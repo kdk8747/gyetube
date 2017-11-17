@@ -14,10 +14,10 @@
           <ion-icon name="arrow-back"></ion-icon>
         </button>
         <button ion-button color="dark" *ngIf="!sharedDataService.headerDetailTitle">
-          <h4 class="overflow-me">{{ sharedDataService.headerGroupTitle }}</h4>
+          <h4>{{ sharedDataService.headerGroupTitle }}</h4>
         </button>
         <button ion-button color="dark" *ngIf="sharedDataService.headerDetailTitle">
-          <span class="overflow-me">{{ sharedDataService.headerDetailTitle }}</span>
+          <span>{{ sharedDataService.headerDetailTitle }}</span>
         </button>
       </span>
     </ion-buttons>

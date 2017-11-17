@@ -4,7 +4,7 @@
     <ion-card-content>
       <ion-row>
         <span *ngIf="sharedDataService.decisionListTimelineMode">
-          <grasscube-state-label [state]="decision.state"></grasscube-state-label>
+          <!--<grasscube-state-label [state]="decision.state"></grasscube-state-label>-->
           {{decision.title}}
         </span>
         <p *ngIf="!sharedDataService.decisionListTimelineMode">{{decision.title}}</p>

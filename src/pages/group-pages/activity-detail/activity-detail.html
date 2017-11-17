@@ -1,16 +1,6 @@
-<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
+<ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
-  <ion-card>
-    <ion-toolbar>
-      <ion-buttons right>
-        <button ion-button icon-only (tap)="popNavigation()">
-          <ion-icon name="close"></ion-icon>
-        </button>
-      </ion-buttons>
-      <ion-buttons>{{(activity | async)?.title}}</ion-buttons>
-    </ion-toolbar>
 
-    <ion-card-header>
       <ion-row justify-content-start>
         <ion-col col-auto>
           <button ion-button clear icon-only (tap)="navigateToUserDetail()">
@@ -26,9 +16,7 @@
           <p>{{(activity | async)?.modifiedDate | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>
-    </ion-card-header>
 
-    <ion-card-content>
       <p>{{(activity | async)?.description}}</p>
       <div style="height:10px"></div>
       <img *ngIf="(activity | async)?.imageUrls.length > 0" [src]="(activity | async)?.imageUrls[0]" style="width: auto; height: auto">
@@ -44,7 +32,6 @@
           </ion-avatar>
         </button>
       </ion-buttons>
-    </ion-card-content>
 
     <ion-card *ngIf="decision | async">
       <ion-toolbar>
@@ -73,15 +60,10 @@
       </ion-toolbar>
     </ion-card>
 
-    <ion-card-header>
       <p text-right>
-        {{ (activity | async)?.elapsedTime }} {{ 'I18N_HOURS' | translate}}
-        X {{ (activity | async)?.participants.length }} {{ 'I18N_PARTICIPANTS' | translate}}
-        = {{ (activity | async)?.elapsedTime * (activity | async)?.participants.length }} {{ 'I18N_HOURS' | translate}}
+        {{ (activity | async)?.elapsedTime }} {{ 'I18N_HOURS' | translate}} X {{ (activity | async)?.participants.length }} {{ 'I18N_PARTICIPANTS' | translate}} = {{ (activity | async)?.elapsedTime * (activity | async)?.participants.length }} {{ 'I18N_HOURS' | translate}}
       </p>
       <p text-right>
         {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{(activity | async)?.totalDifference | number}}
       </p>
-    </ion-card-header>
-  </ion-card>
 </ion-content>
