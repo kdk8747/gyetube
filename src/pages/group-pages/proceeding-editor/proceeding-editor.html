@@ -1,96 +1,96 @@
 <ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-    <form [formGroup]="form">
-      <ion-list>
-        <ion-item>
-          <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
-          <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label>{{ 'I18N_MEETING_DATE' | translate }}</ion-label>
-          <ion-datetime formControlName="meetingDate" displayFormat="YYYY MM DD, HH:mm" [class.invalid]="!form.controls.meetingDate.valid && (form.controls.meetingDate.dirty || submitAttempt)"></ion-datetime>
-        </ion-item>
+  <form [formGroup]="form">
+    <ion-list>
+      <ion-item>
+        <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
+        <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{ 'I18N_MEETING_DATE' | translate }}</ion-label>
+        <ion-datetime formControlName="meetingDate" displayFormat="YYYY MM DD, HH:mm" [class.invalid]="!form.controls.meetingDate.valid && (form.controls.meetingDate.dirty || submitAttempt)"></ion-datetime>
+      </ion-item>
 
-        <ion-item>
-          <ion-label>{{ 'I18N_DESCRIPTION' | translate }}</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-textarea formControlName="description" [class.invalid]="!form.controls.description.valid && (form.controls.description.dirty || submitAttempt)"></ion-textarea>
-        </ion-item>
+      <ion-item>
+        <ion-label>{{ 'I18N_DESCRIPTION' | translate }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-textarea formControlName="description" [class.invalid]="!form.controls.description.valid && (form.controls.description.dirty || submitAttempt)"></ion-textarea>
+      </ion-item>
 
-        <ion-item>
-          <ion-label>{{ 'I18N_ATTENDEES' | translate }}</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-select formControlName="attendees" multiple="true" [selectOptions]="{title: ('I18N_ATTENDEES' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
-            [class.invalid]="!form.controls.attendees.valid && (form.controls.attendees.dirty || submitAttempt)">
-            <ion-option *ngFor="let user of users" [value]="user.id">
-              {{user.name}}
-            </ion-option>
-          </ion-select>
-        </ion-item>
+      <ion-item>
+        <ion-label>{{ 'I18N_ATTENDEES' | translate }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-select formControlName="attendees" multiple="true" [selectOptions]="{title: ('I18N_ATTENDEES' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
+          [class.invalid]="!form.controls.attendees.valid && (form.controls.attendees.dirty || submitAttempt)">
+          <ion-option *ngFor="let user of users" [value]="user.id">
+            {{user.name}}
+          </ion-option>
+        </ion-select>
+      </ion-item>
 
-        <ion-row>
-          <ion-col>
-            <ion-item>
-              <ion-label>{{ 'I18N_DECISIONS' | translate }}</ion-label>
-            </ion-item>
-          </ion-col>
-          <ion-col>
-            <button ion-button *ngIf="!sharedDataService.decisionEditMode" (tap)="onAddDecisions()"> {{ 'I18N_ADD' | translate }} </button>
-            <button ion-button *ngIf="sharedDataService.decisionEditMode" (tap)="sharedDataService.decisionEditMode = false"> {{ 'I18N_CANCEL' | translate }} </button>
-          </ion-col>
-        </ion-row>
-        <ion-card *ngFor="let decision of sharedDataService.decisionChangesets">
-          <ion-toolbar>
-            <ion-buttons *ngIf="decision.state == stateEnum.STATE_PENDING_CREATE">
-              {{ 'I18N_CREATE' | translate}} - {{decision.title}}
-            </ion-buttons>
-            <ion-buttons *ngIf="decision.state == stateEnum.STATE_PENDING_UPDATE">
-              {{ 'I18N_UPDATE' | translate}} - {{decision.title}}
-            </ion-buttons>
-            <ion-buttons *ngIf="decision.state == stateEnum.STATE_PENDING_DELETE">
-              {{ 'I18N_DELETE' | translate}} - {{decision.title}}
-            </ion-buttons>
-            <ion-buttons right>
-              <button ion-button icon-only (tap)="onClose(decision.id)">
-                <ion-icon name="close"></ion-icon>
-              </button>
-            </ion-buttons>
-          </ion-toolbar>
-          <ion-card-content>
-            <span *ngIf="decision.state != stateEnum.STATE_PENDING_DELETE">
-              <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{decision.expiryDate | localizedDate}}</p>
-              <div style="height:10px"></div>
-              <p>{{decision.description}}</p>
-              <div style="height:10px"></div>
-            </span>
-            <ion-buttons left *ngIf="decision.accepters.length">
-              {{ 'I18N_ACCEPTERS' | translate}}:
-              <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let accepter of decision.accepters">
-                <span>{{(userService.getUser(accepter) | async)?.name}}</span>
-              </button>
-            </ion-buttons>
-            <ion-buttons left *ngIf="decision.rejecters.length">
-              {{ 'I18N_REJECTERS' | translate}}:
-              <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let rejecter of decision.rejecters">
-                <span>{{(userService.getUser(rejecter) | async)?.name}}</span>
-              </button>
-            </ion-buttons>
-            <ion-buttons left *ngIf="decision.abstainers.length">
-              {{ 'I18N_ABSTAINERS' | translate}}:
-              <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let abstainer of decision.abstainers">
-                <span>{{(userService.getUser(abstainer) | async)?.name}}</span>
-              </button>
-            </ion-buttons>
-          </ion-card-content>
-        </ion-card>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>{{ 'I18N_DECISIONS' | translate }}</ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <button ion-button *ngIf="!sharedDataService.decisionEditMode" (tap)="onAddDecisions()"> {{ 'I18N_ADD' | translate }} </button>
+          <button ion-button *ngIf="sharedDataService.decisionEditMode" (tap)="sharedDataService.decisionEditMode = false"> {{ 'I18N_CANCEL' | translate }} </button>
+        </ion-col>
+      </ion-row>
+      <ion-card *ngFor="let decision of sharedDataService.decisionChangesets">
+        <ion-toolbar>
+          <ion-buttons *ngIf="decision.state == stateEnum.STATE_PENDING_CREATE">
+            {{ 'I18N_CREATE' | translate}} - {{decision.title}}
+          </ion-buttons>
+          <ion-buttons *ngIf="decision.state == stateEnum.STATE_PENDING_UPDATE">
+            {{ 'I18N_UPDATE' | translate}} - {{decision.title}}
+          </ion-buttons>
+          <ion-buttons *ngIf="decision.state == stateEnum.STATE_PENDING_DELETE">
+            {{ 'I18N_DELETE' | translate}} - {{decision.title}}
+          </ion-buttons>
+          <ion-buttons right>
+            <button ion-button icon-only (tap)="onClose(decision.id)">
+              <ion-icon name="close"></ion-icon>
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-card-content>
+          <span *ngIf="decision.state != stateEnum.STATE_PENDING_DELETE">
+            <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{decision.expiryDate | localizedDate}}</p>
+            <div style="height:10px"></div>
+            <p>{{decision.description}}</p>
+            <div style="height:10px"></div>
+          </span>
+          <ion-buttons left *ngIf="decision.accepters.length">
+            {{ 'I18N_ACCEPTERS' | translate}}:
+            <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let accepter of decision.accepters">
+              <span>{{(userService.getUser(accepter) | async)?.name}}</span>
+            </button>
+          </ion-buttons>
+          <ion-buttons left *ngIf="decision.rejecters.length">
+            {{ 'I18N_REJECTERS' | translate}}:
+            <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let rejecter of decision.rejecters">
+              <span>{{(userService.getUser(rejecter) | async)?.name}}</span>
+            </button>
+          </ion-buttons>
+          <ion-buttons left *ngIf="decision.abstainers.length">
+            {{ 'I18N_ABSTAINERS' | translate}}:
+            <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let abstainer of decision.abstainers">
+              <span>{{(userService.getUser(abstainer) | async)?.name}}</span>
+            </button>
+          </ion-buttons>
+        </ion-card-content>
+      </ion-card>
 
-      </ion-list>
-    </form>
-    <ion-buttons right>
-      <!-- <button ion-button>{{ 'I18N_SAVE' | translate }}</button> -->
-      <button ion-button (tap)="onSave()">{{ 'I18N_UPLOAD' | translate }}</button>
-    </ion-buttons>
+    </ion-list>
+  </form>
+  <ion-buttons right>
+    <!-- <button ion-button>{{ 'I18N_SAVE' | translate }}</button> -->
+    <button ion-button (tap)="onSave()">{{ 'I18N_UPLOAD' | translate }}</button>
+  </ion-buttons>
 </ion-content>
