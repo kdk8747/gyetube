@@ -1,23 +1,23 @@
 <span [ngSwitch]="state">
-  <p *ngSwitchCase="stateEnum.STATE_CREATED">
+  <span *ngSwitchCase="stateEnum.STATE_CREATED">
     {{ 'I18N_CREATED' | translate}} -
-  </p>
-  <p *ngSwitchCase="stateEnum.STATE_UPDATED">
+  </span>
+  <span *ngSwitchCase="stateEnum.STATE_UPDATED">
     {{ 'I18N_UPDATED' | translate}} -
-  </p>
-  <p *ngSwitchCase="stateEnum.STATE_DELETED">
+  </span>
+  <span *ngSwitchCase="stateEnum.STATE_DELETED">
     {{ 'I18N_DELETED' | translate}} -
-  </p>
-  <p *ngSwitchCase="stateEnum.STATE_PENDING_CREATE">
+  </span>
+  <span *ngSwitchCase="stateEnum.STATE_PENDING_CREATE">
     {{ 'I18N_PENDING_CREATE' | translate}} -
-  </p>
-  <p *ngSwitchCase="stateEnum.STATE_PENDING_UPDATE">
+  </span>
+  <span *ngSwitchCase="stateEnum.STATE_PENDING_UPDATE">
     {{ 'I18N_PENDING_UPDATE' | translate}} -
-  </p>
-  <p *ngSwitchCase="stateEnum.STATE_PENDING_DELETE">
+  </span>
+  <span *ngSwitchCase="stateEnum.STATE_PENDING_DELETE">
     {{ 'I18N_PENDING_DELETE' | translate}} -
-  </p>
-  <p *ngSwitchDefault>
+  </span>
+  <span *ngSwitchDefault>
     Unknown -
-  </p>
+  </span>
 </span>

@@ -6,7 +6,7 @@
       {{'I18N_PENDING_CREATE' | translate}} -
       <span *ngIf="needYou(proceeding)">
         <ion-icon name="alert" color="danger"></ion-icon>
-        {{user?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}
+        {{'I18N_NEED_YOUR_REVIEW' | translate}}
       </span>
       {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
     </ion-buttons>
@@ -40,7 +40,12 @@
     <ion-toolbar>
       <ion-buttons>
         <ion-col>
-          <p>{{ 'I18N_DECISION' | translate }}{{i+1}} - {{ (decision | async)?.title }}</p>
+          <p>{{ 'I18N_DECISION' | translate }} {{i+1}}</p>
+          <p>
+            <grasscube-state-label [state]="(decision | async)?.state"></grasscube-state-label>
+            {{ (decision | async)?.title }}
+          </p>
+          <div style="height:10px"></div>
           <p class="pre-wrap">{{ (decision | async)?.description }}</p>
           <p text-right *ngIf="(decision | async)?.accepters.length">
             {{ 'I18N_ACCEPTERS' | translate}} {{ (decision | async)?.accepters.length }}
