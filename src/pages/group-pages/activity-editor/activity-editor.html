@@ -25,14 +25,14 @@
         <ion-input formControlName="elapsedTime" type="number" text-right [class.invalid]="!form.controls.elapsedTime.valid && (form.controls.elapsedTime.dirty || submitAttempt)"></ion-input>
       </ion-item>
 
-      <ion-item>
+      <ion-item no-lines>
         <ion-label>{{ 'I18N_DESCRIPTION' | translate }}</ion-label>
       </ion-item>
       <ion-item>
         <ion-textarea formControlName="description" [class.invalid]="!form.controls.description.valid && (form.controls.description.dirty || submitAttempt)"></ion-textarea>
       </ion-item>
 
-      <ion-item>
+      <ion-item no-lines>
         <ion-label>{{ 'I18N_PARTICIPANTS' | translate }}</ion-label>
       </ion-item>
       <ion-item>
@@ -44,7 +44,7 @@
         </ion-select>
       </ion-item>
 
-      <ion-item>
+      <ion-item no-lines>
         <ion-label>{{ 'I18N_RELATED_DECISION' | translate }}</ion-label>
       </ion-item>
       <ion-item>

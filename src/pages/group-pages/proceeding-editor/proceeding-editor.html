@@ -12,19 +12,19 @@
         <ion-datetime formControlName="meetingDate" displayFormat="YYYY MM DD, HH:mm" [class.invalid]="!form.controls.meetingDate.valid && (form.controls.meetingDate.dirty || submitAttempt)"></ion-datetime>
       </ion-item>
 
-      <ion-item>
+      <ion-item no-lines>
         <ion-label>{{ 'I18N_DESCRIPTION' | translate }}</ion-label>
       </ion-item>
       <ion-item>
         <ion-textarea formControlName="description" [class.invalid]="!form.controls.description.valid && (form.controls.description.dirty || submitAttempt)"></ion-textarea>
       </ion-item>
 
-      <ion-item>
+      <ion-item no-lines>
         <ion-label>{{ 'I18N_ATTENDEES' | translate }}</ion-label>
       </ion-item>
       <ion-item>
         <ion-select formControlName="attendees" multiple="true" [selectOptions]="{title: ('I18N_ATTENDEES' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
-          [class.invalid]="!form.controls.attendees.valid && (form.controls.attendees.dirty || submitAttempt)">
+          [class.invalid]="!form.controls.attendees.valid && (form.controls.attendees.dirty || submitAttempt || addAttempt)">
           <ion-option *ngFor="let user of users" [value]="user.id">
             {{user.name}}
           </ion-option>
@@ -33,7 +33,7 @@
 
       <ion-row>
         <ion-col>
-          <ion-item>
+          <ion-item no-lines>
             <ion-label>{{ 'I18N_DECISIONS' | translate }}</ion-label>
           </ion-item>
         </ion-col>
@@ -42,6 +42,7 @@
           <button ion-button *ngIf="sharedDataService.decisionEditMode" (tap)="sharedDataService.decisionEditMode = false"> {{ 'I18N_CANCEL' | translate }} </button>
         </ion-col>
       </ion-row>
+
       <ion-card *ngFor="let decision of sharedDataService.decisionChangesets">
         <ion-toolbar>
           <ion-buttons *ngIf="decision.state == stateEnum.STATE_PENDING_CREATE">
@@ -68,19 +69,19 @@
           </span>
           <ion-buttons left *ngIf="decision.accepters.length">
             {{ 'I18N_ACCEPTERS' | translate}}:
-            <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let accepter of decision.accepters">
+            <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let accepter of decision.accepters" [class.invalid]="!isThisPartOfAttendees(accepter) && (form.controls.attendees.dirty || submitAttempt)">
               <span>{{(userService.getUser(accepter) | async)?.name}}</span>
             </button>
           </ion-buttons>
           <ion-buttons left *ngIf="decision.rejecters.length">
             {{ 'I18N_REJECTERS' | translate}}:
-            <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let rejecter of decision.rejecters">
+            <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let rejecter of decision.rejecters" [class.invalid]="!isThisPartOfAttendees(rejecter) && (form.controls.attendees.dirty || submitAttempt)">
               <span>{{(userService.getUser(rejecter) | async)?.name}}</span>
             </button>
           </ion-buttons>
           <ion-buttons left *ngIf="decision.abstainers.length">
             {{ 'I18N_ABSTAINERS' | translate}}:
-            <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let abstainer of decision.abstainers">
+            <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let abstainer of decision.abstainers" [class.invalid]="!isThisPartOfAttendees(abstainer) && (form.controls.attendees.dirty || submitAttempt)">
               <span>{{(userService.getUser(abstainer) | async)?.name}}</span>
             </button>
           </ion-buttons>

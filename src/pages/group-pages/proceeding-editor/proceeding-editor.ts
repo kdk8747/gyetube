@@ -21,6 +21,7 @@ export class ProceedingEditorPage {
   users: User[] = [];
 
   form: FormGroup;
+  addAttempt: boolean = false;
   submitAttempt: boolean = false;
 
 
@@ -74,7 +75,7 @@ export class ProceedingEditorPage {
   }
 
   ionViewDidEnter() {
-    this.translate.get(['I18N_EDITOR','I18N_PROCEEDING']).subscribe(values => {
+    this.translate.get(['I18N_EDITOR', 'I18N_PROCEEDING']).subscribe(values => {
       this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_PROCEEDING;
     });
     this.event.publish('App_ShowHeader');
@@ -86,6 +87,11 @@ export class ProceedingEditorPage {
   }
 
   onAddDecisions(): void {
+    this.addAttempt = true;
+
+    if (this.form.value.attendees.length < 2) return;
+
+    this.sharedDataService.proceedingAttendees = this.form.value.attendees;
     this.sharedDataService.decisionListTimelineMode = true;
     this.sharedDataService.decisionEditMode = true;
     this.navCtrl.parent.select(2);
@@ -97,10 +103,22 @@ export class ProceedingEditorPage {
       this.sharedDataService.decisionChangesets.filter(item => item.id != decisionId);
   }
 
+  isThisPartOfAttendees(userId: string): boolean {
+    return this.form.value.attendees.some(attendee => attendee == userId);
+  }
+
+  isValidVote(): boolean {
+    return this.sharedDataService.decisionChangesets.every(decision => {
+      return decision.accepters.every(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter))
+        && decision.rejecters.every(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter))
+        && decision.abstainers.every(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer));
+    });
+  }
+
   onSave(): void {
     this.submitAttempt = true;
 
-    if (!this.form.valid) return;
+    if (!this.form.valid || !this.isValidVote()) return;
     this.form.value.title = this.form.value.title.trim();
     this.form.value.description = this.form.value.description.trim();
 
@@ -108,6 +126,8 @@ export class ProceedingEditorPage {
       decision.meetingDate = this.form.value.meetingDate;
       decision.childActivities = [];
       decision.childReceipts = [];
+      decision.totalDifference = 0;
+      decision.totalElapsedTime = 0;
       return decision;
     });
     let newProceeding = new ProceedingCreation(0, 0, 0, State.STATE_PENDING_CREATE,

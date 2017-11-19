@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, UserService, GroupService, DecisionService, SharedDataService } from '../../../providers';
-import { User, Group, Decision } from '../../../models';
+import { User, Decision } from '../../../models';
 import { State } from '../../../app/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
@@ -50,10 +50,7 @@ export class DecisionEditorPage {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
 
-    this.groupService.getGroup(this.groupId)
-      .subscribe((group: Group) => {
-        this.users = group.members.map(id => this.userService.getUser(id));
-      });
+    this.users = this.sharedDataService.proceedingAttendees.map(id => this.userService.getUser(id));
 
     if (this.id) {
       this.decisionService.getDecision(this.groupId, this.id)
@@ -61,15 +58,18 @@ export class DecisionEditorPage {
           this.form.controls['expiryDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(decision.expiryDate)));
           this.form.controls['title'].setValue(decision.title);
           this.form.controls['description'].setValue(decision.description);
-          this.form.controls['accepters'].setValue(decision.accepters);
-          this.form.controls['rejecters'].setValue(decision.rejecters);
-          this.form.controls['abstainers'].setValue(decision.abstainers);
+          this.form.controls['accepters'].setValue(decision.accepters.filter(accepter =>
+            this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter)));
+          this.form.controls['rejecters'].setValue(decision.rejecters.filter(rejecter =>
+            this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter)));
+          this.form.controls['abstainers'].setValue(decision.abstainers.filter(abstainer =>
+            this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer)));
         });
     }
   }
 
   ionViewDidEnter() {
-    this.translate.get(['I18N_EDITOR','I18N_DECISION']).subscribe(values => {
+    this.translate.get(['I18N_EDITOR', 'I18N_DECISION']).subscribe(values => {
       this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_DECISION;
     });
     this.event.publish('App_ShowHeader');
@@ -77,6 +77,10 @@ export class DecisionEditorPage {
   }
 
   isValidVoters(): boolean {
+    return this.isUniqueVoters() && this.isPartOfAttendees();
+  }
+
+  isUniqueVoters(): boolean {
     let users = [];
     users = users.concat(this.form.value.accepters);
     users = users.concat(this.form.value.rejecters);
@@ -87,6 +91,12 @@ export class DecisionEditorPage {
       valid = valid && (users[i - 1] != users[i]);
 
     return valid;
+  }
+
+  isPartOfAttendees(): boolean {
+    return this.form.value.accepters.every(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter))
+      && this.form.value.rejecters.every(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter))
+      && this.form.value.abstainers.every(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer));
   }
 
   isValidAccepters(): boolean {
