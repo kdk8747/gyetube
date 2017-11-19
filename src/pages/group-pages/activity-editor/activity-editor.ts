@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, UserService, GroupService, ActivityService, DecisionService, AmazonService } from '../../../providers';
+import { UtilService, UserService, GroupService, ActivityService, DecisionService, AmazonService, SharedDataService } from '../../../providers';
 import { User, Group, Activity, Decision, AmazonSignature } from '../../../models';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -34,7 +35,9 @@ export class ActivityEditorPage {
     public groupService: GroupService,
     public activityService: ActivityService,
     public decisionService: DecisionService,
-    public amazonService: AmazonService
+    public amazonService: AmazonService,
+    public sharedDataService: SharedDataService,
+    public translate: TranslateService
   ) {
     this.form = formBuilder.group({
       title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
@@ -58,15 +61,11 @@ export class ActivityEditorPage {
   }
 
   ionViewDidEnter() {
+    this.translate.get(['I18N_EDITOR','I18N_ACTIVITY']).subscribe(values => {
+      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_ACTIVITY;
+    });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-  }
-
-  popNavigation() {
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('ActivityListPage');
-    else
-      this.navCtrl.pop();
   }
 
   onChangeActivityPhoto(event: any) {

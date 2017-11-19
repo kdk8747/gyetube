@@ -1,14 +1,5 @@
-<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
+<ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
-  <ion-card>
-    <ion-toolbar>
-      <ion-buttons right>
-        <button ion-button icon-only (click)="popNavigation()">
-          <ion-icon name="close"></ion-icon>
-        </button>
-      </ion-buttons>
-      <ion-buttons>{{ 'I18N_ACTIVITY' | translate }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
-    </ion-toolbar>
 
     <form [formGroup]="form">
       <ion-list>
@@ -68,5 +59,4 @@
       <!-- <button ion-button>{{ 'I18N_SAVE' | translate }}</button> -->
       <button ion-button (tap)="onSave()">{{ 'I18N_UPLOAD' | translate }}</button>
     </ion-buttons>
-  </ion-card>
 </ion-content>

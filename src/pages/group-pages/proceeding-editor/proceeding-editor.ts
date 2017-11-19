@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, UserService, GroupService, ProceedingService, DecisionService, SharedDataService } from '../../../providers';
 import { User, Group, ProceedingCreation, Proceeding } from '../../../models';
 import { State } from '../../../app/constants';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage({
   segment: 'proceeding-editor'
@@ -33,7 +34,8 @@ export class ProceedingEditorPage {
     public groupService: GroupService,
     public proceedingService: ProceedingService,
     public decisionService: DecisionService,
-    public sharedDataService: SharedDataService
+    public sharedDataService: SharedDataService,
+    public translate: TranslateService
   ) {
     this.form = formBuilder.group({
       title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
@@ -72,17 +74,11 @@ export class ProceedingEditorPage {
   }
 
   ionViewDidEnter() {
+    this.translate.get(['I18N_EDITOR','I18N_PROCEEDING']).subscribe(values => {
+      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_PROCEEDING;
+    });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-  }
-
-  popNavigation() {
-    this.sharedDataService.decisionEditMode = false;
-    this.sharedDataService.decisionChangesets = [];
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('ProceedingListPage');
-    else
-      this.navCtrl.pop();
   }
 
   navigateToUserDetail() {

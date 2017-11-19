@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, ReceiptService, ActivityService, DecisionService, AmazonService } from '../../../providers';
+import { UtilService, ReceiptService, ActivityService, DecisionService, AmazonService, SharedDataService } from '../../../providers';
 import { Receipt, Activity, Decision, AmazonSignature } from '../../../models';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
@@ -35,7 +36,9 @@ export class ReceiptEditorPage {
     public receiptService: ReceiptService,
     public activityService: ActivityService,
     public decisionService: DecisionService,
-    public amazonService: AmazonService
+    public amazonService: AmazonService,
+    public sharedDataService: SharedDataService,
+    public translate: TranslateService
   ) {
 
     this.form = formBuilder.group({
@@ -54,15 +57,11 @@ export class ReceiptEditorPage {
   }
 
   ionViewDidEnter() {
+    this.translate.get(['I18N_EDITOR','I18N_RECEIPT']).subscribe(values => {
+      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_RECEIPT;
+    });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-  }
-
-  popNavigation() {
-    if (this.navCtrl.length() == 1)
-      this.navCtrl.setRoot('ReceiptListPage');
-    else
-      this.navCtrl.pop();
   }
 
   onChangeReceiptPhoto(event: any) {
