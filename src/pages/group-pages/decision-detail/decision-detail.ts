@@ -17,7 +17,7 @@ export class DecisionDetailPage {
 
   groupId: string;
   id: number;
-  decision: Observable<Decision>;
+  decision: Decision;
   abstainers: Observable<User>[] = [];
   accepters: Observable<User>[] = [];
   rejecters: Observable<User>[] = [];
@@ -43,8 +43,8 @@ export class DecisionDetailPage {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
 
-    this.decision = this.decisionService.getDecision(this.groupId, this.id);
-    this.decision.subscribe((decision: Decision) => {
+    this.decisionService.getDecision(this.groupId, this.id).subscribe((decision: Decision) => {
+      this.decision = decision;
       this.abstainers = decision.abstainers.map((id: string) => this.userService.getUser(id));
       this.accepters = decision.accepters.map((id: string) => this.userService.getUser(id));
       this.rejecters = decision.rejecters.map((id: string) => this.userService.getUser(id));
@@ -58,13 +58,22 @@ export class DecisionDetailPage {
   }
 
   ionViewDidEnter() {
-    this.decision.subscribe(decision => this.sharedDataService.headerDetailTitle = decision.title);
+    this.decisionService.getDecision(this.groupId, this.id).subscribe(decision =>
+      this.sharedDataService.headerDetailTitle = this.decision.title);
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }
 
   navigateToUserDetail() {
     ;
+  }
+
+  navigateToPrev() {
+    this.navCtrl.setRoot('DecisionDetailPage', { id: this.decision.prevId });
+  }
+
+  navigateToNext() {
+    this.navCtrl.setRoot('DecisionDetailPage', { id: this.decision.nextId });
   }
 
   navigateToProceedingDetail(obs: Observable<Proceeding>) {

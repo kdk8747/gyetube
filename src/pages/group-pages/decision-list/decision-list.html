@@ -5,7 +5,7 @@
       <ion-row>
         <span *ngIf="sharedDataService.decisionListTimelineMode">
           <grasscube-state-label [state]="decision.state"></grasscube-state-label>
-          {{decision.title}}
+          - {{decision.title}}
         </span>
         <p *ngIf="!sharedDataService.decisionListTimelineMode">{{decision.title}}</p>
       </ion-row>
@@ -20,7 +20,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col *ngIf="sharedDataService.decisionEditMode">
+        <ion-col *ngIf="sharedDataService.decisionEditMode && decision.nextId == 0">
           <button ion-button icon-only (tap)="navigateToEditorForUpdate(decision.id)">
             <ion-icon name="create"></ion-icon>
           </button>

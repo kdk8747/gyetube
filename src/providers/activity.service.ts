@@ -39,8 +39,7 @@ export class ActivityService {
       .map(response => {
         let activities = response.json() as Activity[];
         activities.map(activity => {
-          if (!this.activities[group_id + activity.id])
-            this.activities[group_id + activity.id] = new Observable<Activity>(obs => obs.next(activity))
+          this.activities[group_id + activity.id] = new Observable<Activity>(obs => obs.next(activity));
         });
       }).publishLast().connect(); // connect(): immediately fetch
   }

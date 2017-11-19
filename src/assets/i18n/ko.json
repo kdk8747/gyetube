@@ -59,6 +59,7 @@
   "I18N_CREATE": "새 글",
   "I18N_UPDATE": "수정",
   "I18N_DELETE": "삭제",
+  "I18N_REJECTED": "거부됨",
 
 
   "I18N_CREATED_DATE": "생성일",

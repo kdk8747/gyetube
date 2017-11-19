@@ -82,12 +82,12 @@ export class DecisionListPage {
   }
 
   onDelete(decision: Decision): void {
-    let found = this.sharedDataService.decisionChangesets.findIndex(item => item.id == decision.id);
     let newDecision = JSON.parse(JSON.stringify(decision)) as Decision;
 
     newDecision.prevId = decision.id;
     newDecision.state = State.STATE_PENDING_DELETE;
     newDecision.description = '';
+    let found = this.sharedDataService.decisionChangesets.findIndex(item => item.prevId == decision.id);
     if (found != -1)
       this.sharedDataService.decisionChangesets[found] = newDecision;
     else

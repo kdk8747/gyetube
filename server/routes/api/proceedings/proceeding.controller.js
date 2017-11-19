@@ -113,7 +113,7 @@ exports.create = (req, res) => {
   else if (req.params.group === 'suwongreenparty') {
     if (req.params.group in req.decoded.permissions.groups) {
       let newProceeding = req.body;
-      newProceeding.id = proceedingID++;
+      newProceeding.id = proceedingID;
       if(+newProceeding.prevId > 0) {
         let prev = proceedings.find(item => item.id === +newProceeding.prevId);
         if (prev.nextId == 0) {
@@ -134,10 +134,18 @@ exports.create = (req, res) => {
           req.body = newProceeding.childDecisions[i];
           let id = decisionController.create(req, newProceeding.id);
           if (id) childIdList.push(id);
+          else {
+            res.status(405).json({
+              success: false,
+              message: 'One of the target proceeding.childDecision is already revised'
+            });
+            return;
+          }
         }
         newProceeding.childDecisions = childIdList;
       }
 
+      proceedingID ++;
       proceedings.push(newProceeding);
       res.json(newProceeding);
     }

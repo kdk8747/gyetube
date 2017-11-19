@@ -140,7 +140,7 @@ export class DecisionEditorPage {
       newDecision.id = this.id;
       newDecision.prevId = this.id;
       newDecision.state = State.STATE_PENDING_UPDATE;
-      let found = this.sharedDataService.decisionChangesets.findIndex(item => item.id == this.id);
+      let found = this.sharedDataService.decisionChangesets.findIndex(item => {console.log(item.prevId);return item.prevId == this.id});
       if (found != -1)
         this.sharedDataService.decisionChangesets[found] = newDecision;
       else

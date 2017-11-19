@@ -1,12 +1,12 @@
 <ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-  <p>{{ 'I18N_MEETING_DATE' | translate}}: {{(decision | async)?.meetingDate | localizedDate}}</p>
-  <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{(decision | async)?.expiryDate | localizedDate}}</p>
+  <p>{{ 'I18N_MEETING_DATE' | translate}}: {{decision?.meetingDate | localizedDate}}</p>
+  <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{decision?.expiryDate | localizedDate}}</p>
 
   <div style="height:10px"></div>
 
-  <p>{{(decision | async)?.description}}</p>
+  <p class="pre-wrap">{{decision?.description}}</p>
 
   <div style="height:10px"></div>
 
@@ -91,9 +91,27 @@
   </ion-card>
 
   <p text-right>
-    {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{(decision | async)?.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
+    {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{decision?.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
   </p>
   <p text-right>
-    {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{(decision | async)?.totalDifference | number}}
+    {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{decision?.totalDifference | number}}
   </p>
+
+  <ion-toolbar *ngIf="(decision?.prevId || decision?.nextId)">
+    <ion-buttons left *ngIf="decision?.state <= 2 && decision?.prevId">
+      <button ion-button icon-only (tap)="navigateToPrev()">
+        <ion-icon name="arrow-back"></ion-icon>
+        {{ 'I18N_PREV' | translate}} <br/><br/> {{ 'I18N_REVISION' | translate}}
+      </button>
+    </ion-buttons>
+    <p text-center>
+      <grasscube-state-label [state]="decision?.state"></grasscube-state-label>
+    </p>
+    <ion-buttons right *ngIf="decision?.state <= 2 && decision?.nextId">
+      <button ion-button icon-only (tap)="navigateToNext()">
+        {{ 'I18N_NEXT' | translate}} <br/><br/> {{ 'I18N_REVISION' | translate}}
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-content>

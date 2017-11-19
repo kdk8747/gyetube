@@ -39,8 +39,7 @@ export class ReceiptService {
       .map(response => {
         let receipts = response.json() as Receipt[];
         receipts.map(receipt => {
-          if (!this.receipts[group_id + receipt.id])
-            this.receipts[group_id + receipt.id] = new Observable<Receipt>(obs => obs.next(receipt))
+          this.receipts[group_id + receipt.id] = new Observable<Receipt>(obs => obs.next(receipt));
         });
       }).publishLast().connect(); // connect(): immediately fetch
   }

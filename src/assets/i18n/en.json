@@ -59,6 +59,7 @@
   "I18N_CREATE": "Create",
   "I18N_UPDATE": "Update",
   "I18N_DELETE": "Delete",
+  "I18N_REJECTED": "Rejected",
 
 
   "I18N_CREATED_DATE": "Created Date",

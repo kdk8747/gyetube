@@ -88,7 +88,19 @@ export class ProceedingDetailPage {
       this.proceedingService.update(this.groupId, this.proceeding.id)
         .subscribe((proceeding: Proceeding) => {
           this.proceeding = proceeding;
-          this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
+          if (proceeding.reviewers.length == proceeding.attendees.length) {
+            this.navCtrl.setRoot('ProceedingListPage');
+            proceeding.childDecisions.map((id: number) => {
+              this.decisionService.cacheDecision(this.groupId, id);
+              this.decisionService.getDecision(this.groupId, id).subscribe(decision =>
+                this.decisionService.cacheDecision(this.groupId, decision.prevId));
+            });
+          }
+          else {
+            this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
+            this.event.publish('App_ShowHeader');
+            this.event.publish('TabsGroup_ShowTab');
+          }
         });
     }
     else {

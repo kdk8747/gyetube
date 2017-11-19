@@ -3,12 +3,12 @@
 
   <ion-toolbar *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE && proceeding?.nextId == 0">
     <ion-buttons>
-      {{'I18N_PENDING_CREATE' | translate}} -
+      {{'I18N_PENDING_CREATE' | translate}}
       <span *ngIf="needYou(proceeding)">
         <ion-icon name="alert" color="danger"></ion-icon>
         {{'I18N_NEED_YOUR_REVIEW' | translate}}
       </span>
-      {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
+      - {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
     </ion-buttons>
   </ion-toolbar>
 
@@ -23,7 +23,7 @@
       </ion-avatar>
     </button>
   </ion-buttons>
-  <ion-buttons left *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE">
+  <ion-buttons left *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE && proceeding?.nextId == 0">
     {{ 'I18N_REVIEWED_BY' | translate}}:
     <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let reviewer of reviewers">
       <span *ngIf="!((reviewer | async)?.imageUrl)">{{(reviewer | async)?.name}}</span>
@@ -43,7 +43,7 @@
           <p>{{ 'I18N_DECISION' | translate }} {{i+1}}</p>
           <p>
             <grasscube-state-label [state]="(decision | async)?.state"></grasscube-state-label>
-            {{ (decision | async)?.title }}
+            - {{ (decision | async)?.title }}
           </p>
           <div style="height:10px"></div>
           <p class="pre-wrap">{{ (decision | async)?.description }}</p>
@@ -93,15 +93,15 @@
     <ion-buttons left *ngIf="proceeding?.prevId">
       <button ion-button icon-only (tap)="navigateToPrev()">
         <ion-icon name="arrow-back"></ion-icon>
-        {{ 'I18N_PREV' | translate}}
+        {{ 'I18N_PREV' | translate}} <br/><br/> {{ 'I18N_REVISION' | translate}}
       </button>
     </ion-buttons>
-    <ion-buttons center>
-      <p text-center>{{ 'I18N_REVISION' | translate}}</p>
-    </ion-buttons>
+    <span *ngIf="proceeding?.nextId != 0">
+      <p text-center>{{'I18N_PENDING_CREATE' | translate}} - {{'I18N_REJECTED' | translate}}</p>
+    </span>
     <ion-buttons right *ngIf="proceeding?.nextId">
       <button ion-button icon-only (tap)="navigateToNext()">
-        {{ 'I18N_NEXT' | translate}}
+        {{ 'I18N_NEXT' | translate}} <br/><br/> {{ 'I18N_REVISION' | translate}}
         <ion-icon name="arrow-forward"></ion-icon>
       </button>
     </ion-buttons>

@@ -21,7 +21,7 @@ var decisions = [
     meetingDate: new Date("2016-03-07T19:30:00+09:00"),
     expiryDate: new Date("2016-11-28T19:30:00+09:00"),
     description:
-    '새운영위원 선출\n\
+      '새운영위원 선출\n\
 김동규(연락담당), 고성준, 신지연(경기운영위참석), 한태연(친환경급식담당), 최연두(모임장소섭외/회계담당)',
     abstainers: [], accepters: ['yd', 'sj', 'kk471891074', 'jy', 'ty', 'jh'], rejecters: [],
     parentProceeding: 1,
@@ -37,7 +37,7 @@ var decisions = [
     meetingDate: new Date("2016-03-07T19:30:00+09:00"),
     expiryDate: new Date("2016-04-13T19:30:00+09:00"),
     description:
-    '- 경기녹색당 예결산위원회 권고에 따라 2015년 수원녹색당 활동지원 이월금 1,229,000원을 2016년 총선 선거기금으로 전용 건으로\n\
+      '- 경기녹색당 예결산위원회 권고에 따라 2015년 수원녹색당 활동지원 이월금 1,229,000원을 2016년 총선 선거기금으로 전용 건으로\n\
 임시총회에서 표결에 붙였고 그 결과 이월금액을 총선기금으로 전용하기로 하였음.',
     abstainers: ['sj'], accepters: ['kk471891074', 'jy', 'jh'], rejecters: ['yd', 'ty'],
     parentProceeding: 1,
@@ -53,7 +53,7 @@ var decisions = [
     meetingDate: new Date("2016-03-07T19:30:00+09:00"),
     expiryDate: new Date("2016-04-13T19:30:00+09:00"),
     description:
-    '3월 한달간 매주 일요일 마다 정당연설회와 현수막을 설치하기로 결정함.\n\
+      '3월 한달간 매주 일요일 마다 정당연설회와 현수막을 설치하기로 결정함.\n\
 \n\
 1. 정당연설회 일정\n\
   3/13(일)-오후1시 수원역, 오후3시 행궁동광장\n\
@@ -165,8 +165,14 @@ exports.create = (req, parentId) => {
         found.parentProceeding = parentId;
       }
       else {
-        newDecision.id = decisionID++;
+        newDecision.id = decisionID;
         newDecision.parentProceeding = parentId;
+        if (+newDecision.prevId > 0) {
+          let prev = decisions.find(item => item.id === +newDecision.prevId);
+          if (prev && prev.nextId != 0)
+            return 0;
+        }
+        decisionID ++;
         decisions.push(newDecision);
       }
       return newDecision.id;
@@ -182,7 +188,7 @@ exports.overThePendingState = (req) => {
     if (req.params.group in req.decoded.permissions.groups) {
       let id = req.body;
       let found = decisions.find(item => item.id === +id);
-      if (found && found.state > 2){
+      if (found && found.state > 2) {
         found.state -= 3;
         if (+found.prevId > 0)
           decisions.find(item => item.id === +found.prevId).nextId = found.id;

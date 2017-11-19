@@ -66,6 +66,7 @@ export class ProceedingEditorPage {
           this.form.controls['title'].setValue(proceeding.title);
           this.form.controls['description'].setValue(proceeding.description);
           this.form.controls['attendees'].setValue(proceeding.attendees);
+          this.sharedDataService.proceedingAttendees = proceeding.attendees;
           this.sharedDataService.decisionChangesets = [];
           proceeding.childDecisions.map(id =>
             this.decisionService.getDecision(this.groupId, id)
@@ -143,7 +144,10 @@ export class ProceedingEditorPage {
     this.proceedingService.create(this.groupId, newProceeding)
       .subscribe((proceeding: Proceeding) => {
         for (let i = 0; i < proceeding.childDecisions.length; i++)
-          this.decisionService.cacheDecision(this.groupId, proceeding.childDecisions[i]);
+          this.decisionService.cacheDecision(this.groupId, proceeding.childDecisions[i]).publishLast().connect();
+        if (proceeding.prevId > 0) {
+          this.proceedingService.cacheProceeding(this.groupId, proceeding.prevId).publishLast().connect();
+        }
         this.sharedDataService.decisionEditMode = false;
         this.sharedDataService.decisionChangesets = [];
         this.event.publish('DecisionList_Refresh');

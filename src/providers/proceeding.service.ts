@@ -41,8 +41,7 @@ export class ProceedingService {
       .map(response => {
         let proceedings = response.json() as Proceeding[];
         proceedings.map(proceeding => {
-          if (!this.proceedings[group_id + proceeding.id])
-            this.proceedings[group_id + proceeding.id] = new Observable<Proceeding>(obs => obs.next(proceeding))
+          this.proceedings[group_id + proceeding.id] = new Observable<Proceeding>(obs => obs.next(proceeding));
         });
       }).publishLast().connect(); // connect(): immediately fetch
   }
@@ -57,6 +56,16 @@ export class ProceedingService {
     return this.proceedings[group_id + id];
   }
 
+  cacheProceeding(group_id: string, id: number): Observable<Proceeding> {
+    const url = `${this.proceedingsUrl}/${group_id}/${id}`;
+    return this.http.get(url)
+      .map(response => {
+        let proceeding = response.json() as Proceeding;
+        this.proceedings[group_id + proceeding.id] = new Observable<Proceeding>(obs => obs.next(proceeding));
+        return proceeding;
+      });
+  }
+
   update(group_id: string, proceeding_id: number): Observable<Proceeding> {
     const url = `${this.proceedingsUrl}/${group_id}/${proceeding_id}`;
     return this.proceedings[group_id + proceeding_id] = this.http
@@ -69,7 +78,11 @@ export class ProceedingService {
     const url = `${this.proceedingsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(proceeding), { headers: this.headers })
-      .map(response => response.json() as Proceeding)
+      .map(response => {
+        let proceeding = response.json() as Proceeding;
+        this.proceedings[group_id + proceeding.id] = new Observable<Proceeding>(obs => obs.next(proceeding));
+        return proceeding;
+      })
       .take(1);
   }
 }
