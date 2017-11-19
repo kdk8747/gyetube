@@ -57,10 +57,19 @@ export class HeaderComponent {
       let selectedTabIndex = this.nav.getActiveChildNavs()[0].getSelected().index;
       let childNav = this.nav.getActiveChildNavs()[0]._tabs[selectedTabIndex];
       this.sharedDataService.headerDetailTitle = null;
-      if (childNav.length() == 1)
-        childNav.setRoot('ProceedingListPage');
-      else
+      if (childNav.length() == 1) {
+        switch(selectedTabIndex) {
+          case 0: childNav.setRoot('GroupHomePage'); break;
+          case 1: childNav.setRoot('ProceedingListPage'); break;
+          case 2: childNav.setRoot('DecisionListPage'); break;
+          case 3: childNav.setRoot('ActivityListPage'); break;
+          case 4: childNav.setRoot('ReceiptListPage'); break;
+          default: break;
+        }
+      }
+      else {
         childNav.pop();
+      }
     }
     else {
       this.sharedDataService.headerGroupTitle = null;
