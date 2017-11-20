@@ -51,9 +51,6 @@ export class ReceiptEditorPage {
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
     this.isNative = this.util.isNativeApp();
-
-    this.activities = this.activityService.getActivities(this.groupId);
-    this.decisions = this.decisionService.getDecisions(this.groupId);
   }
 
   ionViewDidEnter() {
@@ -62,6 +59,9 @@ export class ReceiptEditorPage {
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
+
+    this.activities = this.activityService.getActivities(this.groupId);
+    this.decisions = this.decisionService.getDecisions(this.groupId);
   }
 
   onChangeReceiptPhoto(event: any) {

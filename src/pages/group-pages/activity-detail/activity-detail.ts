@@ -41,20 +41,20 @@ export class ActivityDetailPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
+  }
+
+  ionViewDidEnter() {
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
 
     this.activity = this.activityService.getActivity(this.groupId, this.id);
     this.activity.subscribe((activity: Activity) => {
+      this.sharedDataService.headerDetailTitle = activity.title;
       this.creator = this.userService.getUser(activity.creator);
       this.participants = activity.participants.map((id: string) => this.userService.getUser(id));
       this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision);
       this.receipts = activity.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
     });
-  }
-
-  ionViewDidEnter() {
-    this.activity.subscribe(activity => this.sharedDataService.headerDetailTitle = activity.title);
-    this.event.publish('App_ShowHeader');
-    this.event.publish('TabsGroup_ShowTab');
   }
 
   navigateToUserDetail() {

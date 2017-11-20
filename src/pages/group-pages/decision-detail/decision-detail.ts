@@ -42,9 +42,15 @@ export class DecisionDetailPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
+  }
+
+  ionViewDidEnter() {
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
 
     this.decisionService.getDecision(this.groupId, this.id).subscribe((decision: Decision) => {
       this.decision = decision;
+      this.sharedDataService.headerDetailTitle = decision.title;
       this.abstainers = decision.abstainers.map((id: string) => this.userService.getUser(id));
       this.accepters = decision.accepters.map((id: string) => this.userService.getUser(id));
       this.rejecters = decision.rejecters.map((id: string) => this.userService.getUser(id));
@@ -55,13 +61,6 @@ export class DecisionDetailPage {
       if (decision.childReceipts)
         this.receipts = decision.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
     });
-  }
-
-  ionViewDidEnter() {
-    this.decisionService.getDecision(this.groupId, this.id).subscribe(decision =>
-      this.sharedDataService.headerDetailTitle = this.decision.title);
-    this.event.publish('App_ShowHeader');
-    this.event.publish('TabsGroup_ShowTab');
   }
 
   navigateToUserDetail() {

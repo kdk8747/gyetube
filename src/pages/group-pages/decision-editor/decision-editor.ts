@@ -49,6 +49,14 @@ export class DecisionEditorPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
+  }
+
+  ionViewDidEnter() {
+    this.translate.get(['I18N_EDITOR', 'I18N_DECISION']).subscribe(values => {
+      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_DECISION;
+    });
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
 
     this.users = this.sharedDataService.proceedingAttendees.map(id => this.userService.getUser(id));
 
@@ -66,14 +74,6 @@ export class DecisionEditorPage {
             this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer)));
         });
     }
-  }
-
-  ionViewDidEnter() {
-    this.translate.get(['I18N_EDITOR', 'I18N_DECISION']).subscribe(values => {
-      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_DECISION;
-    });
-    this.event.publish('App_ShowHeader');
-    this.event.publish('TabsGroup_ShowTab');
   }
 
   isValidVoters(): boolean {

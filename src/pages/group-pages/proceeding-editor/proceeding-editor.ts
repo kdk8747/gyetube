@@ -49,9 +49,18 @@ export class ProceedingEditorPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
+  }
+
+  ionViewDidEnter() {
+    this.translate.get(['I18N_EDITOR', 'I18N_PROCEEDING']).subscribe(values => {
+      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_PROCEEDING;
+    });
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
 
     this.groupService.getGroup(this.groupId)
       .subscribe((group: Group) => {
+        this.users = [];
         group.members.map(id => {
           this.userService.getUser(id).subscribe(
             (user) => this.users.push(user),
@@ -73,14 +82,6 @@ export class ProceedingEditorPage {
               .subscribe(decision => this.sharedDataService.decisionChangesets.push(decision)));
         });
     }
-  }
-
-  ionViewDidEnter() {
-    this.translate.get(['I18N_EDITOR', 'I18N_PROCEEDING']).subscribe(values => {
-      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_PROCEEDING;
-    });
-    this.event.publish('App_ShowHeader');
-    this.event.publish('TabsGroup_ShowTab');
   }
 
   navigateToUserDetail() {

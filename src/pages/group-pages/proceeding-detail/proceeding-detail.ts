@@ -41,21 +41,20 @@ export class ProceedingDetailPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
+  }
+
+  ionViewDidEnter() {
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
 
     this.proceedingObs = this.proceedingService.getProceeding(this.groupId, this.id);
     this.proceedingObs.subscribe((proceeding: Proceeding) => {
       this.proceeding = proceeding;
+      this.sharedDataService.headerDetailTitle = proceeding.title;
       this.attendees = proceeding.attendees.map((id: string) => this.userService.getUser(id));
       this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
       this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
     });
-  }
-
-  ionViewDidEnter() {
-
-    this.proceedingObs.subscribe(proceeding => this.sharedDataService.headerDetailTitle = proceeding.title);
-    this.event.publish('App_ShowHeader');
-    this.event.publish('TabsGroup_ShowTab');
   }
 
   navigateToUserDetail() {
@@ -91,9 +90,8 @@ export class ProceedingDetailPage {
           if (proceeding.reviewers.length == proceeding.attendees.length) {
             this.navCtrl.setRoot('ProceedingListPage');
             proceeding.childDecisions.map((id: number) => {
-              this.decisionService.cacheDecision(this.groupId, id);
-              this.decisionService.getDecision(this.groupId, id).subscribe(decision =>
-                this.decisionService.cacheDecision(this.groupId, decision.prevId));
+              this.decisionService.cacheDecision(this.groupId, id).subscribe(decision =>
+                this.decisionService.cacheDecision(this.groupId, decision.prevId).publishLast().connect());
             });
           }
           else {

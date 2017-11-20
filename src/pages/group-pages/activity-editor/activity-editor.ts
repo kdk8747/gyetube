@@ -52,12 +52,6 @@ export class ActivityEditorPage {
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
     this.isNative = this.util.isNativeApp();
-
-    this.groupService.getGroup(this.groupId)
-      .subscribe((group: Group) => {
-        this.users = group.members.map(id => this.userService.getUser(id));
-      });
-    this.decisions = this.decisionService.getDecisions(this.groupId);
   }
 
   ionViewDidEnter() {
@@ -66,6 +60,12 @@ export class ActivityEditorPage {
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
+
+    this.groupService.getGroup(this.groupId)
+      .subscribe((group: Group) => {
+        this.users = group.members.map(id => this.userService.getUser(id));
+      });
+    this.decisions = this.decisionService.getDecisions(this.groupId);
   }
 
   onChangeActivityPhoto(event: any) {
