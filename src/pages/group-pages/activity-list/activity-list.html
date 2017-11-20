@@ -1,26 +1,32 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
-  <ion-card *ngFor="let activity of activities | async" (tap)="navigateToDetail(activity.id)">
-    <ion-card-content>
-      <ion-row>
-        <p>{{activity.title}}</p>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <p>{{activity.activityDate | localizedDate}}</p>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <p text-right>
-            {{ activity.elapsedTime }} {{ 'I18N_HOURS' | translate}}
-             X {{ activity.participants.length }} {{ 'I18N_PARTICIPANTS' | translate}}
-            = {{ activity.elapsedTime * activity.participants.length }} {{ 'I18N_HOURS' | translate}}
-          </p>
-        </ion-col>
-      </ion-row>
-    </ion-card-content>
-  </ion-card>
+
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let activity of activities | async">
+        <ion-card (tap)="navigateToDetail(activity.id)">
+          <ion-card-content>
+            <ion-row>
+              <p>{{activity.title}}</p>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <p>{{activity.activityDate | localizedDate}}</p>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <p text-right>
+                  {{ activity.elapsedTime }} {{ 'I18N_HOURS' | translate}} X {{ activity.participants.length }} {{ 'I18N_PARTICIPANTS' | translate}}
+                  = {{ activity.elapsedTime * activity.participants.length }} {{ 'I18N_HOURS' | translate}}
+                </p>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
   <ion-fab right middle *ngIf="creationPermitted">
     <button ion-fab (tap)="navigateToEditor()">

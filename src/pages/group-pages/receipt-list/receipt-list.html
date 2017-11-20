@@ -1,23 +1,32 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
-  <ion-card *ngFor="let receipt of receipts | async" (tap)="navigateToDetail(receipt.id)">
-    <ion-card-content>
-      <ion-row>
-        <p>{{receipt.title}}</p>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <p>{{receipt.paymentDate | localizedDate}}</p>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <p text-left>{{ 'I18N_DIFFERENCE' | translate}} {{receipt.difference | number}}</p>
-          <p text-right>{{ 'I18N_BALANCE' | translate}} {{receipt.balance | number}}</p>
-        </ion-col>
-      </ion-row>
-    </ion-card-content>
-  </ion-card>
+
+  <ion-row>
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+    <ion-col col-12 col-sm-6 col-xl-4>
+      <ion-card *ngFor="let receipt of receipts | async" (tap)="navigateToDetail(receipt.id)">
+        <ion-card-content>
+          <ion-row>
+            <p>{{receipt.title}}</p>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <p>{{receipt.paymentDate | localizedDate}}</p>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <p text-right>{{ 'I18N_BALANCE' | translate}} {{receipt.balance | number}}</p>
+              <p text-center>{{ 'I18N_DIFFERENCE' | translate}} {{receipt.difference | number}}</p>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+  </ion-row>
 
   <ion-fab right middle *ngIf="creationPermitted">
     <button ion-fab (tap)="navigateToEditor()">

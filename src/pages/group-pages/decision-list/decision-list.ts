@@ -107,5 +107,7 @@ export class DecisionListPage {
   onFAB(fab: FabContainer) {
     fab.close();
     this.refreshDecisions();
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
   }
 }

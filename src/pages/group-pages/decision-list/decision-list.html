@@ -1,44 +1,92 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
-  <ion-card *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
-    <ion-card-content>
-      <ion-row>
-        <span *ngIf="sharedDataService.decisionListTimelineMode">
-          <grasscube-state-label [state]="decision.state"></grasscube-state-label>
-          - {{decision.title}}
-        </span>
-        <p *ngIf="!sharedDataService.decisionListTimelineMode">{{decision.title}}</p>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <p>{{decision.meetingDate | localizedDate}}</p>
-        </ion-col>
-        <ion-col>
-          <p text-right *ngIf="decision.accepters.length"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
-          <p text-right *ngIf="decision.rejecters.length"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
-          <p text-right *ngIf="decision.abstainers.length"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col *ngIf="sharedDataService.decisionEditMode && decision.nextId == 0">
-          <button ion-button icon-only (tap)="navigateToEditorForUpdate(decision.id)">
-            <ion-icon name="create"></ion-icon>
-          </button>
-          <button ion-button icon-only (tap)="onDelete(decision)">
-            <ion-icon name="trash"></ion-icon>
-          </button>
-        </ion-col>
-        <ion-col>
-          <p text-right>
-            {{ 'I18N_ELAPSED_TIME' | translate}} {{decision.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
-          </p>
-          <p text-right>
-            {{ 'I18N_DIFFERENCE' | translate}} {{decision.totalDifference | number}}
-          </p>
-        </ion-col>
-      </ion-row>
-    </ion-card-content>
-  </ion-card>
+
+  <ion-row *ngIf="sharedDataService.decisionListTimelineMode">
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+    <ion-col col-12 col-sm-6 col-xl-4>
+      <ion-card *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
+        <ion-card-content>
+          <ion-row>
+            <grasscube-state-label [state]="decision.state"></grasscube-state-label>
+            - {{decision.title}}
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <p>{{decision.meetingDate | localizedDate}}</p>
+            </ion-col>
+            <ion-col>
+              <p text-right *ngIf="decision.accepters.length"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
+              <p text-right *ngIf="decision.rejecters.length"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
+              <p text-right *ngIf="decision.abstainers.length"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col *ngIf="sharedDataService.decisionEditMode && decision.nextId == 0">
+              <button ion-button icon-only (tap)="navigateToEditorForUpdate(decision.id)">
+                <ion-icon name="create"></ion-icon>
+              </button>
+              <button ion-button icon-only (tap)="onDelete(decision)">
+                <ion-icon name="trash"></ion-icon>
+              </button>
+            </ion-col>
+            <ion-col>
+              <p text-right>
+                {{ 'I18N_ELAPSED_TIME' | translate}} {{decision.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
+              </p>
+              <p text-right>
+                {{ 'I18N_DIFFERENCE' | translate}} {{decision.totalDifference | number}}
+              </p>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+  </ion-row>
+
+  <ion-grid fixed *ngIf="!sharedDataService.decisionListTimelineMode">
+    <ion-row>
+      <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let decision of decisions | async">
+        <ion-card (tap)="navigateToDetail(decision.id)">
+          <ion-card-content>
+            <ion-row>
+              <p>{{decision.title}}</p>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <p>{{decision.meetingDate | localizedDate}}</p>
+              </ion-col>
+              <ion-col>
+                <p text-right *ngIf="decision.accepters.length"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
+                <p text-right *ngIf="decision.rejecters.length"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
+                <p text-right *ngIf="decision.abstainers.length"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col *ngIf="sharedDataService.decisionEditMode && decision.nextId == 0">
+                <button ion-button icon-only (tap)="navigateToEditorForUpdate(decision.id)">
+                  <ion-icon name="create"></ion-icon>
+                </button>
+                <button ion-button icon-only (tap)="onDelete(decision)">
+                  <ion-icon name="trash"></ion-icon>
+                </button>
+              </ion-col>
+              <ion-col>
+                <p text-right>
+                  {{ 'I18N_ELAPSED_TIME' | translate}} {{decision.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
+                </p>
+                <p text-right>
+                  {{ 'I18N_DIFFERENCE' | translate}} {{decision.totalDifference | number}}
+                </p>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
   <ion-fab right middle *ngIf="sharedDataService.decisionEditMode">
     <button ion-fab (tap)="navigateToEditor()">
