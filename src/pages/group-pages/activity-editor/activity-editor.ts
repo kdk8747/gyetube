@@ -68,6 +68,13 @@ export class ActivityEditorPage {
     this.decisions = this.decisionService.getDecisions(this.groupId);
   }
 
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ActivityListPage');
+    else
+      this.navCtrl.pop();
+  }
+
   onChangeActivityPhoto(event: any) {
     /*let fileList = event.target.files;
     this.newActivityFiles = [];

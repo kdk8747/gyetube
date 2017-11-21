@@ -57,6 +57,13 @@ export class ProceedingDetailPage {
     });
   }
 
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ProceedingListPage');
+    else
+      this.navCtrl.pop();
+  }
+
   navigateToPrev() {
     this.navCtrl.setRoot('ProceedingDetailPage', { id: this.proceeding.prevId });
   }

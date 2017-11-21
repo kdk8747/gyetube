@@ -84,6 +84,13 @@ export class ProceedingEditorPage {
     }
   }
 
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ProceedingListPage');
+    else
+      this.navCtrl.pop();
+  }
+
   navigateToUserDetail() {
     ;
   }

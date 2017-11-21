@@ -63,6 +63,13 @@ export class DecisionDetailPage {
     });
   }
 
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('DecisionListPage');
+    else
+      this.navCtrl.pop();
+  }
+
   navigateToPrev() {
     this.navCtrl.setRoot('DecisionDetailPage', { id: this.decision.prevId });
   }

@@ -57,6 +57,13 @@ export class ActivityDetailPage {
     });
   }
 
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ActivityListPage');
+    else
+      this.navCtrl.pop();
+  }
+
   navigateToDecisionDetail(obs: Observable<Decision>) {
     obs.subscribe(decision => {
       this.event.publish('TabsGroup_DecisionDetail', { id: decision.id });

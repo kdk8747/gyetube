@@ -64,6 +64,13 @@ export class ReceiptEditorPage {
     this.decisions = this.decisionService.getDecisions(this.groupId);
   }
 
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ReceiptListPage');
+    else
+      this.navCtrl.pop();
+  }
+
   onChangeReceiptPhoto(event: any) {
     this.newReceiptImageFile = event.target.files[0] as File;
 

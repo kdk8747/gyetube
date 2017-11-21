@@ -1,6 +1,20 @@
 <ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
+  <ion-row>
+      <ion-col col-sm-3 col-xl-4>
+      </ion-col>
+      <ion-col col-12 col-sm-6 col-xl-4>
+
+              <ion-toolbar *ngIf="sharedDataService.paneSplited">
+                <ion-buttons right>
+                  <button ion-button icon-only (tap)="popNavigation()">
+                    <ion-icon name="close"></ion-icon>
+                  </button>
+                </ion-buttons>
+                <ion-buttons>{{decision?.title}}</ion-buttons>
+              </ion-toolbar>
+
   <p>{{ 'I18N_MEETING_DATE' | translate}}: {{decision?.meetingDate | localizedDate}}</p>
   <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{decision?.expiryDate | localizedDate}}</p>
 
@@ -96,4 +110,8 @@
       </button>
     </ion-buttons>
   </ion-toolbar>
+</ion-col>
+<ion-col col-sm-3 col-xl-4>
+</ion-col>
+</ion-row>
 </ion-content>

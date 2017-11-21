@@ -57,6 +57,13 @@ export class ReceiptDetailPage {
     });
   }
 
+  popNavigation() {
+    if (this.navCtrl.length() == 1)
+      this.navCtrl.setRoot('ReceiptListPage');
+    else
+      this.navCtrl.pop();
+  }
+
   navigateToActivityDetail(obs: Observable<Activity>) {
     obs.subscribe(activity => {
       this.event.publish('TabsGroup_ActivityDetail', { id: activity.id });
