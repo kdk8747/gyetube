@@ -2,116 +2,120 @@
   <div style="height:56px"></div>
 
   <ion-row>
-      <ion-col col-sm-3 col-xl-4>
-      </ion-col>
-      <ion-col col-12 col-sm-6 col-xl-4>
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+    <ion-col col-12 col-sm-6 col-xl-4>
 
-              <ion-toolbar *ngIf="sharedDataService.paneSplited">
-                <ion-buttons right>
-                  <button ion-button icon-only (tap)="popNavigation()">
-                    <ion-icon name="close"></ion-icon>
-                  </button>
-                </ion-buttons>
-                <ion-buttons>{{decision?.title}}</ion-buttons>
-              </ion-toolbar>
+      <ion-toolbar *ngIf="sharedDataService.paneSplited">
+        <ion-buttons right>
+          <button ion-button icon-only (tap)="popNavigation()">
+            <ion-icon name="close"></ion-icon>
+          </button>
+        </ion-buttons>
+        <ion-buttons>{{decision?.title}}</ion-buttons>
+      </ion-toolbar>
 
-  <p>{{ 'I18N_MEETING_DATE' | translate}}: {{decision?.meetingDate | localizedDate}}</p>
-  <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{decision?.expiryDate | localizedDate}}</p>
+      <p>{{ 'I18N_MEETING_DATE' | translate}}: {{decision?.meetingDate | localizedDate}}</p>
+      <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{decision?.expiryDate | localizedDate}}</p>
 
-  <div style="height:10px"></div>
+      <div style="height:10px"></div>
 
-  <p class="pre-wrap">{{decision?.description}}</p>
+      <p class="pre-wrap">{{decision?.description}}</p>
 
-  <div style="height:10px"></div>
+      <div style="height:10px"></div>
 
-  <ion-buttons left *ngIf="accepters.length">
-    {{ 'I18N_ACCEPTERS' | translate}}:
-    <grasscube-user *ngFor="let accepter of accepters" [user]="accepter | async"></grasscube-user>
-  </ion-buttons>
-  <ion-buttons left *ngIf="rejecters.length">
-    {{ 'I18N_REJECTERS' | translate}}:
-    <grasscube-user *ngFor="let rejecter of rejecters" [user]="rejecter | async"></grasscube-user>
-  </ion-buttons>
-  <ion-buttons left *ngIf="abstainers.length">
-    {{ 'I18N_ABSTAINERS' | translate}}:
-    <grasscube-user *ngFor="let abstainer of abstainers" [user]="abstainer | async"></grasscube-user>
-  </ion-buttons>
-
-  <ion-card *ngIf="proceeding && (proceeding | async)">
-    <ion-toolbar>
-      <ion-buttons>
-        <p>{{ 'I18N_PROCEEDING' | translate }} - {{ (proceeding | async)?.title }}</p>
+      <ion-buttons left *ngIf="accepters.length">
+        {{ 'I18N_ACCEPTERS' | translate}}:
+        <grasscube-user *ngFor="let accepter of accepters" [user]="accepter | async"></grasscube-user>
       </ion-buttons>
-      <ion-buttons left>
-        <button ion-button icon-only (tap)="navigateToProceedingDetail(proceeding)">
-          <ion-icon name="arrow-back"></ion-icon>
-        </button>
+      <ion-buttons left *ngIf="rejecters.length">
+        {{ 'I18N_REJECTERS' | translate}}:
+        <grasscube-user *ngFor="let rejecter of rejecters" [user]="rejecter | async"></grasscube-user>
       </ion-buttons>
-    </ion-toolbar>
-  </ion-card>
+      <ion-buttons left *ngIf="abstainers.length">
+        {{ 'I18N_ABSTAINERS' | translate}}:
+        <grasscube-user *ngFor="let abstainer of abstainers" [user]="abstainer | async"></grasscube-user>
+      </ion-buttons>
 
-  <ion-card *ngFor="let activity of activities; let i=index">
-    <ion-toolbar>
-      <ion-buttons>
-        <p>{{ 'I18N_ACTIVITY' | translate }}{{i+1}} - {{ (activity | async)?.title }}</p>
-        <p text-right>
-          {{ 'I18N_ELAPSED_TIME' | translate}} {{ (activity | async)?.elapsedTime * (activity | async)?.participants.length }} {{ 'I18N_HOURS'
-          | translate}}
+      <ion-card *ngIf="proceeding && (proceeding | async)">
+        <ion-toolbar>
+          <ion-buttons>
+            <p>{{ 'I18N_PROCEEDING' | translate }} - {{ (proceeding | async)?.title }}</p>
+          </ion-buttons>
+          <ion-buttons left>
+            <button ion-button icon-only (tap)="navigateToProceedingDetail(proceeding)">
+              <ion-icon name="arrow-back"></ion-icon>
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-card>
+
+      <ion-card *ngFor="let activity of activities; let i=index">
+        <ion-toolbar>
+          <ion-buttons>
+            <p>{{ 'I18N_ACTIVITY' | translate }}{{i+1}} - {{ (activity | async)?.title }}</p>
+            <p text-right>
+              {{ 'I18N_ELAPSED_TIME' | translate}} {{ (activity | async)?.elapsedTime * (activity | async)?.participants.length }} {{ 'I18N_HOURS'
+              | translate}}
+            </p>
+            <p text-right>
+              {{ 'I18N_DIFFERENCE' | translate}} {{ (activity | async)?.totalDifference | number}}
+            </p>
+          </ion-buttons>
+          <ion-buttons right>
+            <button ion-button icon-only (tap)="navigateToActivityDetail(activity)">
+              <ion-icon name="arrow-forward"></ion-icon>
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-card>
+
+      <ion-card *ngFor="let receipt of receipts; let i=index">
+        <ion-toolbar>
+          <ion-buttons>
+            <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
+            <p text-right>
+              {{ 'I18N_DIFFERENCE' | translate}} {{ (receipt | async)?.difference | number}}
+            </p>
+          </ion-buttons>
+          <ion-buttons right>
+            <button ion-button icon-only (tap)="navigateToReceiptDetail(receipt)">
+              <ion-icon name="arrow-forward"></ion-icon>
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-card>
+
+      <p text-right>
+        {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{decision?.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
+      </p>
+      <p text-right>
+        {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{decision?.totalDifference | number}}
+      </p>
+
+      <ion-toolbar *ngIf="(decision?.prevId || decision?.nextId)">
+        <ion-buttons left *ngIf="decision?.state <= 2 && decision?.prevId">
+          <button ion-button icon-only (tap)="navigateToPrev()">
+            <ion-icon name="arrow-back"></ion-icon>
+            {{ 'I18N_PREV' | translate}}
+            <br/>
+            <br/> {{ 'I18N_REVISION' | translate}}
+          </button>
+        </ion-buttons>
+        <p text-center>
+          <grasscube-state-label [state]="decision?.state"></grasscube-state-label>
         </p>
-        <p text-right>
-          {{ 'I18N_DIFFERENCE' | translate}} {{ (activity | async)?.totalDifference | number}}
-        </p>
-      </ion-buttons>
-      <ion-buttons right>
-        <button ion-button icon-only (tap)="navigateToActivityDetail(activity)">
-          <ion-icon name="arrow-forward"></ion-icon>
-        </button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-card>
-
-  <ion-card *ngFor="let receipt of receipts; let i=index">
-    <ion-toolbar>
-      <ion-buttons>
-        <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
-        <p text-right>
-          {{ 'I18N_DIFFERENCE' | translate}} {{ (receipt | async)?.difference | number}}
-        </p>
-      </ion-buttons>
-      <ion-buttons right>
-        <button ion-button icon-only (tap)="navigateToReceiptDetail(receipt)">
-          <ion-icon name="arrow-forward"></ion-icon>
-        </button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-card>
-
-  <p text-right>
-    {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{decision?.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
-  </p>
-  <p text-right>
-    {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{decision?.totalDifference | number}}
-  </p>
-
-  <ion-toolbar *ngIf="(decision?.prevId || decision?.nextId)">
-    <ion-buttons left *ngIf="decision?.state <= 2 && decision?.prevId">
-      <button ion-button icon-only (tap)="navigateToPrev()">
-        <ion-icon name="arrow-back"></ion-icon>
-        {{ 'I18N_PREV' | translate}} <br/><br/> {{ 'I18N_REVISION' | translate}}
-      </button>
-    </ion-buttons>
-    <p text-center>
-      <grasscube-state-label [state]="decision?.state"></grasscube-state-label>
-    </p>
-    <ion-buttons right *ngIf="decision?.state <= 2 && decision?.nextId">
-      <button ion-button icon-only (tap)="navigateToNext()">
-        {{ 'I18N_NEXT' | translate}} <br/><br/> {{ 'I18N_REVISION' | translate}}
-        <ion-icon name="arrow-forward"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-col>
-<ion-col col-sm-3 col-xl-4>
-</ion-col>
-</ion-row>
+        <ion-buttons right *ngIf="decision?.state <= 2 && decision?.nextId">
+          <button ion-button icon-only (tap)="navigateToNext()">
+            {{ 'I18N_NEXT' | translate}}
+            <br/>
+            <br/> {{ 'I18N_REVISION' | translate}}
+            <ion-icon name="arrow-forward"></ion-icon>
+          </button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-col>
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+  </ion-row>
 </ion-content>
