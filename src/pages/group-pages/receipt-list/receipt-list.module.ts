@@ -3,6 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { ReceiptListPage } from './receipt-list';
 import { PipesModule } from '../../../pipes/pipes.module';
+import { DirectivesModule } from '../../../directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { PipesModule } from '../../../pipes/pipes.module';
   imports: [
     IonicPageModule.forChild(ReceiptListPage),
     TranslateModule.forChild(),
-    PipesModule
+    PipesModule,
+    DirectivesModule
   ],
 })
 export class ReceiptListPageModule {}

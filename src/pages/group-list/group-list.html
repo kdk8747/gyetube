@@ -1,8 +1,7 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-  <button ion-item *ngFor="let group of groups" (tap)="navigateToGroup(group.id)" no-lines>
-  <ion-card>
+  <ion-card *ngFor="let group of groups" (tap)="navigateToGroup(group.id)">
     <ion-card-header>
       {{group.title}}
     </ion-card-header>
@@ -10,5 +9,4 @@
       {{group.description}} - (클릭)
     </ion-card-content>
   </ion-card>
-  </button>
 </ion-content>

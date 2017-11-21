@@ -4,6 +4,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { ComponentsModule } from '../components/components.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { EnvironmentsModule } from './environment-variables/environment-variables.module';
 import { IonicStorageModule } from '@ionic/storage';
 
@@ -31,6 +32,7 @@ export function HttpLoaderFactory(http: Http) {
     BrowserModule,
     HttpModule,
     ComponentsModule,
+    DirectivesModule,
     AuthModule,
     TranslateModule.forRoot({
       loader: {

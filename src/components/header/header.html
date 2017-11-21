@@ -10,8 +10,8 @@
         </button>
       </span>
       <span *ngIf="sharedDataService.headerGroupTitle && !sharedDataService.paneSplited">
-        <button ion-button icon-only (tap)="popNavigation();">
-          <ion-icon name="arrow-round-back"></ion-icon>
+        <button ion-button icon-only style="width:40px" (tap)="popNavigation();">
+          <ion-icon name="arrow-back"></ion-icon>
         </button>
         <button ion-button color="dark" *ngIf="!sharedDataService.headerDetailTitle">
           <h4>{{ sharedDataService.headerGroupTitle }}</h4>

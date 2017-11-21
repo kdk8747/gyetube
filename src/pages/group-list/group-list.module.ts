@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { GroupListPage } from './group-list';
+import { DirectivesModule } from '../../directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -9,7 +10,8 @@ import { GroupListPage } from './group-list';
   ],
   imports: [
     IonicPageModule.forChild(GroupListPage),
-    TranslateModule.forChild()
+    TranslateModule.forChild(),
+    DirectivesModule
   ],
 })
 export class GroupListPageModule {}
