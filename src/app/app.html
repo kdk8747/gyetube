@@ -1,7 +1,7 @@
 
 <grasscube-header [nav]="nav"></grasscube-header>
 
-<ion-split-pane>
+<ion-split-pane (ionChange)="onSplit(pane)" #pane>
   <ion-menu [content]="content">
     <grasscube-menu [nav]="nav"></grasscube-menu>
   </ion-menu>

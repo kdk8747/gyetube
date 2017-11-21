@@ -3,6 +3,7 @@ import { Platform, Nav } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { SharedDataService } from '../providers';
 
 
 @Component({
@@ -19,7 +20,8 @@ export class MyApp {
     public platform: Platform,
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
-    public translate: TranslateService
+    public translate: TranslateService,
+    public sharedDataService: SharedDataService
   ) {
     this.initializeApp();
   }
@@ -52,5 +54,9 @@ export class MyApp {
         this.platform.setDir('rtl', false);
       }
     });
+  }
+
+  onSplit(pane: HTMLElement) {
+    this.sharedDataService.paneSplited = pane.classList.contains('split-pane-visible');
   }
 }
