@@ -57,10 +57,6 @@ export class ReceiptDetailPage {
     });
   }
 
-  navigateToUserDetail() {
-    ;
-  }
-
   navigateToActivityDetail(obs: Observable<Activity>) {
     obs.subscribe(activity => {
       this.event.publish('TabsGroup_ActivityDetail', { id: activity.id });

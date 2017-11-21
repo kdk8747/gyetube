@@ -12,33 +12,15 @@
 
   <ion-buttons left *ngIf="accepters.length">
     {{ 'I18N_ACCEPTERS' | translate}}:
-    <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let accepter of accepters">
-      <span *ngIf="!((accepter | async)?.imageUrl)">{{(accepter | async)?.name}}</span>
-      <ion-avatar *ngIf="(accepter | async)?.imageUrl">
-        <img *ngIf="!((accepter | async)?.imageBase64)" [src]="(accepter | async)?.imageUrl">
-        <img *ngIf="((accepter | async)?.imageBase64)" [src]="(accepter | async)?.imageBase64">
-      </ion-avatar>
-    </button>
+    <grasscube-user *ngFor="let accepter of accepters" [user]="accepter | async"></grasscube-user>
   </ion-buttons>
   <ion-buttons left *ngIf="rejecters.length">
     {{ 'I18N_REJECTERS' | translate}}:
-    <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let rejecter of rejecters">
-      <span *ngIf="!((rejecter | async)?.imageUrl)">{{(rejecter | async)?.name}}</span>
-      <ion-avatar *ngIf="(rejecter | async)?.imageUrl">
-        <img *ngIf="!((rejecter | async)?.imageBase64)" [src]="(rejecter | async)?.imageUrl">
-        <img *ngIf="((rejecter | async)?.imageBase64)" [src]="(rejecter | async)?.imageBase64">
-      </ion-avatar>
-    </button>
+    <grasscube-user *ngFor="let rejecter of rejecters" [user]="rejecter | async"></grasscube-user>
   </ion-buttons>
   <ion-buttons left *ngIf="abstainers.length">
     {{ 'I18N_ABSTAINERS' | translate}}:
-    <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let abstainer of abstainers">
-      <span *ngIf="!((abstainer | async)?.imageUrl)">{{(abstainer | async)?.name}}</span>
-      <ion-avatar *ngIf="(abstainer | async)?.imageUrl">
-        <img *ngIf="!((abstainer | async)?.imageBase64)" [src]="(abstainer | async)?.imageUrl">
-        <img *ngIf="((abstainer | async)?.imageBase64)" [src]="(abstainer | async)?.imageBase64">
-      </ion-avatar>
-    </button>
+    <grasscube-user *ngFor="let abstainer of abstainers" [user]="abstainer | async"></grasscube-user>
   </ion-buttons>
 
   <ion-card *ngIf="proceeding && (proceeding | async)">

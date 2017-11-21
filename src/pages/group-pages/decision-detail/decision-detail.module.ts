@@ -3,7 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { DecisionDetailPage } from './decision-detail';
 import { PipesModule } from '../../../pipes/pipes.module';
-import { StateLabelComponentModule } from '../../../components/state-label/state-label.module';
+import { ComponentsModule } from '../../../components/components.module';
 
 @NgModule({
   declarations: [
@@ -13,7 +13,7 @@ import { StateLabelComponentModule } from '../../../components/state-label/state
     IonicPageModule.forChild(DecisionDetailPage),
     TranslateModule.forChild(),
     PipesModule,
-    StateLabelComponentModule
+    ComponentsModule
   ],
 })
 export class DecisionDetailPageModule {}

@@ -57,10 +57,6 @@ export class ProceedingDetailPage {
     });
   }
 
-  navigateToUserDetail() {
-    ;
-  }
-
   navigateToPrev() {
     this.navCtrl.setRoot('ProceedingDetailPage', { id: this.proceeding.prevId });
   }

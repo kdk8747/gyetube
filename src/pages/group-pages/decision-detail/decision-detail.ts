@@ -63,10 +63,6 @@ export class DecisionDetailPage {
     });
   }
 
-  navigateToUserDetail() {
-    ;
-  }
-
   navigateToPrev() {
     this.navCtrl.setRoot('DecisionDetailPage', { id: this.decision.prevId });
   }

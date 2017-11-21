@@ -1,0 +1,7 @@
+<button ion-button clear icon-only (tap)="navigateToUserDetail()">
+  <span *ngIf="!(user?.imageUrl)">{{user?.name}}</span>
+  <ion-avatar *ngIf="user?.imageUrl">
+    <img *ngIf="!(user?.imageBase64)" [src]="user?.imageUrl">
+    <img *ngIf="(user?.imageBase64)" [src]="user?.imageBase64">
+  </ion-avatar>
+</button>

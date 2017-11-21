@@ -15,23 +15,11 @@
   <p>{{proceeding?.meetingDate | localizedDate:'short'}}</p>
   <ion-buttons left>
     {{ 'I18N_ATTENDEES' | translate}}:
-    <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let attendee of attendees">
-      <span *ngIf="!((attendee | async)?.imageUrl)">{{(attendee | async)?.name}}</span>
-      <ion-avatar *ngIf="(attendee | async)?.imageUrl">
-        <img *ngIf="!((attendee | async)?.imageBase64)" [src]="(attendee | async)?.imageUrl">
-        <img *ngIf="((attendee | async)?.imageBase64)" [src]="(attendee | async)?.imageBase64">
-      </ion-avatar>
-    </button>
+    <grasscube-user *ngFor="let attendee of attendees" [user]="attendee | async"></grasscube-user>
   </ion-buttons>
   <ion-buttons left *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE && proceeding?.nextId == 0">
     {{ 'I18N_REVIEWED_BY' | translate}}:
-    <button ion-button clear icon-only (tap)="navigateToUserDetail()" *ngFor="let reviewer of reviewers">
-      <span *ngIf="!((reviewer | async)?.imageUrl)">{{(reviewer | async)?.name}}</span>
-      <ion-avatar *ngIf="(reviewer | async)?.imageUrl">
-        <img *ngIf="!((reviewer | async)?.imageBase64)" [src]="(reviewer | async)?.imageUrl">
-        <img *ngIf="((reviewer | async)?.imageBase64)" [src]="(reviewer | async)?.imageBase64">
-      </ion-avatar>
-    </button>
+    <grasscube-user *ngFor="let reviewer of reviewers" [user]="reviewer | async"></grasscube-user>
   </ion-buttons>
 
   <p class="pre-wrap">{{proceeding?.description}}</p>

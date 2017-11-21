@@ -57,10 +57,6 @@ export class ActivityDetailPage {
     });
   }
 
-  navigateToUserDetail() {
-    ;
-  }
-
   navigateToDecisionDetail(obs: Observable<Decision>) {
     obs.subscribe(decision => {
       this.event.publish('TabsGroup_DecisionDetail', { id: decision.id });
