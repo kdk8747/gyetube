@@ -26,9 +26,13 @@
       </ion-row>
 
       <p>{{(activity | async)?.description}}</p>
+
       <div style="height:10px"></div>
+
       <img *ngIf="(activity | async)?.imageUrls.length > 0" [src]="(activity | async)?.imageUrls[0]" style="width: auto; height: auto">
+
       <div style="height:10px"></div>
+
       <p>{{ 'I18N_ACTIVITY_DATE' | translate}}: {{(activity | async)?.activityDate | localizedDate:'short'}}</p>
       <ion-buttons left *ngIf="participants.length > 0">
         {{ 'I18N_PARTICIPANTS' | translate}}:
