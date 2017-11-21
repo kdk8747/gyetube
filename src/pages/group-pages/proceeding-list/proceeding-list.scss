@@ -2,4 +2,18 @@ page-proceeding-list {
   p {
     white-space: pre-wrap;
   }
+
+  .grid {
+    padding: 0px;
+  }
+  .item-md {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .item-md.item-block .item-inner {
+    padding-right: 0px;
+  }
+  .label-md {
+    margin: 0px;
+  }
 }

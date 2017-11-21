@@ -21,4 +21,17 @@ page-activity-list {
     height: 100%;
     max-height: 100%;
   }
+
+  .grid {
+    padding: 0px;
+  }
+  .item-md {
+    padding-left: 0px;
+  }
+  .item-md.item-block .item-inner {
+    padding-right: 0px;
+  }
+  .label-md {
+    margin: 0px;
+  }
 }

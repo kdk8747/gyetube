@@ -5,7 +5,8 @@
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-card *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
+      <button ion-item *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)" no-lines>
+      <ion-card>
         <ion-card-content>
           <ion-row>
             <grasscube-state-label [state]="decision.state"></grasscube-state-label>
@@ -41,6 +42,7 @@
           </ion-row>
         </ion-card-content>
       </ion-card>
+      </button>
     </ion-col>
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
@@ -49,7 +51,8 @@
   <ion-grid fixed *ngIf="!sharedDataService.decisionListTimelineMode">
     <ion-row>
       <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let decision of decisions | async">
-        <ion-card (tap)="navigateToDetail(decision.id)">
+        <button ion-item (tap)="navigateToDetail(decision.id)" no-lines>
+        <ion-card>
           <ion-card-content>
             <ion-row>
               <p>{{decision.title}}</p>
@@ -84,6 +87,7 @@
             </ion-row>
           </ion-card-content>
         </ion-card>
+        </button>
       </ion-col>
     </ion-row>
   </ion-grid>

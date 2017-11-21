@@ -4,7 +4,8 @@
   <ion-grid fixed>
     <ion-row>
       <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let activity of activities | async">
-        <ion-card (tap)="navigateToDetail(activity.id)">
+        <button ion-item (tap)="navigateToDetail(activity.id)" no-lines>
+        <ion-card>
           <ion-card-content>
             <ion-row>
               <p>{{activity.title}}</p>
@@ -23,6 +24,7 @@
             </ion-row>
           </ion-card-content>
         </ion-card>
+        </button>
       </ion-col>
     </ion-row>
   </ion-grid>

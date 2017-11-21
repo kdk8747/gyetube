@@ -5,7 +5,8 @@
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-card *ngFor="let receipt of receipts | async" (tap)="navigateToDetail(receipt.id)">
+      <button ion-item *ngFor="let receipt of receipts | async" (tap)="navigateToDetail(receipt.id)" no-lines>
+      <ion-card>
         <ion-card-content>
           <ion-row>
             <p>{{receipt.title}}</p>
@@ -23,6 +24,7 @@
           </ion-row>
         </ion-card-content>
       </ion-card>
+      </button>
     </ion-col>
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
