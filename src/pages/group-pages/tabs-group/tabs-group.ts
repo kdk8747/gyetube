@@ -1,5 +1,5 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, ViewController, Nav } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, Events, ViewController, Nav } from 'ionic-angular';
 import { UserService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
 import { Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
@@ -27,6 +27,7 @@ export class TabsGroupPage {
     public renderer: Renderer,
     public navCtrl: NavController,
     public navParams: NavParams,
+    public loadingCtrl: LoadingController,
     public event: Events,
     public util: UtilService,
     public userService: UserService,
@@ -72,7 +73,12 @@ export class TabsGroupPage {
       }
       else {
         this.setRootToChildNav(childNav, 'ProceedingDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(1), 90);
+        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(1), this.responseTimeMs);
+        if (this.responseTimeMs > 100) {
+          let loading = this.loadingCtrl.create();
+          loading.present();
+          setTimeout(() => loading.dismiss(), this.responseTimeMs);
+        }
       }
     });
 
@@ -84,7 +90,12 @@ export class TabsGroupPage {
       }
       else {
         this.setRootToChildNav(childNav, 'DecisionDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(2), 90);
+        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(2), this.responseTimeMs);
+        if (this.responseTimeMs > 100) {
+          let loading = this.loadingCtrl.create();
+          loading.present();
+          setTimeout(() => loading.dismiss(), this.responseTimeMs);
+        }
       }
     });
 
@@ -96,7 +107,12 @@ export class TabsGroupPage {
       }
       else {
         this.setRootToChildNav(childNav, 'ActivityDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(3), 90);
+        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(3), this.responseTimeMs);
+        if (this.responseTimeMs > 100) {
+          let loading = this.loadingCtrl.create();
+          loading.present();
+          setTimeout(() => loading.dismiss(), this.responseTimeMs);
+        }
       }
     });
 
@@ -108,7 +124,12 @@ export class TabsGroupPage {
       }
       else {
         this.setRootToChildNav(childNav, 'ReceiptDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(4), 90);
+        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(4), this.responseTimeMs);
+        if (this.responseTimeMs > 100) {
+          let loading = this.loadingCtrl.create();
+          loading.present();
+          setTimeout(() => loading.dismiss(), this.responseTimeMs);
+        }
       }
     });
   }
