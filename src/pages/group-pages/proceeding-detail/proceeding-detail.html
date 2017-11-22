@@ -38,9 +38,9 @@
 
       <p class="pre-wrap">{{proceeding?.description}}</p>
 
-      <ion-card tappable *ngFor="let decision of decisions; let i=index" (tap)="navigateToDecisionDetail(decision)">
-        <ion-toolbar>
-          <ion-buttons>
+      <ion-card *ngFor="let decision of decisions; let i=index">
+        <ion-item tappable (tap)="navigateToDecisionDetail(decision)">
+          <ion-row align-items-center>
             <ion-col>
               <p>{{ 'I18N_DECISION' | translate }} {{i+1}}</p>
               <p>
@@ -58,8 +58,6 @@
               <p text-right *ngIf="(decision | async)?.abstainers.length">
                 {{ 'I18N_ABSTAINERS' | translate}} {{ (decision | async)?.abstainers.length }}
               </p>
-            </ion-col>
-            <ion-col>
               <p text-right *ngIf="(decision | async)?.totalElapsedTime">
                 {{ 'I18N_ELAPSED_TIME' | translate}} {{ (decision | async)?.totalElapsedTime }} {{ 'I18N_HOURS' | translate}}
               </p>
@@ -67,24 +65,22 @@
                 {{ 'I18N_DIFFERENCE' | translate}} {{ (decision | async)?.totalDifference | number}}
               </p>
             </ion-col>
-          </ion-buttons>
-          <ion-buttons right>
-            <button ion-button icon-only>
-              <ion-icon name="arrow-forward"></ion-icon>
-            </button>
-          </ion-buttons>
-        </ion-toolbar>
+            <ion-col col-auto>
+              <ion-icon style="font-size: 1.8em" name="arrow-forward"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-item>
       </ion-card>
 
       <ion-buttons right *ngIf="needYou(proceeding)">
         <ion-list radio-group no-lines>
           <ion-item>
-            <ion-label>{{ 'I18N_VERIFIED_GOOD' | translate }}</ion-label>
+            <ion-label style="color: #7f7f7f;">{{ 'I18N_VERIFIED_GOOD' | translate }}</ion-label>
             <ion-radio (ionSelect)="verifiedGood=true" checked="true"></ion-radio>
           </ion-item>
 
           <ion-item>
-            <ion-label>{{ 'I18N_NEED_TO_REVISE' | translate }}</ion-label>
+            <ion-label style="color: #7f7f7f;">{{ 'I18N_NEED_TO_REVISE' | translate }}</ion-label>
             <ion-radio (ionSelect)="verifiedGood=false"></ion-radio>
           </ion-item>
         </ion-list>

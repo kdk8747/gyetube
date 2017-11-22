@@ -2,7 +2,16 @@ page-proceeding-detail {
   .pre-wrap {
     white-space: pre-wrap;
   }
-  ion-label {
-    color: #7f7f7f;
+  .item {
+    padding-left: 0px;
+  }
+  .item-inner {
+    padding-right: 0px!important;
+  }
+  .label {
+    margin-right: 0px;
+  }
+  p {
+    color: color($colors, dark, base)!important;
   }
 }

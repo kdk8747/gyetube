@@ -40,31 +40,31 @@
         <grasscube-user *ngFor="let participant of participants" [user]="participant | async"></grasscube-user>
       </ion-buttons>
 
-      <ion-card tappable *ngIf="decision | async" (tap)="navigateToDecisionDetail(decision)">
-        <ion-toolbar>
-          <ion-buttons>
-            <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
-          </ion-buttons>
-          <ion-buttons left>
-            <button ion-button icon-only>
-              <ion-icon name="arrow-back"></ion-icon>
-            </button>
-          </ion-buttons>
-        </ion-toolbar>
+      <ion-card *ngIf="decision | async">
+        <ion-item tappable (tap)="navigateToDecisionDetail(decision)">
+          <ion-row align-items-center>
+            <ion-col col-auto>
+              <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
+            </ion-col>
+            <ion-col>
+              <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
+            </ion-col>
+          </ion-row>
+        </ion-item>
       </ion-card>
 
-      <ion-card tappable *ngFor="let receipt of receipts; let i=index" (tap)="navigateToReceiptDetail(receipt)">
-        <ion-toolbar>
-          <ion-buttons>
-            <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
-            <p text-right>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
-          </ion-buttons>
-          <ion-buttons right>
-            <button ion-button icon-only>
-              <ion-icon name="arrow-forward"></ion-icon>
-            </button>
-          </ion-buttons>
-        </ion-toolbar>
+      <ion-card *ngFor="let receipt of receipts; let i=index">
+        <ion-item tappable (tap)="navigateToReceiptDetail(receipt)">
+          <ion-row align-items-center>
+            <ion-col>
+              <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
+              <p text-right>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
+            </ion-col>
+            <ion-col col-auto>
+              <ion-icon style="font-size: 1.8em" name="arrow-forward"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-item>
       </ion-card>
 
       <p text-right>

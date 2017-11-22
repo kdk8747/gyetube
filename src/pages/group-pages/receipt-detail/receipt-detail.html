@@ -29,30 +29,30 @@
       <p>{{ 'I18N_PAYMENT_DATE' | translate}} {{(receipt | async)?.paymentDate | localizedDate:'short'}}</p>
       <p>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
 
-      <ion-card tappable *ngIf="activity && (activity | async)" (tap)="navigateToActivityDetail(activity)">
-        <ion-toolbar>
-          <ion-buttons>
-            <p>{{ 'I18N_ACTIVITY' | translate }} - {{ (activity | async)?.title }}</p>
-          </ion-buttons>
-          <ion-buttons left>
-            <button ion-button icon-only>
-              <ion-icon name="arrow-back"></ion-icon>
-            </button>
-          </ion-buttons>
-        </ion-toolbar>
+      <ion-card *ngIf="activity && (activity | async)">
+        <ion-item tappable (tap)="navigateToActivityDetail(activity)">
+          <ion-row align-items-center>
+            <ion-col col-auto>
+              <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
+            </ion-col>
+            <ion-col>
+              <p>{{ 'I18N_ACTIVITY' | translate }} - {{ (activity | async)?.title }}</p>
+            </ion-col>
+          </ion-row>
+        </ion-item>
       </ion-card>
 
-      <ion-card tappable *ngIf="decision && (decision | async)" (tap)="navigateToDecisionDetail(decision)">
-        <ion-toolbar>
-          <ion-buttons>
-            <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
-          </ion-buttons>
-          <ion-buttons left>
-            <button ion-button icon-only>
-              <ion-icon name="arrow-back"></ion-icon>
-            </button>
-          </ion-buttons>
-        </ion-toolbar>
+      <ion-card *ngIf="decision && (decision | async)">
+        <ion-item tappable (tap)="navigateToDecisionDetail(decision)">
+          <ion-row align-items-center>
+            <ion-col left>
+              <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
+            </ion-col>
+            <ion-col>
+              <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
+            </ion-col>
+          </ion-row>
+        </ion-item>
       </ion-card>
     </ion-col>
     <ion-col col-sm-3 col-xl-4>
