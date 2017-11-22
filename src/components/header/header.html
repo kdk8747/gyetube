@@ -1,11 +1,11 @@
 <ion-header>
   <ion-navbar>
-    <ion-buttons left>
+    <ion-buttons>
       <span *ngIf="!sharedDataService.headerGroupTitle || sharedDataService.paneSplited">
         <button ion-button icon-only>
           <ion-icon name="cube" color="secondary"></ion-icon>
         </button>
-        <button ion-button color="dark">
+        <button style="margin-bottom: 6px" ion-button color="dark">
           <h4>{{ 'I18N_GRASSCUBE' | translate }}</h4>
         </button>
       </span>
@@ -13,11 +13,11 @@
         <button ion-button icon-only style="width:40px" (tap)="popNavigation();">
           <ion-icon name="arrow-back"></ion-icon>
         </button>
-        <button ion-button color="dark" *ngIf="!sharedDataService.headerDetailTitle">
-          <h4>{{ sharedDataService.headerGroupTitle }}</h4>
+        <button class="title" ion-button color="dark" *ngIf="!sharedDataService.headerDetailTitle">
+          <h4 style="overflow: hidden">{{ sharedDataService.headerGroupTitle }}</h4>
         </button>
-        <button ion-button color="dark" *ngIf="sharedDataService.headerDetailTitle">
-          <span>{{ sharedDataService.headerDetailTitle }}</span>
+        <button class="title" ion-button color="dark" *ngIf="sharedDataService.headerDetailTitle">
+          <h6 style="overflow: hidden">{{ sharedDataService.headerDetailTitle }}</h6>
         </button>
       </span>
     </ion-buttons>
