@@ -1,12 +1,18 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-  <ion-card *ngFor="let group of groups" (tap)="navigateToGroup(group.id)">
-    <ion-card-header>
-      {{group.title}}
-    </ion-card-header>
-    <ion-card-content>
-      {{group.description}} - (클릭)
-    </ion-card-content>
-  </ion-card>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let group of groups">
+        <button ion-item (tap)="navigateToGroup(group.id)">
+          <ion-card-header>
+            {{group.title}}
+          </ion-card-header>
+          <ion-card-content>
+            {{group.description}} - (클릭)
+          </ion-card-content>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

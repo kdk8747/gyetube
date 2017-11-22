@@ -4,7 +4,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DecisionListPage } from './decision-list';
 import { PipesModule } from '../../../pipes/pipes.module';
 import { ComponentsModule } from '../../../components/components.module';
-import { DirectivesModule } from '../../../directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -14,8 +13,7 @@ import { DirectivesModule } from '../../../directives/directives.module';
     IonicPageModule.forChild(DecisionListPage),
     TranslateModule.forChild(),
     PipesModule,
-    ComponentsModule,
-    DirectivesModule
+    ComponentsModule
   ],
 })
 export class DecisionListPageModule {}

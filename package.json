@@ -59,7 +59,7 @@
     },
     "devDependencies": {
         "concurrently": "3.5.0",
-        "ionic": "3.18.0"
+        "ionic": "3.19.0"
     },
     "description": "An Ionic project",
     "cordova": {

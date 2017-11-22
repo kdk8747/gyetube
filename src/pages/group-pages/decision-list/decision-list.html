@@ -5,11 +5,10 @@
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-card ripple-effect *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
-        <ion-card-content>
+      <button ion-item *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
           <ion-row>
-            <grasscube-state-label [state]="decision.state"></grasscube-state-label>
-            - {{decision.title}}
+            <p><grasscube-state-label [state]="decision.state"></grasscube-state-label>
+            - {{decision.title}}</p>
           </ion-row>
           <ion-row>
             <ion-col>
@@ -39,8 +38,7 @@
               </p>
             </ion-col>
           </ion-row>
-        </ion-card-content>
-      </ion-card>
+        </button>
     </ion-col>
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
@@ -49,8 +47,7 @@
   <ion-grid fixed *ngIf="!sharedDataService.decisionListTimelineMode">
     <ion-row>
       <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let decision of decisions | async">
-        <ion-card ripple-effect (tap)="navigateToDetail(decision.id)">
-          <ion-card-content>
+        <button ion-item (tap)="navigateToDetail(decision.id)">
             <ion-row>
               <p>{{decision.title}}</p>
             </ion-row>
@@ -65,14 +62,6 @@
               </ion-col>
             </ion-row>
             <ion-row>
-              <ion-col *ngIf="sharedDataService.decisionEditMode && decision.nextId == 0">
-                <button ion-button icon-only (tap)="navigateToEditorForUpdate(decision.id)">
-                  <ion-icon name="create"></ion-icon>
-                </button>
-                <button ion-button icon-only (tap)="onDelete(decision)">
-                  <ion-icon name="trash"></ion-icon>
-                </button>
-              </ion-col>
               <ion-col>
                 <p text-right>
                   {{ 'I18N_ELAPSED_TIME' | translate}} {{decision.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
@@ -82,8 +71,7 @@
                 </p>
               </ion-col>
             </ion-row>
-          </ion-card-content>
-        </ion-card>
+          </button>
       </ion-col>
     </ion-row>
   </ion-grid>
