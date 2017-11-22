@@ -77,6 +77,8 @@ export class HeaderComponent {
     }
     else {
       this.sharedDataService.headerGroupTitle = null;
+      this.sharedDataService.decisionEditMode = false;
+      this.sharedDataService.decisionChangesets = [];
       if (this.nav.length() == 1)
         this.nav.setRoot('GroupListPage');
       else
