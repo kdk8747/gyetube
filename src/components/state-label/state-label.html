@@ -1,23 +1,9 @@
 <span [ngSwitch]="state">
-  <span *ngSwitchCase="stateEnum.STATE_CREATED">
-    {{ 'I18N_CREATED' | translate}}
-  </span>
-  <span *ngSwitchCase="stateEnum.STATE_UPDATED">
-    {{ 'I18N_UPDATED' | translate}}
-  </span>
-  <span *ngSwitchCase="stateEnum.STATE_DELETED">
-    {{ 'I18N_DELETED' | translate}}
-  </span>
-  <span *ngSwitchCase="stateEnum.STATE_PENDING_CREATE">
-    {{ 'I18N_PENDING_CREATE' | translate}}
-  </span>
-  <span *ngSwitchCase="stateEnum.STATE_PENDING_UPDATE">
-    {{ 'I18N_PENDING_UPDATE' | translate}}
-  </span>
-  <span *ngSwitchCase="stateEnum.STATE_PENDING_DELETE">
-    {{ 'I18N_PENDING_DELETE' | translate}}
-  </span>
-  <span *ngSwitchDefault>
-    Unknown
-  </span>
+  <p *ngSwitchCase="stateEnum.STATE_CREATED">{{ 'I18N_CREATED' | translate}} - {{ postfix }}</p>
+  <p *ngSwitchCase="stateEnum.STATE_UPDATED">{{ 'I18N_UPDATED' | translate}} - {{ postfix }}</p>
+  <p *ngSwitchCase="stateEnum.STATE_DELETED">{{ 'I18N_DELETED' | translate}} - {{ postfix }}</p>
+  <p *ngSwitchCase="stateEnum.STATE_PENDING_CREATE">{{ 'I18N_PENDING_CREATE' | translate}} - {{ postfix }}</p>
+  <p *ngSwitchCase="stateEnum.STATE_PENDING_UPDATE">{{ 'I18N_PENDING_UPDATE' | translate}} - {{ postfix }}</p>
+  <p *ngSwitchCase="stateEnum.STATE_PENDING_DELETE">{{ 'I18N_PENDING_DELETE' | translate}} - {{ postfix }}</p>
+  <p *ngSwitchDefault>Unknown State - {{ postfix }}</p>
 </span>

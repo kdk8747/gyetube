@@ -10,6 +10,7 @@ export class StateLabelComponent {
   stateEnum = State;
 
   @Input() state: State;
+  @Input() postfix: string;
 
   constructor() {
   }

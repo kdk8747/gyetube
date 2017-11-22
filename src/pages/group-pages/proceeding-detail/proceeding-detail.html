@@ -43,10 +43,7 @@
           <ion-row align-items-center>
             <ion-col>
               <p>{{ 'I18N_DECISION' | translate }} {{i+1}}</p>
-              <p>
-                <grasscube-state-label [state]="(decision | async)?.state"></grasscube-state-label>
-                - {{ (decision | async)?.title }}
-              </p>
+              <grasscube-state-label [state]="(decision | async)?.state" [postfix]="(decision | async)?.title"></grasscube-state-label>
               <div style="height:10px"></div>
               <p class="pre-wrap">{{ (decision | async)?.description }}</p>
               <p text-right *ngIf="(decision | async)?.accepters.length">
