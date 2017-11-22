@@ -4,7 +4,7 @@
   <ion-grid fixed>
     <ion-row>
       <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let activity of activities | async">
-        <button ion-item (tap)="navigateToDetail(activity.id)">
+        <ion-item tappable (tap)="navigateToDetail(activity.id)">
           <img *ngIf="activity.imageUrls.length > 0" [src]="activity.imageUrls[0]">
             <ion-row>
               <p>{{activity.title}}</p>
@@ -22,7 +22,7 @@
                 </p>
               </ion-col>
             </ion-row>
-          </button>
+          </ion-item>
       </ion-col>
     </ion-row>
   </ion-grid>

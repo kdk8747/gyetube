@@ -5,7 +5,7 @@
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <button ion-item *ngFor="let proceeding of proceedings | async" (tap)="navigateToDetail(proceeding.id)">
+      <ion-item tappable *ngFor="let proceeding of proceedings | async" (tap)="navigateToDetail(proceeding.id)">
         <ion-toolbar *ngIf="proceeding.state == stateEnum.STATE_PENDING_CREATE">
 
             {{'I18N_PENDING_CREATE' | translate}} -
@@ -28,7 +28,7 @@
               <p text-right> {{ proceeding.childDecisions.length }} {{ 'I18N_DECISIONS' | translate}} </p>
             </ion-col>
           </ion-row>
-        </button>
+        </ion-item>
     </ion-col>
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
