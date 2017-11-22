@@ -1,4 +1,4 @@
-<ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
+<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
   <ion-row>
@@ -38,7 +38,7 @@
 
       <p class="pre-wrap">{{proceeding?.description}}</p>
 
-      <ion-card *ngFor="let decision of decisions; let i=index">
+      <ion-card tappable *ngFor="let decision of decisions; let i=index" (tap)="navigateToDecisionDetail(decision)">
         <ion-toolbar>
           <ion-buttons>
             <ion-col>
@@ -69,7 +69,7 @@
             </ion-col>
           </ion-buttons>
           <ion-buttons right>
-            <button ion-button icon-only (tap)="navigateToDecisionDetail(decision)">
+            <button ion-button icon-only>
               <ion-icon name="arrow-forward"></ion-icon>
             </button>
           </ion-buttons>

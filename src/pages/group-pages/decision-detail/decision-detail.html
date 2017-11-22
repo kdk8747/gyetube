@@ -1,4 +1,4 @@
-<ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
+<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
   <ion-row>
@@ -37,20 +37,20 @@
         <grasscube-user *ngFor="let abstainer of abstainers" [user]="abstainer | async"></grasscube-user>
       </ion-buttons>
 
-      <ion-card *ngIf="proceeding && (proceeding | async)">
+      <ion-card tappable *ngIf="proceeding && (proceeding | async)" (tap)="navigateToProceedingDetail(proceeding)">
         <ion-toolbar>
           <ion-buttons>
             <p>{{ 'I18N_PROCEEDING' | translate }} - {{ (proceeding | async)?.title }}</p>
           </ion-buttons>
           <ion-buttons left>
-            <button ion-button icon-only (tap)="navigateToProceedingDetail(proceeding)">
+            <button ion-button icon-only>
               <ion-icon name="arrow-back"></ion-icon>
             </button>
           </ion-buttons>
         </ion-toolbar>
       </ion-card>
 
-      <ion-card *ngFor="let activity of activities; let i=index">
+      <ion-card tappable *ngFor="let activity of activities; let i=index" (tap)="navigateToActivityDetail(activity)">
         <ion-toolbar>
           <ion-buttons>
             <p>{{ 'I18N_ACTIVITY' | translate }}{{i+1}} - {{ (activity | async)?.title }}</p>
@@ -63,14 +63,14 @@
             </p>
           </ion-buttons>
           <ion-buttons right>
-            <button ion-button icon-only (tap)="navigateToActivityDetail(activity)">
+            <button ion-button icon-only>
               <ion-icon name="arrow-forward"></ion-icon>
             </button>
           </ion-buttons>
         </ion-toolbar>
       </ion-card>
 
-      <ion-card *ngFor="let receipt of receipts; let i=index">
+      <ion-card tappable *ngFor="let receipt of receipts; let i=index" (tap)="navigateToReceiptDetail(receipt)">
         <ion-toolbar>
           <ion-buttons>
             <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
@@ -79,7 +79,7 @@
             </p>
           </ion-buttons>
           <ion-buttons right>
-            <button ion-button icon-only (tap)="navigateToReceiptDetail(receipt)">
+            <button ion-button icon-only>
               <ion-icon name="arrow-forward"></ion-icon>
             </button>
           </ion-buttons>

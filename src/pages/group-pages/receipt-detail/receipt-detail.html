@@ -1,4 +1,4 @@
-<ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
+<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
   <ion-row>
@@ -29,26 +29,26 @@
       <p>{{ 'I18N_PAYMENT_DATE' | translate}} {{(receipt | async)?.paymentDate | localizedDate:'short'}}</p>
       <p>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
 
-      <ion-card *ngIf="activity && (activity | async)">
+      <ion-card tappable *ngIf="activity && (activity | async)" (tap)="navigateToActivityDetail(activity)">
         <ion-toolbar>
           <ion-buttons>
             <p>{{ 'I18N_ACTIVITY' | translate }} - {{ (activity | async)?.title }}</p>
           </ion-buttons>
           <ion-buttons left>
-            <button ion-button icon-only (tap)="navigateToActivityDetail(activity)">
+            <button ion-button icon-only>
               <ion-icon name="arrow-back"></ion-icon>
             </button>
           </ion-buttons>
         </ion-toolbar>
       </ion-card>
 
-      <ion-card *ngIf="decision && (decision | async)">
+      <ion-card tappable *ngIf="decision && (decision | async)" (tap)="navigateToDecisionDetail(decision)">
         <ion-toolbar>
           <ion-buttons>
             <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
           </ion-buttons>
           <ion-buttons left>
-            <button ion-button icon-only (tap)="navigateToDecisionDetail(decision)">
+            <button ion-button icon-only>
               <ion-icon name="arrow-back"></ion-icon>
             </button>
           </ion-buttons>
