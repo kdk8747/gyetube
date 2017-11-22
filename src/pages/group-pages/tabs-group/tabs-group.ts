@@ -66,71 +66,19 @@ export class TabsGroupPage {
     });
 
     this.event.subscribe('TabsGroup_ProceedingDetail', (obj) => {
-      let childNav: Nav = this.navCtrl.getActiveChildNavs()[0]._tabs[1];
-      if (childNav.length() == 0) {
-        this.navCtrl.getActiveChildNavs()[0].select(1);
-        setTimeout(() => childNav.setRoot('ProceedingDetailPage', obj), this.responseTimeMs);
-      }
-      else {
-        this.setRootToChildNav(childNav, 'ProceedingDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(1), this.responseTimeMs);
-        if (this.responseTimeMs > 100) {
-          let loading = this.loadingCtrl.create();
-          loading.present();
-          setTimeout(() => loading.dismiss(), this.responseTimeMs);
-        }
-      }
+      this.switchDetailPage(1, 'ProceedingDetailPage', obj);
     });
 
     this.event.subscribe('TabsGroup_DecisionDetail', (obj) => {
-      let childNav: Nav = this.navCtrl.getActiveChildNavs()[0]._tabs[2];
-      if (childNav.length() == 0) {
-        this.navCtrl.getActiveChildNavs()[0].select(2);
-        setTimeout(() => childNav.setRoot('DecisionDetailPage', obj), this.responseTimeMs);
-      }
-      else {
-        this.setRootToChildNav(childNav, 'DecisionDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(2), this.responseTimeMs);
-        if (this.responseTimeMs > 100) {
-          let loading = this.loadingCtrl.create();
-          loading.present();
-          setTimeout(() => loading.dismiss(), this.responseTimeMs);
-        }
-      }
+      this.switchDetailPage(2, 'DecisionDetailPage', obj);
     });
 
     this.event.subscribe('TabsGroup_ActivityDetail', (obj) => {
-      let childNav: Nav = this.navCtrl.getActiveChildNavs()[0]._tabs[3];
-      if (childNav.length() == 0) {
-        this.navCtrl.getActiveChildNavs()[0].select(3);
-        setTimeout(() => childNav.setRoot('ActivityDetailPage', obj), this.responseTimeMs);
-      }
-      else {
-        this.setRootToChildNav(childNav, 'ActivityDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(3), this.responseTimeMs);
-        if (this.responseTimeMs > 100) {
-          let loading = this.loadingCtrl.create();
-          loading.present();
-          setTimeout(() => loading.dismiss(), this.responseTimeMs);
-        }
-      }
+      this.switchDetailPage(3, 'ActivityDetailPage', obj);
     });
 
     this.event.subscribe('TabsGroup_ReceiptDetail', (obj) => {
-      let childNav: Nav = this.navCtrl.getActiveChildNavs()[0]._tabs[4];
-      if (childNav.length() == 0) {
-        this.navCtrl.getActiveChildNavs()[0].select(4);
-        setTimeout(() => childNav.setRoot('ReceiptDetailPage', obj), this.responseTimeMs);
-      }
-      else {
-        this.setRootToChildNav(childNav, 'ReceiptDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(4), this.responseTimeMs);
-        if (this.responseTimeMs > 100) {
-          let loading = this.loadingCtrl.create();
-          loading.present();
-          setTimeout(() => loading.dismiss(), this.responseTimeMs);
-        }
-      }
+      this.switchDetailPage(4, 'ReceiptDetailPage', obj);
     });
   }
 
@@ -143,9 +91,36 @@ export class TabsGroupPage {
     this.event.unsubscribe('TabsGroup_ReceiptDetail');
   }
 
-  setRootToChildNav(childNav: Nav, page: string, obj: any) {
+  switchDetailPage(tabIndex: number, page: string, obj:any) {
+    let childNav: Nav = this.navCtrl.getActiveChildNavs()[0]._tabs[tabIndex];
+    if (childNav.length() == 0) {
+      this.navCtrl.getActiveChildNavs()[0].select(tabIndex);
+      setTimeout(() => childNav.setRoot(page, obj), this.responseTimeMs);
+    }
+    else {
+      if (this.setRootToChildNav(childNav, page, obj)) {
+        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(tabIndex), this.responseTimeMs);
+        this.showLoadingSpinner();
+      }
+      else
+        this.navCtrl.getActiveChildNavs()[0].select(tabIndex);
+    }
+  }
+
+  setRootToChildNav(childNav: Nav, page: string, obj: any): boolean {
     let top: ViewController = childNav.last();
-    if (top.id !== page || top.data.id !== obj.id)
+    if (top.id !== page || top.data.id !== obj.id) {
       childNav.setRoot(page, obj);
+      return true;
+    }
+    return false;
+  }
+
+  showLoadingSpinner() {
+    if (this.responseTimeMs > 100) {
+      let loading = this.loadingCtrl.create();
+      loading.present();
+      setTimeout(() => loading.dismiss(), this.responseTimeMs);
+    }
   }
 }
