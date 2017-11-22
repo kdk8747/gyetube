@@ -72,7 +72,7 @@ export class TabsGroupPage {
       }
       else {
         this.setRootToChildNav(childNav, 'ProceedingDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(1), 10);
+        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(1), 20);
       }
     });
 
@@ -84,7 +84,7 @@ export class TabsGroupPage {
       }
       else {
         this.setRootToChildNav(childNav, 'DecisionDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(2), 10);
+        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(2), 20);
       }
     });
 
@@ -96,7 +96,7 @@ export class TabsGroupPage {
       }
       else {
         this.setRootToChildNav(childNav, 'ActivityDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(3), 10);
+        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(3), 20);
       }
     });
 
@@ -108,7 +108,7 @@ export class TabsGroupPage {
       }
       else {
         this.setRootToChildNav(childNav, 'ReceiptDetailPage', obj);
-        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(4), 10);
+        setTimeout(() => this.navCtrl.getActiveChildNavs()[0].select(4), 20);
       }
     });
   }
