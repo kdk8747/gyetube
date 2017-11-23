@@ -11,4 +11,7 @@ page-proceeding-list {
   .label {
     margin-right: 0px;
   }
+  p {
+    color: color($colors, dark, base)!important;
+  }
 }
