@@ -133,10 +133,6 @@ export class ProceedingEditorPage {
 
     let childDecisions = this.sharedDataService.decisionChangesets.map(decision => {
       decision.meetingDate = this.form.value.meetingDate;
-      decision.childActivities = [];
-      decision.childReceipts = [];
-      decision.totalDifference = 0;
-      decision.totalElapsedTime = 0;
       return decision;
     });
     let newProceeding = new ProceedingCreation(0, 0, 0, State.STATE_PENDING_CREATE,

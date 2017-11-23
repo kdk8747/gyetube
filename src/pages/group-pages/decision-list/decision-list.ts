@@ -60,6 +60,10 @@ export class DecisionListPage {
     this.navCtrl.push('DecisionEditorPage', { id: id });
   }
 
+  navigateToEditorForDelete(id: number) {
+    this.navCtrl.push('DecisionEditorPage', { id: id, delete: true });
+  }
+
   sortByDate(decisions: Decision[]): Decision[] {
     return decisions.sort((h1, h2) => {
       return h1.meetingDate < h2.meetingDate ? 1 :
@@ -79,21 +83,6 @@ export class DecisionListPage {
     return decisions.filter(decision =>
       (decision.state == State.STATE_CREATED || decision.state == State.STATE_UPDATED)
     );
-  }
-
-  onDelete(decision: Decision): void {
-    let newDecision = JSON.parse(JSON.stringify(decision)) as Decision;
-
-    newDecision.prevId = decision.id;
-    newDecision.state = State.STATE_PENDING_DELETE;
-    newDecision.description = '';
-    let found = this.sharedDataService.decisionChangesets.findIndex(item => item.prevId == decision.id);
-    if (found != -1)
-      this.sharedDataService.decisionChangesets[found] = newDecision;
-    else
-      this.sharedDataService.decisionChangesets.push(newDecision);
-    this.navCtrl.parent.select(1);
-    this.sharedDataService.decisionEditMode = false;
   }
 
   refreshDecisions() {

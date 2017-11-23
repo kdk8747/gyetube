@@ -18,6 +18,7 @@ export class DecisionEditorPage {
 
   groupId: string;
   id: number;
+  deleteMode: boolean;
   users: Observable<User>[];
 
   form: FormGroup;
@@ -52,12 +53,16 @@ export class DecisionEditorPage {
 
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
+    this.deleteMode = this.navParams.get('delete');
     this.groupId = this.util.getCurrentGroupId();
   }
 
   ionViewDidEnter() {
-    this.translate.get(['I18N_EDITOR', 'I18N_DECISION']).subscribe(values => {
-      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_DECISION;
+    this.translate.get(['I18N_EDITOR', 'I18N_DECISION', 'I18N_DELETE']).subscribe(values => {
+      if (this.deleteMode)
+        this.sharedDataService.headerDetailTitle = values.I18N_DELETE + ' - ' + values.I18N_DECISION;
+      else
+        this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_DECISION;
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
@@ -69,7 +74,8 @@ export class DecisionEditorPage {
         .subscribe((decision: Decision) => {
           this.form.controls['expiryDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(decision.expiryDate)));
           this.form.controls['title'].setValue(decision.title);
-          this.form.controls['description'].setValue(decision.description);
+          if (!this.deleteMode)
+            this.form.controls['description'].setValue(decision.description);
           this.form.controls['accepters'].setValue(decision.accepters.filter(accepter =>
             this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter)));
           this.form.controls['rejecters'].setValue(decision.rejecters.filter(rejecter =>
@@ -147,7 +153,7 @@ export class DecisionEditorPage {
     if (this.id) {
       newDecision.id = this.id;
       newDecision.prevId = this.id;
-      newDecision.state = State.STATE_PENDING_UPDATE;
+      newDecision.state = this.deleteMode ? State.STATE_PENDING_DELETE : State.STATE_PENDING_UPDATE;
       let found = this.sharedDataService.decisionChangesets.findIndex(item => {console.log(item.prevId);return item.prevId == this.id});
       if (found != -1)
         this.sharedDataService.decisionChangesets[found] = newDecision;
