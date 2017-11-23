@@ -56,11 +56,11 @@
           <ion-row align-items-center>
             <ion-col>
               <p>{{ 'I18N_ACTIVITY' | translate }}{{i+1}} - {{ (activity | async)?.title }}</p>
-              <p text-right>
+              <p text-right style="white-space: normal">
                 {{ 'I18N_ELAPSED_TIME' | translate}} {{ (activity | async)?.elapsedTime * (activity | async)?.participants.length }} {{ 'I18N_HOURS'
                 | translate}}
               </p>
-              <p text-right>
+              <p text-right style="white-space: normal">
                 {{ 'I18N_DIFFERENCE' | translate}} {{ (activity | async)?.totalDifference | number}}
               </p>
             </ion-col>
@@ -76,7 +76,7 @@
           <ion-row align-items-center>
             <ion-col>
               <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
-              <p text-right>
+              <p text-right style="white-space: normal">
                 {{ 'I18N_DIFFERENCE' | translate}} {{ (receipt | async)?.difference | number}}
               </p>
             </ion-col>
@@ -87,8 +87,10 @@
         </ion-item>
       </ion-card>
 
-      <p text-right>
+      <p text-right style="white-space: normal">
         {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{decision?.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
+      </p>
+      <p text-right style="white-space: normal">
         {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{decision?.totalDifference | number}}
       </p>
 
