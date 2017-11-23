@@ -56,11 +56,6 @@ export class HeaderComponent {
     if (this.sharedDataService.headerDetailTitle) {
       let selectedTabIndex = this.nav.getActiveChildNavs()[0].getSelected().index;
       let childNav = this.nav.getActiveChildNavs()[0]._tabs[selectedTabIndex];
-      this.sharedDataService.headerDetailTitle = null;
-      if (selectedTabIndex == 1) {
-        this.sharedDataService.decisionEditMode = false;
-        this.sharedDataService.decisionChangesets = [];
-      }
       if (childNav.length() == 1) {
         switch(selectedTabIndex) {
           case 0: childNav.setRoot('GroupHomePage'); break;
@@ -74,15 +69,20 @@ export class HeaderComponent {
       else {
         childNav.pop();
       }
+      this.sharedDataService.headerDetailTitle = null;
+      if (selectedTabIndex == 1) {
+        this.sharedDataService.decisionEditMode = false;
+        this.sharedDataService.decisionChangesets = [];
+      }
     }
     else {
-      this.sharedDataService.headerGroupTitle = null;
-      this.sharedDataService.decisionEditMode = false;
-      this.sharedDataService.decisionChangesets = [];
       if (this.nav.length() == 1)
         this.nav.setRoot('GroupListPage');
       else
         this.nav.pop();
+        this.sharedDataService.headerGroupTitle = null;
+        this.sharedDataService.decisionEditMode = false;
+        this.sharedDataService.decisionChangesets = [];
     }
   }
 
