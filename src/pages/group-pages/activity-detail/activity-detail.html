@@ -29,7 +29,7 @@
 
       <div style="height:10px"></div>
 
-      <img *ngIf="(activity | async)?.imageUrls.length > 0" [src]="(activity | async)?.imageUrls[0]" style="width: auto; height: auto">
+      <img *ngFor="let image of (activity | async)?.imageUrls" [src]="image" style="width: auto; height: auto">
 
       <div style="height:10px"></div>
 
