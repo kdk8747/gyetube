@@ -17,6 +17,7 @@ export class DecisionListPage {
 
   groupId: string;
   decisions: Observable<Decision[]>;
+  readPermitted: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -35,6 +36,12 @@ export class DecisionListPage {
     this.event.subscribe('DecisionList_Refresh', () => {
       this.refreshDecisions();
     });
+
+    this.util.isPermitted('read', 'decisions', this.groupId)
+      .then(bool => this.readPermitted = bool)
+      .catch((error: any) => {
+        console.log(error);
+      });;
   }
 
   ionViewDidEnter() {

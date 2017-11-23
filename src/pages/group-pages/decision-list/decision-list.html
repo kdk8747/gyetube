@@ -81,7 +81,7 @@
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
-  <ion-fab right middle *ngIf="!sharedDataService.decisionEditMode" #fab>
+  <ion-fab right middle *ngIf="!sharedDataService.decisionEditMode && readPermitted" #fab>
     <button ion-fab>
       <ion-icon name="eye"></ion-icon>
     </button>
