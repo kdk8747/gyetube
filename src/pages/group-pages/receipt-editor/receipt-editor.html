@@ -31,7 +31,7 @@
             <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label>{{ 'I18N_PAYMENT_DATE' | translate }}</ion-label>
+            <ion-label>{{ 'I18N_SETTLEMENT_DATE' | translate }}</ion-label>
             <ion-datetime formControlName="paymentDate" displayFormat="YYYY MM DD, HH:mm" [class.invalid]="!form.controls.paymentDate.valid && (form.controls.paymentDate.dirty || submitAttempt)"></ion-datetime>
           </ion-item>
           <ion-item>
@@ -41,6 +41,9 @@
         </form>
 
         <ion-list radio-group no-lines>
+          <ion-item>
+            <ion-label>{{ 'I18N_BASIS_FOR_THIS_DOCUMENT' | translate }}</ion-label>
+          </ion-item>
           <ion-item>
             <ion-label>{{ 'I18N_RELATED_DECISION' | translate }}</ion-label>
             <ion-radio value="decision" (ionSelect)="activitySelected=false"></ion-radio>

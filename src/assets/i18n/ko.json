@@ -43,6 +43,7 @@
   "I18N_PREV": "이전",
   "I18N_NEXT": "다음",
   "I18N_REVISION": "수정판",
+  "I18N_BASIS_FOR_THIS_DOCUMENT": "이 문서의 근거",
 
 
   "I18N_MEETING_DATE": "회의 시각",
@@ -83,7 +84,7 @@
   "I18N_TOTAL_DIFFERENCE": "총 차액",
 
 
-  "I18N_PAYMENT_DATE": "지불일",
+  "I18N_SETTLEMENT_DATE": "결제일",
   "I18N_DIFFERENCE": "차액",
   "I18N_BALANCE": "잔액"
 }
