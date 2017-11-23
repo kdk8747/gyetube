@@ -1,7 +1,4 @@
 page-activity-detail {
-  .pre-wrap {
-    white-space: pre-wrap;
-  }
   .item {
     padding-left: 0px;
   }
@@ -12,6 +9,7 @@ page-activity-detail {
     margin-right: 0px;
   }
   p {
+    white-space: pre-wrap;
     color: color($colors, dark, base)!important;
   }
 }
