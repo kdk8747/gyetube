@@ -36,7 +36,7 @@
         <grasscube-user *ngFor="let reviewer of reviewers" [user]="reviewer | async"></grasscube-user>
       </ion-buttons>
 
-      <p class="pre-wrap">{{proceeding?.description}}</p>
+      <p>{{proceeding?.description}}</p>
 
       <ion-card *ngFor="let decision of decisions; let i=index">
         <ion-item tappable (tap)="navigateToDecisionDetail(decision)">
@@ -45,20 +45,20 @@
               <p>{{ 'I18N_DECISION' | translate }} {{i+1}}</p>
               <grasscube-state-label [state]="(decision | async)?.state" [postfix]="(decision | async)?.title"></grasscube-state-label>
               <div style="height:10px"></div>
-              <p class="pre-wrap">{{ (decision | async)?.description }}</p>
-              <p text-right *ngIf="(decision | async)?.accepters.length">
+              <p>{{ (decision | async)?.description }}</p>
+              <p text-right style="white-space: normal" *ngIf="(decision | async)?.accepters.length">
                 {{ 'I18N_ACCEPTERS' | translate}} {{ (decision | async)?.accepters.length }}
               </p>
-              <p text-right *ngIf="(decision | async)?.rejecters.length">
+              <p text-right style="white-space: normal" *ngIf="(decision | async)?.rejecters.length">
                 {{ 'I18N_REJECTERS' | translate}} {{ (decision | async)?.rejecters.length }}
               </p>
-              <p text-right *ngIf="(decision | async)?.abstainers.length">
+              <p text-right style="white-space: normal" *ngIf="(decision | async)?.abstainers.length">
                 {{ 'I18N_ABSTAINERS' | translate}} {{ (decision | async)?.abstainers.length }}
               </p>
-              <p text-right *ngIf="(decision | async)?.totalElapsedTime">
+              <p text-right style="white-space: normal" *ngIf="(decision | async)?.totalElapsedTime">
                 {{ 'I18N_ELAPSED_TIME' | translate}} {{ (decision | async)?.totalElapsedTime }} {{ 'I18N_HOURS' | translate}}
               </p>
-              <p text-right *ngIf="(decision | async)?.totalDifference">
+              <p text-right style="white-space: normal" *ngIf="(decision | async)?.totalDifference">
                 {{ 'I18N_DIFFERENCE' | translate}} {{ (decision | async)?.totalDifference | number}}
               </p>
             </ion-col>

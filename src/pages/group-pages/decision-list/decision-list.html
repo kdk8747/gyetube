@@ -7,17 +7,16 @@
     <ion-col col-12 col-sm-6 col-xl-4>
       <ion-item tappable *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
           <ion-row>
-            <p><grasscube-state-label [state]="decision.state"></grasscube-state-label>
-            - {{decision.title}}</p>
+            <grasscube-state-label [state]="decision.state" [postfix]="decision.title"></grasscube-state-label>
           </ion-row>
           <ion-row>
             <ion-col>
               <p>{{decision.meetingDate | localizedDate}}</p>
             </ion-col>
             <ion-col>
-              <p text-right *ngIf="decision.accepters.length"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
-              <p text-right *ngIf="decision.rejecters.length"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
-              <p text-right *ngIf="decision.abstainers.length"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
+              <p text-right style="white-space: normal" *ngIf="decision.accepters.length"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
+              <p text-right style="white-space: normal" *ngIf="decision.rejecters.length"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
+              <p text-right style="white-space: normal" *ngIf="decision.abstainers.length"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -30,10 +29,10 @@
               </button>
             </ion-col>
             <ion-col>
-              <p text-right>
+              <p text-right style="white-space: normal">
                 {{ 'I18N_ELAPSED_TIME' | translate}} {{decision.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
               </p>
-              <p text-right>
+              <p text-right style="white-space: normal">
                 {{ 'I18N_DIFFERENCE' | translate}} {{decision.totalDifference | number}}
               </p>
             </ion-col>
@@ -56,17 +55,17 @@
                 <p>{{decision.meetingDate | localizedDate}}</p>
               </ion-col>
               <ion-col>
-                <p text-right *ngIf="decision.accepters.length"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
-                <p text-right *ngIf="decision.rejecters.length"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
-                <p text-right *ngIf="decision.abstainers.length"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
+                <p text-right style="white-space: normal" *ngIf="decision.accepters.length"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
+                <p text-right style="white-space: normal" *ngIf="decision.rejecters.length"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
+                <p text-right style="white-space: normal" *ngIf="decision.abstainers.length"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
               </ion-col>
             </ion-row>
             <ion-row>
               <ion-col>
-                <p text-right>
+                <p text-right style="white-space: normal">
                   {{ 'I18N_ELAPSED_TIME' | translate}} {{decision.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
                 </p>
-                <p text-right>
+                <p text-right style="white-space: normal">
                   {{ 'I18N_DIFFERENCE' | translate}} {{decision.totalDifference | number}}
                 </p>
               </ion-col>
