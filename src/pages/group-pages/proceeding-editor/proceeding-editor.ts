@@ -39,8 +39,8 @@ export class ProceedingEditorPage {
     public translate: TranslateService
   ) {
     this.form = formBuilder.group({
-      title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
       meetingDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
+      title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
       description: ['', Validators.compose([Validators.maxLength(1024), Validators.required])],
       attendees: [[], Validators.compose([Validators.minLength(2), Validators.required])]
     });

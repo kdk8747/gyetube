@@ -36,9 +36,13 @@ export class DecisionEditorPage {
     public sharedDataService: SharedDataService,
     public translate: TranslateService
   ) {
+    let now = new Date();
+    let curYear = now.getFullYear();
+    let curMonth = now.getMonth();
+    let curDate = now.getDate();
     this.form = formBuilder.group({
+      expiryDate: [this.util.toIsoStringWithTimezoneOffset(new Date(curYear+1,curMonth,curDate)), Validators.required],
       title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
-      expiryDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
       description: ['', Validators.compose([Validators.maxLength(1024), Validators.required])],
       accepters: [[]],
       rejecters: [[]],
@@ -77,7 +81,7 @@ export class DecisionEditorPage {
   }
 
   isValidVoters(): boolean {
-    return this.isUniqueVoters() && this.isPartOfAttendees();
+    return this.isUniqueVoters() && this.isPartOfAttendees() && this.allAttendeesVoted();
   }
 
   isUniqueVoters(): boolean {
@@ -97,6 +101,10 @@ export class DecisionEditorPage {
     return this.form.value.accepters.every(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter))
       && this.form.value.rejecters.every(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter))
       && this.form.value.abstainers.every(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer));
+  }
+
+  allAttendeesVoted(): boolean {
+    return this.form.value.accepters.length + this.form.value.rejecters.length + this.form.value.abstainers.length == this.sharedDataService.proceedingAttendees.length;
   }
 
   isValidAccepters(): boolean {

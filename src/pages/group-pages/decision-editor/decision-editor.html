@@ -18,12 +18,12 @@
       <form [formGroup]="form">
         <ion-list>
           <ion-item>
-            <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
-            <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
-          </ion-item>
-          <ion-item>
             <ion-label>{{ 'I18N_EXPIRY_DATE' | translate }}</ion-label>
             <ion-datetime formControlName="expiryDate" displayFormat="YYYY MM DD, HH:mm" max="2100" [class.invalid]="!form.controls.expiryDate.valid && (form.controls.expiryDate.dirty || submitAttempt)"></ion-datetime>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
+            <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
           </ion-item>
 
           <ion-item no-lines>
@@ -33,7 +33,7 @@
             <ion-textarea formControlName="description" [class.invalid]="!form.controls.description.valid && (form.controls.description.dirty || submitAttempt)"></ion-textarea>
           </ion-item>
 
-
+          <div [class.invalid]="!allAttendeesVoted() && submitAttempt">
           <ion-item no-lines>
             <ion-label>{{ 'I18N_ACCEPTERS' | translate }}</ion-label>
           </ion-item>
@@ -69,6 +69,7 @@
               </ion-option>
             </ion-select>
           </ion-item>
+          </div>
 
         </ion-list>
       </form>
