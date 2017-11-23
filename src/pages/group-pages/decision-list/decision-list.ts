@@ -36,12 +36,6 @@ export class DecisionListPage {
     this.event.subscribe('DecisionList_Refresh', () => {
       this.refreshDecisions();
     });
-
-    this.util.isPermitted('read', 'decisions', this.groupId)
-      .then(bool => this.readPermitted = bool)
-      .catch((error: any) => {
-        console.log(error);
-      });;
   }
 
   ionViewDidEnter() {
@@ -98,6 +92,7 @@ export class DecisionListPage {
         this.sharedDataService.decisionListTimelineMode ?
           this.sortByDate(this.filterDeletedDecisions(decisions)) :
           this.sortByDate(this.filterPastDecisions(decisions)));
+    this.decisions.subscribe(() => this.readPermitted = true);
   }
 
   onFAB(fab: FabContainer) {
