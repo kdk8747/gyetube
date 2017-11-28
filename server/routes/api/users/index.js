@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('./user.controller');
-const auth = require('../../../middlewares/authentication');
+const auth = require('../../../express-middlewares/authentication');
 
 
 router.get('/auth/naver', controller.authenticateNaver);

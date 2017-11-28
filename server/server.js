@@ -35,11 +35,11 @@ if (process.env.NODE_ENV != 'production')
 app.use(sslRedirect(['production'], 301));
 app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
 
-require('./middlewares/passports').initialize();
+require('./express-middlewares/passports').initialize();
 
 app.use('/api/v1.0/groups', require('./routes/api/groups'));
 app.use('/api/v1.0/users', require('./routes/api/users'));
-app.use('/api/v1.0/', require('./middlewares/authentication'), require('./routes/api'));
+app.use('/api/v1.0/', require('./express-middlewares/authentication'), require('./routes/api'));
 
 
 app.get('*', (req, res) => {
