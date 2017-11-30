@@ -17,7 +17,7 @@ import 'rxjs/add/operator/toPromise';
 })
 export class ActivityDetailPage {
 
-  groupId: string;
+  groupId: number;
   id: number;
   activity: Observable<Activity>;
   creator: Observable<Member>;
@@ -40,20 +40,22 @@ export class ActivityDetailPage {
 
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
-    this.groupId = this.util.getCurrentGroupId();
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.activity = this.activityService.getActivity(this.groupId, this.id);
-    this.activity.subscribe((activity: Activity) => {
-      this.sharedDataService.headerDetailTitle = activity.title;
-      this.creator = this.memberService.getMember(this.groupId, activity.creator);
-      this.participants = activity.participants.map((id: number) => this.memberService.getMember(this.groupId, id));
-      this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision);
-      this.receipts = activity.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.activity = this.activityService.getActivity(this.groupId, this.id);
+      this.activity.subscribe((activity: Activity) => {
+        this.sharedDataService.headerDetailTitle = activity.title;
+        this.creator = this.memberService.getMember(this.groupId, activity.creator);
+        this.participants = activity.participants.map((id: number) => this.memberService.getMember(this.groupId, id));
+        this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision);
+        this.receipts = activity.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
+      });
     });
   }
 

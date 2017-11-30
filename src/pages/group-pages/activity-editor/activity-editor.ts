@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ActivityEditorPage {
 
-  groupId: string;
+  groupId: number;
   isNative: boolean = false;
   newActivityImageFile: File = null;
   decisions: Observable<Decision[]>;
@@ -47,22 +47,24 @@ export class ActivityEditorPage {
       participants: [[], Validators.compose([Validators.minLength(1), Validators.required])],
       parentDecision: ['', Validators.required],
     });
-  }
-
-  ionViewDidLoad() {
-    this.groupId = this.util.getCurrentGroupId();
     this.isNative = this.util.isNativeApp();
   }
 
-  ionViewDidEnter() {
-    this.translate.get(['I18N_EDITOR','I18N_ACTIVITY']).subscribe(values => {
+  ionViewDidLoad() {
+  }
+
+  ionViewWillEnter() {
+    this.translate.get(['I18N_EDITOR', 'I18N_ACTIVITY']).subscribe(values => {
       this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_ACTIVITY;
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.members = this.memberService.getMembers(this.groupId);
-    this.decisions = this.decisionService.getDecisions(this.groupId);
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.members = this.memberService.getMembers(this.groupId);
+      this.decisions = this.decisionService.getDecisions(this.groupId);
+    });
   }
 
   popNavigation() {

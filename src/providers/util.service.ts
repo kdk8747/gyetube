@@ -9,7 +9,7 @@ declare const process: any; // Typescript compiler will complain without this
 @Injectable()
 export class UtilService {
 
-  groupId: string = '';
+  groupId: number = 0;
 
   constructor(
     public platform: Platform,
@@ -28,18 +28,20 @@ export class UtilService {
       return this.platform.is('mobile'); // CAUTION: This code can't determine whether it's in a mobile web browser or in a native app.
   }
 
-  setCurrentGroupId(group_id: string): void {
+  setCurrentGroupId(group_id: number): void {
     this.groupId = group_id;
   }
 
-  getCurrentGroupId(): string {
+  getCurrentGroupId(): Promise<number> {
+    if (this.groupId) return Promise.resolve(this.groupId);
+
     if (!this.isNativeApp()) {
       let splits = window.location.href.split('/');
       let i = splits.findIndex((str: string) => str === 'group-page');
       if (i >= 0)
-        return splits[i - 1];
+        return this.groupService.getGroupId(splits[i - 1]);
     }
-    return this.groupId;
+    return Promise.reject('getCurrentGroupId() error');
   }
 
   private getCurrentPayload(): Promise<any> {
@@ -62,7 +64,7 @@ export class UtilService {
     });
   }
 
-  getCurrentMember(group_id: string): Promise<Member> {
+  getCurrentMember(group_id: number): Promise<Member> {
     return this.getCurrentPayload().then(payload => {
       return this.memberService.getMember(group_id, payload.id).toPromise();
     });
@@ -70,10 +72,10 @@ export class UtilService {
 
   getCurrentKnownGroups(): Promise<Group[]> {
     return this.getCurrentPayload().then(payload => {
-      let groups: string[] = [];
+      let groups: number[] = [];
       for (let groupId in payload.permissions.groups)
-        groups.push(groupId);
-      return Promise.all(groups.map((groupId: string) =>
+        groups.push(+groupId);
+      return Promise.all(groups.map((groupId: number) =>
         this.groupService.getGroup(groupId).toPromise()));
     });
   }
@@ -100,7 +102,7 @@ export class UtilService {
     });
   }
 
-  isPermitted(query_crud: string, category: string, groupId: string): Promise<boolean> {
+  isPermitted(query_crud: string, category: string, groupId: number): Promise<boolean> {
     let groupRoles;
     return this.groupService.getGroup(groupId).toPromise()
       .then((group: Group) => {

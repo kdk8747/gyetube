@@ -1,63 +1,56 @@
+const models = require('../../../models');
+const debug = require('debug')('server');
 
-var receipts = [
-  {
-    id: 1,
-    creator: 'kk471891074',
-    modifiedDate: new Date("2017-10-06T19:30:00+09:00"),
-    paymentDate: new Date("2016-01-01T19:30:00+09:00"),
-    title: '2015년 수원녹색당 이월금',
-    difference: +1229000,
-    imageUrl: '',
-    //parentActivity: 1
-    parentDecision: 1
-  },
-  {
-    id: 2,
-    creator: 'kk471891074',
-    modifiedDate: new Date("2017-10-06T19:30:00+09:00"),
-    paymentDate: new Date("2016-03-07T19:30:00+09:00"),
-    title: '2016년 총선 선거기금',
-    difference: -1229000,
-    imageUrl: '',
-    //parentActivity: 1
-    parentDecision: 3
-  },
-];
-var receiptID = 12;
-
-var receipts2 = [
-  { id: 1, creator: '1', modifiedDate: new Date(2016, 5, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 5, 24, 11, 33, 30, 0), title: '5월 당비입금', difference: +3000000, imageUrl: 'dummy', parentActivity: 1 },
-  { id: 2, creator: '1', modifiedDate: new Date(2016, 5, 28, 11, 33, 30, 0), paymentDate: new Date(2016, 5, 28, 11, 33, 30, 0), title: 'dummy1', difference: -20000, imageUrl: 'dummy', parentActivity: 2 },
-  { id: 3, creator: '1', modifiedDate: new Date(2016, 6, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 6, 24, 11, 33, 30, 0), title: 'dummy1', difference: -150000, imageUrl: 'dummy', parentActivity: 3 },
-  { id: 4, creator: '1', modifiedDate: new Date(2016, 6, 27, 11, 33, 30, 0), paymentDate: new Date(2016, 6, 27, 11, 33, 30, 0), title: '6월 당비입금', difference: +360000, imageUrl: 'dummy', parentActivity: 4 },
-  { id: 5, creator: '1', modifiedDate: new Date(2016, 7, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 7, 24, 11, 33, 30, 0), title: 'dummy1', difference: -7500, imageUrl: 'dummy', parentActivity: 5 },
-  { id: 6, creator: '1', modifiedDate: new Date(2016, 7, 29, 11, 33, 30, 0), paymentDate: new Date(2016, 7, 29, 11, 33, 30, 0), title: '7월 당비입금', difference: +360000, imageUrl: 'dummy', parentActivity: 6 },
-  { id: 7, creator: '1', modifiedDate: new Date(2016, 8, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 8, 24, 11, 33, 30, 0), title: 'dummy1', difference: -20000, imageUrl: 'dummy', parentActivity: 7 },
-  { id: 8, creator: '1', modifiedDate: new Date(2016, 8, 25, 11, 33, 30, 0), paymentDate: new Date(2016, 8, 25, 11, 33, 30, 0), title: '8월 당비입금', difference: +360000, imageUrl: 'dummy', parentActivity: 8 },
-  { id: 9, creator: '1', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: 'dummy1', difference: -20000, imageUrl: 'dummy', parentActivity: 9 },
-  { id: 10, creator: '1', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: '9월 당비입금', difference: +360000, imageUrl: 'dummy', parentActivity: 10 },
-  { id: 11, creator: '1', modifiedDate: new Date(2016, 10, 24, 11, 33, 30, 0), paymentDate: new Date(2016, 10, 24, 11, 33, 30, 0), title: '10월 당비입금', difference: +360000, imageUrl: 'dummy', parentActivity: 10 }
-];
-var receiptID2 = 12;
 
 exports.getAll = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    res.json(receipts2);
-  }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.decoded && req.params.group in req.decoded.permissions.groups)
-      res.json(receipts);
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
+  models.receipt.findAll({
+    attributes: ['receipt_id', 'activity_id', 'decision_id', 'creator_id', 'modified_datetime', 'settlement_datetime',
+      'title', 'image_url', 'difference'],
+    where: { group_id: req.params.group_id }
+  }).then((result) => {
+    res.json(result.map(row => {
+      return {
+        id: row.dataValues.receipt_id,
+        creator: row.dataValues.creator_id,
+        modifiedDate: row.dataValues.modified_datetime,
+        settlementDate: row.dataValues.settlement_datetime,
+        title: row.dataValues.title,
+        imageUrl: row.dataValues.image_url,
+        difference: row.dataValues.difference,
+        childReceipts: [],//row.dataValues.decision_id
+      };
+    }));
+  }).catch((reason => {
+    debug(reason);
+    res.status(400).json({
       success: false,
-      message: 'groupId: not found'
+      message: reason
     });
+  }));
+}
+
+exports.getByID = (req, res) => {
+  models.receipt.findOne({
+    attributes: ['receipt_id', 'activity_id', 'decision_id', 'creator_id', 'modified_datetime', 'settlement_datetime',
+      'title', 'image_url', 'difference'],
+    where: { group_id: req.params.group_id, receipt_id: +req.params.receipt_id }
+  }).then((result) => {
+    res.json({
+      id: result.receipt_id,
+      creator: result.creator_id,
+      modifiedDate: result.modified_datetime,
+      settlementDate: result.settlement_datetime,
+      title: result.title,
+      imageUrl: result.image_url,
+      difference: result.difference,
+      childReceipts: [],//result.decision_id
+    });
+  }).catch((reason => {
+    res.status(400).json({
+      success: false,
+      message: reason
+    });
+  }));
 }
 
 exports.getBalance = (req, res) => {
@@ -67,26 +60,6 @@ exports.getBalance = (req, res) => {
   else if (req.params.group === 'suwongreenparty') {
     if (req.decoded && req.params.group in req.decoded.permissions.groups)
       res.json(0);
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
-      success: false,
-      message: 'groupId: not found'
-    });
-}
-
-exports.getByID = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    res.json(receipts2.find(item => item.id === +req.params.id));
-  }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.decoded && req.params.group in req.decoded.permissions.groups)
-      res.json(receipts.find(item => item.id === +req.params.id));
     else
       res.status(401).json({
         success: false,

@@ -26,21 +26,21 @@ export class AmazonService {
         return dateStr;
     }
 
-    getAmazonSignatureForReceiptPOST(groupID: string, ISO8601Date: string): Observable<AmazonSignature> {
+    getAmazonSignatureForReceiptPOST(groupID: number, ISO8601Date: string): Observable<AmazonSignature> {
         let url = `/api/v1.0/sign-s3/${groupID}/receipts?amz-date=${ISO8601Date}`;
         return this.authHttp.get(url)
             .map(response => response.json() as AmazonSignature)
             .take(1);
     }
 
-    getAmazonSignatureForPhotoPOST(groupID: string, ISO8601Date: string): Observable<AmazonSignature> {
+    getAmazonSignatureForPhotoPOST(groupID: number, ISO8601Date: string): Observable<AmazonSignature> {
         let url = `/api/v1.0/sign-s3/${groupID}/photos?amz-date=${ISO8601Date}`;
         return this.authHttp.get(url)
             .map(response => response.json() as AmazonSignature)
             .take(1);
     }
 
-    getAmazonSignatureForDocumentPOST(groupID: string, ISO8601Date: string): Observable<AmazonSignature> {
+    getAmazonSignatureForDocumentPOST(groupID: number, ISO8601Date: string): Observable<AmazonSignature> {
         let url = `/api/v1.0/sign-s3/${groupID}/documents?amz-date=${ISO8601Date}`;
         return this.authHttp.get(url)
             .map(response => response.json() as AmazonSignature)

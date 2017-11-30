@@ -12,7 +12,7 @@ exports.getSign = (req, res) => {
   const amzDate = req.query['amz-date'];
   let authDate = amzDate.split('T')[0];
   let credential = `${process.env.AWS_ACCESS_KEY_ID}/${authDate}/ap-northeast-2/s3/aws4_request`;
-  let keyPath = 'suwongreenparty/' + req.params.category + '/';
+  let keyPath = req.params.group + '/' + req.params.category + '/';
 
   let expiration = new Date();
   expiration.setMinutes(expiration.getMinutes() + 3);

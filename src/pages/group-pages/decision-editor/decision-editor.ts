@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class DecisionEditorPage {
 
-  groupId: string;
+  groupId: number;
   id: number;
   deleteMode: boolean;
   members: Observable<Member>[];
@@ -42,7 +42,7 @@ export class DecisionEditorPage {
     let curMonth = now.getMonth();
     let curDate = now.getDate();
     this.form = formBuilder.group({
-      expiryDate: [this.util.toIsoStringWithTimezoneOffset(new Date(curYear+1,curMonth,curDate)), Validators.required],
+      expiryDate: [this.util.toIsoStringWithTimezoneOffset(new Date(curYear + 1, curMonth, curDate)), Validators.required],
       title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
       description: ['', Validators.compose([Validators.maxLength(1024), Validators.required])],
       accepters: [[]],
@@ -54,10 +54,9 @@ export class DecisionEditorPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.deleteMode = this.navParams.get('delete');
-    this.groupId = this.util.getCurrentGroupId();
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.translate.get(['I18N_EDITOR', 'I18N_DECISION', 'I18N_DELETE']).subscribe(values => {
       if (this.deleteMode)
         this.sharedDataService.headerDetailTitle = values.I18N_DELETE + ' - ' + values.I18N_DECISION;
@@ -67,23 +66,27 @@ export class DecisionEditorPage {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.members = this.sharedDataService.proceedingAttendees.map(id => this.memberService.getMember(this.groupId, id));
 
-    if (this.id) {
-      this.decisionService.getDecision(this.groupId, this.id)
-        .subscribe((decision: Decision) => {
-          this.form.controls['expiryDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(decision.expiryDate)));
-          this.form.controls['title'].setValue(decision.title);
-          if (!this.deleteMode)
-            this.form.controls['description'].setValue(decision.description);
-          this.form.controls['accepters'].setValue(decision.accepters.filter(accepter =>
-            this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter)));
-          this.form.controls['rejecters'].setValue(decision.rejecters.filter(rejecter =>
-            this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter)));
-          this.form.controls['abstainers'].setValue(decision.abstainers.filter(abstainer =>
-            this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer)));
-        });
-    }
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.members = this.sharedDataService.proceedingAttendees.map(id => this.memberService.getMember(this.groupId, id));
+
+      if (this.id) {
+        this.decisionService.getDecision(this.groupId, this.id)
+          .subscribe((decision: Decision) => {
+            this.form.controls['expiryDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(decision.expiryDate)));
+            this.form.controls['title'].setValue(decision.title);
+            if (!this.deleteMode)
+              this.form.controls['description'].setValue(decision.description);
+            this.form.controls['accepters'].setValue(decision.accepters.filter(accepter =>
+              this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter)));
+            this.form.controls['rejecters'].setValue(decision.rejecters.filter(rejecter =>
+              this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter)));
+            this.form.controls['abstainers'].setValue(decision.abstainers.filter(abstainer =>
+              this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer)));
+          });
+      }
+    });
   }
 
   isValidVoters(): boolean {
@@ -154,7 +157,7 @@ export class DecisionEditorPage {
       newDecision.id = this.id;
       newDecision.prevId = this.id;
       newDecision.state = this.deleteMode ? State.STATE_PENDING_DELETE : State.STATE_PENDING_UPDATE;
-      let found = this.sharedDataService.decisionChangesets.findIndex(item => {console.log(item.prevId);return item.prevId == this.id});
+      let found = this.sharedDataService.decisionChangesets.findIndex(item => { console.log(item.prevId); return item.prevId == this.id });
       if (found != -1)
         this.sharedDataService.decisionChangesets[found] = newDecision;
       else

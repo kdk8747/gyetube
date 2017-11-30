@@ -28,13 +28,14 @@ export class GroupListPage {
     });
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }
 
-  navigateToGroup(group_id: string) {
-    this.util.setCurrentGroupId(group_id);
-    this.navCtrl.push('TabsGroupPage', { group_id: group_id });
+  navigateToGroup(group: Group) {
+    this.util.setCurrentGroupId(group.id);
+    console.log('GroupListPage ' + group.id);
+    this.navCtrl.push('TabsGroupPage', { group_url_segment: group.urlSegment });
   }
 }

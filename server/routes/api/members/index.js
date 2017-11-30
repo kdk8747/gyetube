@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const controller = require('./member.controller');
 
-router.get('/:group/', controller.getAll);
-router.get('/:group/:id', controller.getByID);
-router.put('/:group/:id', controller.updateByID);
+router.get('/:group_id/', controller.getAll);
+router.get('/:group_id/:member_id', controller.getByID);
+router.put('/:group_id/:member_id', controller.updateByID);
 
 module.exports = router;

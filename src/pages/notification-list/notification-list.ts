@@ -21,7 +21,7 @@ export class NotificationListPage {
   ionViewDidLoad() {
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }

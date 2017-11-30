@@ -2,7 +2,7 @@ export class Receipt {
   constructor(
     public id: number,
     public modifiedDate: string,
-    public paymentDate: string,
+    public settlementDate: string,
     public creator: number,
     public title: string,
     public difference: number,

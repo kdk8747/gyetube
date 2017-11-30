@@ -1,76 +1,62 @@
+const models = require('../../../models');
+const debug = require('debug')('server');
 
-var activities = [
-  {
-    id: 1,
-    creator: 'kk471891074',
-    participants: ['yd', 'sj', 'kk471891074', 'jy', 'ty', 'jh'],
-    elapsedTime: 2,
-    title: '수원녹색당 임시총회',
-    location: '행궁동 공존공간 1층',
-    description: '수원녹색당 임시총회',
-    modifiedDate: new Date("2017-10-06T11:30:00+09:00"),
-    activityDate: new Date("2016-03-07T19:30:00+09:00"),
-    imageUrls: [],
-    documentUrls: [],
-    parentDecision: 1,
-    childReceipts: [],
-    totalDifference: 0
-  },
-];
-var activityID = 11;
-
-var activities2 = [
-  { id: 1, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 5, 24, 11, 33, 30, 0), activityDate: new Date(2016, 5, 24, 11, 33, 30, 0), title: '5월 정기회의', totalDifference: +3000000, parentDecision: 1, childReceipts: [1] },
-  { id: 2, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 6, 2, 11, 33, 30, 0), activityDate: new Date(2016, 6, 2, 11, 33, 30, 0), title: 'hohoho', totalDifference: -20000, parentDecision: 2, childReceipts: [2] },
-  { id: 3, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 6, 24, 11, 33, 30, 0), activityDate: new Date(2016, 6, 24, 11, 33, 30, 0), title: '6월 정기회의', totalDifference: -150000, parentDecision: 3, childReceipts: [3] },
-  { id: 4, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 7, 4, 11, 33, 30, 0), activityDate: new Date(2016, 7, 4, 11, 33, 30, 0), title: 'hohuho', totalDifference: +360000, parentDecision: 4, childReceipts: [4] },
-  { id: 5, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 7, 24, 11, 33, 30, 0), activityDate: new Date(2016, 7, 24, 11, 33, 30, 0), title: '7월 정기회의', totalDifference: -7500, parentDecision: 4, childReceipts: [5] },
-  { id: 6, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 8, 2, 11, 33, 30, 0), activityDate: new Date(2016, 8, 2, 11, 33, 30, 0), title: 'huhuhu', totalDifference: +360000, parentDecision: 1, childReceipts: [6] },
-  { id: 7, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 8, 24, 11, 33, 30, 0), activityDate: new Date(2016, 8, 24, 11, 33, 30, 0), title: '8월 정기회의', totalDifference: -20000, parentDecision: 5, childReceipts: [7] },
-  { id: 8, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 9, 4, 11, 33, 30, 0), activityDate: new Date(2016, 9, 4, 11, 33, 30, 0), title: 'hohoha', totalDifference: +360000, parentDecision: 2, childReceipts: [8] },
-  { id: 9, creator: '1', imageUrls: [], documentUrls: [], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 9, 24, 11, 33, 30, 0), activityDate: new Date(2016, 9, 24, 11, 33, 30, 0), title: '9월 정기회의', totalDifference: -20000, parentDecision: 5, childReceipts: [9] },
-  { id: 10, creator: '1', imageUrls: ['http://cfile29.uf.tistory.com/image/264ED6395174B648342845','https://s3.ap-northeast-2.amazonaws.com/grassroots-groups/suwongreenparty/photos/Credit-cards.jpg','https://s3.ap-northeast-2.amazonaws.com/grassroots-groups/suwongreenparty/photos/drop-coins-in-piggy-bank_grqhnr.jpg'], documentUrls: ['https://s3.ap-northeast-2.amazonaws.com/grassroots-groups/suwongreenparty/documents/test.html'], participants: ['1', '2', '3', '4', '5'], elapsedTime: 2, description: 'dummy content', modifiedDate: new Date(2016, 10, 24, 11, 33, 30, 0), activityDate: new Date(2016, 10, 24, 11, 33, 30, 0), title: '10월 정기회의', totalDifference: +720000, parentDecision: 1, childReceipts: [10, 11] }
-];
-var activityID2 = 11;
 
 exports.getAll = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    res.json(activities2);
-  }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.decoded && req.params.group in req.decoded.permissions.groups)
-      res.json(activities);
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
+  models.activity.findAll({
+    attributes: ['activity_id', 'decision_id', 'creator_id', 'modified_datetime', 'activity_datetime',
+      'title', 'description', 'image_urls', 'document_urls', 'elapsed_time', 'total_difference'],
+    where: { group_id: req.params.group_id }
+  }).then((result) => {
+    res.json(result.map(row => {
+      return {
+        id: row.dataValues.activity_id,
+        creator: row.dataValues.creator_id,
+        modifiedDate: row.dataValues.modified_datetime,
+        activityDate: row.dataValues.activity_datetime,
+        title: row.dataValues.title,
+        description: row.dataValues.description,
+        imageUrls: row.dataValues.image_urls,
+        documentUrls: row.dataValues.document_urls,
+        elapsedTime: row.dataValues.elapsed_time,
+        totalDifference: row.dataValues.total_difference,
+        childReceipts: [],//row.dataValues.decision_id
+      };
+    }));
+  }).catch((reason => {
+    debug(reason);
+    res.status(400).json({
       success: false,
-      message: 'groupId: not found'
+      message: reason
     });
+  }));
 }
 
 exports.getByID = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    res.json(activities2.find(item => item.id === +req.params.id));
-  }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.decoded && req.params.group in req.decoded.permissions.groups)
-      res.json(activities.find(item => item.id === +req.params.id));
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
-      success: false,
-      message: 'groupId: not found'
+  models.activity.findOne({
+    attributes: ['activity_id', 'decision_id', 'creator_id', 'modified_datetime', 'activity_datetime',
+      'title', 'description', 'image_urls', 'document_urls', 'elapsed_time', 'total_difference'],
+    where: { group_id: req.params.group_id, activity_id: +req.params.activity_id }
+  }).then((result) => {
+    res.json({
+      id: result.activity_id,
+      creator: result.creator_id,
+      modifiedDate: result.modified_datetime,
+      activityDate: result.activity_datetime,
+      title: result.title,
+      description: result.description,
+      imageUrls: result.image_urls,
+      documentUrls: result.document_urls,
+      elapsedTime: result.elapsed_time,
+      totalDifference: result.total_difference,
+      childReceipts: [],//result.decision_id
     });
+  }).catch((reason => {
+    res.status(400).json({
+      success: false,
+      message: reason
+    });
+  }));
 }
 
 exports.updateByID = (req, res) => {
@@ -132,7 +118,7 @@ exports.deleteByID = (req, res) => {
     res.send();
   }
   else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups){
+    if (req.params.group in req.decoded.permissions.groups) {
       activities = activities.filter(h => h.id !== +req.params.id);
       res.send();
     }

@@ -18,7 +18,7 @@ export class ProceedingDetailPage {
   stateEnum = State;
   verifiedGood: boolean = true;
 
-  groupId: string;
+  groupId: number;
   member: Member;
   id: number;
   proceeding: Proceeding = null;
@@ -41,23 +41,25 @@ export class ProceedingDetailPage {
 
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
-    this.groupId = this.util.getCurrentGroupId();
-    this.util.getCurrentMember(this.groupId)
-      .then((member) => this.member = member)
-      .catch((err) => console.log(err));
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.proceedingObs = this.proceedingService.getProceeding(this.groupId, this.id);
-    this.proceedingObs.subscribe((proceeding: Proceeding) => {
-      this.proceeding = proceeding;
-      this.sharedDataService.headerDetailTitle = proceeding.title;
-      this.attendees = proceeding.attendees.map((id: number) => this.memberService.getMember(this.groupId, id));
-      this.reviewers = proceeding.reviewers.map((id: number) => this.memberService.getMember(this.groupId, id));
-      this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.util.getCurrentMember(this.groupId)
+        .then((member) => this.member = member)
+        .catch((err) => console.log(err));
+      this.proceedingObs = this.proceedingService.getProceeding(this.groupId, this.id);
+      this.proceedingObs.subscribe((proceeding: Proceeding) => {
+        this.proceeding = proceeding;
+        this.sharedDataService.headerDetailTitle = proceeding.title;
+        this.attendees = proceeding.attendees.map((id: number) => this.memberService.getMember(this.groupId, id));
+        this.reviewers = proceeding.reviewers.map((id: number) => this.memberService.getMember(this.groupId, id));
+        this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
+      });
     });
   }
 

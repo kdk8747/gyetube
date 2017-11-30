@@ -26,14 +26,14 @@ export class DecisionService {
       console.log(elem);
   }
 
-  getDecisions(group_id: string): Observable<Decision[]> {
+  getDecisions(group_id: number): Observable<Decision[]> {
     const url = `${this.decisionsUrl}/${group_id}`;
     return this.http.get(url)
       .map(response => response.json() as Decision[])
       .take(1);
   }
 
-  cacheDecisions(group_id: string): void {
+  cacheDecisions(group_id: number): void {
     const url = `${this.decisionsUrl}/${group_id}`;
     this.http.get(url)
       .map(response => {
@@ -44,7 +44,7 @@ export class DecisionService {
       }).publishLast().connect(); // connect(): immediately fetch
   }
 
-  getDecision(group_id: string, id: number): Observable<Decision> {
+  getDecision(group_id: number, id: number): Observable<Decision> {
     const url = `${this.decisionsUrl}/${group_id}/${id}`;
 
     if (!this.decisions[group_id + id])
@@ -54,7 +54,7 @@ export class DecisionService {
     return this.decisions[group_id + id];
   }
 
-  cacheDecision(group_id: string, id: number): Observable<Decision> {
+  cacheDecision(group_id: number, id: number): Observable<Decision> {
     const url = `${this.decisionsUrl}/${group_id}/${id}`;
     return this.http.get(url)
       .map(response => {
@@ -64,7 +64,7 @@ export class DecisionService {
       });
   }
 
-  update(group_id: string, decision: Decision): Observable<Decision> {
+  update(group_id: number, decision: Decision): Observable<Decision> {
     const url = `${this.decisionsUrl}/${group_id}/${decision.id}`;
     return this.http
       .put(url, JSON.stringify(decision), { headers: this.headers })

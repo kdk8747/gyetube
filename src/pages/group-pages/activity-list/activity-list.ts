@@ -13,7 +13,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ActivityListPage {
 
-  groupId: string;
+  groupId: number;
   activities: Observable<Activity[]>;
   creationPermitted: boolean = false;
 
@@ -28,17 +28,19 @@ export class ActivityListPage {
   }
 
   ionViewDidLoad() {
-    this.groupId = this.util.getCurrentGroupId();
-    this.util.isPermitted('create', 'activities', this.groupId)
-      .then(bool => this.creationPermitted = bool)
-      .catch((error: any) => {
-        console.log(error);
-      });;
-    this.activities = this.activityService.getActivities(this.groupId)
-      .map((activities: Activity[]) => this.sortByDateA(activities));
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.util.isPermitted('create', 'activities', this.groupId)
+        .then(bool => this.creationPermitted = bool)
+        .catch((error: any) => {
+          console.log(error);
+        });;
+      this.activities = this.activityService.getActivities(this.groupId)
+        .map((activities: Activity[]) => this.sortByDateA(activities));
+    });
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');

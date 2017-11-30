@@ -32,7 +32,7 @@ export class GroupService {
       .take(1);
   }
 
-  getGroup(id: string): Observable<Group> {
+  getGroup(id: number): Observable<Group> {
     const url = `${this.groupsUrl}/${id}`;
 
     if (!this.groups[id])
@@ -40,6 +40,14 @@ export class GroupService {
         .map(response => response.json() as Group)
         .publishLast().refCount();
     return this.groups[id];
+  }
+
+  getGroupId(url_segment: string): Promise<number> {
+    const url = `/api/v1.0/groupId/${url_segment}`;
+
+    return this.http.get(url)
+      .map(response => response.json().group_id as number)
+      .toPromise();
   }
 
   update(user: Group): Observable<Group> {

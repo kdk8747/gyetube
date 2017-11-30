@@ -26,35 +26,35 @@ export class ActivityService {
       console.log(elem);
   }
 
-  getActivities(group_id: string): Observable<Activity[]> {
+  getActivities(group_id: number): Observable<Activity[]> {
     const url = `${this.activitiesUrl}/${group_id}`;
     return this.http.get(url)
       .map(response => response.json() as Activity[])
       .take(1);
   }
 
-  cacheActivities(group_id: string): void {
+  cacheActivities(group_id: number): void {
     const url = `${this.activitiesUrl}/${group_id}`;
     this.http.get(url)
       .map(response => {
         let activities = response.json() as Activity[];
         activities.map(activity => {
-          this.activities[group_id + activity.id] = new Observable<Activity>(obs => obs.next(activity));
+          this.activities[group_id + '/' + activity.id] = new Observable<Activity>(obs => obs.next(activity));
         });
       }).publishLast().connect(); // connect(): immediately fetch
   }
 
-  getActivity(group_id: string, id: number): Observable<Activity> {
+  getActivity(group_id: number, id: number): Observable<Activity> {
     const url = `${this.activitiesUrl}/${group_id}/${id}`;
 
-    if (!this.activities[group_id + id])
-      this.activities[group_id + id] = this.http.get(url)
+    if (!this.activities[group_id + '/' + id])
+      this.activities[group_id + '/' + id] = this.http.get(url)
         .map(response => response.json() as Activity)
         .publishLast().refCount();
-    return this.activities[group_id + id];
+    return this.activities[group_id + '/' + id];
   }
 
-  update(group_id: string, activity: Activity): Observable<Activity> {
+  update(group_id: number, activity: Activity): Observable<Activity> {
     const url = `${this.activitiesUrl}/${group_id}/${activity.id}`;
     return this.http
       .put(url, JSON.stringify(activity), { headers: this.headers })
@@ -62,7 +62,7 @@ export class ActivityService {
       .take(1);
   }
 
-  create(group_id: string, activity: Activity): Observable<Activity> {
+  create(group_id: number, activity: Activity): Observable<Activity> {
     const url = `${this.activitiesUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(activity), { headers: this.headers })
@@ -70,7 +70,7 @@ export class ActivityService {
       .take(1);
   }
 
-  delete(group_id: string, id: number): Observable<void> {
+  delete(group_id: number, id: number): Observable<void> {
     const url = `${this.activitiesUrl}/${group_id}/${id}`;
     return this.http.delete(url, { headers: this.headers })
       .map(() => null)

@@ -42,7 +42,7 @@ export class LoginPage {
     }
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }

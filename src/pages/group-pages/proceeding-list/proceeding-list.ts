@@ -15,7 +15,6 @@ import { Observable } from 'rxjs/Observable';
 export class ProceedingListPage {
   stateEnum = State;
 
-  groupId: string;
   member: Member;
   proceedings: Observable<Proceeding[]>;
   creationPermitted: boolean = false;
@@ -31,21 +30,22 @@ export class ProceedingListPage {
   }
 
   ionViewDidLoad() {
-    this.groupId = this.util.getCurrentGroupId();
-    this.util.getCurrentMember(this.groupId)
-      .then((member) => this.member = member)
-      .catch((err) => console.log(err));
+    this.util.getCurrentGroupId().then(group_id => {
+      this.util.getCurrentMember(group_id)
+        .then((member) => this.member = member)
+        .catch((err) => console.log(err));
 
-    this.util.isPermitted('create', 'proceedings', this.groupId)
-      .then(bool => this.creationPermitted = bool)
-      .catch((error: any) => {
-        console.log(error);
-      });;
-    this.proceedings = this.proceedingService.getProceedings(this.groupId)
-      .map((proceedings: Proceeding[]) => this.sortByDate(this.filterDeletedProceedings(proceedings)));
+      this.util.isPermitted('create', 'proceedings', group_id)
+        .then(bool => this.creationPermitted = bool)
+        .catch((error: any) => {
+          console.log(error);
+        });;
+      this.proceedings = this.proceedingService.getProceedings(group_id)
+        .map((proceedings: Proceeding[]) => this.sortByDate(this.filterDeletedProceedings(proceedings)));
+    });
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');

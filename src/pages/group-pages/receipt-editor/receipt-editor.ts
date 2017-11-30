@@ -15,7 +15,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ReceiptEditorPage {
 
-  groupId: string;
+  groupId: number;
   isNative: boolean = false;
   newReceiptImageFile: File = null;
   activities: Observable<Activity[]>;
@@ -43,25 +43,28 @@ export class ReceiptEditorPage {
 
     this.form = formBuilder.group({
       title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
-      paymentDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
+      settlementDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
       difference: ['', Validators.compose([Validators.pattern('[0-9-]*'), Validators.required])]
     });
-  }
 
-  ionViewDidLoad() {
-    this.groupId = this.util.getCurrentGroupId();
     this.isNative = this.util.isNativeApp();
   }
 
-  ionViewDidEnter() {
-    this.translate.get(['I18N_EDITOR','I18N_RECEIPT']).subscribe(values => {
+  ionViewDidLoad() {
+  }
+
+  ionViewWillEnter() {
+    this.translate.get(['I18N_EDITOR', 'I18N_RECEIPT']).subscribe(values => {
       this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_RECEIPT;
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.activities = this.activityService.getActivities(this.groupId);
-    this.decisions = this.decisionService.getDecisions(this.groupId);
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.activities = this.activityService.getActivities(this.groupId);
+      this.decisions = this.decisionService.getDecisions(this.groupId);
+    });
   }
 
   popNavigation() {
@@ -96,7 +99,7 @@ export class ReceiptEditorPage {
       || !this.form.valid) return;
     this.form.value.title = this.form.value.title.trim();
 
-    let newReceipt = new Receipt(0, new Date(Date.now()).toISOString(), this.form.value.paymentDate, 0,
+    let newReceipt = new Receipt(0, new Date(Date.now()).toISOString(), this.form.value.settlementDate, 0,
       this.form.value.title, +this.form.value.difference, 0, '',
       this.activitySelected ? +this.parentActivity : 0,
       this.activitySelected ? 0 : +this.parentDecision);

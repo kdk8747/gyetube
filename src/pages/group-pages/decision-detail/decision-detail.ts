@@ -15,7 +15,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class DecisionDetailPage {
 
-  groupId: string;
+  groupId: number;
   id: number;
   decision: Decision;
   abstainers: Observable<Member>[] = [];
@@ -41,25 +41,27 @@ export class DecisionDetailPage {
 
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
-    this.groupId = this.util.getCurrentGroupId();
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.decisionService.getDecision(this.groupId, this.id).subscribe((decision: Decision) => {
-      this.decision = decision;
-      this.sharedDataService.headerDetailTitle = decision.title;
-      this.abstainers = decision.abstainers.map((id: number) => this.memberService.getMember(this.groupId, id));
-      this.accepters = decision.accepters.map((id: number) => this.memberService.getMember(this.groupId, id));
-      this.rejecters = decision.rejecters.map((id: number) => this.memberService.getMember(this.groupId, id));
-      if (decision.parentProceeding)
-        this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding);
-      if (decision.childActivities)
-        this.activities = decision.childActivities.map((id: number) => this.activityService.getActivity(this.groupId, id));
-      if (decision.childReceipts)
-        this.receipts = decision.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.decisionService.getDecision(this.groupId, this.id).subscribe((decision: Decision) => {
+        this.decision = decision;
+        this.sharedDataService.headerDetailTitle = decision.title;
+        this.abstainers = decision.abstainers.map((id: number) => this.memberService.getMember(this.groupId, id));
+        this.accepters = decision.accepters.map((id: number) => this.memberService.getMember(this.groupId, id));
+        this.rejecters = decision.rejecters.map((id: number) => this.memberService.getMember(this.groupId, id));
+        if (decision.parentProceeding)
+          this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding);
+        if (decision.childActivities)
+          this.activities = decision.childActivities.map((id: number) => this.activityService.getActivity(this.groupId, id));
+        if (decision.childReceipts)
+          this.receipts = decision.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
+      });
     });
   }
 

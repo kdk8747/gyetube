@@ -3,11 +3,9 @@ const router = express.Router();
 const controller = require('./group.controller');
 
 router.get('/', controller.getAll);
-router.get('/:group', controller.getByID);
-router.get('/:group/roles', controller.getRoles);
-router.get('/:group/roles/:role', controller.getRole);
-router.put('/:group', controller.updateByID);
+router.get('/:group_id', controller.getByID);
+router.put('/:group_id', controller.updateByID);
 router.post('/', controller.create);
-router.delete('/:group', controller.deleteByID);
+router.delete('/:group_id', controller.deleteByID);
 
 module.exports = router;

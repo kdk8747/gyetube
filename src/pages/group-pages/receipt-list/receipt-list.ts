@@ -13,7 +13,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ReceiptListPage {
 
-  groupId: string;
+  groupId: number;
   receipts: Observable<Receipt[]>;
   creationPermitted: boolean = false;
 
@@ -28,18 +28,20 @@ export class ReceiptListPage {
   }
 
   ionViewDidLoad() {
-    this.groupId = this.util.getCurrentGroupId();
-    this.util.isPermitted('create', 'receipts', this.groupId)
-      .then(bool => this.creationPermitted = bool)
-      .catch((error: any) => {
-        console.log(error);
-      });;
-    this.receipts = this.receiptService.getReceipts(this.groupId)
-      .map((receipts: Receipt[]) => this.sortByDateR(receipts))
-      .map((receipts: Receipt[]) => this.setBalance(receipts));
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.util.isPermitted('create', 'receipts', this.groupId)
+        .then(bool => this.creationPermitted = bool)
+        .catch((error: any) => {
+          console.log(error);
+        });;
+      this.receipts = this.receiptService.getReceipts(this.groupId)
+        .map((receipts: Receipt[]) => this.sortByDateR(receipts))
+        .map((receipts: Receipt[]) => this.setBalance(receipts));
+    });
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
@@ -55,16 +57,16 @@ export class ReceiptListPage {
 
   sortByDateR(receipts: Receipt[]): Receipt[] {
     return receipts.sort((h1, h2) => {
-      return h1.paymentDate < h2.paymentDate ? 1 :
-        (h1.paymentDate > h2.paymentDate ? -1 : 0);
+      return h1.settlementDate < h2.settlementDate ? 1 :
+        (h1.settlementDate > h2.settlementDate ? -1 : 0);
     });
   }
 
   setBalance(receipts: Receipt[]): Receipt[] {
     if (receipts.length > 0) {
       receipts[receipts.length - 1].balance = receipts[receipts.length - 1].difference;
-      for(let i = receipts.length - 1; i > 0; i --){
-        receipts[i-1].balance = receipts[i].balance + receipts[i-1].difference;
+      for (let i = receipts.length - 1; i > 0; i--) {
+        receipts[i - 1].balance = receipts[i].balance + receipts[i - 1].difference;
       }
     }
     return receipts;

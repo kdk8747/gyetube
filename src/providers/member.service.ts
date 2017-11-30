@@ -31,30 +31,30 @@ export class MemberService {
     return this.responseTimeMs;
   }
 
-  getMembers(group_id: string): Observable<Member[]> {
+  getMembers(group_id: number): Observable<Member[]> {
     const url = `${this.membersUrl}/${group_id}`;
     return this.http.get(url)
       .map(response => response.json() as Member[])
       .take(1);
   }
 
-  cacheMembers(group_id: string): void {
+  cacheMembers(group_id: number): void {
     const url = `${this.membersUrl}/${group_id}`;
     this.http.get(url)
       .map(response => {
         let members = response.json() as Member[];
         members.map(member => {
-          this.members[group_id + member.id] = new Observable<Member>(obs => obs.next(member));
+          this.members[group_id + '/' + member.id] = new Observable<Member>(obs => obs.next(member));
         });
       }).publishLast().connect(); // connect(): immediately fetch
   }
 
-  getMember(group_id: string, id: number): Observable<Member> {
+  getMember(group_id: number, id: number): Observable<Member> {
     const url = `${this.membersUrl}/${group_id}/${id}`;
 
-    if (!this.members[group_id + id]){
+    if (!this.members[group_id + '/' + id]){
       let sendDate = (new Date()).getTime();
-      this.members[group_id + id] = this.http.get(url)
+      this.members[group_id + '/' + id] = this.http.get(url)
         .map(response => {
           let receiveDate = (new Date()).getTime();
           this.responseTimeMs = receiveDate - sendDate;
@@ -62,10 +62,10 @@ export class MemberService {
         })
         .publishLast().refCount();
     }
-    return this.members[group_id + id];
+    return this.members[group_id + '/' + id];
   }
 
-  cacheMember(group_id: string, id: number): Observable<Member> {
+  cacheMember(group_id: number, id: number): Observable<Member> {
     const url = `${this.membersUrl}/${group_id}/${id}`;
     let sendDate = (new Date()).getTime();
     return this.http.get(url)
@@ -73,12 +73,12 @@ export class MemberService {
         let receiveDate = (new Date()).getTime();
         this.responseTimeMs = receiveDate - sendDate;
         let member = response.json() as Member;
-        this.members[group_id + member.id] = new Observable<Member>(obs => obs.next(member));
+        this.members[group_id + '/' + member.id] = new Observable<Member>(obs => obs.next(member));
         return member;
       });
   }
 
-  update(group_id: string, member: Member): Observable<Member> {
+  update(group_id: number, member: Member): Observable<Member> {
     const url = `${this.membersUrl}/${group_id}/${member.id}`;
     return this.http
       .put(url, JSON.stringify(member), { headers: this.headers })

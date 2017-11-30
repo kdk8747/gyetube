@@ -15,7 +15,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class DecisionListPage {
 
-  groupId: string;
+  groupId: number;
   decisions: Observable<Decision[]>;
   readPermitted: boolean = false;
 
@@ -30,15 +30,17 @@ export class DecisionListPage {
   }
 
   ionViewDidLoad() {
-    this.groupId = this.util.getCurrentGroupId();
-    this.refreshDecisions();
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.refreshDecisions();
+    });
 
     this.event.subscribe('DecisionList_Refresh', () => {
       this.refreshDecisions();
     });
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');

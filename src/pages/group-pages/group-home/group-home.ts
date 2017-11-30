@@ -14,8 +14,6 @@ import { Observable } from 'rxjs/Observable';
 })
 export class GroupHomePage {
 
-  groupId: string = '';
-  id: number;
   group: Observable<Group>;
 
   constructor(
@@ -29,11 +27,15 @@ export class GroupHomePage {
   }
 
   ionViewDidLoad() {
-    this.groupId = this.util.getCurrentGroupId();
-    this.group = this.groupService.getGroup(this.groupId);
+    this.util.getCurrentGroupId().then(group_id => {
+      this.group = this.groupService.getGroup(group_id);
+      this.group.subscribe(group => {
+        this.sharedDataService.headerGroupTitle = group.title;
+      });
+    });
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');

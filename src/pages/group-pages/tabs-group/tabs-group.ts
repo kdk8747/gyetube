@@ -5,7 +5,7 @@ import { Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
-  segment: ':group_id/group-page'
+  segment: ':group_url_segment/group-page'
 })
 @Component({
   selector: 'page-tabs-group',
@@ -18,8 +18,6 @@ export class TabsGroupPage {
   tab4Root: string = 'ActivityListPage';
   tab5Root: string = 'ReceiptListPage';
 
-  groupId: string = '';
-  group: Observable<Group>;
   responseTimeMs: number = 80;
 
   constructor(
@@ -41,16 +39,14 @@ export class TabsGroupPage {
   }
 
   ionViewDidLoad() {
-    this.groupId = this.navParams.get('group_id');
-    this.group = this.groupService.getGroup(this.groupId);
-
-    this.group.subscribe((group: Group) => {
-      this.sharedDataService.headerGroupTitle = group.title;
-      this.memberService.cacheMembers(group.id);
-      this.proceedingService.cacheProceedings(group.id);
-      this.decisionService.cacheDecisions(group.id);
-      this.activityService.cacheActivities(group.id);
-      this.receiptService.cacheReceipts(group.id);
+    this.groupService.getGroupId(this.navParams.get('group_url_segment')).then(group_id => {
+      this.groupService.getGroup(group_id).subscribe(group => this.sharedDataService.headerGroupTitle = group.title);
+      this.util.setCurrentGroupId(group_id);
+      this.memberService.cacheMembers(group_id);
+      this.proceedingService.cacheProceedings(group_id);
+      this.decisionService.cacheDecisions(group_id);
+      this.activityService.cacheActivities(group_id);
+      this.receiptService.cacheReceipts(group_id);
     });
 
     this.event.subscribe('TabsGroup_HideTab', (obj) => {
@@ -89,7 +85,7 @@ export class TabsGroupPage {
     this.event.unsubscribe('TabsGroup_ReceiptDetail');
   }
 
-  switchDetailPage(tabIndex: number, page: string, obj:any) {
+  switchDetailPage(tabIndex: number, page: string, obj: any) {
     let childNav: Nav = this.navCtrl.getActiveChildNavs()[0]._tabs[tabIndex];
     if (childNav.length() == 0) {
       this.navCtrl.getActiveChildNavs()[0].select(tabIndex);

@@ -15,7 +15,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ReceiptDetailPage {
 
-  groupId: string;
+  groupId: number;
   id: number;
   imageUrl: string = '';
   receipt: Observable<Receipt>;
@@ -38,22 +38,24 @@ export class ReceiptDetailPage {
 
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
-    this.groupId = this.util.getCurrentGroupId();
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.receipt = this.receiptService.getReceipt(this.groupId, this.id);
-    this.receipt.subscribe((receipt: Receipt) => {
-      this.sharedDataService.headerDetailTitle = receipt.title;
-      this.imageUrl = receipt.imageUrl;
-      this.creator = this.memberService.getMember(this.groupId, receipt.creator);
-      if (receipt.parentActivity)
-        this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity);
-      if (receipt.parentDecision)
-        this.decision = this.decisionService.getDecision(this.groupId, receipt.parentDecision);
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.receipt = this.receiptService.getReceipt(this.groupId, this.id);
+      this.receipt.subscribe((receipt: Receipt) => {
+        this.sharedDataService.headerDetailTitle = receipt.title;
+        this.imageUrl = receipt.imageUrl;
+        this.creator = this.memberService.getMember(this.groupId, receipt.creator);
+        if (receipt.parentActivity)
+          this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity);
+        if (receipt.parentDecision)
+          this.decision = this.decisionService.getDecision(this.groupId, receipt.parentDecision);
+      });
     });
   }
 

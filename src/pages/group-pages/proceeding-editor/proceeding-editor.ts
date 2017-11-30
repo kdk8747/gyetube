@@ -17,7 +17,7 @@ import { Observable } from 'rxjs/Observable';
 export class ProceedingEditorPage {
   stateEnum = State;
 
-  groupId: string;
+  groupId: number;
   id: number;
   members: Observable<Member[]>;
 
@@ -49,32 +49,34 @@ export class ProceedingEditorPage {
 
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
-    this.groupId = this.util.getCurrentGroupId();
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.translate.get(['I18N_EDITOR', 'I18N_PROCEEDING']).subscribe(values => {
       this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_PROCEEDING;
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.members = this.memberService.getMembers(this.groupId);
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.members = this.memberService.getMembers(this.groupId);
 
-    if (this.id) {
-      this.proceedingService.getProceeding(this.groupId, this.id)
-        .subscribe((proceeding: Proceeding) => {
-          this.form.controls['meetingDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(proceeding.meetingDate)));
-          this.form.controls['title'].setValue(proceeding.title);
-          this.form.controls['description'].setValue(proceeding.description);
-          this.form.controls['attendees'].setValue(proceeding.attendees);
-          this.sharedDataService.proceedingAttendees = proceeding.attendees;
-          this.sharedDataService.decisionChangesets = [];
-          proceeding.childDecisions.map(id =>
-            this.decisionService.getDecision(this.groupId, id)
-              .subscribe(decision => this.sharedDataService.decisionChangesets.push(decision)));
-        });
-    }
+      if (this.id) {
+        this.proceedingService.getProceeding(this.groupId, this.id)
+          .subscribe((proceeding: Proceeding) => {
+            this.form.controls['meetingDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(proceeding.meetingDate)));
+            this.form.controls['title'].setValue(proceeding.title);
+            this.form.controls['description'].setValue(proceeding.description);
+            this.form.controls['attendees'].setValue(proceeding.attendees);
+            this.sharedDataService.proceedingAttendees = proceeding.attendees;
+            this.sharedDataService.decisionChangesets = [];
+            proceeding.childDecisions.map(id =>
+              this.decisionService.getDecision(this.groupId, id)
+                .subscribe(decision => this.sharedDataService.decisionChangesets.push(decision)));
+          });
+      }
+    });
   }
 
   popNavigation() {

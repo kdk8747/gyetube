@@ -4,7 +4,7 @@
   <ion-grid fixed>
     <ion-row>
       <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let group of groups">
-        <ion-item tappable (tap)="navigateToGroup(group.id)">
+        <ion-item tappable (tap)="navigateToGroup(group)">
           <ion-card-header>
             {{group.title}}
           </ion-card-header>

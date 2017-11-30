@@ -2,16 +2,9 @@ const models = require('../../../models');
 const debug = require('debug')('server');
 
 exports.getAll = (req, res) => {
-  models.sequelize.transaction(t => {
-    return models.url_segment.findOne({
-      attributes: ['group_id'],
-      where: {url_segment: req.params.group}
-    }, {transaction: t}).then(result => {
-      return models.member.findAll({
-        attributes: ['member_id','decision_id','prev_id','next_id','state','creator_id','modified_datetime','image_url','name'],
-        where: {group_id: result.group_id}
-      }, {transaction: t});
-    });
+  models.member.findAll({
+    attributes: ['member_id', 'decision_id', 'prev_id', 'next_id', 'state', 'creator_id', 'modified_datetime', 'image_url', 'name'],
+    where: { group_id: req.params.group_id }
   }).then((result) => {
     res.json(result.map(row => {
       return {
@@ -35,27 +28,20 @@ exports.getAll = (req, res) => {
 }
 
 exports.getByID = (req, res) => {
-  models.sequelize.transaction(t => {
-    return models.url_segment.findOne({
-      attributes: ['group_id'],
-      where: {url_segment: req.params.group}
-    }, {transaction: t}).then(result => {
-      return models.member.findOne({
-        attributes: ['member_id','decision_id','prev_id','next_id','state','creator_id','modified_datetime','image_url','name'],
-        where: {group_id: result.group_id, member_id: +req.params.id}
-      }, {transaction: t});
-    });
+  models.member.findOne({
+    attributes: ['member_id', 'decision_id', 'prev_id', 'next_id', 'state', 'creator_id', 'modified_datetime', 'image_url', 'name'],
+    where: { group_id: req.params.group_id, member_id: +req.params.member_id }
   }).then((result) => {
     res.json({
-        id: result.member_id,
-        prevId: result.prev_id,
-        nextId: result.next_id,
-        state: result.state,
-        creator: result.creator_id,
-        modifiedDate: result.modified_datetime,
-        imageUrl: result.image_url,
-        name: result.name,
-        parentDecision: result.decision_id
+      id: result.member_id,
+      prevId: result.prev_id,
+      nextId: result.next_id,
+      state: result.state,
+      creator: result.creator_id,
+      modifiedDate: result.modified_datetime,
+      imageUrl: result.image_url,
+      name: result.name,
+      parentDecision: result.decision_id
     });
   }).catch((reason => {
     res.status(400).json({
@@ -66,8 +52,8 @@ exports.getByID = (req, res) => {
 }
 
 exports.updateByID = (req, res) => {
-    res.status(404).json({
-      success: false,
-      message: 'groupId: not found'
-    });
+  res.status(404).json({
+    success: false,
+    message: 'groupId: not found'
+  });
 }

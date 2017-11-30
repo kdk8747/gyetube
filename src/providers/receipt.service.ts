@@ -26,35 +26,35 @@ export class ReceiptService {
       console.log(elem);
   }
 
-  getReceipts(group_id: string): Observable<Receipt[]> {
+  getReceipts(group_id: number): Observable<Receipt[]> {
     const url = `${this.receiptsUrl}/${group_id}`;
     return this.http.get(url)
       .map(response => response.json() as Receipt[])
       .take(1);
   }
 
-  cacheReceipts(group_id: string): void {
+  cacheReceipts(group_id: number): void {
     const url = `${this.receiptsUrl}/${group_id}`;
     this.http.get(url)
       .map(response => {
         let receipts = response.json() as Receipt[];
         receipts.map(receipt => {
-          this.receipts[group_id + receipt.id] = new Observable<Receipt>(obs => obs.next(receipt));
+          this.receipts[group_id + '/' + receipt.id] = new Observable<Receipt>(obs => obs.next(receipt));
         });
       }).publishLast().connect(); // connect(): immediately fetch
   }
 
-  getReceipt(group_id: string, id: number): Observable<Receipt> {
+  getReceipt(group_id: number, id: number): Observable<Receipt> {
     const url = `${this.receiptsUrl}/${group_id}/${id}`;
 
-    if (!this.receipts[group_id + id])
-      this.receipts[group_id + id] = this.http.get(url)
+    if (!this.receipts[group_id + '/' + id])
+      this.receipts[group_id + '/' + id] = this.http.get(url)
         .map(response => response.json() as Receipt)
         .publishLast().refCount();
-    return this.receipts[group_id + id];
+    return this.receipts[group_id + '/' + id];
   }
 
-  update(group_id: string, receipt: Receipt): Observable<Receipt> {
+  update(group_id: number, receipt: Receipt): Observable<Receipt> {
     const url = `${this.receiptsUrl}/${group_id}/${receipt.id}`;
     return this.http
       .put(url, JSON.stringify(receipt), { headers: this.headers })
@@ -62,7 +62,7 @@ export class ReceiptService {
       .take(1);
   }
 
-  create(group_id: string, receipt: Receipt): Observable<Receipt> {
+  create(group_id: number, receipt: Receipt): Observable<Receipt> {
     const url = `${this.receiptsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(receipt), { headers: this.headers })
@@ -70,7 +70,7 @@ export class ReceiptService {
       .take(1);
   }
 
-  delete(group_id: string, id: number): Observable<void> {
+  delete(group_id: number, id: number): Observable<void> {
     const url = `${this.receiptsUrl}/${group_id}/${id}`;
     return this.http.delete(url, { headers: this.headers })
       .map(() => null)
