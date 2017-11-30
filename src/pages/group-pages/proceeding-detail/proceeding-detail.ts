@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, UserService, ProceedingService, DecisionService, SharedDataService } from '../../../providers';
-import { Proceeding, User, Decision } from '../../../models';
+import { UtilService, MemberService, ProceedingService, DecisionService, SharedDataService } from '../../../providers';
+import { Proceeding, Member, Decision } from '../../../models';
 import { State } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
@@ -19,11 +19,12 @@ export class ProceedingDetailPage {
   verifiedGood: boolean = true;
 
   groupId: string;
+  member: Member;
   id: number;
   proceeding: Proceeding = null;
   proceedingObs: Observable<Proceeding>;
-  attendees: Observable<User>[];
-  reviewers: Observable<User>[];
+  attendees: Observable<Member>[];
+  reviewers: Observable<Member>[];
   decisions: Observable<Decision>[];
 
   constructor(
@@ -31,7 +32,7 @@ export class ProceedingDetailPage {
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public userService: UserService,
+    public memberService: MemberService,
     public decisionService: DecisionService,
     public proceedingService: ProceedingService,
     public sharedDataService: SharedDataService
@@ -41,6 +42,9 @@ export class ProceedingDetailPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.groupId = this.util.getCurrentGroupId();
+    this.util.getCurrentMember(this.groupId)
+      .then((member) => this.member = member)
+      .catch((err) => console.log(err));
   }
 
   ionViewDidEnter() {
@@ -51,8 +55,8 @@ export class ProceedingDetailPage {
     this.proceedingObs.subscribe((proceeding: Proceeding) => {
       this.proceeding = proceeding;
       this.sharedDataService.headerDetailTitle = proceeding.title;
-      this.attendees = proceeding.attendees.map((id: string) => this.userService.getUser(id));
-      this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
+      this.attendees = proceeding.attendees.map((id: number) => this.memberService.getMember(this.groupId, id));
+      this.reviewers = proceeding.reviewers.map((id: number) => this.memberService.getMember(this.groupId, id));
       this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
     });
   }
@@ -79,10 +83,10 @@ export class ProceedingDetailPage {
   }
 
   needYou(proceeding: Proceeding): boolean {
-    return proceeding && this.sharedDataService.loggedInUser && proceeding.state == State.STATE_PENDING_CREATE
+    return proceeding && this.member && proceeding.state == State.STATE_PENDING_CREATE
       && proceeding.nextId == 0
-      && proceeding.attendees.findIndex(attendee => attendee == this.sharedDataService.loggedInUser.id) != -1
-      && proceeding.reviewers.findIndex(attendee => attendee == this.sharedDataService.loggedInUser.id) == -1;
+      && proceeding.attendees.findIndex(attendee => attendee == this.member.id) != -1
+      && proceeding.reviewers.findIndex(attendee => attendee == this.member.id) == -1;
   }
 
   onSubmit() {
@@ -98,7 +102,7 @@ export class ProceedingDetailPage {
             });
           }
           else {
-            this.reviewers = proceeding.reviewers.map((id: string) => this.userService.getUser(id));
+            this.reviewers = proceeding.reviewers.map((id: number) => this.memberService.getMember(this.groupId, id));
             this.event.publish('App_ShowHeader');
             this.event.publish('TabsGroup_ShowTab');
           }

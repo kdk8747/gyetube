@@ -9,8 +9,8 @@ export class Proceeding {
     public state: State,
     public createdDate: string,
     public meetingDate: string,
-    public attendees: string[],
-    public reviewers: string[],
+    public attendees: number[],
+    public reviewers: number[],
     public title: string,
     public description: string,
     public childDecisions: number[]
@@ -25,8 +25,8 @@ export class ProceedingCreation {
     public state: State,
     public createdDate: string,
     public meetingDate: string,
-    public attendees: string[],
-    public reviewers: string[],
+    public attendees: number[],
+    public reviewers: number[],
     public title: string,
     public description: string,
     public childDecisions: Decision[]

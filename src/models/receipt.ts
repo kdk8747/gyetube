@@ -3,7 +3,7 @@ export class Receipt {
     public id: number,
     public modifiedDate: string,
     public paymentDate: string,
-    public creator: string,
+    public creator: number,
     public title: string,
     public difference: number,
     public balance: number,     // always 0 at the server

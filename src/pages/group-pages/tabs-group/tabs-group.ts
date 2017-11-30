@@ -1,6 +1,6 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, Events, ViewController, Nav } from 'ionic-angular';
-import { UserService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
+import { MemberService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
 import { Group } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -20,7 +20,7 @@ export class TabsGroupPage {
 
   groupId: string = '';
   group: Observable<Group>;
-  responseTimeMs: number = 500;
+  responseTimeMs: number = 80;
 
   constructor(
     public element: ElementRef,
@@ -30,7 +30,7 @@ export class TabsGroupPage {
     public loadingCtrl: LoadingController,
     public event: Events,
     public util: UtilService,
-    public userService: UserService,
+    public memberService: MemberService,
     public groupService: GroupService,
     public proceedingService: ProceedingService,
     public decisionService: DecisionService,
@@ -46,9 +46,7 @@ export class TabsGroupPage {
 
     this.group.subscribe((group: Group) => {
       this.sharedDataService.headerGroupTitle = group.title;
-      group.members.map(id => this.userService.cacheUser(id));
-      if (group.members.length > 0)
-        this.userService.getUser(group.members[0]).subscribe(() => this.responseTimeMs = this.userService.getResponseTimeMs());
+      this.memberService.cacheMembers(group.id);
       this.proceedingService.cacheProceedings(group.id);
       this.decisionService.cacheDecisions(group.id);
       this.activityService.cacheActivities(group.id);

@@ -8,7 +8,9 @@ module.exports = (sequelize, DataTypes) => {
     state: { type: DataTypes.TINYINT.UNSIGNED },
     creator_id: { type: DataTypes.INTEGER.UNSIGNED },
     modified_datetime: { type: DataTypes.DATE },
-    user_id: { type: DataTypes.UUID }
+    user_id: { type: DataTypes.UUID },
+    image_url: { type: DataTypes.TEXT },
+    name: { type: DataTypes.STRING(32) }
   }, {
       timestamps: false,
       tableName: 'member'

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, UserService, ReceiptService, ActivityService, DecisionService, SharedDataService } from '../../../providers';
-import { Receipt, User, Activity, Decision } from '../../../models';
+import { UtilService, MemberService, ReceiptService, ActivityService, DecisionService, SharedDataService } from '../../../providers';
+import { Receipt, Member, Activity, Decision } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -19,7 +19,7 @@ export class ReceiptDetailPage {
   id: number;
   imageUrl: string = '';
   receipt: Observable<Receipt>;
-  creator: Observable<User>;
+  creator: Observable<Member>;
   activity: Observable<Activity> = null;
   decision: Observable<Decision> = null;
 
@@ -28,7 +28,7 @@ export class ReceiptDetailPage {
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public userService: UserService,
+    public memberService: MemberService,
     public receiptService: ReceiptService,
     public activityService: ActivityService,
     public decisionService: DecisionService,
@@ -49,7 +49,7 @@ export class ReceiptDetailPage {
     this.receipt.subscribe((receipt: Receipt) => {
       this.sharedDataService.headerDetailTitle = receipt.title;
       this.imageUrl = receipt.imageUrl;
-      this.creator = this.userService.getUser(receipt.creator);
+      this.creator = this.memberService.getMember(this.groupId, receipt.creator);
       if (receipt.parentActivity)
         this.activity = this.activityService.getActivity(this.groupId, receipt.parentActivity);
       if (receipt.parentDecision)

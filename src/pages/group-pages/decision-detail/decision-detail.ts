@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, UserService, DecisionService, ProceedingService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
-import { Decision, User, Proceeding, Activity, Receipt } from '../../../models';
+import { UtilService, MemberService, DecisionService, ProceedingService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
+import { Decision, Member, Proceeding, Activity, Receipt } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -18,9 +18,9 @@ export class DecisionDetailPage {
   groupId: string;
   id: number;
   decision: Decision;
-  abstainers: Observable<User>[] = [];
-  accepters: Observable<User>[] = [];
-  rejecters: Observable<User>[] = [];
+  abstainers: Observable<Member>[] = [];
+  accepters: Observable<Member>[] = [];
+  rejecters: Observable<Member>[] = [];
   proceeding: Observable<Proceeding> = null;
   activities: Observable<Activity>[];
   receipts: Observable<Receipt>[];
@@ -30,7 +30,7 @@ export class DecisionDetailPage {
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public userService: UserService,
+    public memberService: MemberService,
     public decisionService: DecisionService,
     public proceedingService: ProceedingService,
     public activityService: ActivityService,
@@ -51,9 +51,9 @@ export class DecisionDetailPage {
     this.decisionService.getDecision(this.groupId, this.id).subscribe((decision: Decision) => {
       this.decision = decision;
       this.sharedDataService.headerDetailTitle = decision.title;
-      this.abstainers = decision.abstainers.map((id: string) => this.userService.getUser(id));
-      this.accepters = decision.accepters.map((id: string) => this.userService.getUser(id));
-      this.rejecters = decision.rejecters.map((id: string) => this.userService.getUser(id));
+      this.abstainers = decision.abstainers.map((id: number) => this.memberService.getMember(this.groupId, id));
+      this.accepters = decision.accepters.map((id: number) => this.memberService.getMember(this.groupId, id));
+      this.rejecters = decision.rejecters.map((id: number) => this.memberService.getMember(this.groupId, id));
       if (decision.parentProceeding)
         this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding);
       if (decision.childActivities)

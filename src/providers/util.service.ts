@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { GroupService, UserService } from './';
-import { User, Group } from '../models';
+import { GroupService, UserService, MemberService } from './';
+import { User, Group, Member } from '../models';
 
 declare const process: any; // Typescript compiler will complain without this
 
@@ -17,6 +17,7 @@ export class UtilService {
     public event: Events,
     public groupService: GroupService,
     public userService: UserService,
+    public memberService: MemberService
   ) { }
 
   isNativeApp(): boolean {
@@ -61,6 +62,12 @@ export class UtilService {
     });
   }
 
+  getCurrentMember(group_id: string): Promise<Member> {
+    return this.getCurrentPayload().then(payload => {
+      return this.memberService.getMember(group_id, payload.id).toPromise();
+    });
+  }
+
   getCurrentKnownGroups(): Promise<Group[]> {
     return this.getCurrentPayload().then(payload => {
       let groups: string[] = [];
@@ -97,7 +104,11 @@ export class UtilService {
     let groupRoles;
     return this.groupService.getGroup(groupId).toPromise()
       .then((group: Group) => {
-        groupRoles = group.roles;
+        groupRoles = [
+          {id: 'anyone', name:'아무나', proceedings:'____', decisions:'____', activities:'_r__', receipts:'_r__'},
+          {id: 'member', name:'당원', proceedings:'_ru_', decisions:'_ru_', activities:'crud', receipts:'crud'},
+          {id: 'commitee', name:'운영위원', proceedings:'cru_', decisions:'_ru_', activities:'crud', receipts:'crud'}
+        ];//group.roles;
         return this.getCurrentPayload();
       }).then(payload => {
         if (groupId in payload.permissions.groups) {

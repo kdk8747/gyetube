@@ -1,0 +1,9 @@
+const express = require('express');
+const router = express.Router();
+const controller = require('./member.controller');
+
+router.get('/:group/', controller.getAll);
+router.get('/:group/:id', controller.getByID);
+router.put('/:group/:id', controller.updateByID);
+
+module.exports = router;

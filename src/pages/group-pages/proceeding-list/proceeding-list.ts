@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, ProceedingService, SharedDataService } from '../../../providers';
-import { User, Proceeding } from '../../../models';
+import { Member, Proceeding } from '../../../models';
 import { State } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
@@ -16,7 +16,7 @@ export class ProceedingListPage {
   stateEnum = State;
 
   groupId: string;
-  user: User;
+  member: Member;
   proceedings: Observable<Proceeding[]>;
   creationPermitted: boolean = false;
 
@@ -32,8 +32,8 @@ export class ProceedingListPage {
 
   ionViewDidLoad() {
     this.groupId = this.util.getCurrentGroupId();
-    this.util.getCurrentUser()
-      .then((user) => this.user = user)
+    this.util.getCurrentMember(this.groupId)
+      .then((member) => this.member = member)
       .catch((err) => console.log(err));
 
     this.util.isPermitted('create', 'proceedings', this.groupId)
@@ -71,9 +71,9 @@ export class ProceedingListPage {
   }
 
   needYou(proceeding: Proceeding): boolean {
-    return proceeding && this.user && proceeding.state == this.stateEnum.STATE_PENDING_CREATE
+    return proceeding && this.member && proceeding.state == this.stateEnum.STATE_PENDING_CREATE
       && proceeding.nextId == 0
-      && proceeding.attendees.findIndex(attendee => attendee == this.user.id) != -1
-      && proceeding.reviewers.findIndex(attendee => attendee == this.user.id) == -1;
+      && proceeding.attendees.findIndex(attendee => attendee == this.member.id) != -1
+      && proceeding.reviewers.findIndex(attendee => attendee == this.member.id) == -1;
   }
 }

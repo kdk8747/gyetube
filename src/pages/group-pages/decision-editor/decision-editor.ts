@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, UserService, GroupService, DecisionService, SharedDataService } from '../../../providers';
-import { User, Decision } from '../../../models';
+import { UtilService, MemberService, GroupService, DecisionService, SharedDataService } from '../../../providers';
+import { Member, Decision } from '../../../models';
 import { State } from '../../../app/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
@@ -19,7 +19,7 @@ export class DecisionEditorPage {
   groupId: string;
   id: number;
   deleteMode: boolean;
-  users: Observable<User>[];
+  members: Observable<Member>[];
 
   form: FormGroup;
   submitAttempt: boolean = false;
@@ -31,7 +31,7 @@ export class DecisionEditorPage {
     public formBuilder: FormBuilder,
     public event: Events,
     public util: UtilService,
-    public userService: UserService,
+    public memberService: MemberService,
     public groupService: GroupService,
     public decisionService: DecisionService,
     public sharedDataService: SharedDataService,
@@ -67,7 +67,7 @@ export class DecisionEditorPage {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.users = this.sharedDataService.proceedingAttendees.map(id => this.userService.getUser(id));
+    this.members = this.sharedDataService.proceedingAttendees.map(id => this.memberService.getMember(this.groupId, id));
 
     if (this.id) {
       this.decisionService.getDecision(this.groupId, this.id)
@@ -91,14 +91,14 @@ export class DecisionEditorPage {
   }
 
   isUniqueVoters(): boolean {
-    let users = [];
-    users = users.concat(this.form.value.accepters);
-    users = users.concat(this.form.value.rejecters);
-    users = users.concat(this.form.value.abstainers);
-    users = users.sort();
+    let members = [];
+    members = members.concat(this.form.value.accepters);
+    members = members.concat(this.form.value.rejecters);
+    members = members.concat(this.form.value.abstainers);
+    members = members.sort();
     let valid = true;
-    for (let i = 1; i < users.length; i++)
-      valid = valid && (users[i - 1] != users[i]);
+    for (let i = 1; i < members.length; i++)
+      valid = valid && (members[i - 1] != members[i]);
 
     return valid;
   }

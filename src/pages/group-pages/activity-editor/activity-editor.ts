@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, UserService, GroupService, ActivityService, DecisionService, AmazonService, SharedDataService } from '../../../providers';
-import { User, Group, Activity, Decision, AmazonSignature } from '../../../models';
+import { UtilService, MemberService, GroupService, ActivityService, DecisionService, AmazonService, SharedDataService } from '../../../providers';
+import { Member, Group, Activity, Decision, AmazonSignature } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -20,7 +20,7 @@ export class ActivityEditorPage {
   isNative: boolean = false;
   newActivityImageFile: File = null;
   decisions: Observable<Decision[]>;
-  users: Observable<User>[];
+  members: Observable<Member[]>;
 
   form: FormGroup;
   submitAttempt: boolean = false;
@@ -31,7 +31,7 @@ export class ActivityEditorPage {
     public formBuilder: FormBuilder,
     public event: Events,
     public util: UtilService,
-    public userService: UserService,
+    public memberService: MemberService,
     public groupService: GroupService,
     public activityService: ActivityService,
     public decisionService: DecisionService,
@@ -61,10 +61,7 @@ export class ActivityEditorPage {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.groupService.getGroup(this.groupId)
-      .subscribe((group: Group) => {
-        this.users = group.members.map(id => this.userService.getUser(id));
-      });
+    this.members = this.memberService.getMembers(this.groupId);
     this.decisions = this.decisionService.getDecisions(this.groupId);
   }
 
@@ -106,7 +103,7 @@ export class ActivityEditorPage {
     this.form.value.title = this.form.value.title.trim();
     this.form.value.description = this.form.value.description.trim();
 
-    let newActivity = new Activity(0, new Date(Date.now()).toISOString(), this.form.value.activityDate, '',
+    let newActivity = new Activity(0, new Date(Date.now()).toISOString(), this.form.value.activityDate, 0,
       this.form.value.participants, this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
       +this.form.value.parentDecision, [], 0);
 

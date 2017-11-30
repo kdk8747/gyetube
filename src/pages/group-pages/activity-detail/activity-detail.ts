@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, UserService, ActivityService, DecisionService, ReceiptService, SharedDataService } from '../../../providers';
-import { Activity, User, Decision, Receipt } from '../../../models';
+import { UtilService, MemberService, ActivityService, DecisionService, ReceiptService, SharedDataService } from '../../../providers';
+import { Activity, Member, Decision, Receipt } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/toPromise';
@@ -20,8 +20,8 @@ export class ActivityDetailPage {
   groupId: string;
   id: number;
   activity: Observable<Activity>;
-  creator: Observable<User>;
-  participants: Observable<User>[] = [];
+  creator: Observable<Member>;
+  participants: Observable<Member>[] = [];
   decision: Observable<Decision>;
   receipts: Observable<Receipt>[];
 
@@ -30,7 +30,7 @@ export class ActivityDetailPage {
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public userService: UserService,
+    public memberService: MemberService,
     public activityService: ActivityService,
     public decisionService: DecisionService,
     public receiptService: ReceiptService,
@@ -50,8 +50,8 @@ export class ActivityDetailPage {
     this.activity = this.activityService.getActivity(this.groupId, this.id);
     this.activity.subscribe((activity: Activity) => {
       this.sharedDataService.headerDetailTitle = activity.title;
-      this.creator = this.userService.getUser(activity.creator);
-      this.participants = activity.participants.map((id: string) => this.userService.getUser(id));
+      this.creator = this.memberService.getMember(this.groupId, activity.creator);
+      this.participants = activity.participants.map((id: number) => this.memberService.getMember(this.groupId, id));
       this.decision = this.decisionService.getDecision(this.groupId, activity.parentDecision);
       this.receipts = activity.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
     });

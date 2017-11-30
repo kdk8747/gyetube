@@ -10,7 +10,7 @@ export class SharedDataService {
   loggedIn: boolean = false;
   loggedInUser: User = null;
 
-  proceedingAttendees: string[] = [];
+  proceedingAttendees: number[] = [];
   decisionListTimelineMode: boolean = false;
   decisionEditMode: boolean = false;
   decisionChangesets: Decision[] = [];

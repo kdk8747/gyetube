@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, UserService, GroupService, ProceedingService, DecisionService, SharedDataService } from '../../../providers';
-import { User, Group, ProceedingCreation, Proceeding } from '../../../models';
+import { UtilService, MemberService, GroupService, ProceedingService, DecisionService, SharedDataService } from '../../../providers';
+import { Member, ProceedingCreation, Proceeding } from '../../../models';
 import { State } from '../../../app/constants';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
   segment: 'proceeding-editor'
@@ -18,7 +19,7 @@ export class ProceedingEditorPage {
 
   groupId: string;
   id: number;
-  users: User[] = [];
+  members: Observable<Member[]>;
 
   form: FormGroup;
   addAttempt: boolean = false;
@@ -31,7 +32,7 @@ export class ProceedingEditorPage {
     public formBuilder: FormBuilder,
     public event: Events,
     public util: UtilService,
-    public userService: UserService,
+    public memberService: MemberService,
     public groupService: GroupService,
     public proceedingService: ProceedingService,
     public decisionService: DecisionService,
@@ -58,15 +59,7 @@ export class ProceedingEditorPage {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.groupService.getGroup(this.groupId)
-      .subscribe((group: Group) => {
-        this.users = [];
-        group.members.map(id => {
-          this.userService.getUser(id).subscribe(
-            (user) => this.users.push(user),
-            (err) => console.log('error: ' + err));
-        });
-      });
+    this.members = this.memberService.getMembers(this.groupId);
 
     if (this.id) {
       this.proceedingService.getProceeding(this.groupId, this.id)
@@ -91,7 +84,7 @@ export class ProceedingEditorPage {
       this.navCtrl.pop();
   }
 
-  navigateToUserDetail() {
+  navigateToMemberDetail() {
     ;
   }
 
@@ -112,8 +105,8 @@ export class ProceedingEditorPage {
       this.sharedDataService.decisionChangesets.filter(item => item.id != decisionId);
   }
 
-  isThisPartOfAttendees(userId: string): boolean {
-    return this.form.value.attendees.some(attendee => attendee == userId);
+  isThisPartOfAttendees(memberId: string): boolean {
+    return this.form.value.attendees.some(attendee => attendee == memberId);
   }
 
   isValidVote(): boolean {

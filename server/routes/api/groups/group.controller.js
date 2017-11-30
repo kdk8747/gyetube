@@ -1,5 +1,5 @@
 
-var groups = [
+/*var groups = [
   {
     id: 'suwongreenparty',
     title: '수원녹색당',
@@ -26,16 +26,69 @@ var groups = [
       {id: 'commitee', name:'운영위원', proceedings:'cru_', decisions:'_ru_', activities:'crud', receipts:'crud'}
     ]
   }
-];
+];*/
+const models = require('../../../models');
+const debug = require('debug')('server');
 
 exports.getAll = (req, res) => {
-  res.json(groups);
+  models.sequelize.transaction(t => {
+    return models.group.findAll({
+      attributes: ['group_id','url_segment','title','description','image_url','created_datetime']
+    }, {transaction: t});
+  }).then((result) => {
+    res.json(result.map(row => {
+      return {
+        id: row.dataValues.url_segment,
+        title: row.dataValues.title,
+        description: row.dataValues.description,
+        imageUrl: row.dataValues.image_url,
+        createdDate: row.dataValues.created_datetime
+      };
+    }));
+  }).catch((reason => {
+    res.status(400).json({
+      success: false,
+      message: reason
+    });
+  }));
+  //res.json(groups);
+  /*
+  models.group.findAll().then((result) => {
+    debug('@@@@@' + JSON.stringify(result[0].dataValues));
+    debug('@@@@@' + JSON.stringify(result[1].dataValues));
+    res.json(result.map(row => row.dataValues));
+  }).catch((reason => {
+    res.status(400).json({
+      success: false,
+      message: reason
+    });
+  }));*/
 }
+
 exports.getByID = (req, res) => {
-  res.json(groups.find(item => item.id === req.params.id));
+  models.sequelize.transaction(t => {
+    return models.group.findOne({
+      attributes: ['group_id','url_segment','title','description','image_url','created_datetime'],
+      where: {url_segment: req.params.group}
+    }, {transaction: t});
+  }).then((result) => {
+    res.json({
+      id: result.url_segment,
+      title: result.title,
+      description: result.description,
+      imageUrl: result.image_url,
+      createdDate: result.created_datetime
+    });
+  }).catch((reason => {
+    res.status(400).json({
+      success: false,
+      message: reason
+    });
+  }));
 }
+
 exports.getRoles = (req, res) => {
-  let found = groups.find(item => item.id === req.params.id);
+  let found = groups.find(item => item.id === req.params.group);
   if (found == undefined){
     res.status(404).json({
       success: false,
@@ -45,7 +98,7 @@ exports.getRoles = (req, res) => {
   res.json(found.roles);
 }
 exports.getRole = (req, res) => {
-  let group = groups.find(item => item.id === req.params.id);
+  let group = groups.find(item => item.id === req.params.group);
   if (group == undefined){
     res.status(404).json({
       success: false,
@@ -64,14 +117,14 @@ exports.getRole = (req, res) => {
   }
 }
 exports.updateByID = (req, res) => {
-  let i = groups.findIndex(item => item.id === req.params.id);
+  let i = groups.findIndex(item => item.id === req.params.group);
   groups[i] = req.body;
   res.send();
 }
 exports.create = (req, res) => {
   let newGroup = req.body;
 
-  let found = groups.find(item => item.id === newGroup.id);
+  let found = groups.find(item => item.id === newGroup.group);
   if (found != undefined){
     res.writeHead(412, {'Content-Type': 'application/json'})
     res.send();
@@ -80,6 +133,6 @@ exports.create = (req, res) => {
   res.json(newGroup);
 }
 exports.deleteByID = (req, res) => {
-  groups = groups.filter(h => h.id !== req.params.id);
+  groups = groups.filter(h => h.id !== req.params.group);
   res.send();
 }

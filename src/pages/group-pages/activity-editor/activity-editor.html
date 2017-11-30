@@ -52,8 +52,8 @@
           <ion-item>
             <ion-select formControlName="participants" multiple="true" [selectOptions]="{title: ('I18N_PARTICIPANTS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!form.controls.participants.valid && (form.controls.participants.dirty || submitAttempt)">
-              <ion-option *ngFor="let user of users" [value]="(user | async)?.id">
-                {{(user | async)?.name}}
+              <ion-option *ngFor="let member of members | async" [value]="member.id">
+                {{member.name}}
               </ion-option>
             </ion-select>
           </ion-item>

@@ -11,7 +11,7 @@
             {{'I18N_PENDING_CREATE' | translate}} -
             <span *ngIf="needYou(proceeding)">
               <ion-icon name="alert" color="danger"></ion-icon>
-              {{user?.name}}, <br>{{'I18N_NEED_YOUR_REVIEW' | translate}}
+              {{member?.name}}, <br>{{'I18N_NEED_YOUR_REVIEW' | translate}}
             </span>
             {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
 

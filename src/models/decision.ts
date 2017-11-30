@@ -8,9 +8,9 @@ export class Decision {
     public state: State,
     public meetingDate: string,  // equals to parentProceeding.meetingDate
     public expiryDate: string,
-    public abstainers: string[],
-    public accepters: string[],
-    public rejecters: string[],
+    public abstainers: number[],
+    public accepters: number[],
+    public rejecters: number[],
     public title: string,
     public description: string,
     public parentProceeding: number,
