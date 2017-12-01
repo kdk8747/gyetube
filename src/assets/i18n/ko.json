@@ -46,6 +46,11 @@
   "I18N_BASIS_FOR_THIS_DOCUMENT": "이 문서의 근거",
 
 
+  "I18N_ADMINISTRATION": "관리",
+  "I18N_MEMBERS": "구성원",
+  "I18N_ROLES": "역할",
+
+
   "I18N_MEETING_DATE": "회의 시각",
   "I18N_ATTENDEES": "참석자",
   "I18N_DECISIONS": "결정사항",
@@ -69,12 +74,6 @@
   "I18N_REJECTERS": "반대",
   "I18N_ABSTAINERS": "기권",
   "I18N_TOTAL_ELAPSED_TIME": "총 소요 시간",
-  "I18N_CREATED": "새 글",
-  "I18N_UPDATED": "수정됨",
-  "I18N_DELETED": "삭제됨",
-  "I18N_PENDING_CREATE": "계류중인 새 글",
-  "I18N_PENDING_UPDATE": "계류중인 수정",
-  "I18N_PENDING_DELETE": "계류중인 삭제",
 
 
   "I18N_ACTIVITY_DATE": "활동 시각",
@@ -86,5 +85,14 @@
 
   "I18N_SETTLEMENT_DATE": "결제일",
   "I18N_DIFFERENCE": "차액",
-  "I18N_BALANCE": "잔액"
+  "I18N_BALANCE": "잔액",
+
+
+  "I18N_UNKNOWN_STATE": "알 수 없는 상태",
+  "I18N_CREATED": "새 글",
+  "I18N_UPDATED": "수정됨",
+  "I18N_DELETED": "삭제됨",
+  "I18N_PENDING_CREATE": "계류중인 새 글",
+  "I18N_PENDING_UPDATE": "계류중인 수정",
+  "I18N_PENDING_DELETE": "계류중인 삭제"
 }

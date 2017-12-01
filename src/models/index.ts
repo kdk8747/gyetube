@@ -5,4 +5,5 @@ export * from './receipt';
 export * from './user';
 export * from './group';
 export * from './member';
+export * from './role';
 export * from './amazon.signature';

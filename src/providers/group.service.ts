@@ -46,7 +46,7 @@ export class GroupService {
     const url = `/api/v1.0/groupId/${url_segment}`;
 
     return this.http.get(url)
-      .map(response => response.json().group_id as number)
+      .map(response => response.json() as number)
       .toPromise();
   }
 

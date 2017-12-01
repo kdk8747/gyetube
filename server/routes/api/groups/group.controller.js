@@ -49,7 +49,7 @@ exports.getID = (req, res) => {
     attributes: ['group_id'],
     where: { url_segment: req.params.url_segment }
   }).then((result) => {
-    res.json(result);
+    res.json(result.group_id);
   }).catch((reason => {
     res.status(400).json({
       success: false,

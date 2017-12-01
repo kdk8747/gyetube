@@ -41,4 +41,12 @@ export class GroupHomePage {
     this.event.publish('TabsGroup_ShowTab');
   }
 
+  navigateToMemberList() {
+    this.navCtrl.push('MemberListPage');
+  }
+
+  navigateToRoleList() {
+    this.navCtrl.push('RoleListPage');
+  }
+
 }

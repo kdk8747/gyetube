@@ -1,8 +1,7 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, Events, ViewController, Nav } from 'ionic-angular';
 import { MemberService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
-import { Group } from '../../../models';
-import { Observable } from 'rxjs/Observable';
+
 
 @IonicPage({
   segment: ':group_url_segment/group-page'

@@ -6,6 +6,7 @@ export * from './proceeding.service';
 export * from './receipt.service';
 //export * from './receipt.list.service';
 export * from './member.service';
+export * from './role.service';
 export * from './amazon.service';
 export * from './user.service';
 export * from './group.service';

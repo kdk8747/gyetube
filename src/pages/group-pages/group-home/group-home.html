@@ -1,5 +1,25 @@
-<ion-content padding fullscreen (ionScroll)="util.onContentScroll($event)">
+<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
-  <img [src]="(group | async)?.imageUrl">
-  <p>{{ (group | async)?.description }}</p>
+
+  <ion-row>
+    <ion-col col-sm-2 col-xl-3>
+    </ion-col>
+    <ion-col col-12 col-sm-8 col-xl-6>
+        <p style="text-align: center"><img [src]="(group | async)?.imageUrl"></p>
+      <p>{{ (group | async)?.description }}</p>
+
+      <ion-list>
+        <ion-list-header>
+          {{ 'I18N_ADMINISTRATION' | translate }}
+        </ion-list-header>
+        <ion-buttons right>
+          <button ion-button (tap)="navigateToMemberList()">{{ 'I18N_MEMBERS' | translate }}</button>
+          <button ion-button (tap)="navigateToRoleList()">{{ 'I18N_ROLES' | translate }}</button>
+        </ion-buttons>
+
+      </ion-list>
+    </ion-col>
+    <ion-col col-sm-2 col-xl-3>
+    </ion-col>
+  </ion-row>
 </ion-content>

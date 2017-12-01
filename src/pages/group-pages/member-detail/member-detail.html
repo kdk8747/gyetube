@@ -1,0 +1,47 @@
+<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
+  <div style="height:56px"></div>
+
+  <ion-row>
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+    <ion-col col-12 col-sm-6 col-xl-4>
+
+      <ion-toolbar *ngIf="sharedDataService.paneSplited">
+        <ion-buttons right>
+          <button ion-button icon-only (tap)="popNavigation()">
+            <ion-icon name="close"></ion-icon>
+          </button>
+        </ion-buttons>
+        <ion-buttons>{{(member | async)?.title}}</ion-buttons>
+      </ion-toolbar>
+
+      <ion-row align-items-center justify-content-start>
+        <ion-col col-auto>
+          <grasscube-user [user]="creator | async"></grasscube-user>
+        </ion-col>
+        <ion-col>
+          <p>{{(creator | async)?.name}}</p>
+          <p>{{(member | async)?.modifiedDate | localizedDate:'short'}}</p>
+        </ion-col>
+      </ion-row>
+
+      <img *ngIf="imageUrl && imageUrl.includes('http')" [src]="imageUrl" style="width: auto; height: auto">
+
+      <ion-card *ngIf="decision && (decision | async)">
+        <ion-item tappable (tap)="navigateToMemberDetail()">
+          <ion-row align-items-center>
+            <ion-col col-auto>
+              <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
+            </ion-col>
+            <ion-col>
+              <p>{{ 'I18N_BASIS_FOR_THIS_DOCUMENT' | translate }}</p>
+              <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-card>
+    </ion-col>
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+  </ion-row>
+</ion-content>

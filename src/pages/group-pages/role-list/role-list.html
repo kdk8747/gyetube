@@ -1,0 +1,26 @@
+<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
+  <div style="height:56px"></div>
+
+  <ion-row>
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+    <ion-col col-12 col-sm-6 col-xl-4>
+      <ion-item tappable *ngFor="let role of roles | async" (tap)="navigateToDetail(role.id)">
+        <ion-row>
+          <p>{{role.name}}</p>
+        </ion-row>
+        <ion-row>
+          <p>{{role.modifiedDate | localizedDate}}</p>
+        </ion-row>
+      </ion-item>
+    </ion-col>
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+  </ion-row>
+
+  <ion-fab right middle *ngIf="creationPermitted">
+    <button ion-fab (tap)="navigateToEditor()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+</ion-content>
