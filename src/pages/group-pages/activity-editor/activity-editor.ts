@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, MemberService, GroupService, ActivityService, DecisionService, AmazonService, SharedDataService } from '../../../providers';
-import { Member, Activity, Decision, AmazonSignature } from '../../../models';
+import { MemberDetailElement, ActivityDetailElement, DecisionListElement, AmazonSignature } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -19,8 +19,8 @@ export class ActivityEditorPage {
   groupId: number;
   isNative: boolean = false;
   newActivityImageFile: File = null;
-  decisions: Observable<Decision[]>;
-  members: Observable<Member[]>;
+  decisions: Observable<DecisionListElement[]>;
+  members: Observable<MemberDetailElement[]>;
 
   form: FormGroup;
   submitAttempt: boolean = false;
@@ -49,7 +49,7 @@ export class ActivityEditorPage {
     });
     this.isNative = this.util.isNativeApp();
   }
-
+/*
   ionViewDidLoad() {
   }
 
@@ -74,13 +74,13 @@ export class ActivityEditorPage {
       this.navCtrl.pop();
   }
 
-  onChangeActivityPhoto(event: any) {
+  onChangeActivityPhoto(event: any) { */
     /*let fileList = event.target.files;
     this.newActivityFiles = [];
     for (let i = 0; i < fileList.length; i++) {
       this.newActivityFiles.push(event.target.files[i] as File);
     }*/
-
+/*
     this.newActivityImageFile = event.target.files[0] as File;
 
     let preview = event.srcElement.nextElementSibling;
@@ -129,32 +129,6 @@ export class ActivityEditorPage {
         .then(() => this.navCtrl.setRoot('ActivityListPage'))
         .catch(() => { console.log('new receipt failed') });
     }
-    /*
-  let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
-  let amzSignForPhoto: AmazonSignature = null;
-  this.amazonService.getAmazonSignatureForPhotoPOST(this.groupId, dateForSign).toPromise()
-    .then((amzSign: AmazonSignature) => {
-      amzSignForPhoto = amzSign;
-      return this.amazonService.getAmazonSignatureForDocumentPOST(this.groupId, dateForSign).toPromise();
-    })
-    .then((amzSignForDocument: AmazonSignature) => Promise.all(this.newActivityFiles.map(file => {
-      let amzSign = file.type.substr(0, 5) == 'image' ? amzSignForPhoto : amzSignForDocument;
-      return this.amazonService.postFile(file, dateForSign, amzSign).toPromise()
-        .then((xml: string) => {
-          let regexp = /<Location>(.+)<\/Location>/;
-          let result = regexp.exec(xml);
-          if (result.length < 2) return Promise.reject('Unknown XML format');
-
-          if (file.type.substr(0, 5) == 'image')
-            newActivity.imageUrls.push(result[1]);
-          else
-            newActivity.documentUrls.push(result[1]);
-          return Promise.resolve();
-        })
-    })))
-    .then(() => this.activityService.create(this.groupId, newActivity).toPromise())
-    .then(() => this.popNavigation())
-    .catch(() => { console.log('new receipt failed') });*/
-
   }
+*/
 }

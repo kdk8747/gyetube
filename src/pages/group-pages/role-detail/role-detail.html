@@ -12,30 +12,30 @@
             <ion-icon name="close"></ion-icon>
           </button>
         </ion-buttons>
-        <ion-buttons>{{(role | async)?.title}}</ion-buttons>
+        <ion-buttons>{{role?.name}}</ion-buttons>
       </ion-toolbar>
 
       <ion-row align-items-center justify-content-start>
         <ion-col col-auto>
-          <grasscube-user [user]="creator | async"></grasscube-user>
+          <grasscube-user [user]="role?.creator"></grasscube-user>
         </ion-col>
         <ion-col>
-          <p>{{(creator | async)?.name}}</p>
-          <p>{{(role | async)?.modifiedDate | localizedDate:'short'}}</p>
+          <p>{{role?.creator.name}}</p>
+          <p>{{role?.modified_datetime | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>
 
-      <p>{{ 'I18N_ROLES' | translate}} {{(role | async)?.role }}</p>
+      <p>{{ 'I18N_ROLES' | translate}} {{role?.role }}</p>
 
-      <ion-card *ngIf="decision && (decision | async)">
-        <ion-item tappable (tap)="navigateToDecisionDetail(decision)">
+      <ion-card *ngIf="role?.parent_decision">
+          <ion-item tappable (tap)="navigateToDecisionDetail(role.parent_decision.decision_id)">
           <ion-row align-items-center>
-            <ion-col col-auto>
-              <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
-            </ion-col>
             <ion-col>
               <p>{{ 'I18N_BASIS_FOR_THIS_DOCUMENT' | translate }}</p>
-              <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
+              <p>{{ 'I18N_DECISION' | translate }} - {{ role.parent_decision.title }}</p>
+            </ion-col>
+            <ion-col col-auto>
+              <ion-icon style="font-size: 1.8em" name="arrow-forward"></ion-icon>
             </ion-col>
           </ion-row>
         </ion-item>

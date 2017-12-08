@@ -1,62 +1,68 @@
-const models = require('../../../models');
+const db = require('../../../database');
 const debug = require('debug')('server');
 
 
-exports.getAll = (req, res) => {
-  models.activity.findAll({
-    attributes: ['activity_id', 'decision_id', 'creator_id', 'modified_datetime', 'activity_datetime',
-      'title', 'description', 'image_urls', 'document_urls', 'elapsed_time', 'total_difference'],
-    where: { group_id: req.params.group_id }
-  }).then((result) => {
-    res.json(result.map(row => {
-      return {
-        id: row.dataValues.activity_id,
-        creator: row.dataValues.creator_id,
-        modifiedDate: row.dataValues.modified_datetime,
-        activityDate: row.dataValues.activity_datetime,
-        title: row.dataValues.title,
-        description: row.dataValues.description,
-        imageUrls: row.dataValues.image_urls,
-        documentUrls: row.dataValues.document_urls,
-        elapsedTime: row.dataValues.elapsed_time,
-        totalDifference: row.dataValues.total_difference,
-        childReceipts: [],//row.dataValues.decision_id
-      };
-    }));
-  }).catch((reason => {
-    debug(reason);
-    res.status(400).json({
+exports.getAll = async (req, res) => {
+  try {
+    let result = await db.execute(
+      'SELECT A.activity_id, A.activity_datetime, A.modified_datetime,\
+        A.title, A.description,\
+        count(distinct P.member_id) AS participants_count,\
+        A.elapsed_time, A.total_difference\
+      FROM activity A\
+        LEFT JOIN participant P ON P.group_id=A.group_id AND P.activity_id=A.activity_id\
+      WHERE A.group_id=?\
+      GROUP BY A.activity_id', [req.params.group_id]);
+    res.send(result[0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
-exports.getByID = (req, res) => {
-  models.activity.findOne({
-    attributes: ['activity_id', 'decision_id', 'creator_id', 'modified_datetime', 'activity_datetime',
-      'title', 'description', 'image_urls', 'document_urls', 'elapsed_time', 'total_difference'],
-    where: { group_id: req.params.group_id, activity_id: +req.params.activity_id }
-  }).then((result) => {
-    res.json({
-      id: result.activity_id,
-      creator: result.creator_id,
-      modifiedDate: result.modified_datetime,
-      activityDate: result.activity_datetime,
-      title: result.title,
-      description: result.description,
-      imageUrls: result.image_urls,
-      documentUrls: result.document_urls,
-      elapsedTime: result.elapsed_time,
-      totalDifference: result.total_difference,
-      childReceipts: [],//result.decision_id
-    });
-  }).catch((reason => {
-    res.status(400).json({
+exports.getByID = async (req, res) => {
+  try {
+    let activity = await db.execute(
+      'SELECT *\
+      FROM activity\
+      WHERE group_id=? AND activity_id=?', [req.params.group_id, req.params.activity_id]);
+
+    let parent_decision = await db.execute(
+      'SELECT *\
+      FROM decision\
+      WHERE group_id=? AND decision_id=?', [req.params.group_id, activity[0][0].decision_id]);
+    activity[0][0].parent_decision = parent_decision[0][0];
+
+    let child_receipts = await db.execute(
+      'SELECT *\
+      FROM receipt\
+      WHERE group_id=? AND activity_id=?', [req.params.group_id, req.params.activity_id]);
+    activity[0][0].child_receipts = child_receipts[0];
+
+    let participants = await db.execute(
+      'SELECT *\
+      FROM participant P\
+      LEFT JOIN member M ON M.group_id=P.group_id AND M.member_id=P.member_id\
+      WHERE P.group_id=? AND P.activity_id=?', [req.params.group_id, req.params.activity_id]);
+    activity[0][0].participants = participants[0];
+
+    let creator = await db.execute(
+      'SELECT *\
+      FROM member\
+      WHERE group_id=? AND member_id=?', [req.params.group_id, activity[0][0].creator_id]);
+    activity[0][0].creator = creator[0][0];
+
+    res.send(activity[0][0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
 exports.updateByID = (req, res) => {

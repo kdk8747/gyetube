@@ -62,7 +62,7 @@
 
   "I18N_ADD": "Add",
   "I18N_CANCEL": "Cancel",
-  "I18N_CREATE": "Create",
+  "I18N_NEWLY_CREATE": "Newly Create",
   "I18N_UPDATE": "Update",
   "I18N_DELETE": "Delete",
   "I18N_REJECTED": "Rejected",
@@ -74,6 +74,8 @@
   "I18N_REJECTERS": "Rejecter(s)",
   "I18N_ABSTAINERS": "Abstainer(s)",
   "I18N_TOTAL_ELAPSED_TIME": "Total Elapsed Time",
+  "I18N_MEMBER": "Member",
+  "I18N_ROLE": "Role",
 
 
   "I18N_ACTIVITY_DATE": "Activity Date",
@@ -89,10 +91,10 @@
 
 
   "I18N_UNKNOWN_STATE": "Unknown State",
-  "I18N_CREATED": "Created",
+  "I18N_NEWLY_CREATED": "Newly Created",
   "I18N_UPDATED": "Updated",
   "I18N_DELETED": "Deleted",
-  "I18N_PENDING_CREATE": "Pending Create",
+  "I18N_PENDING_NEWLY_CREATE": "Pending Newly Create",
   "I18N_PENDING_UPDATE": "Pending Update",
   "I18N_PENDING_DELETE": "Pending Delete"
 }

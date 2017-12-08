@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { Proceeding, ProceedingCreation } from '../models';
+import { ProceedingListElement, ProceedingDetailElement } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -14,75 +14,40 @@ export class ProceedingService {
   private proceedingsUrl = '/api/v1.0/proceedings';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
-  private proceedings = {};
 
   constructor(
     public http: AuthHttp
   ) { }
 
-  print() {
-    console.log('proceedings: ');
-    for (let elem in this.proceedings)
-      console.log(elem);
-  }
-
-  getProceedings(group_id: number): Observable<Proceeding[]> {
+  getProceedings(group_id: number): Observable<ProceedingListElement[]> {
     const url = `${this.proceedingsUrl}/${group_id}`;
 
     return this.http.get(url)
-      .map(response => response.json() as Proceeding[])
+      .map(response => response.json() as ProceedingListElement[])
       .take(1);
   }
 
-  cacheProceedings(group_id: number): void {
-    const url = `${this.proceedingsUrl}/${group_id}`;
-
-    this.http.get(url)
-      .map(response => {
-        let proceedings = response.json() as Proceeding[];
-        proceedings.map(proceeding => {
-          this.proceedings[group_id + '/' + proceeding.id] = new Observable<Proceeding>(obs => obs.next(proceeding));
-        });
-      }).publishLast().connect(); // connect(): immediately fetch
-  }
-
-  getProceeding(group_id: number, id: number): Observable<Proceeding> {
-    const url = `${this.proceedingsUrl}/${group_id}/${id}`;
-
-    if (!this.proceedings[group_id + '/' + id])
-      this.proceedings[group_id + '/' + id] = this.http.get(url)
-        .map(response => response.json() as Proceeding)
-        .publishLast().refCount();
-    return this.proceedings[group_id + '/' + id];
-  }
-
-  cacheProceeding(group_id: number, id: number): Observable<Proceeding> {
-    const url = `${this.proceedingsUrl}/${group_id}/${id}`;
-    return this.http.get(url)
-      .map(response => {
-        let proceeding = response.json() as Proceeding;
-        this.proceedings[group_id + '/' + proceeding.id] = new Observable<Proceeding>(obs => obs.next(proceeding));
-        return proceeding;
-      });
-  }
-
-  update(group_id: number, proceeding_id: number): Observable<Proceeding> {
+  getProceeding(group_id: number, proceeding_id: number): Observable<ProceedingDetailElement> {
     const url = `${this.proceedingsUrl}/${group_id}/${proceeding_id}`;
-    return this.proceedings[group_id + '/' + proceeding_id] = this.http
-      .put(url, '', { headers: this.headers })
-      .map(response => response.json() as Proceeding)
-      .publishLast().refCount();
+
+    return this.http.get(url)
+      .map(response => response.json() as ProceedingDetailElement)
+      .take(1);
   }
 
-  create(group_id: number, proceeding: ProceedingCreation): Observable<Proceeding> {
+  update(group_id: number, proceeding_id: number): Observable<ProceedingDetailElement> {
+    const url = `${this.proceedingsUrl}/${group_id}/${proceeding_id}`;
+    return this.http
+      .put(url, '', { headers: this.headers })
+      .map(response => response.json() as ProceedingDetailElement)
+      .take(1);
+  }
+
+  create(group_id: number, proceeding: ProceedingDetailElement): Observable<ProceedingDetailElement> {
     const url = `${this.proceedingsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(proceeding), { headers: this.headers })
-      .map(response => {
-        let proceeding = response.json() as Proceeding;
-        this.proceedings[group_id + '/' + proceeding.id] = new Observable<Proceeding>(obs => obs.next(proceeding));
-        return proceeding;
-      })
+      .map(response => response.json() as ProceedingDetailElement)
       .take(1);
   }
 }

@@ -15,8 +15,8 @@
         <ion-buttons>{{decision?.title}}</ion-buttons>
       </ion-toolbar>
 
-      <p>{{ 'I18N_MEETING_DATE' | translate}}: {{decision?.meetingDate | localizedDate}}</p>
-      <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{decision?.expiryDate | localizedDate}}</p>
+      <p>{{ 'I18N_MEETING_DATE' | translate}}: {{decision?.meeting_datetime | localizedDate:'short'}}</p>
+      <p>{{ 'I18N_EXPIRY_DATE' | translate }}: {{decision?.expiry_datetime | localizedDate}}</p>
 
       <div style="height:10px"></div>
 
@@ -26,42 +26,73 @@
 
       <ion-buttons left *ngIf="accepters.length">
         {{ 'I18N_ACCEPTERS' | translate}}:
-        <grasscube-user *ngFor="let accepter of accepters" [user]="accepter | async"></grasscube-user>
+        <grasscube-user *ngFor="let accepter of accepters" [user]="accepter"></grasscube-user>
       </ion-buttons>
       <ion-buttons left *ngIf="rejecters.length">
         {{ 'I18N_REJECTERS' | translate}}:
-        <grasscube-user *ngFor="let rejecter of rejecters" [user]="rejecter | async"></grasscube-user>
+        <grasscube-user *ngFor="let rejecter of rejecters" [user]="rejecter"></grasscube-user>
       </ion-buttons>
       <ion-buttons left *ngIf="abstainers.length">
         {{ 'I18N_ABSTAINERS' | translate}}:
-        <grasscube-user *ngFor="let abstainer of abstainers" [user]="abstainer | async"></grasscube-user>
+        <grasscube-user *ngFor="let abstainer of abstainers" [user]="abstainer"></grasscube-user>
       </ion-buttons>
 
-      <ion-card *ngIf="proceeding && (proceeding | async)">
-        <ion-item tappable (tap)="navigateToProceedingDetail(proceeding)">
+      <ion-card *ngIf="decision?.parent_proceeding">
+        <ion-item tappable (tap)="navigateToProceedingDetail(decision.parent_proceeding.proceeding_id)">
           <ion-row align-items-center>
             <ion-col col-auto>
               <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
             </ion-col>
             <ion-col>
               <p>{{ 'I18N_BASIS_FOR_THIS_DOCUMENT' | translate }}</p>
-              <p>{{ 'I18N_PROCEEDING' | translate }} - {{ (proceeding | async)?.title }}</p>
+              <p>{{ 'I18N_PROCEEDING' | translate }} - {{ decision.parent_proceeding.title }}</p>
             </ion-col>
           </ion-row>
         </ion-item>
       </ion-card>
 
-      <ion-card *ngFor="let activity of activities; let i=index">
-        <ion-item tappable (tap)="navigateToActivityDetail(activity)">
+      <div style="height:10px"></div>
+
+      <ion-card *ngFor="let member of decision?.child_members; let i=index">
+        <ion-item tappable (tap)="navigateToMemberDetail(member.member_id)">
+          <ion-row align-items-center>
+            <ion-col col-auto>
+              <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
+            </ion-col>
+            <ion-col>
+              <p>{{ 'I18N_MEMBER' | translate }}{{i+1}}</p>
+              <grasscube-state-label [state]="member.document_state" [postfix]="member.name"></grasscube-state-label>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-card>
+      <div style="height:10px" *ngIf="decision?.child_members.length > 0"></div>
+
+      <ion-card *ngFor="let role of decision?.child_roles; let i=index">
+        <ion-item tappable (tap)="navigateToRoleDetail(role.role_id)">
+          <ion-row align-items-center>
+            <ion-col col-auto>
+              <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
+            </ion-col>
+            <ion-col>
+              <p>{{ 'I18N_ROLE' | translate }}{{i+1}}</p>
+              <grasscube-state-label [state]="role.document_state" [postfix]="role.name"></grasscube-state-label>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-card>
+      <div style="height:10px" *ngIf="decision?.child_roles.length > 0"></div>
+
+      <ion-card *ngFor="let activity of decision?.child_activities; let i=index">
+        <ion-item tappable (tap)="navigateToActivityDetail(activity.activity_id)">
           <ion-row align-items-center>
             <ion-col>
-              <p>{{ 'I18N_ACTIVITY' | translate }}{{i+1}} - {{ (activity | async)?.title }}</p>
+              <p>{{ 'I18N_ACTIVITY' | translate }}{{i+1}} - {{ activity.title }}</p>
               <p text-right style="white-space: normal">
-                {{ 'I18N_ELAPSED_TIME' | translate}} {{ (activity | async)?.elapsedTime * (activity | async)?.participants.length }} {{ 'I18N_HOURS'
-                | translate}}
+                {{ 'I18N_ELAPSED_TIME' | translate}} {{ activity.elapsed_time * activity.participants_count }} {{ 'I18N_HOURS' | translate}}
               </p>
               <p text-right style="white-space: normal">
-                {{ 'I18N_DIFFERENCE' | translate}} {{ (activity | async)?.totalDifference | number}}
+                {{ 'I18N_DIFFERENCE' | translate}} {{ activity.total_difference | number}}
               </p>
             </ion-col>
             <ion-col col-auto>
@@ -70,9 +101,10 @@
           </ion-row>
         </ion-item>
       </ion-card>
+      <div style="height:10px" *ngIf="decision?.child_activities.length > 0"></div>
 
-      <ion-card *ngFor="let receipt of receipts; let i=index">
-        <ion-item tappable (tap)="navigateToReceiptDetail(receipt)">
+      <ion-card *ngFor="let receipt of decision?.child_receipts; let i=index">
+        <ion-item tappable (tap)="navigateToReceiptDetail(receipt.receipt_id)">
           <ion-row align-items-center>
             <ion-col>
               <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
@@ -88,14 +120,14 @@
       </ion-card>
 
       <p text-right style="white-space: normal">
-        {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{decision?.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
+        {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{decision?.total_elapsed_time | number}} {{ 'I18N_HOURS' | translate}}
       </p>
       <p text-right style="white-space: normal">
-        {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{decision?.totalDifference | number}}
+        {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{decision?.total_difference | number}}
       </p>
 
-      <ion-toolbar *ngIf="(decision?.prevId || decision?.nextId)">
-        <ion-buttons left *ngIf="decision?.state <= 2 && decision?.prevId">
+      <ion-toolbar *ngIf="(decision?.prev_id || decision?.next_id)">
+        <ion-buttons left *ngIf="decision?.document_state <= 2 && decision?.prev_id">
           <button ion-button icon-only (tap)="navigateToPrev()">
             <ion-icon name="arrow-back"></ion-icon>
             {{ 'I18N_PREV' | translate}}
@@ -104,9 +136,9 @@
           </button>
         </ion-buttons>
         <p text-center>
-          <grasscube-state-label [state]="decision?.state"></grasscube-state-label>
+          <grasscube-state-label [state]="decision?.document_state"></grasscube-state-label>
         </p>
-        <ion-buttons right *ngIf="decision?.state <= 2 && decision?.nextId">
+        <ion-buttons right *ngIf="decision?.document_state <= 2 && decision?.next_id">
           <button ion-button icon-only (tap)="navigateToNext()">
             {{ 'I18N_NEXT' | translate}}
             <br/>

@@ -1,60 +1,59 @@
 const decisionController = require('../decisions/decision.controller');
-const models = require('../../../models');
+const db = require('../../../database');
 const debug = require('debug')('server');
 
 
-exports.getAll = (req, res) => {
-  models.proceeding.findAll({
-    attributes: ['proceeding_id', 'prev_id', 'next_id', 'state', 'created_datetime', 'meeting_datetime', 'title', 'description'],
-    where: { group_id: req.params.group_id }
-  }).then((result) => {
-    res.json(result.map(row => {
-      return {
-        id: row.dataValues.proceeding_id,
-        prevId: row.dataValues.prev_id,
-        nextId: row.dataValues.next_id,
-        state: row.dataValues.state,
-        createdDate: row.dataValues.created_datetime,
-        meetingDate: row.dataValues.meeting_datetime,
-        attendees: [],//row.dataValues.image_url,
-        reviewers: [],//row.dataValues.image_url,
-        title: row.dataValues.title,
-        description: row.dataValues.description,
-        childDecisions: [],//row.dataValues.decision_id
-      };
-    }));
-  }).catch((reason => {
-    res.status(400).json({
+exports.getAll = async (req, res) => {
+  try {
+    let result = await db.execute(
+      'SELECT P.proceeding_id, P.prev_id, P.next_id, P.document_state, P.created_datetime, P.meeting_datetime,\
+        P.title, P.description,\
+        count(distinct A.member_id) AS attendees_count,\
+        count(distinct (case when A.attendee_state=1 then A.member_id end)) AS reviewers_count,\
+        count(distinct D.decision_id) AS child_decisions_count\
+      FROM proceeding P\
+        LEFT JOIN attendee A ON A.group_id=? AND A.proceeding_id=P.proceeding_id\
+        LEFT JOIN decision D ON D.group_id=? AND D.proceeding_id=P.proceeding_id\
+      WHERE P.group_id=?\
+      GROUP BY P.proceeding_id', [req.params.group_id, req.params.group_id, req.params.group_id]);
+    res.send(result[0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
-exports.getByID = (req, res) => {
-  models.proceeding.findOne({
-    attributes: ['proceeding_id', 'prev_id', 'next_id', 'state', 'created_datetime', 'meeting_datetime', 'title', 'description'],
-    where: { group_id: req.params.group_id, proceeding_id: +req.params.proceeding_id }
-  }).then((result) => {
-    res.json({
-      id: result.proceeding_id,
-      prevId: result.prev_id,
-      nextId: result.next_id,
-      state: result.state,
-      createdDate: result.created_datetime,
-      meetingDate: result.meeting_datetime,
-      attendees: [],//result.image_url,
-      reviewers: [],//result.image_url,
-      title: result.title,
-      description: result.description,
-      childDecisions: [],//result.decision_id
-    });
-  }).catch((reason => {
-    res.status(400).json({
+exports.getByID = async (req, res) => {
+  try {
+    let proceeding = await db.execute(
+      'SELECT *\
+      FROM proceeding\
+      WHERE group_id=? AND proceeding_id=?', [req.params.group_id, +req.params.proceeding_id]);
+
+    let child_decisions = await db.execute(
+      'SELECT *\
+      FROM decision\
+      WHERE group_id=? AND proceeding_id=?', [req.params.group_id, +req.params.proceeding_id]);
+    proceeding[0][0].child_decisions = child_decisions[0];
+
+    let attendees = await db.execute(
+      'SELECT *\
+      FROM attendee A\
+      LEFT JOIN member M ON M.group_id=? AND M.member_id=A.member_id\
+      WHERE A.group_id=? AND A.proceeding_id=?', [req.params.group_id, req.params.group_id, +req.params.proceeding_id]);
+    proceeding[0][0].attendees = attendees[0];
+
+    res.send(proceeding[0][0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
 exports.updateByID = (req, res) => {

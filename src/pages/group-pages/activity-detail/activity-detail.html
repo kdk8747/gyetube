@@ -12,54 +12,54 @@
             <ion-icon name="close"></ion-icon>
           </button>
         </ion-buttons>
-        <ion-buttons>{{(activity | async)?.title}}</ion-buttons>
+        <ion-buttons>{{activity?.title}}</ion-buttons>
       </ion-toolbar>
 
       <ion-row align-items-center justify-content-start>
         <ion-col col-auto>
-          <grasscube-user [user]="creator | async"></grasscube-user>
+          <grasscube-user [user]="activity?.creator"></grasscube-user>
         </ion-col>
         <ion-col>
-          <p>{{(creator | async)?.name}}</p>
-          <p>{{(activity | async)?.modifiedDate | localizedDate:'short'}}</p>
+          <p>{{activity?.creator.name}}</p>
+          <p>{{activity?.modified_datetime | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>
 
-      <p>{{(activity | async)?.description}}</p>
+      <p>{{activity?.description}}</p>
 
       <div style="height:10px"></div>
 
-      <img *ngFor="let image of (activity | async)?.imageUrls" [src]="image" style="width: auto; height: auto">
+      <img *ngFor="let image of activity?.image_urls" [src]="image" style="width: auto; height: auto">
 
       <div style="height:10px"></div>
 
-      <p>{{ 'I18N_ACTIVITY_DATE' | translate}}: {{(activity | async)?.activityDate | localizedDate:'short'}}</p>
-      <ion-buttons left *ngIf="participants.length > 0">
+      <p>{{ 'I18N_ACTIVITY_DATE' | translate}}: {{activity?.activity_datetime | localizedDate:'short'}}</p>
+      <ion-buttons left *ngIf="activity?.participants.length > 0">
         {{ 'I18N_PARTICIPANTS' | translate}}:
 
-        <grasscube-user *ngFor="let participant of participants" [user]="participant | async"></grasscube-user>
+        <grasscube-user *ngFor="let participant of activity.participants" [user]="participant"></grasscube-user>
       </ion-buttons>
 
-      <ion-card *ngIf="decision | async">
-        <ion-item tappable (tap)="navigateToDecisionDetail(decision)">
+      <ion-card *ngIf="activity?.parent_decision">
+        <ion-item tappable (tap)="navigateToDecisionDetail(activity.parent_decision.decision_id)">
           <ion-row align-items-center>
             <ion-col col-auto>
               <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
             </ion-col>
             <ion-col>
               <p>{{ 'I18N_BASIS_FOR_THIS_DOCUMENT' | translate }}</p>
-              <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
+              <p>{{ 'I18N_DECISION' | translate }} - {{ activity.parent_decision.title }}</p>
             </ion-col>
           </ion-row>
         </ion-item>
       </ion-card>
 
-      <ion-card *ngFor="let receipt of receipts; let i=index">
-        <ion-item tappable (tap)="navigateToReceiptDetail(receipt)">
+      <ion-card *ngFor="let receipt of activity?.child_receipts; let i=index">
+        <ion-item tappable (tap)="navigateToReceiptDetail(receipt.receipt_id)">
           <ion-row align-items-center>
             <ion-col>
-              <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
-              <p text-right>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
+              <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ receipt.title }}</p>
+              <p text-right>{{ 'I18N_DIFFERENCE' | translate}} {{receipt.difference | number}}</p>
             </ion-col>
             <ion-col col-auto>
               <ion-icon style="font-size: 1.8em" name="arrow-forward"></ion-icon>
@@ -69,12 +69,10 @@
       </ion-card>
 
       <p text-right style="white-space: normal">
-        {{ (activity | async)?.elapsedTime }} {{ 'I18N_HOURS' | translate}} X {{ (activity | async)?.participants.length }} {{ 'I18N_PARTICIPANTS'
-        | translate}} = {{ (activity | async)?.elapsedTime * (activity | async)?.participants.length }} {{ 'I18N_HOURS' |
-        translate}}
+        {{ activity?.elapsed_time }} {{ 'I18N_HOURS' | translate}} X {{ activity?.participants.length }} {{ 'I18N_PARTICIPANTS' | translate}} = {{ activity?.elapsed_time * activity?.participants.length }} {{ 'I18N_HOURS' | translate}}
       </p>
       <p text-right style="white-space: normal">
-        {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{(activity | async)?.totalDifference | number}}
+        {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{activity?.total_difference | number}}
       </p>
     </ion-col>
     <ion-col col-sm-3 col-xl-4>

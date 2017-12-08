@@ -5,12 +5,19 @@
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-item tappable *ngFor="let member of members | async" (tap)="navigateToDetail(member.id)">
+      <ion-item tappable *ngFor="let member of members | async" (tap)="navigateToDetail(member.member_id)">
         <ion-row>
-          <p>{{member.name}}</p>
+          <grasscube-state-label [state]="member.document_state" [postfix]="member.name"></grasscube-state-label>
         </ion-row>
         <ion-row>
-          <p>{{member.modifiedDate | localizedDate}}</p>
+          <p>{{member.modified_datetime | localizedDate}}</p>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p text-right style="white-space: normal">
+              {{ 'I18N_ROLES' | translate}}: {{ member.roles_count }}
+            </p>
+          </ion-col>
         </ion-row>
       </ion-item>
     </ion-col>

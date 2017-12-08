@@ -4,25 +4,25 @@
   <ion-grid fixed>
     <ion-row>
       <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let activity of activities | async">
-        <ion-item tappable (tap)="navigateToDetail(activity.id)">
-          <img *ngIf="activity.imageUrls.length > 0" [src]="activity.imageUrls[0]">
-            <ion-row>
-              <p>{{activity.title}}</p>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-              <p>{{activity.activityDate | localizedDate}}</p>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <p text-right style="white-space: normal">
-                  {{ activity.elapsedTime }} {{ 'I18N_HOURS' | translate}} X {{ activity.participants.length }} {{ 'I18N_PARTICIPANTS' | translate}}
-                  = {{ activity.elapsedTime * activity.participants.length }} {{ 'I18N_HOURS' | translate}}
-                </p>
-              </ion-col>
-            </ion-row>
-          </ion-item>
+        <ion-item tappable (tap)="navigateToDetail(activity.activity_id)">
+          <img *ngIf="activity.image_urls_count > 0" [src]="activity.image_urls[0]">
+          <ion-row>
+            <p>{{activity.title}}</p>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <p>{{activity.activity_datetime | localizedDate}}</p>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <p text-right style="white-space: normal">
+                {{ activity.elapsed_time }} {{ 'I18N_HOURS' | translate}} X {{ activity.participants_count }} {{ 'I18N_PARTICIPANTS' | translate}}
+                = {{ activity.elapsed_time * activity.participants_count }} {{ 'I18N_HOURS' | translate}}
+              </p>
+            </ion-col>
+          </ion-row>
+        </ion-item>
       </ion-col>
     </ion-row>
   </ion-grid>

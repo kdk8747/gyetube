@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { Activity } from '../models';
+import { ActivityListElement, ActivityDetailElement } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -14,59 +14,38 @@ export class ActivityService {
   private activitiesUrl = '/api/v1.0/activities';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
-  private activities = {};
-
   constructor(
     public http: AuthHttp
   ) { }
 
-  print() {
-    console.log('activities: ');
-    for (let elem in this.activities)
-      console.log(elem);
-  }
-
-  getActivities(group_id: number): Observable<Activity[]> {
+  getActivities(group_id: number): Observable<ActivityListElement[]> {
     const url = `${this.activitiesUrl}/${group_id}`;
     return this.http.get(url)
-      .map(response => response.json() as Activity[])
+      .map(response => response.json() as ActivityListElement[])
       .take(1);
   }
 
-  cacheActivities(group_id: number): void {
-    const url = `${this.activitiesUrl}/${group_id}`;
-    this.http.get(url)
-      .map(response => {
-        let activities = response.json() as Activity[];
-        activities.map(activity => {
-          this.activities[group_id + '/' + activity.id] = new Observable<Activity>(obs => obs.next(activity));
-        });
-      }).publishLast().connect(); // connect(): immediately fetch
+  getActivity(group_id: number, activity_id: number): Observable<ActivityDetailElement> {
+    const url = `${this.activitiesUrl}/${group_id}/${activity_id}`;
+
+    return this.http.get(url)
+      .map(response => response.json() as ActivityDetailElement)
+      .take(1);
   }
 
-  getActivity(group_id: number, id: number): Observable<Activity> {
-    const url = `${this.activitiesUrl}/${group_id}/${id}`;
-
-    if (!this.activities[group_id + '/' + id])
-      this.activities[group_id + '/' + id] = this.http.get(url)
-        .map(response => response.json() as Activity)
-        .publishLast().refCount();
-    return this.activities[group_id + '/' + id];
-  }
-
-  update(group_id: number, activity: Activity): Observable<Activity> {
-    const url = `${this.activitiesUrl}/${group_id}/${activity.id}`;
+  update(group_id: number, activity: ActivityDetailElement): Observable<ActivityDetailElement> {
+    const url = `${this.activitiesUrl}/${group_id}/${activity.activity_id}`;
     return this.http
       .put(url, JSON.stringify(activity), { headers: this.headers })
       .map(() => activity)
       .take(1);
   }
 
-  create(group_id: number, activity: Activity): Observable<Activity> {
+  create(group_id: number, activity: ActivityDetailElement): Observable<ActivityDetailElement> {
     const url = `${this.activitiesUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(activity), { headers: this.headers })
-      .map(response => response.json() as Activity)
+      .map(response => response.json() as ActivityDetailElement)
       .take(1);
   }
 

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, MemberService, GroupService, DecisionService, SharedDataService } from '../../../providers';
-import { Member, Decision } from '../../../models';
-import { State } from '../../../app/constants';
+import { MemberDetailElement, DecisionDetailElement } from '../../../models';
+import { DocumentState } from '../../../app/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -19,7 +19,7 @@ export class DecisionEditorPage {
   groupId: number;
   id: number;
   deleteMode: boolean;
-  members: Observable<Member>[];
+  members: Observable<MemberDetailElement>[];
 
   form: FormGroup;
   submitAttempt: boolean = false;
@@ -50,7 +50,7 @@ export class DecisionEditorPage {
       abstainers: [[]]
     });
   }
-
+/*
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
     this.deleteMode = this.navParams.get('delete');
@@ -145,7 +145,7 @@ export class DecisionEditorPage {
     this.form.value.title = this.form.value.title.trim();
     this.form.value.description = this.form.value.description.trim();
 
-    let newDecision = new Decision(0, 0, 0, State.STATE_PENDING_CREATE,
+    let newDecision = new Decision(0, 0, 0, DocumentState.STATE_PENDING_CREATE,
       new Date(Date.now()).toISOString(),
       this.form.value.expiryDate,
       this.form.value.abstainers,
@@ -156,7 +156,7 @@ export class DecisionEditorPage {
     if (this.id) {
       newDecision.id = this.id;
       newDecision.prevId = this.id;
-      newDecision.state = this.deleteMode ? State.STATE_PENDING_DELETE : State.STATE_PENDING_UPDATE;
+      newDecision.state = this.deleteMode ? DocumentState.STATE_PENDING_DELETE : DocumentState.STATE_PENDING_UPDATE;
       let found = this.sharedDataService.decisionChangesets.findIndex(item => { console.log(item.prevId); return item.prevId == this.id });
       if (found != -1)
         this.sharedDataService.decisionChangesets[found] = newDecision;
@@ -170,5 +170,5 @@ export class DecisionEditorPage {
     this.sharedDataService.decisionEditMode = false;
     this.popNavigation();
   }
-
+*/
 }

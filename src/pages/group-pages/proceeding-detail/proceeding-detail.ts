@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, MemberService, ProceedingService, DecisionService, SharedDataService } from '../../../providers';
-import { Proceeding, Member, Decision } from '../../../models';
-import { State } from '../../../app/constants';
+import { UtilService, MemberService, ProceedingService, SharedDataService } from '../../../providers';
+import { ProceedingDetailElement, MemberDetailElement } from '../../../models';
+import { DocumentState } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -15,17 +15,14 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'proceeding-detail.html',
 })
 export class ProceedingDetailPage {
-  stateEnum = State;
+  stateEnum = DocumentState;
   verifiedGood: boolean = true;
 
   groupId: number;
-  member: Member;
+  member: MemberDetailElement;
   id: number;
-  proceeding: Proceeding = null;
-  proceedingObs: Observable<Proceeding>;
-  attendees: Observable<Member>[];
-  reviewers: Observable<Member>[];
-  decisions: Observable<Decision>[];
+  proceeding: ProceedingDetailElement = null;
+  proceedingObs: Observable<ProceedingDetailElement>;
 
   constructor(
     public navCtrl: NavController,
@@ -33,7 +30,6 @@ export class ProceedingDetailPage {
     public event: Events,
     public util: UtilService,
     public memberService: MemberService,
-    public decisionService: DecisionService,
     public proceedingService: ProceedingService,
     public sharedDataService: SharedDataService
   ) {
@@ -53,12 +49,9 @@ export class ProceedingDetailPage {
         .then((member) => this.member = member)
         .catch((err) => console.log(err));
       this.proceedingObs = this.proceedingService.getProceeding(this.groupId, this.id);
-      this.proceedingObs.subscribe((proceeding: Proceeding) => {
+      this.proceedingObs.subscribe((proceeding: ProceedingDetailElement) => {
         this.proceeding = proceeding;
         this.sharedDataService.headerDetailTitle = proceeding.title;
-        this.attendees = proceeding.attendees.map((id: number) => this.memberService.getMember(this.groupId, id));
-        this.reviewers = proceeding.reviewers.map((id: number) => this.memberService.getMember(this.groupId, id));
-        this.decisions = proceeding.childDecisions.map((id: number) => this.decisionService.getDecision(this.groupId, id));
       });
     });
   }
@@ -71,28 +64,26 @@ export class ProceedingDetailPage {
   }
 
   navigateToPrev() {
-    this.navCtrl.setRoot('ProceedingDetailPage', { id: this.proceeding.prevId });
+    this.navCtrl.setRoot('ProceedingDetailPage', { id: this.proceeding.prev_id });
   }
 
   navigateToNext() {
-    this.navCtrl.setRoot('ProceedingDetailPage', { id: this.proceeding.nextId });
+    this.navCtrl.setRoot('ProceedingDetailPage', { id: this.proceeding.next_id });
   }
 
-  navigateToDecisionDetail(obs: Observable<Decision>) {
-    obs.subscribe(decision => {
-      this.event.publish('TabsGroup_DecisionDetail', { id: decision.id });
-    });
+  navigateToDecisionDetail(decision_id: number) {
+    this.event.publish('TabsGroup_DecisionDetail', { id: decision_id });
   }
 
-  needYou(proceeding: Proceeding): boolean {
-    return proceeding && this.member && proceeding.state == State.STATE_PENDING_CREATE
-      && proceeding.nextId == 0
-      && proceeding.attendees.findIndex(attendee => attendee == this.member.id) != -1
-      && proceeding.reviewers.findIndex(attendee => attendee == this.member.id) == -1;
+  needYou(proceeding: ProceedingDetailElement): boolean {
+    return proceeding && this.member && proceeding.document_state == DocumentState.STATE_PENDING_NEWLY_CREATE
+      && proceeding.next_id == 0;
+      //&& proceeding.attendees.findIndex(attendee => attendee == this.member.member_id) != -1
+      //&& proceeding.reviewers.findIndex(attendee => attendee == this.member.id) == -1;
   }
 
   onSubmit() {
-    if (this.verifiedGood) {
+    if (this.verifiedGood) {/*
       this.proceedingService.update(this.groupId, this.proceeding.id)
         .subscribe((proceeding: Proceeding) => {
           this.proceeding = proceeding;
@@ -108,7 +99,7 @@ export class ProceedingDetailPage {
             this.event.publish('App_ShowHeader');
             this.event.publish('TabsGroup_ShowTab');
           }
-        });
+        });*/
     }
     else {
       this.navCtrl.push('ProceedingEditorPage', { id: this.id });

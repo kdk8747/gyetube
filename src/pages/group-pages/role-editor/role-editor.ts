@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, RoleService, SharedDataService } from '../../../providers';
 import { Role } from '../../../models';
-import { State } from '../../../app/constants';
+import { DocumentState } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -24,7 +24,7 @@ export class RoleEditorPage {
     public sharedDataService: SharedDataService
   ) {
   }
-
+/*
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoleEditorPage');
   }
@@ -35,5 +35,5 @@ export class RoleEditorPage {
     else
       this.navCtrl.pop();
   }
-
+*/
 }

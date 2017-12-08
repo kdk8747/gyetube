@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { State } from '../../app/constants';
+import { DocumentState } from '../../app/constants';
 
 
 @Component({
@@ -7,9 +7,9 @@ import { State } from '../../app/constants';
   templateUrl: 'state-label.html'
 })
 export class StateLabelComponent {
-  stateEnum = State;
+  stateEnum = DocumentState;
 
-  @Input() state: State;
+  @Input() state: DocumentState;
   @Input() postfix: string;
 
   constructor() {

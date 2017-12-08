@@ -5,12 +5,12 @@
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-item tappable *ngFor="let role of roles | async" (tap)="navigateToDetail(role.id)">
+      <ion-item tappable *ngFor="let role of roles | async" (tap)="navigateToDetail(role.role_id)">
         <ion-row>
           <p>{{role.name}}</p>
         </ion-row>
         <ion-row>
-          <p>{{role.modifiedDate | localizedDate}}</p>
+          <p>{{role.modified_datetime | localizedDate}}</p>
         </ion-row>
       </ion-item>
     </ion-col>

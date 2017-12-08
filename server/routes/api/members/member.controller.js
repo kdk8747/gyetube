@@ -1,54 +1,52 @@
-const models = require('../../../models');
+const db = require('../../../database');
 const debug = require('debug')('server');
 
-exports.getAll = (req, res) => {
-  models.member.findAll({
-    attributes: ['member_id', 'decision_id', 'prev_id', 'next_id', 'state', 'creator_id', 'modified_datetime', 'image_url', 'name'],
-    where: { group_id: req.params.group_id }
-  }).then((result) => {
-    res.json(result.map(row => {
-      return {
-        id: row.dataValues.member_id,
-        prevId: row.dataValues.prev_id,
-        nextId: row.dataValues.next_id,
-        state: row.dataValues.state,
-        creator: row.dataValues.creator_id,
-        modifiedDate: row.dataValues.modified_datetime,
-        imageUrl: row.dataValues.image_url,
-        name: row.dataValues.name,
-        parentDecision: row.dataValues.decision_id
-      };
-    }));
-  }).catch((reason => {
-    res.status(400).json({
+exports.getAll = async (req, res) => {
+  try {
+    let result = await db.execute(
+      'SELECT M.member_id, M.prev_id, M.next_id, M.document_state, M.modified_datetime, M.image_url, M.name,\
+      count(distinct R.role_id) AS roles_count\
+      FROM member M\
+      LEFT JOIN member_role R ON R.group_id=M.group_id AND R.member_id=M.member_id\
+      WHERE M.group_id=?\
+      GROUP BY M.member_id', [req.params.group_id]);
+    res.send(result[0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
-exports.getByID = (req, res) => {
-  models.member.findOne({
-    attributes: ['member_id', 'decision_id', 'prev_id', 'next_id', 'state', 'creator_id', 'modified_datetime', 'image_url', 'name'],
-    where: { group_id: req.params.group_id, member_id: +req.params.member_id }
-  }).then((result) => {
-    res.json({
-      id: result.member_id,
-      prevId: result.prev_id,
-      nextId: result.next_id,
-      state: result.state,
-      creator: result.creator_id,
-      modifiedDate: result.modified_datetime,
-      imageUrl: result.image_url,
-      name: result.name,
-      parentDecision: result.decision_id
-    });
-  }).catch((reason => {
-    res.status(400).json({
+exports.getByID = async (req, res) => {
+  try {
+    let member = await db.execute(
+      'SELECT *\
+      FROM member\
+      WHERE group_id=? AND member_id=?', [req.params.group_id, req.params.member_id]);
+
+    let parent_decision = await db.execute(
+      'SELECT *\
+        FROM decision\
+        WHERE group_id=? AND decision_id=?', [req.params.group_id, member[0][0].decision_id]);
+    member[0][0].parent_decision = parent_decision[0][0];
+
+    let creator = await db.execute(
+      'SELECT *\
+      FROM member\
+      WHERE group_id=? AND member_id=?', [req.params.group_id, member[0][0].creator_id]);
+    member[0][0].creator = creator[0][0];
+
+    res.send(member[0][0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
 exports.updateByID = (req, res) => {

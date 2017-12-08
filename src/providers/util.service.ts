@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { GroupService, UserService, MemberService } from './';
-import { User, Group, Member } from '../models';
+import { User, Group, MemberDetailElement } from '../models';
 
 declare const process: any; // Typescript compiler will complain without this
 
@@ -64,7 +64,7 @@ export class UtilService {
     });
   }
 
-  getCurrentMember(group_id: number): Promise<Member> {
+  getCurrentMember(group_id: number): Promise<MemberDetailElement> {
     return this.getCurrentPayload().then(payload => {
       return this.memberService.getMember(group_id, payload.id).toPromise();
     });

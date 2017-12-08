@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, MemberService, RoleService, SharedDataService } from '../../../providers';
-import { Member, Role } from '../../../models';
-import { State } from '../../../app/constants';
+import { MemberDetailElement, Role } from '../../../models';
+import { DocumentState } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -24,7 +24,7 @@ export class MemberEditorPage {
     public sharedDataService: SharedDataService
   ) {
   }
-
+/*
   ionViewDidLoad() {
     console.log('ionViewDidLoad MemberEditorPage');
   }
@@ -35,5 +35,5 @@ export class MemberEditorPage {
     else
       this.navCtrl.pop();
   }
-
+*/
 }

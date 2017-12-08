@@ -1,61 +1,54 @@
-const models = require('../../../models');
+const db = require('../../../database');
 const debug = require('debug')('server');
 
-exports.getAll = (req, res) => {
-  models.group.findAll({
-    attributes: ['group_id', 'url_segment', 'title', 'description', 'image_url', 'created_datetime']
-  }).then((result) => {
-    res.json(result.map(row => {
-      return {
-        id: row.dataValues.group_id,
-        urlSegment: row.dataValues.url_segment,
-        title: row.dataValues.title,
-        description: row.dataValues.description,
-        imageUrl: row.dataValues.image_url,
-        createdDate: row.dataValues.created_datetime
-      };
-    }));
-  }).catch((reason => {
-    res.status(400).json({
+exports.getAll = async (req, res) => {
+  try {
+    let group = await db.execute(
+      'SELECT *\
+      FROM `group` G');
+
+    res.send(group[0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
-exports.getByID = (req, res) => {
-  models.group.findOne({
-    attributes: ['group_id', 'url_segment', 'title', 'description', 'image_url', 'created_datetime'],
-    where: { group_id: req.params.group_id }
-  }).then((result) => {
-    res.json({
-      id: result.group_id,
-      urlSegment: result.url_segment,
-      title: result.title,
-      description: result.description,
-      imageUrl: result.image_url,
-      createdDate: result.created_datetime
-    });
-  }).catch((reason => {
-    res.status(400).json({
+exports.getByID = async (req, res) => {
+  try {
+    let group = await db.execute(
+      'SELECT *\
+      FROM `group` G\
+      WHERE G.group_id=?', [req.params.group_id]);
+
+    res.send(group[0][0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
-exports.getID = (req, res) => {
-  models.url_segment.findOne({
-    attributes: ['group_id'],
-    where: { url_segment: req.params.url_segment }
-  }).then((result) => {
-    res.json(result.group_id);
-  }).catch((reason => {
-    res.status(400).json({
+exports.getID = async (req, res) => {
+  try {
+    let group = await db.execute(
+      'SELECT *\
+      FROM url_segment U\
+      WHERE U.url_segment=?', [req.params.url_segment]);
+
+    res.send(group[0][0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
 exports.updateByID = (req, res) => {

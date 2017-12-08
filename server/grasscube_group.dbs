@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="grasscube_group" id="Project_2d86125" template="Default" database="MariaDb" >
+	<schema name="test" catalogname="test" >
+		<table name="activity" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="activity_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="decision_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="modified_datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="activity_datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="title" type="varchar" length="32" decimal="0" jt="12" mandatory="y" />
+			<column name="description" type="text" length="256" jt="-1" mandatory="y" />
+			<column name="image_urls" type="text" jt="-1" >
+				<comment><![CDATA[JSON Array<String>]]></comment>
+			</column>
+			<column name="document_urls" type="text" jt="-1" >
+				<comment><![CDATA[JSON Array<String>]]></comment>
+			</column>
+			<column name="elapsed_time" type="smallint" jt="5" mandatory="y" unsigned="y" />
+			<column name="total_difference" type="bigint" jt="-5" mandatory="y" />
+			<index name="pk_activity" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+				<column name="activity_id" />
+			</index>
+			<index name="idx_activity_decision_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="decision_id" />
+			</index>
+			<index name="idx_activity_creator_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="creator_id" />
+			</index>
+			<fk name="fk_activity_decision" to_schema="test" to_table="decision" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="decision_id" pk="decision_id" />
+			</fk>
+			<fk name="fk_activity_member" to_schema="test" to_table="member" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="creator_id" pk="member_id" />
+			</fk>
+		</table>
+		<table name="attendee" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="proceeding_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="member_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="attendee_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" >
+				<comment><![CDATA[0: not reviewed
+1: reviewed pending proceeding]]></comment>
+			</column>
+			<index name="pk_attendee" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+				<column name="proceeding_id" />
+				<column name="member_id" />
+			</index>
+			<index name="idx_attendee_member_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="member_id" />
+			</index>
+			<fk name="fk_attendee_proceeding" to_schema="test" to_table="proceeding" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="proceeding_id" pk="proceeding_id" />
+			</fk>
+			<fk name="fk_attendee_member" to_schema="test" to_table="member" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="member_id" pk="member_id" />
+			</fk>
+		</table>
+		<table name="decision" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="decision_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="proceeding_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="prev_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="next_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="meeting_datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="expiry_datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="title" type="varchar" length="32" decimal="0" jt="12" mandatory="y" />
+			<column name="description" type="text" length="512" jt="-1" mandatory="y" />
+			<column name="total_elapsed_time" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="total_difference" type="bigint" jt="-5" mandatory="y" />
+			<index name="pk_decision" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+				<column name="decision_id" />
+			</index>
+			<index name="idx_decision_proceeding_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="proceeding_id" />
+			</index>
+			<index name="idx_decision_notice_filter" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="expiry_datetime" />
+				<column name="next_id" />
+				<column name="document_state" />
+			</index>
+			<fk name="fk_decision_proceeding" to_schema="test" to_table="proceeding" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="proceeding_id" pk="proceeding_id" />
+			</fk>
+		</table>
+		<table name="group" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" autoincrement="y" />
+			<column name="url_segment" type="char" length="32" jt="1" mandatory="y" />
+			<column name="title" type="varchar" length="32" jt="12" mandatory="y" />
+			<column name="description" type="text" jt="-1" mandatory="y" />
+			<column name="image_url" type="text" jt="-1" />
+			<column name="created_datetime" type="datetime" jt="93" mandatory="y" />
+			<index name="pk_group_group_id" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+			</index>
+			<index name="unq_group_segment_url" unique="UNIQUE" >
+				<column name="url_segment" />
+			</index>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="home" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="home_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="decision_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="prev_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="next_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="modified_datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="title" type="varchar" length="32" jt="12" mandatory="y" />
+			<column name="description" type="text" jt="-1" mandatory="y" />
+			<column name="image_url" type="text" jt="-1" />
+			<index name="pk_home" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+				<column name="home_id" />
+			</index>
+			<index name="idx_home_decision_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="decision_id" />
+			</index>
+			<index name="idx_home_creator_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="creator_id" />
+			</index>
+			<fk name="fk_home_decision" to_schema="test" to_table="decision" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="decision_id" pk="decision_id" />
+			</fk>
+			<fk name="fk_home_member" to_schema="test" to_table="member" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="creator_id" pk="member_id" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="member" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="member_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="decision_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="prev_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="next_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="modified_datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="user_id" type="binary" length="16" jt="-2" />
+			<column name="image_url" type="text" jt="-1" >
+				<comment><![CDATA[37x37 base64 encoded]]></comment>
+			</column>
+			<column name="name" type="varchar" length="32" jt="12" mandatory="y" />
+			<index name="pk_member" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+				<column name="member_id" />
+			</index>
+			<index name="idx_member_decision_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="decision_id" />
+			</index>
+			<fk name="fk_member_decision" to_schema="test" to_table="decision" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="decision_id" pk="decision_id" />
+			</fk>
+		</table>
+		<table name="member_role" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="member_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="role_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<index name="pk_member_role" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+				<column name="member_id" />
+				<column name="role_id" />
+			</index>
+			<index name="idx_member_role_role_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="role_id" />
+			</index>
+			<fk name="fk_member_role_member" to_schema="test" to_table="member" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="member_id" pk="member_id" />
+			</fk>
+			<fk name="fk_member_role_role" to_schema="test" to_table="role" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="role_id" pk="role_id" />
+			</fk>
+		</table>
+		<table name="proceeding" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="proceeding_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="prev_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="next_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="created_datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="meeting_datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="title" type="varchar" length="32" jt="12" mandatory="y" />
+			<column name="description" type="text" length="512" jt="-1" mandatory="y" />
+			<index name="pk_proceeding" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+				<column name="proceeding_id" />
+			</index>
+		</table>
+		<table name="receipt" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="receipt_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="decision_id" type="int" jt="4" unsigned="y" />
+			<column name="activity_id" type="int" jt="4" unsigned="y" />
+			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="modified_datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="settlement_datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="title" type="varchar" length="32" decimal="0" jt="12" mandatory="y" />
+			<column name="image_url" type="text" jt="-1" />
+			<column name="difference" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<index name="pk_receipt" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+				<column name="receipt_id" />
+			</index>
+			<index name="idx_receipt_activity_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="activity_id" />
+			</index>
+			<index name="idx_receipt_decision_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="decision_id" />
+			</index>
+			<index name="idx_receipt_creator_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="creator_id" />
+			</index>
+			<fk name="fk_receipt_activity" to_schema="test" to_table="activity" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="activity_id" pk="activity_id" />
+			</fk>
+			<fk name="fk_receipt_decision" to_schema="test" to_table="decision" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="decision_id" pk="decision_id" />
+			</fk>
+			<fk name="fk_receipt_member" to_schema="test" to_table="member" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="creator_id" pk="member_id" />
+			</fk>
+		</table>
+		<table name="role" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="role_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="decision_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="prev_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="next_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="modified_datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="name" type="varchar" length="32" decimal="0" jt="12" mandatory="y" />
+			<column name="member" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="role" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="proceeding" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="decision" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="activity" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="receipt" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<index name="pk_role" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+				<column name="role_id" />
+			</index>
+			<index name="idx_role_decision_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="decision_id" />
+			</index>
+			<index name="idx_role_creator_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="creator_id" />
+			</index>
+			<fk name="fk_role_decision" to_schema="test" to_table="decision" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="decision_id" pk="decision_id" />
+			</fk>
+			<fk name="fk_role_member" to_schema="test" to_table="member" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="creator_id" pk="member_id" />
+			</fk>
+		</table>
+		<table name="url_segment" >
+			<column name="url_segment" type="char" length="32" jt="1" mandatory="y" />
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<index name="pk_url_segment" unique="PRIMARY_KEY" >
+				<column name="url_segment" />
+			</index>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="user" >
+			<column name="user_id" type="binary" length="16" jt="-2" mandatory="y" />
+			<column name="image_url" type="text" jt="-1" />
+			<column name="third_party" type="varchar" length="16" jt="12" mandatory="y" />
+			<column name="third_party_access_token" type="varchar" length="64" jt="12" mandatory="y" />
+			<index name="pk_user_user_id" unique="PRIMARY_KEY" >
+				<column name="user_id" />
+			</index>
+			<index name="unq_user_third_party_access_token" unique="UNIQUE" >
+				<column name="third_party_access_token" />
+			</index>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="user_permission" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="user_id" type="binary" length="16" jt="-2" mandatory="y" />
+			<column name="member" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="role" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="proceeding" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="decision" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="activity" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="receipt" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<index name="pk_user_permission" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+				<column name="user_id" />
+			</index>
+			<index name="idx_user_permission_user_id" unique="NORMAL" >
+				<column name="user_id" />
+			</index>
+			<fk name="fk_user_permission_group" to_schema="test" to_table="group" >
+				<fk_column name="group_id" pk="group_id" />
+			</fk>
+			<fk name="fk_user_permission_user" to_schema="test" to_table="user" >
+				<fk_column name="user_id" pk="user_id" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="voter" >
+			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="decision_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="member_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="voter_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" >
+				<comment><![CDATA[0: abstainer
+1: accepter
+2: rejecter]]></comment>
+			</column>
+			<index name="pk_voter" unique="PRIMARY_KEY" >
+				<column name="group_id" />
+				<column name="decision_id" />
+				<column name="member_id" />
+			</index>
+			<index name="idx_voter_member_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="member_id" />
+			</index>
+			<fk name="fk_voter_decision" to_schema="test" to_table="decision" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="decision_id" pk="decision_id" />
+			</fk>
+			<fk name="fk_voter_member" to_schema="test" to_table="member" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="member_id" pk="member_id" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+	</schema>
+	<connector name="MariaDb" database="MariaDb" driver_class="org.mariadb.jdbc.Driver" driver_jar="mariadb-java-client-2.1.0.jar" host="localhost" port="3306" instance="test" user="root" passwd="bXlsb2NhbHB3" />
+	<layout name="Default Layout" id="Layout_32e5263" show_relation="columns" >
+		<entity schema="test" name="member_role" color="c8f5bf" x="45" y="90" />
+		<entity schema="test" name="url_segment" color="99ff99" x="600" y="750" />
+		<entity schema="test" name="group" color="ff9999" x="495" y="1005" />
+		<entity schema="test" name="activity" color="99ffff" x="795" y="315" />
+		<entity schema="test" name="receipt" color="99ffff" x="1050" y="450" />
+		<entity schema="test" name="user_permission" color="ff9999" x="780" y="1005" />
+		<entity schema="test" name="user" color="ff9999" x="990" y="1020" />
+		<entity schema="test" name="member" color="c8f5bf" x="435" y="75" />
+		<entity schema="test" name="proceeding" color="99ffff" x="225" y="480" />
+		<entity schema="test" name="role" color="99ff99" x="120" y="675" />
+		<entity schema="test" name="home" color="99ff99" x="345" y="720" />
+		<entity schema="test" name="voter" color="1f5182" x="675" y="330" />
+		<entity schema="test" name="attendee" color="bfd4f5" x="150" y="225" />
+		<entity schema="test" name="decision" color="99ffff" x="495" y="450" />
+		<group name="Group_for_Sharding" color="c4e0f9" >
+			<entity schema="test" name="activity" />
+			<entity schema="test" name="attendee" />
+			<entity schema="test" name="decision" />
+			<entity schema="test" name="member" />
+			<entity schema="test" name="member_role" />
+			<entity schema="test" name="proceeding" />
+			<entity schema="test" name="receipt" />
+			<entity schema="test" name="role" />
+			<entity schema="test" name="voter" />
+			<entity schema="test" name="home" />
+			<entity schema="test" name="url_segment" />
+		</group>
+		<group name="Group_for_Center" color="c4e0f9" >
+			<entity schema="test" name="group" />
+			<entity schema="test" name="user" />
+			<entity schema="test" name="user_permission" />
+		</group>
+	</layout>
+</project>

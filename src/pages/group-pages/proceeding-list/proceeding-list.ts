@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, ProceedingService, SharedDataService } from '../../../providers';
-import { Member, Proceeding } from '../../../models';
-import { State } from '../../../app/constants';
+import { MemberDetailElement, ProceedingListElement } from '../../../models';
+import { DocumentState } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
@@ -13,10 +13,10 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'proceeding-list.html',
 })
 export class ProceedingListPage {
-  stateEnum = State;
+  stateEnum = DocumentState;
 
-  member: Member;
-  proceedings: Observable<Proceeding[]>;
+  member: MemberDetailElement;
+  proceedings: Observable<ProceedingListElement[]>;
   creationPermitted: boolean = false;
 
   constructor(
@@ -41,7 +41,7 @@ export class ProceedingListPage {
           console.log(error);
         });;
       this.proceedings = this.proceedingService.getProceedings(group_id)
-        .map((proceedings: Proceeding[]) => this.sortByDate(this.filterDeletedProceedings(proceedings)));
+        .map((proceedings: ProceedingListElement[]) => this.filterDeletedProceedings(proceedings));
     });
   }
 
@@ -59,21 +59,14 @@ export class ProceedingListPage {
     this.navCtrl.push('ProceedingEditorPage');
   }
 
-  sortByDate(proceedings: Proceeding[]): Proceeding[] {
-    return proceedings.sort((h1, h2) => {
-      return h1.meetingDate < h2.meetingDate ? 1 :
-        (h1.meetingDate > h2.meetingDate ? -1 : 0);
-    });
+  filterDeletedProceedings(proceedings: ProceedingListElement[]): ProceedingListElement[] {
+    return proceedings.filter(proceeding => proceeding.next_id == 0);
   }
-
-  filterDeletedProceedings(proceedings: Proceeding[]): Proceeding[] {
-    return proceedings.filter(proceeding => proceeding.nextId == 0);
-  }
-
+/*
   needYou(proceeding: Proceeding): boolean {
     return proceeding && this.member && proceeding.state == this.stateEnum.STATE_PENDING_CREATE
-      && proceeding.nextId == 0
-      && proceeding.attendees.findIndex(attendee => attendee == this.member.id) != -1
-      && proceeding.reviewers.findIndex(attendee => attendee == this.member.id) == -1;
-  }
+      && proceeding.next_id == 0
+      && proceeding.attendees.findIndex(attendee => attendee == this.member.member_id) != -1
+      && proceeding.reviewers.findIndex(attendee => attendee == this.member.member_id) == -1;
+  }*/
 }

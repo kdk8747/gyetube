@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, MemberService, GroupService, ProceedingService, DecisionService, SharedDataService } from '../../../providers';
-import { Member, ProceedingCreation, Proceeding } from '../../../models';
-import { State } from '../../../app/constants';
+import { MemberDetailElement, ProceedingDetailElement } from '../../../models';
+import { DocumentState } from '../../../app/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -15,11 +15,11 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'proceeding-editor.html',
 })
 export class ProceedingEditorPage {
-  stateEnum = State;
+  stateEnum = DocumentState;
 
   groupId: number;
   id: number;
-  members: Observable<Member[]>;
+  members: Observable<MemberDetailElement[]>;
 
   form: FormGroup;
   addAttempt: boolean = false;
@@ -46,7 +46,7 @@ export class ProceedingEditorPage {
       attendees: [[], Validators.compose([Validators.minLength(2), Validators.required])]
     });
   }
-
+/*
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
   }
@@ -130,7 +130,7 @@ export class ProceedingEditorPage {
       decision.meetingDate = this.form.value.meetingDate;
       return decision;
     });
-    let newProceeding = new ProceedingCreation(0, 0, 0, State.STATE_PENDING_CREATE,
+    let newProceeding = new Proceeding(0, 0, 0, DocumentState.STATE_PENDING_CREATE,
       new Date(Date.now()).toISOString(),
       this.form.value.meetingDate,
       this.form.value.attendees,
@@ -153,5 +153,5 @@ export class ProceedingEditorPage {
         this.navCtrl.setRoot('ProceedingListPage');
       });
   }
-
+*/
 }

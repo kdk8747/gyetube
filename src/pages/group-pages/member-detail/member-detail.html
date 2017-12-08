@@ -12,7 +12,7 @@
             <ion-icon name="close"></ion-icon>
           </button>
         </ion-buttons>
-        <ion-buttons>{{(member | async)?.title}}</ion-buttons>
+        <ion-buttons>{{member?.name}}</ion-buttons>
       </ion-toolbar>
 
       <ion-row align-items-center justify-content-start>
@@ -21,21 +21,21 @@
         </ion-col>
         <ion-col>
           <p>{{(creator | async)?.name}}</p>
-          <p>{{(member | async)?.modifiedDate | localizedDate:'short'}}</p>
+          <p>{{member?.modified_datetime | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>
 
-      <img *ngIf="imageUrl && imageUrl.includes('http')" [src]="imageUrl" style="width: auto; height: auto">
+      <img *ngIf="member?.image_url?.includes('http')" [src]="member?.image_url" style="width: auto; height: auto">
 
-      <ion-card *ngIf="decision && (decision | async)">
-        <ion-item tappable (tap)="navigateToMemberDetail()">
+      <ion-card *ngIf="member?.parent_decision">
+        <ion-item tappable (tap)="navigateToDecisionDetail(member.parent_decision.decision_id)">
           <ion-row align-items-center>
-            <ion-col col-auto>
-              <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
-            </ion-col>
             <ion-col>
               <p>{{ 'I18N_BASIS_FOR_THIS_DOCUMENT' | translate }}</p>
-              <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
+              <p>{{ 'I18N_DECISION' | translate }} - {{ member.parent_decision.title }}</p>
+            </ion-col>
+            <ion-col col-auto>
+              <ion-icon style="font-size: 1.8em" name="arrow-forward"></ion-icon>
             </ion-col>
           </ion-row>
         </ion-item>

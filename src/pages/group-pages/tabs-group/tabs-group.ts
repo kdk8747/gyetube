@@ -41,11 +41,6 @@ export class TabsGroupPage {
     this.groupService.getGroupId(this.navParams.get('group_url_segment')).then(group_id => {
       this.groupService.getGroup(group_id).subscribe(group => this.sharedDataService.headerGroupTitle = group.title);
       this.util.setCurrentGroupId(group_id);
-      this.memberService.cacheMembers(group_id);
-      this.proceedingService.cacheProceedings(group_id);
-      this.decisionService.cacheDecisions(group_id);
-      this.activityService.cacheActivities(group_id);
-      this.receiptService.cacheReceipts(group_id);
     });
 
     this.event.subscribe('TabsGroup_HideTab', (obj) => {
@@ -56,6 +51,14 @@ export class TabsGroupPage {
     this.event.subscribe('TabsGroup_ShowTab', (obj) => {
       this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'opacity', '1');
       this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'z-index', '10');
+    });
+
+    this.event.subscribe('TabsGroup_MemberDetail', (obj) => {
+      this.switchDetailPage(0, 'MemberDetailPage', obj);
+    });
+
+    this.event.subscribe('TabsGroup_RoleDetail', (obj) => {
+      this.switchDetailPage(0, 'RoleDetailPage', obj);
     });
 
     this.event.subscribe('TabsGroup_ProceedingDetail', (obj) => {

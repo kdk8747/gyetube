@@ -5,35 +5,35 @@
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-item tappable *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.id)">
+      <ion-item tappable *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.decision_id)">
           <ion-row>
-            <grasscube-state-label [state]="decision.state" [postfix]="decision.title"></grasscube-state-label>
+            <grasscube-state-label [state]="decision.document_state" [postfix]="decision.title"></grasscube-state-label>
           </ion-row>
           <ion-row>
             <ion-col>
-              <p>{{decision.meetingDate | localizedDate}}</p>
+              <p>{{decision.meeting_datetime | localizedDate}}</p>
             </ion-col>
             <ion-col>
-              <p text-right style="white-space: normal" *ngIf="decision.accepters.length"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
-              <p text-right style="white-space: normal" *ngIf="decision.rejecters.length"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
-              <p text-right style="white-space: normal" *ngIf="decision.abstainers.length"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
+              <p text-right style="white-space: normal" *ngIf="decision.accepters_count"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters_count }} </p>
+              <p text-right style="white-space: normal" *ngIf="decision.rejecters_count"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters_count }} </p>
+              <p text-right style="white-space: normal" *ngIf="decision.abstainers_count"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers_count }} </p>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col *ngIf="sharedDataService.decisionEditMode && decision.nextId == 0">
-              <button ion-button icon-only (tap)="navigateToEditorForUpdate(decision.id)">
+            <ion-col *ngIf="sharedDataService.decisionEditMode && decision.next_id == 0">
+              <button ion-button icon-only (tap)="navigateToEditorForUpdate(decision.decision_id)">
                 <ion-icon name="create"></ion-icon>
               </button>
-              <button ion-button icon-only (tap)="navigateToEditorForDelete(decision.id)">
+              <button ion-button icon-only (tap)="navigateToEditorForDelete(decision.decision_id)">
                 <ion-icon name="trash"></ion-icon>
               </button>
             </ion-col>
             <ion-col>
               <p text-right style="white-space: normal">
-                {{ 'I18N_ELAPSED_TIME' | translate}} {{decision.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
+                {{ 'I18N_ELAPSED_TIME' | translate}} {{decision.total_elapsed_time | number}} {{ 'I18N_HOURS' | translate}}
               </p>
               <p text-right style="white-space: normal">
-                {{ 'I18N_DIFFERENCE' | translate}} {{decision.totalDifference | number}}
+                {{ 'I18N_DIFFERENCE' | translate}} {{decision.total_difference | number}}
               </p>
             </ion-col>
           </ion-row>
@@ -46,27 +46,27 @@
   <ion-grid fixed *ngIf="!sharedDataService.decisionListTimelineMode">
     <ion-row>
       <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let decision of decisions | async">
-        <ion-item tappable (tap)="navigateToDetail(decision.id)">
+        <ion-item tappable (tap)="navigateToDetail(decision.decision_id)">
             <ion-row>
               <p>{{decision.title}}</p>
             </ion-row>
             <ion-row>
               <ion-col>
-                <p>{{decision.meetingDate | localizedDate}}</p>
+                <p>{{decision.meeting_datetime | localizedDate}}</p>
               </ion-col>
               <ion-col>
-                <p text-right style="white-space: normal" *ngIf="decision.accepters.length"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters.length }} </p>
-                <p text-right style="white-space: normal" *ngIf="decision.rejecters.length"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters.length }} </p>
-                <p text-right style="white-space: normal" *ngIf="decision.abstainers.length"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers.length }} </p>
+                <p text-right style="white-space: normal" *ngIf="decision.accepters_count"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters_count }} </p>
+                <p text-right style="white-space: normal" *ngIf="decision.rejecters_count"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters_count }} </p>
+                <p text-right style="white-space: normal" *ngIf="decision.abstainers_count"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers_count }} </p>
               </ion-col>
             </ion-row>
             <ion-row>
               <ion-col>
                 <p text-right style="white-space: normal">
-                  {{ 'I18N_ELAPSED_TIME' | translate}} {{decision.totalElapsedTime | number}} {{ 'I18N_HOURS' | translate}}
+                  {{ 'I18N_ELAPSED_TIME' | translate}} {{decision.total_elapsed_time | number}} {{ 'I18N_HOURS' | translate}}
                 </p>
                 <p text-right style="white-space: normal">
-                  {{ 'I18N_DIFFERENCE' | translate}} {{decision.totalDifference | number}}
+                  {{ 'I18N_DIFFERENCE' | translate}} {{decision.total_difference | number}}
                 </p>
               </ion-col>
             </ion-row>

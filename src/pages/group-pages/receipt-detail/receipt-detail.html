@@ -12,46 +12,46 @@
             <ion-icon name="close"></ion-icon>
           </button>
         </ion-buttons>
-        <ion-buttons>{{(receipt | async)?.title}}</ion-buttons>
+        <ion-buttons>{{receipt?.title}}</ion-buttons>
       </ion-toolbar>
 
       <ion-row align-items-center justify-content-start>
         <ion-col col-auto>
-          <grasscube-user [user]="creator | async"></grasscube-user>
+          <grasscube-user [user]="receipt?.creator"></grasscube-user>
         </ion-col>
         <ion-col>
-          <p>{{(creator | async)?.name}}</p>
-          <p>{{(receipt | async)?.modifiedDate | localizedDate:'short'}}</p>
+          <p>{{receipt?.creator?.name}}</p>
+          <p>{{receipt?.modified_datetime | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>
 
-      <img *ngIf="imageUrl.includes('http')" [src]="imageUrl" style="width: auto; height: auto">
-      <p>{{ 'I18N_SETTLEMENT_DATE' | translate}} {{(receipt | async)?.settlementDate | localizedDate:'short'}}</p>
-      <p>{{ 'I18N_DIFFERENCE' | translate}} {{(receipt | async)?.difference | number}}</p>
+      <img *ngIf="receipt?.image_url?.includes('http')" [src]="receipt?.image_url" style="width: auto; height: auto">
+      <p>{{ 'I18N_SETTLEMENT_DATE' | translate}} {{receipt?.settlement_datetime | localizedDate:'short'}}</p>
+      <p>{{ 'I18N_DIFFERENCE' | translate}} {{receipt?.difference | number}}</p>
 
-      <ion-card *ngIf="activity && (activity | async)">
-        <ion-item tappable (tap)="navigateToActivityDetail(activity)">
+      <ion-card *ngIf="receipt?.parent_activity">
+        <ion-item tappable (tap)="navigateToActivityDetail(receipt.parent_activity.activity_id)">
           <ion-row align-items-center>
             <ion-col col-auto>
               <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
             </ion-col>
             <ion-col>
               <p>{{ 'I18N_BASIS_FOR_THIS_DOCUMENT' | translate }}</p>
-              <p>{{ 'I18N_ACTIVITY' | translate }} - {{ (activity | async)?.title }}</p>
+              <p>{{ 'I18N_ACTIVITY' | translate }} - {{ receipt.parent_activity.title }}</p>
             </ion-col>
           </ion-row>
         </ion-item>
       </ion-card>
 
-      <ion-card *ngIf="decision && (decision | async)">
-        <ion-item tappable (tap)="navigateToDecisionDetail(decision)">
+      <ion-card *ngIf="receipt?.parent_decision">
+        <ion-item tappable (tap)="navigateToDecisionDetail(receipt.parent_decision.decision_id)">
           <ion-row align-items-center>
             <ion-col col-auto>
               <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
             </ion-col>
             <ion-col>
               <p>{{ 'I18N_BASIS_FOR_THIS_DOCUMENT' | translate }}</p>
-              <p>{{ 'I18N_DECISION' | translate }} - {{ (decision | async)?.title }}</p>
+              <p>{{ 'I18N_DECISION' | translate }} - {{ receipt.parent_decision.title }}</p>
             </ion-col>
           </ion-row>
         </ion-item>

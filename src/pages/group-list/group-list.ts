@@ -34,8 +34,7 @@ export class GroupListPage {
   }
 
   navigateToGroup(group: Group) {
-    this.util.setCurrentGroupId(group.id);
-    console.log('GroupListPage ' + group.id);
-    this.navCtrl.push('TabsGroupPage', { group_url_segment: group.urlSegment });
+    this.util.setCurrentGroupId(group.group_id);
+    this.navCtrl.push('TabsGroupPage', { group_url_segment: group.url_segment });
   }
 }

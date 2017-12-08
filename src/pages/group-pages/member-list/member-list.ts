@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, MemberService, RoleService, SharedDataService } from '../../../providers';
-import { Member, Role } from '../../../models';
-import { State } from '../../../app/constants';
+import { MemberListElement, Role } from '../../../models';
+import { DocumentState } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -14,9 +14,9 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'member-list.html',
 })
 export class MemberListPage {
-  stateEnum = State;
+  stateEnum = DocumentState;
 
-  members: Observable<Member[]>;
+  members: Observable<MemberListElement[]>;
 
   constructor(
     public navCtrl: NavController,
@@ -41,8 +41,7 @@ export class MemberListPage {
     this.event.publish('TabsGroup_ShowTab');
   }
 
-  navigateToDetail(memberId: number) {
-    this.navCtrl.push('MemberDetailPage', { id: memberId });
+  navigateToDetail(member_id: number) {
+    this.navCtrl.push('MemberDetailPage', { id: member_id });
   }
-
 }

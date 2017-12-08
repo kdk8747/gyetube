@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, FabContainer } from 'ionic-angular';
 import { UtilService, DecisionService, SharedDataService } from '../../../providers';
-import { Decision } from '../../../models';
-import { State } from '../../../app/constants';
+import { DecisionListElement } from '../../../models';
+import { DocumentState } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/Observable';
 export class DecisionListPage {
 
   groupId: number;
-  decisions: Observable<Decision[]>;
+  decisions: Observable<DecisionListElement[]>;
   readPermitted: boolean = false;
 
   constructor(
@@ -67,30 +67,30 @@ export class DecisionListPage {
     this.navCtrl.push('DecisionEditorPage', { id: id, delete: true });
   }
 
-  sortByDate(decisions: Decision[]): Decision[] {
+  sortByDate(decisions: DecisionListElement[]): DecisionListElement[] {
     return decisions.sort((h1, h2) => {
-      return h1.meetingDate < h2.meetingDate ? 1 :
-        (h1.meetingDate > h2.meetingDate ? -1 : 0);
+      return h1.meeting_datetime < h2.meeting_datetime ? 1 :
+        (h1.meeting_datetime > h2.meeting_datetime ? -1 : 0);
     });
   }
 
-  filterPastDecisions(decisions: Decision[]): Decision[] {
+  filterPastDecisions(decisions: DecisionListElement[]): DecisionListElement[] {
     return decisions.filter(decision =>
-      (decision.state == State.STATE_CREATED || decision.state == State.STATE_UPDATED)
-      && new Date(decision.expiryDate).getTime() > new Date(Date.now()).getTime()
-      && decision.nextId == 0
+      (decision.document_state == DocumentState.STATE_NEWLY_CREATED || decision.document_state == DocumentState.STATE_UPDATED)
+      && new Date(decision.expiry_datetime).getTime() > new Date(Date.now()).getTime()
+      && decision.next_id == 0
     );
   }
 
-  filterDeletedDecisions(decisions: Decision[]): Decision[] {
+  filterDeletedDecisions(decisions: DecisionListElement[]): DecisionListElement[] {
     return decisions.filter(decision =>
-      (decision.state == State.STATE_CREATED || decision.state == State.STATE_UPDATED)
+      (decision.document_state == DocumentState.STATE_NEWLY_CREATED || decision.document_state == DocumentState.STATE_UPDATED)
     );
   }
 
   refreshDecisions() {
     this.decisions = this.decisionService.getDecisions(this.groupId)
-      .map((decisions: Decision[]) =>
+      .map((decisions: DecisionListElement[]) =>
         this.sharedDataService.decisionListTimelineMode ?
           this.sortByDate(this.filterDeletedDecisions(decisions)) :
           this.sortByDate(this.filterPastDecisions(decisions)));

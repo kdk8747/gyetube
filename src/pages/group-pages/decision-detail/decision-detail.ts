@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, MemberService, DecisionService, ProceedingService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
-import { Decision, Member, Proceeding, Activity, Receipt } from '../../../models';
+import { UtilService, DecisionService, SharedDataService } from '../../../providers';
+import { DecisionDetailElement, Voter } from '../../../models';
 import { Observable } from 'rxjs/Observable';
+import { VoterState } from '../../../app/constants';
 
 
 @IonicPage({
@@ -17,24 +18,17 @@ export class DecisionDetailPage {
 
   groupId: number;
   id: number;
-  decision: Decision;
-  abstainers: Observable<Member>[] = [];
-  accepters: Observable<Member>[] = [];
-  rejecters: Observable<Member>[] = [];
-  proceeding: Observable<Proceeding> = null;
-  activities: Observable<Activity>[];
-  receipts: Observable<Receipt>[];
+  decision: DecisionDetailElement;
+  abstainers: Voter[] = [];
+  accepters: Voter[] = [];
+  rejecters: Voter[] = [];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public memberService: MemberService,
     public decisionService: DecisionService,
-    public proceedingService: ProceedingService,
-    public activityService: ActivityService,
-    public receiptService: ReceiptService,
     public sharedDataService: SharedDataService
   ) {
   }
@@ -49,18 +43,12 @@ export class DecisionDetailPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.decisionService.getDecision(this.groupId, this.id).subscribe((decision: Decision) => {
+      this.decisionService.getDecision(this.groupId, this.id).subscribe((decision: DecisionDetailElement) => {
         this.decision = decision;
         this.sharedDataService.headerDetailTitle = decision.title;
-        this.abstainers = decision.abstainers.map((id: number) => this.memberService.getMember(this.groupId, id));
-        this.accepters = decision.accepters.map((id: number) => this.memberService.getMember(this.groupId, id));
-        this.rejecters = decision.rejecters.map((id: number) => this.memberService.getMember(this.groupId, id));
-        if (decision.parentProceeding)
-          this.proceeding = this.proceedingService.getProceeding(this.groupId, decision.parentProceeding);
-        if (decision.childActivities)
-          this.activities = decision.childActivities.map((id: number) => this.activityService.getActivity(this.groupId, id));
-        if (decision.childReceipts)
-          this.receipts = decision.childReceipts.map((id: number) => this.receiptService.getReceipt(this.groupId, id));
+        this.abstainers = decision.voters.filter((voter: Voter) => voter.voter_state == VoterState.STATE_ABSTAINER);
+        this.accepters = decision.voters.filter((voter: Voter) => voter.voter_state == VoterState.STATE_ACCEPTER);
+        this.rejecters = decision.voters.filter((voter: Voter) => voter.voter_state == VoterState.STATE_REJECTER);
       });
     });
   }
@@ -73,28 +61,30 @@ export class DecisionDetailPage {
   }
 
   navigateToPrev() {
-    this.navCtrl.setRoot('DecisionDetailPage', { id: this.decision.prevId });
+    this.navCtrl.setRoot('DecisionDetailPage', { id: this.decision.prev_id });
   }
 
   navigateToNext() {
-    this.navCtrl.setRoot('DecisionDetailPage', { id: this.decision.nextId });
+    this.navCtrl.setRoot('DecisionDetailPage', { id: this.decision.next_id });
   }
 
-  navigateToProceedingDetail(obs: Observable<Proceeding>) {
-    obs.subscribe(proceeding => {
-      this.event.publish('TabsGroup_ProceedingDetail', { id: proceeding.id });
-    });
+  navigateToProceedingDetail(proceeding_id: string) {
+    this.event.publish('TabsGroup_ProceedingDetail', { id: proceeding_id });
   }
 
-  navigateToActivityDetail(obs: Observable<Activity>) {
-    obs.subscribe(activity => {
-      this.event.publish('TabsGroup_ActivityDetail', { id: activity.id });
-    });
+  navigateToMemberDetail(member_id: string) {
+    this.event.publish('TabsGroup_MemberDetail', { id: member_id });
   }
 
-  navigateToReceiptDetail(obs: Observable<Receipt>) {
-    obs.subscribe(receipt => {
-      this.event.publish('TabsGroup_ReceiptDetail', { id: receipt.id });
-    });
+  navigateToRoleDetail(role_id: string) {
+    this.event.publish('TabsGroup_RoleDetail', { id: role_id });
+  }
+
+  navigateToActivityDetail(activity_id: string) {
+    this.event.publish('TabsGroup_ActivityDetail', { id: activity_id });
+  }
+
+  navigateToReceiptDetail(receipt_id: string) {
+    this.event.publish('TabsGroup_ReceiptDetail', { id: receipt_id });
   }
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, ReceiptService, SharedDataService } from '../../../providers';
-import { Receipt } from '../../../models';
+import { ReceiptListElement } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
@@ -14,7 +14,7 @@ import { Observable } from 'rxjs/Observable';
 export class ReceiptListPage {
 
   groupId: number;
-  receipts: Observable<Receipt[]>;
+  receipts: Observable<ReceiptListElement[]>;
   creationPermitted: boolean = false;
 
   constructor(
@@ -36,8 +36,8 @@ export class ReceiptListPage {
           console.log(error);
         });;
       this.receipts = this.receiptService.getReceipts(this.groupId)
-        .map((receipts: Receipt[]) => this.sortByDateR(receipts))
-        .map((receipts: Receipt[]) => this.setBalance(receipts));
+        .map((receipts: ReceiptListElement[]) => this.sortByDateR(receipts))
+        .map((receipts: ReceiptListElement[]) => this.setBalance(receipts));
     });
   }
 
@@ -47,22 +47,22 @@ export class ReceiptListPage {
     this.event.publish('TabsGroup_ShowTab');
   }
 
-  navigateToDetail(receiptId: number) {
-    this.navCtrl.push('ReceiptDetailPage', { id: receiptId });
+  navigateToDetail(receipt_id: number) {
+    this.navCtrl.push('ReceiptDetailPage', { id: receipt_id });
   }
 
   navigateToEditor() {
     this.navCtrl.push('ReceiptEditorPage');
   }
 
-  sortByDateR(receipts: Receipt[]): Receipt[] {
+  sortByDateR(receipts: ReceiptListElement[]): ReceiptListElement[] {
     return receipts.sort((h1, h2) => {
-      return h1.settlementDate < h2.settlementDate ? 1 :
-        (h1.settlementDate > h2.settlementDate ? -1 : 0);
+      return h1.settlement_datetime < h2.settlement_datetime ? 1 :
+        (h1.settlement_datetime > h2.settlement_datetime ? -1 : 0);
     });
   }
 
-  setBalance(receipts: Receipt[]): Receipt[] {
+  setBalance(receipts: ReceiptListElement[]): ReceiptListElement[] {
     if (receipts.length > 0) {
       receipts[receipts.length - 1].balance = receipts[receipts.length - 1].difference;
       for (let i = receipts.length - 1; i > 0; i--) {

@@ -1,66 +1,49 @@
-const models = require('../../../models');
+const db = require('../../../database');
 const debug = require('debug')('server');
 
-exports.getAll = (req, res) => {
-  models.role.findAll({
-    attributes: ['role_id', 'decision_id', 'prev_id', 'next_id', 'state', 'creator_id', 'modified_datetime',
-     'name', 'member', 'role', 'proceeding', 'decision', 'activity', 'receipt'],
-    where: { group_id: req.params.group_id }
-  }).then((result) => {
-    res.json(result.map(row => {
-      return {
-        id: row.dataValues.role_id,
-        prevId: row.dataValues.prev_id,
-        nextId: row.dataValues.next_id,
-        state: row.dataValues.state,
-        creator: row.dataValues.creator_id,
-        modifiedDate: row.dataValues.modified_datetime,
-        name: row.dataValues.name,
-        member: row.dataValues.member,
-        role: row.dataValues.role,
-        proceeding: row.dataValues.proceeding,
-        decision: row.dataValues.decision,
-        activity: row.dataValues.activity,
-        receipt: row.dataValues.receipt,
-        parentDecision: row.dataValues.decision_id
-      };
-    }));
-  }).catch((reason => {
-    res.status(400).json({
+exports.getAll = async (req, res) => {
+  try {
+    let result = await db.execute(
+      'SELECT *\
+      FROM role\
+      WHERE group_id=?', [req.params.group_id]);
+    res.send(result[0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
-exports.getByID = (req, res) => {
-  models.role.findOne({
-    attributes: ['role_id', 'decision_id', 'prev_id', 'next_id', 'state', 'creator_id', 'modified_datetime',
-     'name', 'member', 'role', 'proceeding', 'decision', 'activity', 'receipt'],
-    where: { group_id: req.params.group_id, role_id: +req.params.role_id }
-  }).then((result) => {
-    res.json({
-      id: result.role_id,
-      prevId: result.prev_id,
-      nextId: result.next_id,
-      state: result.state,
-      creator: result.creator_id,
-      modifiedDate: result.modified_datetime,
-      name: result.name,
-      member: result.member,
-      role: result.role,
-      proceeding: result.proceeding,
-      decision: result.decision,
-      activity: result.activity,
-      receipt: result.receipt,
-      parentDecision: result.decision_id
-    });
-  }).catch((reason => {
-    res.status(400).json({
+exports.getByID = async (req, res) => {
+  try {
+    let role = await db.execute(
+      'SELECT *\
+      FROM role\
+      WHERE group_id=? AND role_id=?', [req.params.group_id, req.params.role_id]);
+
+    let parent_decision = await db.execute(
+      'SELECT *\
+        FROM decision\
+        WHERE group_id=? AND decision_id=?', [req.params.group_id, role[0][0].decision_id]);
+    role[0][0].parent_decision = parent_decision[0][0];
+
+    let creator = await db.execute(
+      'SELECT *\
+      FROM member\
+      WHERE group_id=? AND member_id=?', [req.params.group_id, role[0][0].creator_id]);
+    role[0][0].creator = creator[0][0];
+
+    res.send(role[0][0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
 exports.updateByID = (req, res) => {

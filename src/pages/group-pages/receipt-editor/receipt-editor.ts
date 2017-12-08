@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, ReceiptService, ActivityService, DecisionService, AmazonService, SharedDataService } from '../../../providers';
-import { Receipt, Activity, Decision, AmazonSignature } from '../../../models';
+import { ReceiptDetailElement, ActivityDetailElement, DecisionListElement, AmazonSignature } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -18,8 +18,8 @@ export class ReceiptEditorPage {
   groupId: number;
   isNative: boolean = false;
   newReceiptImageFile: File = null;
-  activities: Observable<Activity[]>;
-  decisions: Observable<Decision[]>;
+  activities: Observable<ActivityDetailElement[]>;
+  decisions: Observable<DecisionListElement[]>;
   activitySelected: boolean = true;
 
   form: FormGroup;
@@ -49,7 +49,7 @@ export class ReceiptEditorPage {
 
     this.isNative = this.util.isNativeApp();
   }
-
+/*
   ionViewDidLoad() {
   }
 
@@ -123,5 +123,5 @@ export class ReceiptEditorPage {
         .then(() => this.navCtrl.setRoot('ReceiptListPage'))
         .catch(() => { console.log('new receipt failed') });
     }
-  }
+  }*/
 }

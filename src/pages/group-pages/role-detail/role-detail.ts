@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, MemberService, RoleService, SharedDataService } from '../../../providers';
-import { Member, Role } from '../../../models';
-import { State } from '../../../app/constants';
+import { MemberDetailElement, Role } from '../../../models';
+import { DocumentState } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -17,8 +17,7 @@ export class RoleDetailPage {
 
   groupId: number;
   id: number;
-  role: Observable<Role>;
-  creator: Observable<Member>;
+  role: Role;
 
   constructor(
     public navCtrl: NavController,
@@ -41,12 +40,10 @@ export class RoleDetailPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.role = this.roleService.getRole(this.groupId, this.id);
-      this.role.subscribe((role: Role) => {
+      this.roleService.getRole(this.groupId, this.id)
+      .subscribe((role: Role) => {
+        this.role = role;
         this.sharedDataService.headerDetailTitle = role.name;
-        this.creator = this.memberService.getMember(this.groupId, role.creator);
-        //if (role.parentDecision)
-          ;//this.decision = this.decisionService.getDecision(this.groupId, role.parentDecision);
       });
     });
   }
@@ -58,8 +55,7 @@ export class RoleDetailPage {
       this.navCtrl.pop();
   }
 
-  navigateToActivityDetail() {
-    ;
+  navigateToDecisionDetail(decision_id: string) {
+    this.event.publish('TabsGroup_DecisionDetail', { id: decision_id });
   }
-
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { Receipt } from '../models';
+import { ReceiptListElement, ReceiptDetailElement } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -14,59 +14,37 @@ export class ReceiptService {
   private receiptsUrl = '/api/v1.0/receipts';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
-  private receipts = {};
-
   constructor(
     public http: AuthHttp
   ) { }
 
-  print() {
-    console.log('receipts: ');
-    for (let elem in this.receipts)
-      console.log(elem);
-  }
-
-  getReceipts(group_id: number): Observable<Receipt[]> {
+  getReceipts(group_id: number): Observable<ReceiptListElement[]> {
     const url = `${this.receiptsUrl}/${group_id}`;
     return this.http.get(url)
-      .map(response => response.json() as Receipt[])
+      .map(response => response.json() as ReceiptListElement[])
       .take(1);
   }
 
-  cacheReceipts(group_id: number): void {
-    const url = `${this.receiptsUrl}/${group_id}`;
-    this.http.get(url)
-      .map(response => {
-        let receipts = response.json() as Receipt[];
-        receipts.map(receipt => {
-          this.receipts[group_id + '/' + receipt.id] = new Observable<Receipt>(obs => obs.next(receipt));
-        });
-      }).publishLast().connect(); // connect(): immediately fetch
+  getReceipt(group_id: number, receipt_id: number): Observable<ReceiptDetailElement> {
+    const url = `${this.receiptsUrl}/${group_id}/${receipt_id}`;
+    return this.http.get(url)
+      .map(response => response.json() as ReceiptDetailElement)
+      .take(1);
   }
 
-  getReceipt(group_id: number, id: number): Observable<Receipt> {
-    const url = `${this.receiptsUrl}/${group_id}/${id}`;
-
-    if (!this.receipts[group_id + '/' + id])
-      this.receipts[group_id + '/' + id] = this.http.get(url)
-        .map(response => response.json() as Receipt)
-        .publishLast().refCount();
-    return this.receipts[group_id + '/' + id];
-  }
-
-  update(group_id: number, receipt: Receipt): Observable<Receipt> {
-    const url = `${this.receiptsUrl}/${group_id}/${receipt.id}`;
+  update(group_id: number, receipt: ReceiptDetailElement): Observable<ReceiptDetailElement> {
+    const url = `${this.receiptsUrl}/${group_id}/${receipt.receipt_id}`;
     return this.http
       .put(url, JSON.stringify(receipt), { headers: this.headers })
       .map(() => receipt)
       .take(1);
   }
 
-  create(group_id: number, receipt: Receipt): Observable<Receipt> {
+  create(group_id: number, receipt: ReceiptDetailElement): Observable<ReceiptDetailElement> {
     const url = `${this.receiptsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(receipt), { headers: this.headers })
-      .map(response => response.json() as Receipt)
+      .map(response => response.json() as ReceiptDetailElement)
       .take(1);
   }
 

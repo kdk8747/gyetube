@@ -1,34 +1,33 @@
-import { State } from '../app/constants';
-import { Decision } from './decision'
+import { DocumentState } from '../app/constants';
+import { DecisionListElement, MemberListElement } from './'
 
-export class Proceeding {
+export class ProceedingListElement {
   constructor(
-    public id: number,
-    public prevId: number, // 0: unused
-    public nextId: number, // 0: unused
-    public state: State,
-    public createdDate: string,
-    public meetingDate: string,
-    public attendees: number[],
-    public reviewers: number[],
+    public proceeding_id: number,
+    public prev_id: number, // 0: unused
+    public next_id: number, // 0: unused
+    public document_state: DocumentState,
+    public created_datetime: string,
+    public meeting_datetime: string,
     public title: string,
     public description: string,
-    public childDecisions: number[]
+    public attendees_count: number,
+    public reviewers_count: number,
+    public child_decisions_count: number
   ) { }
 }
 
-export class ProceedingCreation {
+export class ProceedingDetailElement {
   constructor(
-    public id: number,
-    public prevId: number, // 0: unused
-    public nextId: number, // 0: unused
-    public state: State,
-    public createdDate: string,
-    public meetingDate: string,
-    public attendees: number[],
-    public reviewers: number[],
+    public proceeding_id: number,
+    public prev_id: number, // 0: unused
+    public next_id: number, // 0: unused
+    public document_state: DocumentState,
+    public created_datetime: string,
+    public meeting_datetime: string,
     public title: string,
     public description: string,
-    public childDecisions: Decision[]
+    public attendees: MemberListElement[],
+    public child_decisions: DecisionListElement[]
   ) { }
 }

@@ -14,17 +14,9 @@ export class GroupService {
   private groupsUrl = '/api/v1.0/groups';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
-  private groups = {};
-
   constructor(
     public http: AuthHttp
   ) { }
-
-  print() {
-    console.log('groups: ');
-    for (let elem in this.groups)
-      console.log(elem);
-  }
 
   getGroups(): Observable<Group[]> {
     return this.http.get(this.groupsUrl)
@@ -35,32 +27,30 @@ export class GroupService {
   getGroup(id: number): Observable<Group> {
     const url = `${this.groupsUrl}/${id}`;
 
-    if (!this.groups[id])
-      this.groups[id] = this.http.get(url)
-        .map(response => response.json() as Group)
-        .publishLast().refCount();
-    return this.groups[id];
+    return this.http.get(url)
+      .map(response => response.json() as Group)
+      .publishLast().refCount();
   }
 
   getGroupId(url_segment: string): Promise<number> {
-    const url = `/api/v1.0/groupId/${url_segment}`;
+    const url = `/api/v1.0/group-id/${url_segment}`;
 
     return this.http.get(url)
-      .map(response => response.json() as number)
+      .map(response => response.json().group_id as number)
       .toPromise();
   }
 
-  update(user: Group): Observable<Group> {
-    const url = `${this.groupsUrl}/${user.id}`;
+  update(group: Group): Observable<Group> {
+    const url = `${this.groupsUrl}/${group.group_id}`;
     return this.http
-      .put(url, JSON.stringify(user), { headers: this.headers })
-      .map(() => user)
+      .put(url, JSON.stringify(group), { headers: this.headers })
+      .map(() => group)
       .take(1);
   }
 
-  create(user: Group): Observable<Group> {
+  create(group: Group): Observable<Group> {
     return this.http
-      .post(this.groupsUrl, JSON.stringify(user), { headers: this.headers })
+      .post(this.groupsUrl, JSON.stringify(group), { headers: this.headers })
       .map(response => response.json() as Group)
       .take(1);
   }

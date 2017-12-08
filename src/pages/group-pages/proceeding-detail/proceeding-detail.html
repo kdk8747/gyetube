@@ -15,51 +15,51 @@
         <ion-buttons>{{proceeding?.title}}</ion-buttons>
       </ion-toolbar>
 
-      <ion-toolbar *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE && proceeding?.nextId == 0">
+      <ion-toolbar *ngIf="proceeding?.document_state == stateEnum.STATE_PENDING_CREATE && proceeding?.next_id == 0">
         <ion-buttons>
           {{'I18N_PENDING_CREATE' | translate}}
           <span *ngIf="needYou(proceeding)">
             <ion-icon name="alert" color="danger"></ion-icon>
             {{'I18N_NEED_YOUR_REVIEW' | translate}}
           </span>
-          - {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers.length}}/{{proceeding.attendees.length}})
+          - {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers_count}}/{{proceeding.attendees_count}})
         </ion-buttons>
       </ion-toolbar>
 
-      <p>{{proceeding?.meetingDate | localizedDate:'short'}}</p>
+      <p>{{proceeding?.meeting_datetime | localizedDate:'short'}}</p>
       <ion-buttons left>
         {{ 'I18N_ATTENDEES' | translate}}:
-        <grasscube-user *ngFor="let attendee of attendees" [user]="attendee | async"></grasscube-user>
+        <grasscube-user *ngFor="let attendee of proceeding?.attendees" [user]="attendee"></grasscube-user>
       </ion-buttons>
-      <ion-buttons left *ngIf="proceeding?.state == stateEnum.STATE_PENDING_CREATE && proceeding?.nextId == 0">
+      <ion-buttons left *ngIf="proceeding?.document_state == stateEnum.STATE_PENDING_CREATE && proceeding?.next_id == 0">
         {{ 'I18N_REVIEWED_BY' | translate}}:
-        <grasscube-user *ngFor="let reviewer of reviewers" [user]="reviewer | async"></grasscube-user>
+        <grasscube-user *ngFor="let reviewer of proceeding?.reviewers" [user]="reviewer"></grasscube-user>
       </ion-buttons>
 
       <p>{{proceeding?.description}}</p>
 
-      <ion-card *ngFor="let decision of decisions; let i=index">
-        <ion-item tappable (tap)="navigateToDecisionDetail(decision)">
+      <ion-card *ngFor="let decision of proceeding?.child_decisions; let i=index">
+        <ion-item tappable (tap)="navigateToDecisionDetail(decision.decision_id)">
           <ion-row align-items-center>
             <ion-col>
               <p>{{ 'I18N_DECISION' | translate }} {{i+1}}</p>
-              <grasscube-state-label [state]="(decision | async)?.state" [postfix]="(decision | async)?.title"></grasscube-state-label>
+              <grasscube-state-label [state]="decision.document_state" [postfix]="decision.title"></grasscube-state-label>
               <div style="height:10px"></div>
-              <p>{{ (decision | async)?.description }}</p>
-              <p text-right style="white-space: normal" *ngIf="(decision | async)?.accepters.length">
-                {{ 'I18N_ACCEPTERS' | translate}} {{ (decision | async)?.accepters.length }}
+              <p>{{ decision.description }}</p>
+              <p text-right style="white-space: normal" *ngIf="decision.accepters_count">
+                {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters_count }}
               </p>
-              <p text-right style="white-space: normal" *ngIf="(decision | async)?.rejecters.length">
-                {{ 'I18N_REJECTERS' | translate}} {{ (decision | async)?.rejecters.length }}
+              <p text-right style="white-space: normal" *ngIf="decision.rejecters_count">
+                {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters_count }}
               </p>
-              <p text-right style="white-space: normal" *ngIf="(decision | async)?.abstainers.length">
-                {{ 'I18N_ABSTAINERS' | translate}} {{ (decision | async)?.abstainers.length }}
+              <p text-right style="white-space: normal" *ngIf="decision.abstainers_count">
+                {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers_count }}
               </p>
-              <p text-right style="white-space: normal" *ngIf="(decision | async)?.totalElapsedTime">
-                {{ 'I18N_ELAPSED_TIME' | translate}} {{ (decision | async)?.totalElapsedTime }} {{ 'I18N_HOURS' | translate}}
+              <p text-right style="white-space: normal" *ngIf="decision.totalElapsedTime">
+                {{ 'I18N_ELAPSED_TIME' | translate}} {{ decision.totalElapsedTime }} {{ 'I18N_HOURS' | translate}}
               </p>
-              <p text-right style="white-space: normal" *ngIf="(decision | async)?.totalDifference">
-                {{ 'I18N_DIFFERENCE' | translate}} {{ (decision | async)?.totalDifference | number}}
+              <p text-right style="white-space: normal" *ngIf="decision.totalDifference">
+                {{ 'I18N_DIFFERENCE' | translate}} {{ decision.totalDifference | number}}
               </p>
             </ion-col>
             <ion-col col-auto>
@@ -84,7 +84,7 @@
         <button ion-button (tap)="onSubmit()">{{ 'I18N_SUBMIT' | translate }}</button>
       </ion-buttons>
 
-      <ion-toolbar *ngIf="proceeding?.prevId || proceeding?.nextId">
+      <ion-toolbar *ngIf="proceeding?.prev_id || proceeding?.next_id">
         <ion-buttons left *ngIf="proceeding?.prevId">
           <button ion-button icon-only (tap)="navigateToPrev()">
             <ion-icon name="arrow-back"></ion-icon>
@@ -93,10 +93,10 @@
             <br/> {{ 'I18N_REVISION' | translate}}
           </button>
         </ion-buttons>
-        <span *ngIf="proceeding?.nextId != 0">
+        <span *ngIf="proceeding?.next_id != 0">
           <p text-center>{{'I18N_PENDING_CREATE' | translate}} - {{'I18N_REJECTED' | translate}}</p>
         </span>
-        <ion-buttons right *ngIf="proceeding?.nextId">
+        <ion-buttons right *ngIf="proceeding?.next_id">
           <button ion-button icon-only (tap)="navigateToNext()">
             {{ 'I18N_NEXT' | translate}}
             <br/>

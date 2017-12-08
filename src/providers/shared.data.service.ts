@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Decision, User } from '../models';
+import { DecisionDetailElement, User } from '../models';
 
 
 @Injectable()
@@ -13,7 +13,7 @@ export class SharedDataService {
   proceedingAttendees: number[] = [];
   decisionListTimelineMode: boolean = false;
   decisionEditMode: boolean = false;
-  decisionChangesets: Decision[] = [];
+  decisionChangesets: DecisionDetailElement[] = [];
 
   headerGroupTitle: string = null;
   headerDetailTitle: string = null;

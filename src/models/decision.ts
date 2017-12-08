@@ -1,22 +1,45 @@
-import { State } from '../app/constants';
+import { DocumentState } from '../app/constants';
+import { ProceedingListElement, Voter, ActivityListElement, ReceiptListElement } from './';
 
-export class Decision {
+export class DecisionListElement {
   constructor(
-    public id: number,
-    public prevId: number, // 0: unused
-    public nextId: number, // 0: unused
-    public state: State,
-    public meetingDate: string,  // equals to parentProceeding.meetingDate
-    public expiryDate: string,
-    public abstainers: number[],
-    public accepters: number[],
-    public rejecters: number[],
+    public decision_id: number,
+    public prev_id: number, // 0: unused
+    public next_id: number, // 0: unused
+    public document_state: DocumentState,
+    public meeting_datetime: string,  // equals to parentProceeding.meetingDate
+    public expiry_datetime: string,
     public title: string,
     public description: string,
-    public parentProceeding: number,
-    public childActivities: number[],
-    public childReceipts: number[],
-    public totalElapsedTime: number,  // TODO
-    public totalDifference: number    // TODO
+
+    public abstainers_count: number,
+    public accepters_count: number,
+    public rejecters_count: number,
+    public child_activities_count: number,
+    public child_receipts_count: number,
+
+    public total_elapsed_time: number,  // TODO
+    public total_difference: number    // TODO
+  ) { }
+}
+
+export class DecisionDetailElement {
+  constructor(
+    public decision_id: number,
+    public prev_id: number, // 0: unused
+    public next_id: number, // 0: unused
+    public document_state: DocumentState,
+    public meeting_datetime: string,  // equals to parentProceeding.meetingDate
+    public expiry_datetime: string,
+    public title: string,
+    public description: string,
+
+    public voters: Voter[],
+    public parent_proceeding: ProceedingListElement,
+    public child_activities: ActivityListElement[],
+    public child_receipts: ReceiptListElement[],
+
+    public total_elapsedTime: number,  // TODO
+    public total_difference: number    // TODO
   ) { }
 }

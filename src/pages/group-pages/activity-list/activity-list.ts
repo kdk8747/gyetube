@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, ActivityService, SharedDataService } from '../../../providers';
-import { Activity } from '../../../models';
+import { ActivityListElement } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
@@ -14,7 +14,7 @@ import { Observable } from 'rxjs/Observable';
 export class ActivityListPage {
 
   groupId: number;
-  activities: Observable<Activity[]>;
+  activities: Observable<ActivityListElement[]>;
   creationPermitted: boolean = false;
 
   constructor(
@@ -36,7 +36,7 @@ export class ActivityListPage {
           console.log(error);
         });;
       this.activities = this.activityService.getActivities(this.groupId)
-        .map((activities: Activity[]) => this.sortByDateA(activities));
+        .map((activities: ActivityListElement[]) => this.sortByDateA(activities));
     });
   }
 
@@ -46,18 +46,18 @@ export class ActivityListPage {
     this.event.publish('TabsGroup_ShowTab');
   }
 
-  navigateToDetail(activityId: number) {
-    this.navCtrl.push('ActivityDetailPage', { id: activityId });
+  navigateToDetail(activity_id: number) {
+    this.navCtrl.push('ActivityDetailPage', { id: activity_id });
   }
 
   navigateToEditor() {
     this.navCtrl.push('ActivityEditorPage');
   }
 
-  sortByDateA(activities: Activity[]): Activity[] {
+  sortByDateA(activities: ActivityListElement[]): ActivityListElement[] {
     return activities.sort((h1, h2) => {
-      return h1.activityDate < h2.activityDate ? 1 :
-        (h1.activityDate > h2.activityDate ? -1 : 0);
+      return h1.activity_datetime < h2.activity_datetime ? 1 :
+        (h1.activity_datetime > h2.activity_datetime ? -1 : 0);
     });
   }
 }

@@ -1,56 +1,60 @@
-const models = require('../../../models');
+const db = require('../../../database');
 const debug = require('debug')('server');
 
 
-exports.getAll = (req, res) => {
-  models.receipt.findAll({
-    attributes: ['receipt_id', 'activity_id', 'decision_id', 'creator_id', 'modified_datetime', 'settlement_datetime',
-      'title', 'image_url', 'difference'],
-    where: { group_id: req.params.group_id }
-  }).then((result) => {
-    res.json(result.map(row => {
-      return {
-        id: row.dataValues.receipt_id,
-        creator: row.dataValues.creator_id,
-        modifiedDate: row.dataValues.modified_datetime,
-        settlementDate: row.dataValues.settlement_datetime,
-        title: row.dataValues.title,
-        imageUrl: row.dataValues.image_url,
-        difference: row.dataValues.difference,
-        childReceipts: [],//row.dataValues.decision_id
-      };
-    }));
-  }).catch((reason => {
-    debug(reason);
-    res.status(400).json({
+exports.getAll = async (req, res) => {
+  try {
+    let result = await db.execute(
+      'SELECT *\
+      FROM receipt\
+      WHERE group_id=?', [req.params.group_id]);
+    res.send(result[0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
-exports.getByID = (req, res) => {
-  models.receipt.findOne({
-    attributes: ['receipt_id', 'activity_id', 'decision_id', 'creator_id', 'modified_datetime', 'settlement_datetime',
-      'title', 'image_url', 'difference'],
-    where: { group_id: req.params.group_id, receipt_id: +req.params.receipt_id }
-  }).then((result) => {
-    res.json({
-      id: result.receipt_id,
-      creator: result.creator_id,
-      modifiedDate: result.modified_datetime,
-      settlementDate: result.settlement_datetime,
-      title: result.title,
-      imageUrl: result.image_url,
-      difference: result.difference,
-      childReceipts: [],//result.decision_id
-    });
-  }).catch((reason => {
-    res.status(400).json({
+exports.getByID = async (req, res) => {
+  try {
+    let receipt = await db.execute(
+      'SELECT *\
+      FROM receipt\
+      WHERE group_id=? AND receipt_id=?', [req.params.group_id, req.params.receipt_id]);
+
+    if (receipt[0][0].decision_id != null) {
+      let parent_decision = await db.execute(
+        'SELECT *\
+        FROM decision\
+        WHERE group_id=? AND decision_id=?', [req.params.group_id, receipt[0][0].decision_id]);
+      receipt[0][0].parent_decision = parent_decision[0][0];
+    }
+
+    if (receipt[0][0].activity_id != null) {
+      let parent_activity = await db.execute(
+        'SELECT *\
+        FROM activity\
+        WHERE group_id=? AND activity_id=?', [req.params.group_id, receipt[0][0].activity_id]);
+      receipt[0][0].parent_activity = parent_activity[0][0];
+    }
+
+    let creator = await db.execute(
+      'SELECT *\
+      FROM member\
+      WHERE group_id=? AND member_id=?', [req.params.group_id, receipt[0][0].creator_id]);
+    receipt[0][0].creator = creator[0][0];
+
+    res.send(receipt[0][0]);
+  }
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: reason
+      message: err
     });
-  }));
+  }
 }
 
 exports.getBalance = (req, res) => {

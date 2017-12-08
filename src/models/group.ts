@@ -1,10 +1,10 @@
 export class Group {
   constructor(
-    public id: number,
-    public urlSegment: string,
+    public group_id: number,
+    public url_segment: string,
     public title: string,
     public description: string,
-    public imageUrl: string,
-    public createdDate: string
+    public image_url: string,
+    public created_datetime: string
   ) { }
 }
