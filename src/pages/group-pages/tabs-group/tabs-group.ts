@@ -17,7 +17,7 @@ export class TabsGroupPage {
   tab4Root: string = 'ActivityListPage';
   tab5Root: string = 'ReceiptListPage';
 
-  responseTimeMs: number = 80;
+  responseTimeMs: number = 90;
 
   constructor(
     public element: ElementRef,
