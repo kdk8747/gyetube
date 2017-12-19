@@ -11,6 +11,5 @@ router.use('/roles', require('./roles'));
 
 router.use('/groups', require('./groups'));
 router.use('/group-id/:url_segment', require('./groups/group.controller').getID);
-router.use('/users', require('./users'));
 
 module.exports = router;

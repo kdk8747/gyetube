@@ -3,6 +3,18 @@ const db = require('../../../database');
 const debug = require('debug')('proceeding');
 
 
+exports.authRead = (req, res, next) => {
+  const READ = 2;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].proceeding & READ))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
 exports.getAll = async (req, res) => {
   try {
     let result = await db.execute(
