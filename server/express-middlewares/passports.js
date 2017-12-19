@@ -18,10 +18,10 @@ exports.initialize = () => {
 
             debug(_profile);
             done(null, {
-                id: 'nv' + String(_profile.id),
+                third_party_access_token: String(_profile.id),
                 name: _profile.nickname,
-                imageUrl: _profile.profile_image,
-                loggedInBy: 'naver'
+                image_url: _profile.profile_image,
+                third_party: 'naver'
             });
         }
     ));
@@ -36,10 +36,10 @@ exports.initialize = () => {
 
             debug(_profile);
             done(null, {
-                id: 'kk' + String(_profile.id),
+                third_party_access_token: String(_profile.id),
                 name: _profile.properties.nickname,
-                imageUrl: _profile.properties.thumbnail_image,
-                loggedInBy: 'kakao'
+                image_url: _profile.properties.thumbnail_image,
+                third_party: 'kakao'
             });
         }
     ));
@@ -55,10 +55,10 @@ exports.initialize = () => {
 
             debug(_profile);
             done(null, {
-                id: 'fb' + String(_profile.id),
+                third_party_access_token: String(_profile.id),
                 name: _profile.name,
-                imageUrl: _profile.picture.data.url,
-                loggedInBy: 'facebook'
+                image_url: _profile.picture.data.url,
+                third_party: 'facebook'
             });
         }
     ));

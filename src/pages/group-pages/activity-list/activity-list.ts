@@ -30,11 +30,11 @@ export class ActivityListPage {
   ionViewDidLoad() {
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.util.isPermitted('create', 'activities', this.groupId)
+      /*this.util.isPermitted('create', 'activities', this.groupId)
         .then(bool => this.creationPermitted = bool)
         .catch((error: any) => {
           console.log(error);
-        });;
+        });;*/
       this.activities = this.activityService.getActivities(this.groupId)
         .map((activities: ActivityListElement[]) => this.sortByDateA(activities));
     });

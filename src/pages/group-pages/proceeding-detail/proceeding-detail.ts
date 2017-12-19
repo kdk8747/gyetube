@@ -45,9 +45,9 @@ export class ProceedingDetailPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.util.getCurrentMember(this.groupId)
+      /*this.util.getCurrentMember(this.groupId)
         .then((member) => this.member = member)
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err));*/
       this.proceedingObs = this.proceedingService.getProceeding(this.groupId, this.id);
       this.proceedingObs.subscribe((proceeding: ProceedingDetailElement) => {
         this.proceeding = proceeding;

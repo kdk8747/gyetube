@@ -31,7 +31,7 @@ export class ProceedingListPage {
 
   ionViewDidLoad() {
     this.util.getCurrentGroupId().then(group_id => {
-      this.util.getCurrentMember(group_id)
+      /*this.util.getCurrentMember(group_id)
         .then((member) => this.member = member)
         .catch((err) => console.log(err));
 
@@ -39,7 +39,7 @@ export class ProceedingListPage {
         .then(bool => this.creationPermitted = bool)
         .catch((error: any) => {
           console.log(error);
-        });;
+        });;*/
       this.proceedings = this.proceedingService.getProceedings(group_id)
         .map((proceedings: ProceedingListElement[]) => this.filterDeletedProceedings(proceedings));
     });

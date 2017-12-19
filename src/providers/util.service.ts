@@ -60,85 +60,8 @@ export class UtilService {
 
   getCurrentUser(): Promise<User> {
     return this.getCurrentPayload().then(payload => {
-      return this.userService.getUser(payload.id).toPromise();
+      return new User(payload.id, decodeURIComponent(payload.name), payload.image_url, payload.third_party);
     });
-  }
-
-  getCurrentMember(group_id: number): Promise<MemberDetailElement> {
-    return this.getCurrentPayload().then(payload => {
-      return this.memberService.getMember(group_id, payload.id).toPromise();
-    });
-  }
-
-  getCurrentKnownGroups(): Promise<Group[]> {
-    return this.getCurrentPayload().then(payload => {
-      let groups: number[] = [];
-      for (let groupId in payload.permissions.groups)
-        groups.push(+groupId);
-      return Promise.all(groups.map((groupId: number) =>
-        this.groupService.getGroup(groupId).toPromise()));
-    });
-  }
-
-  convertToDataURLviaCanvas(url: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      let img = new Image();
-      img.setAttribute('crossOrigin', 'anonymous');
-      img.onload = function () {
-        let canvas = <HTMLCanvasElement>document.createElement('CANVAS'),
-          ctx = canvas.getContext('2d'),
-          dataURL: string;
-        canvas.height = 37;
-        canvas.width = 37;
-        ctx.drawImage(img,
-          0, 0, img.width, img.height,
-          0, 0, canvas.width, canvas.height
-        );
-        dataURL = canvas.toDataURL('image/png');
-        canvas = null;
-        resolve(dataURL);
-      };
-      img.src = url;
-    });
-  }
-
-  isPermitted(query_crud: string, category: string, groupId: number): Promise<boolean> {
-    let groupRoles;
-    return this.groupService.getGroup(groupId).toPromise()
-      .then((group: Group) => {
-        groupRoles = [
-          {id: 'anyone', name:'아무나', proceedings:'____', decisions:'____', activities:'_r__', receipts:'_r__'},
-          {id: 'member', name:'당원', proceedings:'_ru_', decisions:'_ru_', activities:'crud', receipts:'crud'},
-          {id: 'commitee', name:'운영위원', proceedings:'cru_', decisions:'_ru_', activities:'crud', receipts:'crud'}
-        ];//group.roles;
-        return this.getCurrentPayload();
-      }).then(payload => {
-        if (groupId in payload.permissions.groups) {
-          let userRoles: string[] = payload.permissions.groups[groupId];
-
-          let ret = false;
-          for (let i = 0; i < userRoles.length; i++)
-            for (let j = 0; j < groupRoles.length; j++)
-              if (groupRoles[j].id == userRoles[i]) {
-                let crud: string = '';
-                switch(category) {
-                  case 'proceedings': crud = groupRoles[j].proceedings; break;
-                  case 'decisions': crud = groupRoles[j].decisions; break;
-                  case 'activities': crud = groupRoles[j].activities; break;
-                  case 'receipts': crud = groupRoles[j].receipts; break;
-                }
-                switch(query_crud) {
-                  case 'create': ret = ret || crud.includes('c'); break;
-                  case 'read':   ret = ret || crud.includes('r'); break;
-                  case 'update': ret = ret || crud.includes('u'); break;
-                  case 'delete': ret = ret || crud.includes('d'); break;
-                }
-
-              }
-          return ret;
-        }
-        return false;
-      });;
   }
 
   onContentScroll(event) {

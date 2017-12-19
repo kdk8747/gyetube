@@ -2,9 +2,7 @@ export class User {
   constructor(
     public id: string,
     public name: string,
-    public imageUrl: string,
-    public imageBase64: string,
-    public loggedInBy: string
-    //public permissions: JSON
+    public image_url: string,
+    public third_party: string
   ) { }
 }

@@ -21,10 +21,10 @@
     </ion-list-header>
     <ion-item *ngIf="sharedDataService.loggedIn">
       <ion-avatar item-start>
-        <img [src]="sharedDataService.loggedInUser.imageUrl">
+        <img [src]="sharedDataService.loggedInUser.image_url">
       </ion-avatar>
       <h2>{{ sharedDataService.loggedInUser.name }}</h2>
-      <p>{{ sharedDataService.loggedInUser.loggedInBy }}</p>
+      <p>{{ sharedDataService.loggedInUser.third_party }}</p>
     </ion-item>
     <button *ngIf="!sharedDataService.loggedIn" ion-item (tap)="onMenuItemPush('LoginPage');">
       <ion-icon name="contact" item-left></ion-icon>

@@ -1,5 +1,5 @@
 const db = require('../../../database');
-const debug = require('debug')('server');
+const debug = require('debug')('decision');
 
 
 exports.getAll = async (req, res) => {

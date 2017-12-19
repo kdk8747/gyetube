@@ -25,13 +25,6 @@ export class HeaderComponent {
         .then((user: User) => {
           this.sharedDataService.loggedIn = true;
           this.sharedDataService.loggedInUser = user;
-          return this.util.convertToDataURLviaCanvas('http://reverse-proxy.grassroots.kr/' + user.imageUrl);
-        }).then(base64Img => {
-          if (base64Img !== this.sharedDataService.loggedInUser.imageBase64) {
-            this.sharedDataService.loggedInUser.imageBase64 = base64Img;
-            return this.userService.update(this.sharedDataService.loggedInUser).toPromise();
-          }
-          return Promise.reject('user.imageBase64 has been updated already');
         }).catch((error: any) => {
           console.log(error);
         });

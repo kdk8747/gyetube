@@ -31,8 +31,7 @@
     <button ion-button icon-only menuToggle end *ngIf="!sharedDataService.paneSplited">
       <ion-icon *ngIf="!sharedDataService.loggedIn" name="contact"></ion-icon>
       <ion-avatar *ngIf="sharedDataService.loggedIn">
-        <img *ngIf="!sharedDataService.loggedInUser.imageBase64" [src]="sharedDataService.loggedInUser.imageUrl">
-        <img *ngIf="sharedDataService.loggedInUser.imageBase64" [src]="sharedDataService.loggedInUser.imageBase64">
+        <img [src]="sharedDataService.loggedInUser.image_url">
       </ion-avatar>
     </button>
   </ion-navbar>

@@ -1,6 +1,6 @@
 const decisionController = require('../decisions/decision.controller');
 const db = require('../../../database');
-const debug = require('debug')('server');
+const debug = require('debug')('proceeding');
 
 
 exports.getAll = async (req, res) => {
