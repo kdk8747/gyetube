@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { ReceiptListElement, ReceiptDetailElement } from '../models';
+import { ReceiptListElement, ReceiptDetailElement, ReceiptEditorElement } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -21,18 +21,30 @@ export class ReceiptService {
   getReceipts(group_id: number): Observable<ReceiptListElement[]> {
     const url = `${this.receiptsUrl}/${group_id}`;
     return this.http.get(url)
-      .map(response => response.json() as ReceiptListElement[])
+      .map(response => {
+        let receipts = response.json() as ReceiptListElement[];
+        receipts.map(receipt => {
+          receipt.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          receipt.settlement_datetime += 'Z';
+        })
+        return receipts;
+      })
       .take(1);
   }
 
   getReceipt(group_id: number, receipt_id: number): Observable<ReceiptDetailElement> {
     const url = `${this.receiptsUrl}/${group_id}/${receipt_id}`;
     return this.http.get(url)
-      .map(response => response.json() as ReceiptDetailElement)
+      .map(response => {
+        let receipt = response.json() as ReceiptDetailElement;
+        receipt.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        receipt.settlement_datetime += 'Z';
+        return receipt;
+      })
       .take(1);
   }
 
-  update(group_id: number, receipt: ReceiptDetailElement): Observable<ReceiptDetailElement> {
+  update(group_id: number, receipt: ReceiptEditorElement): Observable<ReceiptEditorElement> {
     const url = `${this.receiptsUrl}/${group_id}/${receipt.receipt_id}`;
     return this.http
       .put(url, JSON.stringify(receipt), { headers: this.headers })
@@ -40,11 +52,11 @@ export class ReceiptService {
       .take(1);
   }
 
-  create(group_id: number, receipt: ReceiptDetailElement): Observable<ReceiptDetailElement> {
+  create(group_id: number, receipt: ReceiptEditorElement): Observable<void> {
     const url = `${this.receiptsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(receipt), { headers: this.headers })
-      .map(response => response.json() as ReceiptDetailElement)
+      .map(() => null)
       .take(1);
   }
 

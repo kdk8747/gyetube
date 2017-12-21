@@ -2,10 +2,46 @@ const db = require('../../../database');
 const debug = require('debug')('receipt');
 
 
+exports.authCreate = (req, res, next) => {
+  const CREATE = 1;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].receipt & CREATE))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
 exports.authRead = (req, res, next) => {
   const READ = 2;
   if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
     && (req.decoded.permissions.groups[req.params.group_id].receipt & READ))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
+exports.authUpdate = (req, res, next) => {
+  const UPDATE = 4;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].receipt & UPDATE))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
+exports.authDelete = (req, res, next) => {
+  const DELETE = 8;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].receipt & DELETE))
     next();
   else
     res.status(403).json({
@@ -36,6 +72,7 @@ exports.getByID = async (req, res) => {
       'SELECT *\
       FROM receipt\
       WHERE group_id=? AND receipt_id=?', [req.params.group_id, req.params.receipt_id]);
+    debug(receipt[0]);
 
     if (receipt[0][0].decision_id != null) {
       let parent_decision = await db.execute(
@@ -69,98 +106,115 @@ exports.getByID = async (req, res) => {
   }
 }
 
-exports.getBalance = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    res.json(0);
+exports.getBalance = async (req, res) => {
+  try {
+    let result = await db.execute(
+      'SELECT *\
+      FROM receipt\
+      WHERE group_id=?', [req.params.group_id]);
+    res.send(result[0]);
   }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.decoded && req.params.group in req.decoded.permissions.groups)
-      res.json(0);
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: 'groupId: not found'
+      message: err
     });
+  }
 }
 
-exports.updateByID = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    let i = receipts2.findIndex(item => item.id === +req.params.id);
-    receipts2[i] = req.body;
+exports.updateByID = async (req, res) => {
+  try {
+    let result = await db.execute(
+      'SELECT *\
+      FROM receipt\
+      WHERE group_id=? AND receipt_id=?', [req.params.group_id, req.params.receipt_id]);
+    res.send(result[0]);
+  }
+  catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err
+    });
+  }
+}
+
+exports.create = async (req, res) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    let member_id = await conn.query(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.params.group_id, req.decoded.user_id]);
+    debug(member_id[0]);
+
+    debug(req.body);
+    if (req.body.decision_id || req.body.activity_id) {
+
+      if (req.body.decision_id) {
+        await conn.query(
+          'UPDATE decision\
+          SET total_difference=total_difference+?\
+          WHERE group_id=? AND decision_id=?', [req.body.difference, req.params.group_id, req.body.decision_id]);
+      }
+      if (req.body.activity_id) {
+        await conn.query(
+          'UPDATE activity\
+          SET total_difference=total_difference+?\
+          WHERE group_id=? AND activity_id=?', [req.body.difference, req.params.group_id, req.body.activity_id]);
+        await conn.query(
+          'UPDATE decision D\
+            INNER JOIN activity A ON D.group_id=A.group_id AND D.decision_id=A.decision_id\
+          SET D.total_difference=D.total_difference+?\
+          WHERE A.group_id=? AND A.activity_id=?', [req.body.difference, req.params.group_id, req.body.activity_id]);
+      }
+
+      await conn.query(
+        'INSERT INTO receipt\
+        VALUES(?,GET_SEQ(?,"receipt"),?,?,?, ?,?,?,?,?)', [
+          req.params.group_id,
+          req.params.group_id,
+          req.body.decision_id,
+          req.body.activity_id,
+          member_id[0][0].member_id,
+          new Date(req.body.modified_datetime).toISOString().substring(0, 19).replace('T', ' '),
+          new Date(req.body.settlement_datetime).toISOString().substring(0, 19).replace('T', ' '),
+          req.body.title,
+          req.body.image_url,
+          req.body.difference,
+        ]);
+    }
+    else {
+      throw 'need at least one parent document';
+    }
+    await conn.commit();
+    conn.release();
+
     res.send();
   }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups) {
-      let i = receipts.findIndex(item => item.id === +req.params.id);
-      receipts[i] = req.body;
-      res.send();
+  catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
     }
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
+    res.status(500).json({
       success: false,
-      message: 'groupId: not found'
+      message: err
     });
+  }
 }
 
-exports.create = (req, res) => {
-  let newHero = req.body;
-  if (req.params.group === 'examplelocalparty') {
-    newHero['id'] = receiptID2++;
-    newHero['creator'] = req.decoded.id;
-    receipts2.push(newHero);
-    res.json(newHero);
+exports.deleteByID = async (req, res) => {
+  try {
+    let result = await db.execute(
+      'DELETE FROM receipt\
+      WHERE group_id=? AND receipt_id=?', [req.params.group_id, req.params.receipt_id]);
+    res.send(result[0]);
   }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups) {
-      newHero['id'] = receiptID++;
-      newHero['creator'] = req.decoded.id;
-      receipts.push(newHero);
-      res.json(newHero);
-    }
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
+  catch (err) {
+    res.status(500).json({
       success: false,
-      message: 'groupId: not found'
+      message: err
     });
-}
-
-exports.deleteByID = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    receipts2 = receipts2.filter(h => h.id !== +req.params.id);
-    res.send();
   }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups) {
-      receipts = receipts.filter(h => h.id !== +req.params.id);
-      res.send();
-    }
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
-      success: false,
-      message: 'groupId: not found'
-    });
 }

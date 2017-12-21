@@ -107,9 +107,9 @@
         <ion-item tappable (tap)="navigateToReceiptDetail(receipt.receipt_id)">
           <ion-row align-items-center>
             <ion-col>
-              <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ (receipt | async)?.title }}</p>
+              <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ receipt.title }}</p>
               <p text-right style="white-space: normal">
-                {{ 'I18N_DIFFERENCE' | translate}} {{ (receipt | async)?.difference | number}}
+                {{ 'I18N_DIFFERENCE' | translate}} {{ receipt.difference | number}}
               </p>
             </ion-col>
             <ion-col col-auto>

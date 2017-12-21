@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, ReceiptService, ActivityService, DecisionService, AmazonService, SharedDataService } from '../../../providers';
-import { ReceiptDetailElement, ActivityDetailElement, DecisionListElement, AmazonSignature } from '../../../models';
+import { ReceiptEditorElement, ActivityListElement, DecisionListElement, AmazonSignature } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -18,7 +18,7 @@ export class ReceiptEditorPage {
   groupId: number;
   isNative: boolean = false;
   newReceiptImageFile: File = null;
-  activities: Observable<ActivityDetailElement[]>;
+  activities: Observable<ActivityListElement[]>;
   decisions: Observable<DecisionListElement[]>;
   activitySelected: boolean = true;
 
@@ -49,7 +49,7 @@ export class ReceiptEditorPage {
 
     this.isNative = this.util.isNativeApp();
   }
-/*
+
   ionViewDidLoad() {
   }
 
@@ -77,7 +77,7 @@ export class ReceiptEditorPage {
   onChangeReceiptPhoto(event: any) {
     this.newReceiptImageFile = event.target.files[0] as File;
 
-    let preview = event.srcElement.nextElementSibling;
+    let preview = event.srcElement.nextElementSibling.nextElementSibling;
     let file: File = this.newReceiptImageFile;
     let reader = new FileReader();
 
@@ -99,8 +99,8 @@ export class ReceiptEditorPage {
       || !this.form.valid) return;
     this.form.value.title = this.form.value.title.trim();
 
-    let newReceipt = new Receipt(0, new Date(Date.now()).toISOString(), this.form.value.settlementDate, 0,
-      this.form.value.title, +this.form.value.difference, 0, '',
+    let newReceipt = new ReceiptEditorElement(0, new Date(Date.now()).toISOString(), this.form.value.settlementDate, 0,
+      this.form.value.title, +this.form.value.difference, '',
       this.activitySelected ? +this.parentActivity : 0,
       this.activitySelected ? 0 : +this.parentDecision);
 
@@ -117,11 +117,11 @@ export class ReceiptEditorPage {
           let regexp = /<Location>(.+)<\/Location>/;
           let result = regexp.exec(xml);
           if (result.length < 2) return Promise.reject('Unknown XML format');
-          newReceipt.imageUrl = result[1];
+          newReceipt.image_url = result[1];
           return this.receiptService.create(this.groupId, newReceipt).toPromise();
         })
         .then(() => this.navCtrl.setRoot('ReceiptListPage'))
         .catch(() => { console.log('new receipt failed') });
     }
-  }*/
+  }
 }
