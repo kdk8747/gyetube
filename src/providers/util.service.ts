@@ -58,9 +58,28 @@ export class UtilService {
     });
   }
 
+  isPermitted(query_crud: string, category: string, groupId: number): Promise<boolean> {
+    return this.getCurrentPayload()
+    .then((payload) => {
+      if (groupId in payload.permissions.groups) {
+        let permission = payload.permissions.groups[groupId][category];
+
+        switch(query_crud) {
+          case 'create': return (permission & 1) != 0;
+          case 'read':   return (permission & 2) != 0;
+          case 'update': return (permission & 4) != 0;
+          case 'delete': return (permission & 8) != 0;
+          default: console.log('Unknown query_crud');
+        }
+        return false;
+      }
+      return false;
+    });
+  }
+
   getCurrentUser(): Promise<User> {
     return this.getCurrentPayload().then(payload => {
-      return new User(payload.id, decodeURIComponent(payload.name), payload.image_url, payload.third_party);
+      return new User(payload.user_id, decodeURIComponent(payload.name), payload.image_url, payload.third_party);
     });
   }
 

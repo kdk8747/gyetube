@@ -30,11 +30,11 @@ export class ReceiptListPage {
   ionViewDidLoad() {
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      /*this.util.isPermitted('create', 'receipts', this.groupId)
+      this.util.isPermitted('create', 'receipt', this.groupId)
         .then(bool => this.creationPermitted = bool)
         .catch((error: any) => {
           console.log(error);
-        });;*/
+        });
       this.receipts = this.receiptService.getReceipts(this.groupId)
         .map((receipts: ReceiptListElement[]) => this.sortByDateR(receipts))
         .map((receipts: ReceiptListElement[]) => this.setBalance(receipts));

@@ -21,7 +21,8 @@
     "jsonwebtoken": "7.4.1",
     "mysql2": "1.5.1",
     "passport": "0.3.2",
-    "passport-facebook": "2.1.1"
+    "passport-facebook": "2.1.1",
+    "uuid": "3.1.0"
   },
   "devDependencies": {
     "dotenv-safe": "4.0.4",
