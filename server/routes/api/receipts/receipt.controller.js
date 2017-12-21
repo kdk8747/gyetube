@@ -171,7 +171,7 @@ exports.create = async (req, res) => {
 
       await conn.query(
         'INSERT INTO receipt\
-        VALUES(?,GET_SEQ(?,"receipt"),?,?,?, ?,?,?,?,?)', [
+        VALUES(?,GET_SEQ(?,"receipt"),?,?,?, ?,?,?,?,?)', [ // GET_SEQ http://blog.naver.com/PostView.nhn?blogId=platinasnow&logNo=220262549568
           req.params.group_id,
           req.params.group_id,
           req.body.decision_id,
