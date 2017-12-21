@@ -21,6 +21,7 @@ export class ReceiptDetailElement {
     public title: string,
     public difference: number,
     public image_url: string,    // 영수증 사진의 금액과 기록된 차액을 비교하는 작업이 편하려면 사진은 한장이어야 한다.
+
     public parent_activity: ActivityListElement, // parent는 activity 또는
     public parent_decision: DecisionListElement  // decision 둘 중 하나만 가질 수 있다.
   ) { }
@@ -35,7 +36,8 @@ export class ReceiptEditorElement {
     public title: string,
     public difference: number,
     public image_url: string,    // 영수증 사진의 금액과 기록된 차액을 비교하는 작업이 편하려면 사진은 한장이어야 한다.
-    public activity_id: number, // parent는 activity 또는
-    public decision_id: number  // decision 둘 중 하나만 가질 수 있다.
+
+    public parent_activity_id: number, // parent는 activity 또는
+    public parent_decision_id: number  // decision 둘 중 하나만 가질 수 있다.
   ) { }
 }

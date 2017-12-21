@@ -23,11 +23,11 @@ export class ReceiptService {
     return this.http.get(url)
       .map(response => {
         let receipts = response.json() as ReceiptListElement[];
-        receipts.map(receipt => {
+        return receipts.map(receipt => {
           receipt.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
           receipt.settlement_datetime += 'Z';
-        })
-        return receipts;
+          return receipt;
+        });
       })
       .take(1);
   }

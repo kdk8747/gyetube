@@ -20,7 +20,7 @@
           <grasscube-user [user]="activity?.creator"></grasscube-user>
         </ion-col>
         <ion-col>
-          <p>{{activity?.creator.name}}</p>
+          <p>{{activity?.creator?.name}}</p>
           <p>{{activity?.modified_datetime | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>

@@ -149,44 +149,44 @@ exports.create = async (req, res) => {
     debug(member_id[0]);
 
     debug(req.body);
-    if (req.body.decision_id || req.body.activity_id) {
+    if (!req.body.parent_decision_id && !req.body.parent_activity_id) throw 'need at least one parent document';
+    if (!req.body.settlement_datetime) throw 'need settlement_datetime';
+    if (req.body.difference == undefined) throw 'need difference';
 
-      if (req.body.decision_id) {
-        await conn.query(
-          'UPDATE decision\
-          SET total_difference=total_difference+?\
-          WHERE group_id=? AND decision_id=?', [req.body.difference, req.params.group_id, req.body.decision_id]);
-      }
-      if (req.body.activity_id) {
-        await conn.query(
-          'UPDATE activity\
-          SET total_difference=total_difference+?\
-          WHERE group_id=? AND activity_id=?', [req.body.difference, req.params.group_id, req.body.activity_id]);
-        await conn.query(
-          'UPDATE decision D\
-            INNER JOIN activity A ON D.group_id=A.group_id AND D.decision_id=A.decision_id\
-          SET D.total_difference=D.total_difference+?\
-          WHERE A.group_id=? AND A.activity_id=?', [req.body.difference, req.params.group_id, req.body.activity_id]);
-      }
 
+    if (req.body.parent_decision_id) {
       await conn.query(
-        'INSERT INTO receipt\
+        'UPDATE decision\
+        SET total_difference=total_difference+?\
+        WHERE group_id=? AND decision_id=?', [req.body.difference, req.params.group_id, req.body.parent_decision_id]);
+    }
+    if (req.body.parent_activity_id) {
+      await conn.query(
+        'UPDATE activity\
+        SET total_difference=total_difference+?\
+        WHERE group_id=? AND activity_id=?', [req.body.difference, req.params.group_id, req.body.parent_activity_id]);
+      await conn.query(
+        'UPDATE decision D\
+          INNER JOIN activity A ON D.group_id=A.group_id AND D.decision_id=A.decision_id\
+        SET D.total_difference=D.total_difference+?\
+        WHERE A.group_id=? AND A.activity_id=?', [req.body.difference, req.params.group_id, req.body.parent_activity_id]);
+    }
+
+    await conn.query(
+      'INSERT INTO receipt\
         VALUES(?,GET_SEQ(?,"receipt"),?,?,?, ?,?,?,?,?)', [ // GET_SEQ http://blog.naver.com/PostView.nhn?blogId=platinasnow&logNo=220262549568
-          req.params.group_id,
-          req.params.group_id,
-          req.body.decision_id,
-          req.body.activity_id,
-          member_id[0][0].member_id,
-          new Date(req.body.modified_datetime).toISOString().substring(0, 19).replace('T', ' '),
-          new Date(req.body.settlement_datetime).toISOString().substring(0, 19).replace('T', ' '),
-          req.body.title,
-          req.body.image_url,
-          req.body.difference,
-        ]);
-    }
-    else {
-      throw 'need at least one parent document';
-    }
+        req.params.group_id,
+        req.params.group_id,
+        req.body.parent_decision_id,
+        req.body.parent_activity_id,
+        member_id[0][0].member_id,
+        new Date(req.body.modified_datetime).toISOString().substring(0, 19).replace('T', ' '),
+        new Date(req.body.settlement_datetime).toISOString().substring(0, 19).replace('T', ' '),
+        req.body.title,
+        req.body.image_url,
+        req.body.difference,
+      ]);
+
     await conn.commit();
     conn.release();
 

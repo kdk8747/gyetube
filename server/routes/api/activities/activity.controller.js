@@ -67,6 +67,9 @@ exports.getByID = async (req, res) => {
       WHERE group_id=? AND member_id=?', [req.params.group_id, activity[0][0].creator_id]);
     activity[0][0].creator = creator[0][0];
 
+    activity[0][0].image_urls = JSON.parse(activity[0][0].image_urls);
+    activity[0][0].document_urls = JSON.parse(activity[0][0].document_urls);
+
     res.send(activity[0][0]);
   }
   catch (err) {
@@ -102,32 +105,66 @@ exports.updateByID = (req, res) => {
     });
 }
 
-exports.create = (req, res) => {
-  let newActivity = req.body;
-  if (req.params.group === 'examplelocalparty') {
-    newActivity['id'] = activityID2++;
-    newActivity['creator'] = req.decoded.id;
-    activities2.push(newActivity);
-    res.json(newActivity);
+exports.create = async (req, res) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    let member_id = await conn.query(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.params.group_id, req.decoded.user_id]);
+    debug(member_id[0]);
+
+    debug(req.body);
+    if (!req.body.activity_datetime) throw 'invalid activity_datetime';
+    if (!(req.body.elapsed_time >= 0)) throw 'need elapsed_time';
+    if (!(req.body.participant_ids.length > 0)) throw 'need at least one participant';
+    if (!req.body.parent_decision_id) throw 'need parent document';
+
+    await conn.query(
+      'UPDATE decision\
+      SET total_elapsed_time=total_elapsed_time+?*?\
+      WHERE group_id=? AND decision_id=?', [req.body.elapsed_time, req.body.participant_ids.length, req.params.group_id, req.body.parent_decision_id]);
+
+    let activity_new_id = await conn.query('SELECT GET_SEQ(?,"activity") AS new_id', [req.params.group_id]);
+
+    await conn.query(
+      'INSERT INTO activity\
+      VALUES(?,?,?,?,?, ?,?,?,?,?, ?,?)', [ // GET_SEQ http://blog.naver.com/PostView.nhn?blogId=platinasnow&logNo=220262549568
+        req.params.group_id,
+        activity_new_id[0][0].new_id,
+        req.body.parent_decision_id,
+        member_id[0][0].member_id,
+        new Date(req.body.modified_datetime).toISOString().substring(0, 19).replace('T', ' '),
+        new Date(req.body.activity_datetime).toISOString().substring(0, 19).replace('T', ' '),
+        req.body.title,
+        req.body.description,
+        JSON.stringify(req.body.image_urls),
+        JSON.stringify(req.body.document_urls),
+        req.body.elapsed_time,
+        0 //req.body.total_difference,
+      ]);
+
+    await Promise.all(req.body.participant_ids.map(
+      participant_id => conn.query(
+        'INSERT INTO participant\
+        VALUES(?,?,?)', [req.params.group_id, activity_new_id[0][0].new_id, participant_id])));
+
+    await conn.commit();
+    conn.release();
+
+    res.send();
   }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups) {
-      newActivity['id'] = activityID++;
-      newActivity['creator'] = req.decoded.id;
-      activities.push(newActivity);
-      res.json(newActivity);
+  catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
     }
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
+    res.status(500).json({
       success: false,
-      message: 'groupId: not found'
+      message: err
     });
+  }
 }
 
 exports.deleteByID = (req, res) => {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { ActivityListElement, ActivityDetailElement } from '../models';
+import { ActivityListElement, ActivityDetailElement, ActivityEditorElement } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -21,7 +21,14 @@ export class ActivityService {
   getActivities(group_id: number): Observable<ActivityListElement[]> {
     const url = `${this.activitiesUrl}/${group_id}`;
     return this.http.get(url)
-      .map(response => response.json() as ActivityListElement[])
+      .map(response => {
+        let activities = response.json() as ActivityListElement[];
+        return activities.map(activity => {
+          activity.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          activity.activity_datetime += 'Z';
+          return activity;
+        });
+      })
       .take(1);
   }
 
@@ -29,7 +36,12 @@ export class ActivityService {
     const url = `${this.activitiesUrl}/${group_id}/${activity_id}`;
 
     return this.http.get(url)
-      .map(response => response.json() as ActivityDetailElement)
+      .map(response => {
+        let activity = response.json() as ActivityDetailElement;
+        activity.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        activity.activity_datetime += 'Z';
+        return activity;
+      })
       .take(1);
   }
 
@@ -41,11 +53,11 @@ export class ActivityService {
       .take(1);
   }
 
-  create(group_id: number, activity: ActivityDetailElement): Observable<ActivityDetailElement> {
+  create(group_id: number, activity: ActivityEditorElement): Observable<void> {
     const url = `${this.activitiesUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(activity), { headers: this.headers })
-      .map(response => response.json() as ActivityDetailElement)
+      .map(() => null)
       .take(1);
   }
 

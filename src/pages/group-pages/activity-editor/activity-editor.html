@@ -15,14 +15,15 @@
         <ion-buttons>{{ 'I18N_ACTIVITY' | translate }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
       </ion-toolbar>
 
+      <ion-item *ngIf="!isNative">
+        {{ 'I18N_PHOTOS' | translate }}
+        <input type="file" (change)="onChangeActivityPhoto($event)" accept="image/*" />
+        <div style="height:56px"></div>
+        <img src="" style="width: auto; height: auto">
+      </ion-item>
+
       <form [formGroup]="form">
         <ion-list>
-          <ion-item *ngIf="!isNative">
-            {{ 'I18N_PHOTOS' | translate }}
-            <!-- {{ 'I18N_OR' | translate }} {{ 'I18N_DOCUMENTS' | translate }} -->
-            <input type="file" (change)="onChangeActivityPhoto($event)" accept="image/*" />
-            <img src="" style="width: auto; height: auto">
-          </ion-item>
           <ion-item *ngIf="isNative">
             <ion-label>{{ 'I18N_PHOTOS' | translate }}</ion-label>
           </ion-item>
@@ -52,7 +53,7 @@
           <ion-item>
             <ion-select formControlName="participants" multiple="true" [selectOptions]="{title: ('I18N_PARTICIPANTS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!form.controls.participants.valid && (form.controls.participants.dirty || submitAttempt)">
-              <ion-option *ngFor="let member of members | async" [value]="member.id">
+              <ion-option *ngFor="let member of members | async" [value]="member.member_id">
                 {{member.name}}
               </ion-option>
             </ion-select>
@@ -64,7 +65,7 @@
           <ion-item>
             <ion-select formControlName="parentDecision" [selectOptions]="{title: ('I18N_RELATED_DECISION' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}"
               [class.invalid]="!form.controls.parentDecision.valid && (form.controls.parentDecision.dirty || submitAttempt)">
-              <ion-option *ngFor="let decision of decisions | async" [value]="decision.id">{{decision.title}}</ion-option>
+              <ion-option *ngFor="let decision of decisions | async" [value]="decision.decision_id">{{decision.title}}</ion-option>
             </ion-select>
           </ion-item>
 

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, MemberService, GroupService, ActivityService, DecisionService, AmazonService, SharedDataService } from '../../../providers';
-import { MemberDetailElement, ActivityDetailElement, DecisionListElement, AmazonSignature } from '../../../models';
+import { MemberListElement, ActivityEditorElement, DecisionListElement, AmazonSignature } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -20,7 +20,7 @@ export class ActivityEditorPage {
   isNative: boolean = false;
   newActivityImageFile: File = null;
   decisions: Observable<DecisionListElement[]>;
-  members: Observable<MemberDetailElement[]>;
+  members: Observable<MemberListElement[]>;
 
   form: FormGroup;
   submitAttempt: boolean = false;
@@ -40,7 +40,7 @@ export class ActivityEditorPage {
     public translate: TranslateService
   ) {
     this.form = formBuilder.group({
-      title: ['', Validators.compose([Validators.maxLength(30), Validators.required])],
+      title: ['', Validators.compose([Validators.maxLength(32), Validators.required])],
       activityDate: [this.util.toIsoStringWithTimezoneOffset(new Date()), Validators.required],
       elapsedTime: ['', Validators.compose([Validators.pattern('[0-9]*'), Validators.required])],
       description: ['', Validators.compose([Validators.maxLength(1024), Validators.required])],
@@ -49,7 +49,7 @@ export class ActivityEditorPage {
     });
     this.isNative = this.util.isNativeApp();
   }
-/*
+
   ionViewDidLoad() {
   }
 
@@ -74,16 +74,16 @@ export class ActivityEditorPage {
       this.navCtrl.pop();
   }
 
-  onChangeActivityPhoto(event: any) { */
+  onChangeActivityPhoto(event: any) {
     /*let fileList = event.target.files;
     this.newActivityFiles = [];
     for (let i = 0; i < fileList.length; i++) {
       this.newActivityFiles.push(event.target.files[i] as File);
     }*/
-/*
+
     this.newActivityImageFile = event.target.files[0] as File;
 
-    let preview = event.srcElement.nextElementSibling;
+    let preview = event.srcElement.nextElementSibling.nextElementSibling;
     let file: File = this.newActivityImageFile;
     let reader = new FileReader();
 
@@ -105,9 +105,9 @@ export class ActivityEditorPage {
     this.form.value.title = this.form.value.title.trim();
     this.form.value.description = this.form.value.description.trim();
 
-    let newActivity = new Activity(0, new Date(Date.now()).toISOString(), this.form.value.activityDate, 0,
+    let newActivity = new ActivityEditorElement(0, new Date(Date.now()).toISOString(), this.form.value.activityDate, 0,
       this.form.value.participants, this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
-      +this.form.value.parentDecision, [], 0);
+      +this.form.value.parentDecision, 0);
 
 
     if (!this.newActivityImageFile) {
@@ -123,12 +123,11 @@ export class ActivityEditorPage {
           let regexp = /<Location>(.+)<\/Location>/;
           let result = regexp.exec(xml);
           if (result.length < 2) return Promise.reject('Unknown XML format');
-          newActivity.imageUrls.push(result[1]);
+          newActivity.image_urls.push(result[1]);
           return this.activityService.create(this.groupId, newActivity).toPromise();
         })
         .then(() => this.navCtrl.setRoot('ActivityListPage'))
         .catch(() => { console.log('new receipt failed') });
     }
   }
-*/
 }
