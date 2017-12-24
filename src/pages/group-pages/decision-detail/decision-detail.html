@@ -24,17 +24,17 @@
 
       <div style="height:10px"></div>
 
-      <ion-buttons left *ngIf="accepters.length">
+      <ion-buttons left *ngIf="decision?.accepters.length">
         {{ 'I18N_ACCEPTERS' | translate}}:
-        <grasscube-user *ngFor="let accepter of accepters" [user]="accepter"></grasscube-user>
+        <grasscube-user *ngFor="let accepter of decision.accepters" [user]="accepter"></grasscube-user>
       </ion-buttons>
-      <ion-buttons left *ngIf="rejecters.length">
+      <ion-buttons left *ngIf="decision?.rejecters.length">
         {{ 'I18N_REJECTERS' | translate}}:
-        <grasscube-user *ngFor="let rejecter of rejecters" [user]="rejecter"></grasscube-user>
+        <grasscube-user *ngFor="let rejecter of decision.rejecters" [user]="rejecter"></grasscube-user>
       </ion-buttons>
-      <ion-buttons left *ngIf="abstainers.length">
+      <ion-buttons left *ngIf="decision?.abstainers.length">
         {{ 'I18N_ABSTAINERS' | translate}}:
-        <grasscube-user *ngFor="let abstainer of abstainers" [user]="abstainer"></grasscube-user>
+        <grasscube-user *ngFor="let abstainer of decision.abstainers" [user]="abstainer"></grasscube-user>
       </ion-buttons>
 
       <ion-card *ngIf="decision?.parent_proceeding">
@@ -61,7 +61,7 @@
             </ion-col>
             <ion-col>
               <p>{{ 'I18N_MEMBER' | translate }}{{i+1}}</p>
-              <grasscube-state-label [state]="member.document_state" [postfix]="member.name"></grasscube-state-label>
+              <p>{{ 'I18N_' + member.document_state | translate}} - {{ member.name }}</p>
             </ion-col>
           </ion-row>
         </ion-item>
@@ -76,7 +76,7 @@
             </ion-col>
             <ion-col>
               <p>{{ 'I18N_ROLE' | translate }}{{i+1}}</p>
-              <grasscube-state-label [state]="role.document_state" [postfix]="role.name"></grasscube-state-label>
+              <p>{{ 'I18N_' + role.document_state | translate}} - {{ role.name }}</p>
             </ion-col>
           </ion-row>
         </ion-item>
@@ -136,7 +136,7 @@
           </button>
         </ion-buttons>
         <p text-center>
-          <grasscube-state-label [state]="decision?.document_state"></grasscube-state-label>
+          {{ 'I18N_' + decision?.document_state | translate}}
         </p>
         <ion-buttons right *ngIf="decision?.document_state <= 2 && decision?.next_id">
           <button ion-button icon-only (tap)="navigateToNext()">

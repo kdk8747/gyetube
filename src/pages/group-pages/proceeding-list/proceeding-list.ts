@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, ProceedingService, SharedDataService } from '../../../providers';
-import { MemberDetailElement, ProceedingListElement } from '../../../models';
-import { DocumentState } from '../../../app/constants';
+import { ProceedingListElement, User } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
@@ -13,9 +12,8 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'proceeding-list.html',
 })
 export class ProceedingListPage {
-  stateEnum = DocumentState;
 
-  member: MemberDetailElement;
+  user: User;
   proceedings: Observable<ProceedingListElement[]>;
   creationPermitted: boolean = false;
 
@@ -31,17 +29,16 @@ export class ProceedingListPage {
 
   ionViewDidLoad() {
     this.util.getCurrentGroupId().then(group_id => {
-      /*this.util.getCurrentMember(group_id)
-        .then((member) => this.member = member)
+      this.util.getCurrentUser()
+        .then((user) => this.user = user)
         .catch((err) => console.log(err));
 
-      this.util.isPermitted('create', 'proceedings', group_id)
+      this.util.isPermitted('create', 'proceeding', group_id)
         .then(bool => this.creationPermitted = bool)
         .catch((error: any) => {
           console.log(error);
-        });;*/
-      this.proceedings = this.proceedingService.getProceedings(group_id)
-        .map((proceedings: ProceedingListElement[]) => this.filterDeletedProceedings(proceedings));
+        });
+      this.proceedings = this.proceedingService.getProceedings(group_id);
     });
   }
 
@@ -58,15 +55,4 @@ export class ProceedingListPage {
   navigateToEditor() {
     this.navCtrl.push('ProceedingEditorPage');
   }
-
-  filterDeletedProceedings(proceedings: ProceedingListElement[]): ProceedingListElement[] {
-    return proceedings.filter(proceeding => proceeding.next_id == 0);
-  }
-/*
-  needYou(proceeding: Proceeding): boolean {
-    return proceeding && this.member && proceeding.state == this.stateEnum.STATE_PENDING_CREATE
-      && proceeding.next_id == 0
-      && proceeding.attendees.findIndex(attendee => attendee == this.member.member_id) != -1
-      && proceeding.reviewers.findIndex(attendee => attendee == this.member.member_id) == -1;
-  }*/
 }

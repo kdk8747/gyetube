@@ -1,9 +1,0 @@
-<span [ngSwitch]="state">
-  <p *ngSwitchCase="stateEnum.STATE_NEWLY_CREATED">{{ 'I18N_NEWLY_CREATED' | translate}} - {{ postfix }}</p>
-  <p *ngSwitchCase="stateEnum.STATE_UPDATED">{{ 'I18N_UPDATED' | translate}} - {{ postfix }}</p>
-  <p *ngSwitchCase="stateEnum.STATE_DELETED">{{ 'I18N_DELETED' | translate}} - {{ postfix }}</p>
-  <p *ngSwitchCase="stateEnum.STATE_PENDING_NEWLY_CREATE">{{ 'I18N_PENDING_NEWLY_CREATE' | translate}} - {{ postfix }}</p>
-  <p *ngSwitchCase="stateEnum.STATE_PENDING_UPDATE">{{ 'I18N_PENDING_UPDATE' | translate}} - {{ postfix }}</p>
-  <p *ngSwitchCase="stateEnum.STATE_PENDING_DELETE">{{ 'I18N_PENDING_DELETE' | translate}} - {{ postfix }}</p>
-  <p *ngSwitchDefault>{{ 'I18N_UNKNOWN_STATE' | translate}} - {{ postfix }}</p>
-</span>

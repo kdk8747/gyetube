@@ -7,7 +7,7 @@
     <ion-col col-12 col-sm-6 col-xl-4>
       <ion-item tappable *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.decision_id)">
           <ion-row>
-            <grasscube-state-label [state]="decision.document_state" [postfix]="decision.title"></grasscube-state-label>
+            <p>{{ 'I18N_' + decision.document_state | translate}} - {{ decision.title }}</p>
           </ion-row>
           <ion-row>
             <ion-col>
@@ -23,9 +23,6 @@
             <ion-col *ngIf="sharedDataService.decisionEditMode && decision.next_id == 0">
               <button ion-button icon-only (tap)="navigateToEditorForUpdate(decision.decision_id)">
                 <ion-icon name="create"></ion-icon>
-              </button>
-              <button ion-button icon-only (tap)="navigateToEditorForDelete(decision.decision_id)">
-                <ion-icon name="trash"></ion-icon>
               </button>
             </ion-col>
             <ion-col>

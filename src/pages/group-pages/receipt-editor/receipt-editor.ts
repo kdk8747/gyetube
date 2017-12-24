@@ -99,7 +99,7 @@ export class ReceiptEditorPage {
       || !this.form.valid) return;
     this.form.value.title = this.form.value.title.trim();
 
-    let newReceipt = new ReceiptEditorElement(0, new Date(Date.now()).toISOString(), this.form.value.settlementDate, 0,
+    let newReceipt = new ReceiptEditorElement(0, this.form.value.settlementDate,
       this.form.value.title, +this.form.value.difference, '',
       this.activitySelected ? +this.parentActivity : 0,
       this.activitySelected ? 0 : +this.parentDecision);

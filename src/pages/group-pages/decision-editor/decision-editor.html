@@ -19,11 +19,11 @@
         <ion-list>
           <ion-item>
             <ion-label>{{ 'I18N_EXPIRY_DATE' | translate }}</ion-label>
-            <ion-datetime [disabled]="deleteMode" formControlName="expiryDate" displayFormat="YYYY MM DD, HH:mm" max="2100" [class.invalid]="!form.controls.expiryDate.valid && (form.controls.expiryDate.dirty || submitAttempt)"></ion-datetime>
+            <ion-datetime formControlName="expiryDate" displayFormat="YYYY MM DD, HH:mm" max="2100" [class.invalid]="!form.controls.expiryDate.valid && (form.controls.expiryDate.dirty || submitAttempt)"></ion-datetime>
           </ion-item>
           <ion-item>
             <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
-            <ion-input [disabled]="deleteMode" formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
+            <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
           </ion-item>
 
           <ion-item no-lines>
@@ -40,7 +40,7 @@
           <ion-item>
             <ion-select formControlName="accepters" multiple="true" [selectOptions]="{title: ('I18N_ACCEPTERS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!isValidAccepters() && (form.controls.accepters.dirty || submitAttempt)">
-              <ion-option *ngFor="let member of members" [value]="(member | async)?.id">
+              <ion-option *ngFor="let member of members" [value]="(member | async)">
                 {{(member | async)?.name}}
               </ion-option>
             </ion-select>
@@ -52,7 +52,7 @@
           <ion-item>
             <ion-select formControlName="rejecters" multiple="true" [selectOptions]="{title: ('I18N_REJECTERS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!isValidRejecters() && (form.controls.rejecters.dirty || submitAttempt)">
-              <ion-option *ngFor="let member of members" [value]="(member | async)?.id">
+              <ion-option *ngFor="let member of members" [value]="(member | async)">
                 {{(member | async)?.name}}
               </ion-option>
             </ion-select>
@@ -64,7 +64,7 @@
           <ion-item>
             <ion-select formControlName="abstainers" multiple="true" [selectOptions]="{title: ('I18N_ABSTAINERS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!isValidAbstainers() && (form.controls.abstainers.dirty || submitAttempt)">
-              <ion-option *ngFor="let member of members" [value]="(member | async)?.id">
+              <ion-option *ngFor="let member of members" [value]="(member | async)">
                 {{(member | async)?.name}}
               </ion-option>
             </ion-select>

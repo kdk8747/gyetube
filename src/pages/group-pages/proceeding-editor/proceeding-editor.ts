@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, MemberService, GroupService, ProceedingService, DecisionService, SharedDataService } from '../../../providers';
-import { MemberDetailElement, ProceedingDetailElement } from '../../../models';
-import { DocumentState } from '../../../app/constants';
+import { MemberListElement, ProceedingDetailElement, ProceedingEditorElement, DecisionEditorElement, DecisionNewElement } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -15,11 +14,10 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'proceeding-editor.html',
 })
 export class ProceedingEditorPage {
-  stateEnum = DocumentState;
 
   groupId: number;
   id: number;
-  members: Observable<MemberDetailElement[]>;
+  members: Observable<MemberListElement[]>;
 
   form: FormGroup;
   addAttempt: boolean = false;
@@ -46,7 +44,7 @@ export class ProceedingEditorPage {
       attendees: [[], Validators.compose([Validators.minLength(2), Validators.required])]
     });
   }
-/*
+
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
   }
@@ -64,16 +62,21 @@ export class ProceedingEditorPage {
 
       if (this.id) {
         this.proceedingService.getProceeding(this.groupId, this.id)
-          .subscribe((proceeding: Proceeding) => {
-            this.form.controls['meetingDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(proceeding.meetingDate)));
+          .subscribe((proceeding: ProceedingDetailElement) => {
+            this.form.controls['meetingDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(proceeding.meeting_datetime)));
             this.form.controls['title'].setValue(proceeding.title);
             this.form.controls['description'].setValue(proceeding.description);
             this.form.controls['attendees'].setValue(proceeding.attendees);
-            this.sharedDataService.proceedingAttendees = proceeding.attendees;
+            this.sharedDataService.proceedingAttendees = proceeding.attendees.map(attendee => attendee.member_id);
+
             this.sharedDataService.decisionChangesets = [];
-            proceeding.childDecisions.map(id =>
-              this.decisionService.getDecision(this.groupId, id)
-                .subscribe(decision => this.sharedDataService.decisionChangesets.push(decision)));
+            proceeding.child_decisions.map(dle =>
+              this.decisionService.getDecision(this.groupId, dle.decision_id)
+                .subscribe(ddl => this.sharedDataService.decisionChangesets.push(
+                  new DecisionEditorElement(ddl.prev_id, ddl.expiry_datetime, ddl.title, ddl.description, ddl.abstainers, ddl.accepters, ddl.rejecters)
+                )
+                )
+            );
           });
       }
     });
@@ -102,9 +105,8 @@ export class ProceedingEditorPage {
     this.navCtrl.parent._tabs[2].setRoot('DecisionListPage');
   }
 
-  onClose(decisionId: number): void {
-    this.sharedDataService.decisionChangesets =
-      this.sharedDataService.decisionChangesets.filter(item => item.id != decisionId);
+  onClose(i: number): void {
+    this.sharedDataService.decisionChangesets.splice(i, 1);
   }
 
   isThisPartOfAttendees(memberId: string): boolean {
@@ -113,9 +115,9 @@ export class ProceedingEditorPage {
 
   isValidVote(): boolean {
     return this.sharedDataService.decisionChangesets.every(decision => {
-      return decision.accepters.every(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter))
-        && decision.rejecters.every(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter))
-        && decision.abstainers.every(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer));
+      return decision.accepters.every(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter.member_id))
+        && decision.rejecters.every(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter.member_id))
+        && decision.abstainers.every(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer.member_id));
     });
   }
 
@@ -126,32 +128,24 @@ export class ProceedingEditorPage {
     this.form.value.title = this.form.value.title.trim();
     this.form.value.description = this.form.value.description.trim();
 
-    let childDecisions = this.sharedDataService.decisionChangesets.map(decision => {
-      decision.meetingDate = this.form.value.meetingDate;
-      return decision;
-    });
-    let newProceeding = new Proceeding(0, 0, 0, DocumentState.STATE_PENDING_CREATE,
-      new Date(Date.now()).toISOString(),
-      this.form.value.meetingDate,
-      this.form.value.attendees,
-      [],
-      this.form.value.title, this.form.value.description, childDecisions);
+    let childDecisions = this.sharedDataService.decisionChangesets.map(dee => new DecisionNewElement(dee.prev_id, dee.expiry_datetime, dee.title, dee.description,
+      dee.abstainers.map(member => member.member_id),
+      dee.accepters.map(member => member.member_id),
+      dee.rejecters.map(member => member.member_id)));
+      console.log(childDecisions);
 
-    if (this.id) {
-      newProceeding.prevId = this.id;
-    }
+    let newProceeding = new ProceedingEditorElement(this.id ? this.id : 0,
+      new Date(Date.now()).toISOString(),
+      this.form.value.meetingDate, this.form.value.title, this.form.value.description,
+      this.form.value.attendees,
+      childDecisions);
+
     this.proceedingService.create(this.groupId, newProceeding)
-      .subscribe((proceeding: Proceeding) => {
-        for (let i = 0; i < proceeding.childDecisions.length; i++)
-          this.decisionService.cacheDecision(this.groupId, proceeding.childDecisions[i]).publishLast().connect();
-        if (proceeding.prevId > 0) {
-          this.proceedingService.cacheProceeding(this.groupId, proceeding.prevId).publishLast().connect();
-        }
+      .subscribe(() => {
         this.sharedDataService.decisionEditMode = false;
         this.sharedDataService.decisionChangesets = [];
         this.event.publish('DecisionList_Refresh');
         this.navCtrl.setRoot('ProceedingListPage');
       });
   }
-*/
 }

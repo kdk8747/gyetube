@@ -130,12 +130,11 @@ exports.create = async (req, res) => {
 
     await conn.query(
       'INSERT INTO activity\
-      VALUES(?,?,?,?,?, ?,?,?,?,?, ?,?)', [ // GET_SEQ http://blog.naver.com/PostView.nhn?blogId=platinasnow&logNo=220262549568
+      VALUES(?,?,?,?,NOW(),?, ?,?,?,?,?, ?)', [
         req.params.group_id,
         activity_new_id[0][0].new_id,
         req.body.parent_decision_id,
         member_id[0][0].member_id,
-        new Date(req.body.modified_datetime).toISOString().substring(0, 19).replace('T', ' '),
         new Date(req.body.activity_datetime).toISOString().substring(0, 19).replace('T', ' '),
         req.body.title,
         req.body.description,

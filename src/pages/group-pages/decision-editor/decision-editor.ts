@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, MemberService, GroupService, DecisionService, SharedDataService } from '../../../providers';
-import { MemberDetailElement, DecisionDetailElement } from '../../../models';
-import { DocumentState } from '../../../app/constants';
+import { MemberDetailElement, MemberListElement, DecisionDetailElement, DecisionEditorElement } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -18,7 +17,6 @@ export class DecisionEditorPage {
 
   groupId: number;
   id: number;
-  deleteMode: boolean;
   members: Observable<MemberDetailElement>[];
 
   form: FormGroup;
@@ -50,18 +48,14 @@ export class DecisionEditorPage {
       abstainers: [[]]
     });
   }
-/*
+
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
-    this.deleteMode = this.navParams.get('delete');
   }
 
   ionViewWillEnter() {
     this.translate.get(['I18N_EDITOR', 'I18N_DECISION', 'I18N_DELETE']).subscribe(values => {
-      if (this.deleteMode)
-        this.sharedDataService.headerDetailTitle = values.I18N_DELETE + ' - ' + values.I18N_DECISION;
-      else
-        this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_DECISION;
+      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_DECISION;
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
@@ -73,17 +67,19 @@ export class DecisionEditorPage {
 
       if (this.id) {
         this.decisionService.getDecision(this.groupId, this.id)
-          .subscribe((decision: Decision) => {
-            this.form.controls['expiryDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(decision.expiryDate)));
+          .subscribe((decision: DecisionDetailElement) => {
+            this.form.controls['expiryDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(decision.expiry_datetime)));
             this.form.controls['title'].setValue(decision.title);
-            if (!this.deleteMode)
-              this.form.controls['description'].setValue(decision.description);
-            this.form.controls['accepters'].setValue(decision.accepters.filter(accepter =>
-              this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter)));
-            this.form.controls['rejecters'].setValue(decision.rejecters.filter(rejecter =>
-              this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter)));
-            this.form.controls['abstainers'].setValue(decision.abstainers.filter(abstainer =>
-              this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer)));
+            this.form.controls['description'].setValue(decision.description);
+
+            this.form.controls['accepters'].setValue(decision.accepters
+              .filter(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter.member_id)));
+
+            this.form.controls['rejecters'].setValue(decision.rejecters
+              .filter(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter.member_id)));
+
+            this.form.controls['abstainers'].setValue(decision.abstainers
+              .filter(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer.member_id)));
           });
       }
     });
@@ -95,9 +91,9 @@ export class DecisionEditorPage {
 
   isUniqueVoters(): boolean {
     let members = [];
-    members = members.concat(this.form.value.accepters);
-    members = members.concat(this.form.value.rejecters);
-    members = members.concat(this.form.value.abstainers);
+    members = members.concat(this.form.value.accepters.map(member => member.member_id));
+    members = members.concat(this.form.value.rejecters.map(member => member.member_id));
+    members = members.concat(this.form.value.abstainers.map(member => member.member_id));
     members = members.sort();
     let valid = true;
     for (let i = 1; i < members.length; i++)
@@ -107,9 +103,9 @@ export class DecisionEditorPage {
   }
 
   isPartOfAttendees(): boolean {
-    return this.form.value.accepters.every(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter))
-      && this.form.value.rejecters.every(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter))
-      && this.form.value.abstainers.every(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer));
+    return this.form.value.accepters.every(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter.member_id))
+      && this.form.value.rejecters.every(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter.member_id))
+      && this.form.value.abstainers.every(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer.member_id));
   }
 
   allAttendeesVoted(): boolean {
@@ -117,18 +113,21 @@ export class DecisionEditorPage {
   }
 
   isValidAccepters(): boolean {
-    return !this.form.value.accepters.some((a_id: string) =>
-      this.form.value.rejecters.some(id => a_id == id) || this.form.value.abstainers.some(id => a_id == id));
+    return !this.form.value.accepters.some((accepter: MemberListElement) =>
+      this.form.value.rejecters.some(rejecter => accepter.member_id == rejecter.member_id)
+      || this.form.value.abstainers.some(abstainer => accepter.member_id == abstainer.member_id));
   }
 
   isValidRejecters(): boolean {
-    return !this.form.value.rejecters.some((a_id: string) =>
-      this.form.value.accepters.some(id => a_id == id) || this.form.value.abstainers.some(id => a_id == id));
+    return !this.form.value.rejecters.some((rejecter: MemberListElement) =>
+      this.form.value.accepters.some(accepter => rejecter.member_id == accepter.member_id)
+      || this.form.value.abstainers.some(abstainer => rejecter.member_id == abstainer.member_id));
   }
 
   isValidAbstainers(): boolean {
-    return !this.form.value.abstainers.some((a_id: string) =>
-      this.form.value.rejecters.some(id => a_id == id) || this.form.value.accepters.some(id => a_id == id));
+    return !this.form.value.abstainers.some((abstainer: MemberListElement) =>
+      this.form.value.rejecters.some(rejecter => abstainer.member_id == rejecter.member_id)
+      || this.form.value.accepters.some(accepter => abstainer.member_id == accepter.member_id));
   }
 
   popNavigation() {
@@ -145,19 +144,15 @@ export class DecisionEditorPage {
     this.form.value.title = this.form.value.title.trim();
     this.form.value.description = this.form.value.description.trim();
 
-    let newDecision = new Decision(0, 0, 0, DocumentState.STATE_PENDING_CREATE,
-      new Date(Date.now()).toISOString(),
-      this.form.value.expiryDate,
+    let newDecision = new DecisionEditorElement(0,
+      this.form.value.expiryDate, this.form.value.title, this.form.value.description,
       this.form.value.abstainers,
       this.form.value.accepters,
-      this.form.value.rejecters,
-      this.form.value.title, this.form.value.description, 0, [], [], 0, 0);
+      this.form.value.rejecters);
 
     if (this.id) {
-      newDecision.id = this.id;
-      newDecision.prevId = this.id;
-      newDecision.state = this.deleteMode ? DocumentState.STATE_PENDING_DELETE : DocumentState.STATE_PENDING_UPDATE;
-      let found = this.sharedDataService.decisionChangesets.findIndex(item => { console.log(item.prevId); return item.prevId == this.id });
+      newDecision.prev_id = this.id;
+      let found = this.sharedDataService.decisionChangesets.findIndex(item => item.prev_id == this.id);
       if (found != -1)
         this.sharedDataService.decisionChangesets[found] = newDecision;
       else
@@ -170,5 +165,4 @@ export class DecisionEditorPage {
     this.sharedDataService.decisionEditMode = false;
     this.popNavigation();
   }
-*/
 }

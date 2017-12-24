@@ -105,9 +105,9 @@ export class ActivityEditorPage {
     this.form.value.title = this.form.value.title.trim();
     this.form.value.description = this.form.value.description.trim();
 
-    let newActivity = new ActivityEditorElement(0, new Date(Date.now()).toISOString(), this.form.value.activityDate, 0,
-      this.form.value.participants, this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
-      +this.form.value.parentDecision, 0);
+    let newActivity = new ActivityEditorElement(0, this.form.value.activityDate,
+       this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
+       this.form.value.participants, +this.form.value.parentDecision);
 
 
     if (!this.newActivityImageFile) {

@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, MemberService, ProceedingService, SharedDataService } from '../../../providers';
-import { ProceedingDetailElement, MemberDetailElement } from '../../../models';
-import { DocumentState } from '../../../app/constants';
+import { User, ProceedingDetailElement, MemberDetailElement } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -15,11 +14,10 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'proceeding-detail.html',
 })
 export class ProceedingDetailPage {
-  stateEnum = DocumentState;
   verifiedGood: boolean = true;
 
   groupId: number;
-  member: MemberDetailElement;
+  user: User;
   id: number;
   proceeding: ProceedingDetailElement = null;
   proceedingObs: Observable<ProceedingDetailElement>;
@@ -45,9 +43,9 @@ export class ProceedingDetailPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      /*this.util.getCurrentMember(this.groupId)
-        .then((member) => this.member = member)
-        .catch((err) => console.log(err));*/
+      this.util.getCurrentUser()
+        .then((user) => this.user = user)
+        .catch((err) => console.log(err));
       this.proceedingObs = this.proceedingService.getProceeding(this.groupId, this.id);
       this.proceedingObs.subscribe((proceeding: ProceedingDetailElement) => {
         this.proceeding = proceeding;
@@ -73,13 +71,6 @@ export class ProceedingDetailPage {
 
   navigateToDecisionDetail(decision_id: number) {
     this.event.publish('TabsGroup_DecisionDetail', { id: decision_id });
-  }
-
-  needYou(proceeding: ProceedingDetailElement): boolean {
-    return proceeding && this.member && proceeding.document_state == DocumentState.STATE_PENDING_NEWLY_CREATE
-      && proceeding.next_id == 0;
-      //&& proceeding.attendees.findIndex(attendee => attendee == this.member.member_id) != -1
-      //&& proceeding.reviewers.findIndex(attendee => attendee == this.member.id) == -1;
   }
 
   onSubmit() {

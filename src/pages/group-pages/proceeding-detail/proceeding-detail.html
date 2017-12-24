@@ -15,14 +15,14 @@
         <ion-buttons>{{proceeding?.title}}</ion-buttons>
       </ion-toolbar>
 
-      <ion-toolbar *ngIf="proceeding?.document_state == stateEnum.STATE_PENDING_CREATE && proceeding?.next_id == 0">
+      <ion-toolbar *ngIf="proceeding?.document_state == 'PENDING_ADDS' && proceeding?.next_id == 0">
         <ion-buttons>
-          {{'I18N_PENDING_CREATE' | translate}}
-          <span *ngIf="needYou(proceeding)">
+          {{'I18N_PENDING_ADDS' | translate}}<br>
+          <span *ngIf="proceeding?.need_my_review">
             <ion-icon name="alert" color="danger"></ion-icon>
-            {{'I18N_NEED_YOUR_REVIEW' | translate}}
+            {{user?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}
           </span>
-          - {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers_count}}/{{proceeding.attendees_count}})
+          {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding?.reviewers.length}}/{{proceeding?.attendees.length}})
         </ion-buttons>
       </ion-toolbar>
 
@@ -31,7 +31,7 @@
         {{ 'I18N_ATTENDEES' | translate}}:
         <grasscube-user *ngFor="let attendee of proceeding?.attendees" [user]="attendee"></grasscube-user>
       </ion-buttons>
-      <ion-buttons left *ngIf="proceeding?.document_state == stateEnum.STATE_PENDING_CREATE && proceeding?.next_id == 0">
+      <ion-buttons left *ngIf="proceeding?.document_state == 'PENDING_ADDS' && proceeding?.next_id == 0">
         {{ 'I18N_REVIEWED_BY' | translate}}:
         <grasscube-user *ngFor="let reviewer of proceeding?.reviewers" [user]="reviewer"></grasscube-user>
       </ion-buttons>
@@ -43,7 +43,7 @@
           <ion-row align-items-center>
             <ion-col>
               <p>{{ 'I18N_DECISION' | translate }} {{i+1}}</p>
-              <grasscube-state-label [state]="decision.document_state" [postfix]="decision.title"></grasscube-state-label>
+              <p>{{ 'I18N_' + decision.document_state | translate}} - {{ decision.title }}</p>
               <div style="height:10px"></div>
               <p>{{ decision.description }}</p>
               <p text-right style="white-space: normal" *ngIf="decision.accepters_count">
@@ -69,7 +69,7 @@
         </ion-item>
       </ion-card>
 
-      <ion-buttons right *ngIf="needYou(proceeding)">
+      <ion-buttons right *ngIf="proceeding?.need_my_review">
         <ion-list radio-group no-lines>
           <ion-item>
             <ion-label style="color: #7f7f7f;">{{ 'I18N_VERIFIED_GOOD' | translate }}</ion-label>

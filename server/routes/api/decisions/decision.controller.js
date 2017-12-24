@@ -1,6 +1,10 @@
 const db = require('../../../database');
 const debug = require('debug')('decision');
 
+const STATE_ABSTAINER = 0;
+const STATE_ACCEPTER = 1;
+const STATE_REJECTER = 2;
+
 
 exports.authRead = (req, res, next) => {
   const READ = 2;
@@ -17,8 +21,9 @@ exports.authRead = (req, res, next) => {
 exports.getAll = async (req, res) => {
   try {
     let result = await db.execute(
-      'SELECT D.decision_id, D.prev_id, D.next_id, D.document_state, D.expiry_datetime, D.meeting_datetime,\
+      'SELECT D.decision_id, D.prev_id, D.next_id, D.expiry_datetime, D.meeting_datetime,\
         D.title, D.description,\
+        get_state(D.document_state) AS document_state,\
         count(distinct (case when V.voter_state=0 then V.member_id end)) AS abstainers_count,\
         count(distinct (case when V.voter_state=1 then V.member_id end)) AS accepters_count,\
         count(distinct (case when V.voter_state=2 then V.member_id end)) AS rejecters_count,\
@@ -44,24 +49,24 @@ exports.getAll = async (req, res) => {
 exports.getByID = async (req, res) => {
   try {
     let decision = await db.execute(
-      'SELECT *\
+      'SELECT *, get_state(document_state) AS document_state\
       FROM decision\
       WHERE group_id=? AND decision_id=?', [req.params.group_id, req.params.decision_id]);
 
     let parent_proceeding = await db.execute(
-      'SELECT *\
+      'SELECT *, get_state(document_state) AS document_state\
       FROM proceeding\
       WHERE group_id=? AND proceeding_id=?', [req.params.group_id, decision[0][0].proceeding_id]);
     decision[0][0].parent_proceeding = parent_proceeding[0][0];
 
     let child_members = await db.execute(
-      'SELECT *\
+      'SELECT *, get_state(document_state) AS document_state\
       FROM member\
       WHERE group_id=? AND decision_id=?', [req.params.group_id, req.params.decision_id]);
     decision[0][0].child_members = child_members[0];
 
     let child_roles = await db.execute(
-      'SELECT *\
+      'SELECT *, get_state(document_state) AS document_state\
       FROM role\
       WHERE group_id=? AND decision_id=?', [req.params.group_id, req.params.decision_id]);
     decision[0][0].child_roles = child_roles[0];
@@ -82,11 +87,13 @@ exports.getByID = async (req, res) => {
     decision[0][0].child_receipts = child_receipts[0];
 
     let voters = await db.execute(
-      'SELECT *\
+      'SELECT *, get_state(document_state) AS document_state\
       FROM voter V\
       LEFT JOIN member M ON M.group_id=? AND M.member_id=V.member_id\
       WHERE V.group_id=? AND V.decision_id=?', [req.params.group_id, req.params.group_id, req.params.decision_id]);
-    decision[0][0].voters = voters[0];
+    decision[0][0].abstainers = voters[0].filter(voter => voter.voter_state == STATE_ABSTAINER);
+    decision[0][0].accepters = voters[0].filter(voter => voter.voter_state == STATE_ACCEPTER);
+    decision[0][0].rejecters = voters[0].filter(voter => voter.voter_state == STATE_REJECTER);
 
     res.send(decision[0][0]);
   }
@@ -123,37 +130,47 @@ exports.updateByID = (req, res) => {
     });
 }
 
-exports.create = (req, parentId) => {
-  if (req.params.group === 'examplelocalparty') {
+exports.create = async (conn, decision) => {
+  let decision_new_id = await conn.query('SELECT GET_SEQ(?,"decision") AS new_id', [decision.group_id]);
+
+  await conn.query(
+    'INSERT INTO decision\
+    VALUES(?,?,?,?,0,?,?,?,?,?,0,0)', [
+      decision.group_id,
+      decision_new_id[0][0].new_id,
+      decision.proceeding_id,
+      decision.prev_id,
+      decision.prev_id ? 1 /*PENDING_UPDATES*/ : 0/*PENDING_ADDS*/,
+      new Date(decision.meeting_datetime).toISOString().substring(0, 19).replace('T', ' '),
+      new Date(decision.expiry_datetime).toISOString().substring(0, 19).replace('T', ' '),
+      decision.title,
+      decision.description
+    ]);
+
+  await Promise.all(
+    decision.abstainer_ids.map(member_id => conn.query(
+      'INSERT INTO voter\
+      VALUES(?,?,?,0)', [decision.group_id, decision_new_id[0][0].new_id, member_id])),
+    decision.accepter_ids.map(member_id => conn.query(
+      'INSERT INTO voter\
+      VALUES(?,?,?,1)', [decision.group_id, decision_new_id[0][0].new_id, member_id])),
+    decision.rejecter_ids.map(member_id => conn.query(
+      'INSERT INTO voter\
+      VALUES(?,?,?,2)', [decision.group_id, decision_new_id[0][0].new_id, member_id])),
+  );
+
+  if (decision.prev_id) {
+    let updatePrev = await conn.query(
+      'UPDATE decision\
+      SET next_id=?\
+      WHERE group_id=? AND decision_id=? AND next_id=0', [
+        decision.proceeding_id,
+        decision.group_id,
+        decision.prev_id
+      ]);
+    if (updatePrev[0].affectedRows == 0);
+    throw 'Invalid prev decision id';
   }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups) {
-      let newDecision = req.body;
-      let found = decisions.find(item => item.id == +newDecision.id
-        && item.prevId == +newDecision.prevId
-        && item.nextId == +newDecision.nextId
-        && item.state == +newDecision.state
-        && item.title == newDecision.title
-        && item.description == newDecision.description
-      );
-      if (found && newDecision.state > 2) {
-        found.parentProceeding = parentId;
-      }
-      else {
-        newDecision.id = decisionID;
-        newDecision.parentProceeding = parentId;
-        if (+newDecision.prevId > 0) {
-          let prev = decisions.find(item => item.id === +newDecision.prevId);
-          if (prev && prev.nextId != 0)
-            return 0;
-        }
-        decisionID++;
-        decisions.push(newDecision);
-      }
-      return newDecision.id;
-    }
-  }
-  return 0;
 }
 
 exports.overThePendingState = (req) => {

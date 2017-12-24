@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, FabContainer } from 'ionic-angular';
 import { UtilService, DecisionService, SharedDataService } from '../../../providers';
 import { DecisionListElement } from '../../../models';
-import { DocumentState } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -63,10 +62,6 @@ export class DecisionListPage {
     this.navCtrl.push('DecisionEditorPage', { id: id });
   }
 
-  navigateToEditorForDelete(id: number) {
-    this.navCtrl.push('DecisionEditorPage', { id: id, delete: true });
-  }
-
   sortByDate(decisions: DecisionListElement[]): DecisionListElement[] {
     return decisions.sort((h1, h2) => {
       return h1.meeting_datetime < h2.meeting_datetime ? 1 :
@@ -76,7 +71,7 @@ export class DecisionListPage {
 
   filterPastDecisions(decisions: DecisionListElement[]): DecisionListElement[] {
     return decisions.filter(decision =>
-      (decision.document_state == DocumentState.STATE_NEWLY_CREATED || decision.document_state == DocumentState.STATE_UPDATED)
+      (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED')
       && new Date(decision.expiry_datetime).getTime() > new Date(Date.now()).getTime()
       && decision.next_id == 0
     );
@@ -84,7 +79,7 @@ export class DecisionListPage {
 
   filterDeletedDecisions(decisions: DecisionListElement[]): DecisionListElement[] {
     return decisions.filter(decision =>
-      (decision.document_state == DocumentState.STATE_NEWLY_CREATED || decision.document_state == DocumentState.STATE_UPDATED)
+      (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED')
     );
   }
 
@@ -92,7 +87,7 @@ export class DecisionListPage {
     this.decisions = this.decisionService.getDecisions(this.groupId)
       .map((decisions: DecisionListElement[]) =>
         this.sharedDataService.decisionListTimelineMode ?
-          this.sortByDate(this.filterDeletedDecisions(decisions)) :
+          this.sortByDate(decisions) :
           this.sortByDate(this.filterPastDecisions(decisions)));
     this.decisions.subscribe(() => this.readPermitted = true);
   }

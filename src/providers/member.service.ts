@@ -33,6 +33,14 @@ export class MemberService {
       .take(1);
   }
 
+  getMemberMyself(group_id: number): Observable<MemberDetailElement> {
+    const url = `${this.membersUrl}/${group_id}/myself`;
+
+    return this.http.get(url)
+      .map(response => response.json() as MemberDetailElement)
+      .take(1);
+  }
+
   update(group_id: number, member: MemberDetailElement): Observable<MemberDetailElement> {
     const url = `${this.membersUrl}/${group_id}/${member.member_id}`;
     return this.http

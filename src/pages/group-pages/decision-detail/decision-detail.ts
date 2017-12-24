@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, DecisionService, SharedDataService } from '../../../providers';
-import { DecisionDetailElement, Voter } from '../../../models';
+import { DecisionDetailElement } from '../../../models';
 import { Observable } from 'rxjs/Observable';
-import { VoterState } from '../../../app/constants';
 
 
 @IonicPage({
@@ -19,9 +18,6 @@ export class DecisionDetailPage {
   groupId: number;
   id: number;
   decision: DecisionDetailElement;
-  abstainers: Voter[] = [];
-  accepters: Voter[] = [];
-  rejecters: Voter[] = [];
 
   constructor(
     public navCtrl: NavController,
@@ -46,9 +42,6 @@ export class DecisionDetailPage {
       this.decisionService.getDecision(this.groupId, this.id).subscribe((decision: DecisionDetailElement) => {
         this.decision = decision;
         this.sharedDataService.headerDetailTitle = decision.title;
-        this.abstainers = decision.voters.filter((voter: Voter) => voter.voter_state == VoterState.STATE_ABSTAINER);
-        this.accepters = decision.voters.filter((voter: Voter) => voter.voter_state == VoterState.STATE_ACCEPTER);
-        this.rejecters = decision.voters.filter((voter: Voter) => voter.voter_state == VoterState.STATE_REJECTER);
       });
     });
   }

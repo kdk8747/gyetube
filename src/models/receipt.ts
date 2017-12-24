@@ -30,9 +30,7 @@ export class ReceiptDetailElement {
 export class ReceiptEditorElement {
   constructor(
     public receipt_id: number,
-    public modified_datetime: string,
     public settlement_datetime: string,
-    public creator_id: number,
     public title: string,
     public difference: number,
     public image_url: string,    // 영수증 사진의 금액과 기록된 차액을 비교하는 작업이 편하려면 사진은 한장이어야 한다.

@@ -17,17 +17,25 @@ exports.authRead = (req, res, next) => {
 
 exports.getAll = async (req, res) => {
   try {
+    let member_id = await db.execute(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.params.group_id, req.decoded.user_id]);
+    debug(member_id[0]);
+
     let result = await db.execute(
-      'SELECT P.proceeding_id, P.prev_id, P.next_id, P.document_state, P.created_datetime, P.meeting_datetime,\
+      'SELECT P.proceeding_id, P.prev_id, P.next_id, P.created_datetime, P.meeting_datetime,\
         P.title, P.description,\
+        get_state(P.document_state) AS document_state,\
         count(distinct A.member_id) AS attendees_count,\
         count(distinct (case when A.attendee_state=1 then A.member_id end)) AS reviewers_count,\
-        count(distinct D.decision_id) AS child_decisions_count\
+        count(distinct D.decision_id) AS child_decisions_count,\
+        count(distinct case when P.document_state=0 and A.member_id=? and A.attendee_state=0 then 1 end) AS need_my_review\
       FROM proceeding P\
         LEFT JOIN attendee A ON A.group_id=? AND A.proceeding_id=P.proceeding_id\
         LEFT JOIN decision D ON D.group_id=? AND D.proceeding_id=P.proceeding_id\
-      WHERE P.group_id=?\
-      GROUP BY P.proceeding_id', [req.params.group_id, req.params.group_id, req.params.group_id]);
+      WHERE P.group_id=? AND P.next_id=0\
+      GROUP BY P.proceeding_id', [member_id[0][0].member_id, req.params.group_id, req.params.group_id, req.params.group_id]);
     res.send(result[0]);
   }
   catch (err) {
@@ -40,23 +48,32 @@ exports.getAll = async (req, res) => {
 
 exports.getByID = async (req, res) => {
   try {
+    let member_id = await db.execute(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.params.group_id, req.decoded.user_id]);
+    debug(member_id[0]);
+
     let proceeding = await db.execute(
-      'SELECT *\
-      FROM proceeding\
-      WHERE group_id=? AND proceeding_id=?', [req.params.group_id, +req.params.proceeding_id]);
+      'SELECT *, get_state(P.document_state) AS document_state,\
+      count(distinct case when P.document_state=0 and A.member_id=? and A.attendee_state=0 then 1 end) AS need_my_review\
+      FROM proceeding P\
+        LEFT JOIN attendee A ON A.group_id=? AND A.proceeding_id=P.proceeding_id\
+      WHERE P.group_id=? AND P.proceeding_id=?', [member_id[0][0].member_id, req.params.group_id, req.params.group_id, +req.params.proceeding_id]);
 
     let child_decisions = await db.execute(
-      'SELECT *\
+      'SELECT *, get_state(document_state) AS document_state\
       FROM decision\
       WHERE group_id=? AND proceeding_id=?', [req.params.group_id, +req.params.proceeding_id]);
     proceeding[0][0].child_decisions = child_decisions[0];
 
     let attendees = await db.execute(
-      'SELECT *\
+      'SELECT *, get_state(document_state) AS document_state\
       FROM attendee A\
       LEFT JOIN member M ON M.group_id=? AND M.member_id=A.member_id\
       WHERE A.group_id=? AND A.proceeding_id=?', [req.params.group_id, req.params.group_id, +req.params.proceeding_id]);
     proceeding[0][0].attendees = attendees[0];
+    proceeding[0][0].reviewers = attendees[0].filter(attendee => attendee.attendee_state == 1/*REVIEWED*/);
 
     res.send(proceeding[0][0]);
   }
@@ -107,61 +124,68 @@ exports.updateByID = (req, res) => {
     });
 }
 
-exports.create = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    res.status(401).json({
-      success: false,
-      message: 'not allowed'
-    });
-  }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups) {
-      let newProceeding = req.body;
-      newProceeding.id = proceedingID;
-      if (+newProceeding.prevId > 0) {
-        let prev = proceedings.find(item => item.id === +newProceeding.prevId);
-        if (prev.nextId == 0) {
-          prev.nextId = newProceeding.id;
-        }
-        else {
-          res.status(405).json({
-            success: false,
-            message: 'The target proceeding is already revised'
-          });
-          return;
-        }
-      }
+exports.create = async (req, res) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    debug(req.body);
+    if (!req.body.meeting_datetime) throw 'Invalid meeting_datetime';
+    if (!(req.body.attendee_ids.length > 1)) throw 'Need at least two attendees';
 
-      if (newProceeding.childDecisions) {
-        let childIdList = [];
-        for (let i = 0; i < newProceeding.childDecisions.length; i++) {
-          req.body = newProceeding.childDecisions[i];
-          let id = decisionController.create(req, newProceeding.id);
-          if (id) childIdList.push(id);
-          else {
-            res.status(405).json({
-              success: false,
-              message: 'One of the target proceeding.childDecision is already revised'
-            });
-            return;
-          }
-        }
-        newProceeding.childDecisions = childIdList;
-      }
+    let proceeding_new_id = await conn.query('SELECT GET_SEQ(?,"proceeding") AS new_id', [req.params.group_id]);
 
-      proceedingID++;
-      proceedings.push(newProceeding);
-      res.json(newProceeding);
+    await conn.query(
+      'INSERT INTO proceeding\
+      VALUES(?,?,?,0,?,NOW(),?,?,?)', [
+        req.params.group_id,
+        proceeding_new_id[0][0].new_id,
+        req.body.prev_id,
+        req.body.prev_id ? 1 /*PENDING_UPDATES*/ : 0/*PENDING_ADDS*/,
+        new Date(req.body.meeting_datetime).toISOString().substring(0, 19).replace('T', ' '),
+        req.body.title,
+        req.body.description
+      ]);
+
+    await Promise.all(req.body.attendee_ids.map(
+      attendee_id => conn.query(
+        'INSERT INTO attendee\
+        VALUES(?,?,?,0)', [req.params.group_id, proceeding_new_id[0][0].new_id, attendee_id])));
+
+    if (req.body.prev_id) {
+      let updatePrev = await conn.query(
+        'UPDATE proceeding\
+        SET next_id=?\
+        WHERE group_id=? AND proceeding_id=? AND next_id=0', [
+          proceeding_new_id[0][0].new_id,
+          req.params.group_id,
+          req.body.prev_id
+        ]);
+      if (updatePrev[0].affectedRows == 0);
+      throw 'The target proceeding is already revised';
     }
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
+
+    if (req.body.child_decisions && req.body.child_decisions.length > 0) {
+      await Promise.all(req.body.child_decisions.map(decision => {
+        decision.group_id = req.params.group_id;
+        decision.proceeding_id = proceeding_new_id[0][0].new_id;
+        decision.meeting_datetime = req.body.meeting_datetime;
+        return decisionController.create(conn, decision);
+      }));
+    }
+
+    await conn.commit();
+    conn.release();
+
+    res.send();
   }
-  else
-    res.status(404).json({
+  catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
+    }
+    res.status(500).json({
       success: false,
-      message: 'groupId: not found'
+      message: err
     });
+  }
 }

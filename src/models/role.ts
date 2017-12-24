@@ -1,11 +1,10 @@
-import { DocumentState } from '../app/constants';
 
 export class Role {
   constructor(
     public id: number,
     public prevId: number,
     public nextId: number,
-    public document_state: DocumentState,
+    public document_state: string,
     public creator: number,
     public modifiedDate: string,
     public name: string,

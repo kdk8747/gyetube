@@ -4,13 +4,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { IonicPageModule } from 'ionic-angular';
 import { HeaderComponent } from './header/header';
 import { MenuComponent } from './menu/menu';
-import { StateLabelComponent } from './state-label/state-label';
 import { UserComponent } from './user/user';
 @NgModule({
 	declarations: [
     HeaderComponent,
     MenuComponent,
-    StateLabelComponent,
     UserComponent
   ],
 	imports: [
@@ -23,7 +21,6 @@ import { UserComponent } from './user/user';
   exports: [
     HeaderComponent,
     MenuComponent,
-    StateLabelComponent,
     UserComponent
   ]
 })

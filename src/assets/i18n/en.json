@@ -62,7 +62,6 @@
 
   "I18N_ADD": "Add",
   "I18N_CANCEL": "Cancel",
-  "I18N_NEWLY_CREATE": "Newly Create",
   "I18N_UPDATE": "Update",
   "I18N_DELETE": "Delete",
   "I18N_REJECTED": "Rejected",
@@ -91,10 +90,10 @@
 
 
   "I18N_UNKNOWN_STATE": "Unknown State",
-  "I18N_NEWLY_CREATED": "Newly Created",
+  "I18N_ADDED": "Added",
   "I18N_UPDATED": "Updated",
   "I18N_DELETED": "Deleted",
-  "I18N_PENDING_NEWLY_CREATE": "Pending Newly Create",
-  "I18N_PENDING_UPDATE": "Pending Update",
-  "I18N_PENDING_DELETE": "Pending Delete"
+  "I18N_PENDING_ADDS": "Pending Adds",
+  "I18N_PENDING_UPDATES": "Pending Updates",
+  "I18N_PENDING_DELETES": "Pending Deletes"
 }

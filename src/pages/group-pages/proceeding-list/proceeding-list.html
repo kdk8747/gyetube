@@ -6,29 +6,26 @@
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
       <ion-item tappable *ngFor="let proceeding of proceedings | async" (tap)="navigateToDetail(proceeding.proceeding_id)">
-        <ion-toolbar *ngIf="proceeding.document_state == stateEnum.STATE_PENDING_CREATE">
-
-            {{'I18N_PENDING_CREATE' | translate}} -
-            <!-- <span *ngIf="needYou(proceeding)">
-              <ion-icon name="alert" color="danger"></ion-icon>
-              {{member?.name}}, <br>{{'I18N_NEED_YOUR_REVIEW' | translate}}
-            </span> -->
-            {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers_count}}/{{proceeding.attendees_count}})
-
+        <ion-toolbar *ngIf="proceeding.document_state == 'PENDING_ADDS'">
+          {{'I18N_PENDING_ADDS' | translate}}<br>
+          <span *ngIf="proceeding.need_my_review">
+            <p><ion-icon name="alert" color="danger"></ion-icon>{{user?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}</p>
+          </span>
+          <p>{{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers_count}}/{{proceeding.attendees_count}})</p>
         </ion-toolbar>
-          <ion-row>
-            <p>{{proceeding.title}}</p>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <p>{{proceeding.meeting_datetime | localizedDate}}</p>
-            </ion-col>
-            <ion-col>
-              <p text-right> {{ proceeding.attendees_count }} {{ 'I18N_ATTENDEES' | translate}} </p>
-              <p text-right> {{ proceeding.child_decisions_count }} {{ 'I18N_DECISIONS' | translate}} </p>
-            </ion-col>
-          </ion-row>
-        </ion-item>
+        <ion-row>
+          <p>{{proceeding.title}}</p>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p>{{proceeding.meeting_datetime | localizedDate}}</p>
+          </ion-col>
+          <ion-col>
+            <p text-right> {{ proceeding.attendees_count }} {{ 'I18N_ATTENDEES' | translate}} </p>
+            <p text-right> {{ proceeding.child_decisions_count }} {{ 'I18N_DECISIONS' | translate}} </p>
+          </ion-col>
+        </ion-row>
+      </ion-item>
     </ion-col>
     <ion-col col-sm-3 col-xl-4>
     </ion-col>

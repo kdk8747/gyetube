@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { ProceedingListElement, ProceedingDetailElement } from '../models';
+import { ProceedingListElement, ProceedingDetailElement, ProceedingEditorElement } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -43,11 +43,11 @@ export class ProceedingService {
       .take(1);
   }
 
-  create(group_id: number, proceeding: ProceedingDetailElement): Observable<ProceedingDetailElement> {
+  create(group_id: number, proceeding: ProceedingEditorElement): Observable<void> {
     const url = `${this.proceedingsUrl}/${group_id}`;
     return this.http
       .post(url, JSON.stringify(proceeding), { headers: this.headers })
-      .map(response => response.json() as ProceedingDetailElement)
+      .map(() => null)
       .take(1);
   }
 }

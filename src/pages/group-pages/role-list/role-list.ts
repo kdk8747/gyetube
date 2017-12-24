@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, RoleService, SharedDataService } from '../../../providers';
 import { Role } from '../../../models';
-import { DocumentState } from '../../../app/constants';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -14,7 +13,6 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'role-list.html',
 })
 export class RoleListPage {
-  stateEnum = DocumentState;
 
   roles: Observable<Role[]>;
 

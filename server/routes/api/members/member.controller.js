@@ -17,7 +17,8 @@ exports.authRead = (req, res, next) => {
 exports.getAll = async (req, res) => {
   try {
     let result = await db.execute(
-      'SELECT M.member_id, M.prev_id, M.next_id, M.document_state, M.modified_datetime, M.image_url, M.name,\
+      'SELECT M.member_id, M.prev_id, M.next_id, M.modified_datetime, M.image_url, M.name,\
+      get_state(M.document_state) AS document_state,\
       count(distinct R.role_id) AS roles_count\
       FROM member M\
       LEFT JOIN member_role R ON R.group_id=M.group_id AND R.member_id=M.member_id\
@@ -36,22 +37,38 @@ exports.getAll = async (req, res) => {
 exports.getByID = async (req, res) => {
   try {
     let member = await db.execute(
-      'SELECT *\
+      'SELECT *, get_state(document_state) AS document_state\
       FROM member\
       WHERE group_id=? AND member_id=?', [req.params.group_id, req.params.member_id]);
 
     let parent_decision = await db.execute(
-      'SELECT *\
-        FROM decision\
-        WHERE group_id=? AND decision_id=?', [req.params.group_id, member[0][0].decision_id]);
+      'SELECT *, get_state(document_state) AS document_state\
+      FROM decision\
+      WHERE group_id=? AND decision_id=?', [req.params.group_id, member[0][0].decision_id]);
     member[0][0].parent_decision = parent_decision[0][0];
 
     let creator = await db.execute(
-      'SELECT *\
+      'SELECT *, get_state(document_state) AS document_state\
       FROM member\
       WHERE group_id=? AND member_id=?', [req.params.group_id, member[0][0].creator_id]);
     member[0][0].creator = creator[0][0];
 
+    res.send(member[0][0]);
+  }
+  catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err
+    });
+  }
+}
+
+exports.getMyself = async (req, res) => {
+  try {
+    let member = await db.execute(
+      'SELECT *, get_state(document_state) AS document_state\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.params.group_id, req.decoded.user_id]);
     res.send(member[0][0]);
   }
   catch (err) {
