@@ -29,6 +29,7 @@ export class ProceedingDetailElement {
     public description: string,
     public attendees: MemberListElement[],
     public reviewers: MemberListElement[],
+    public need_my_review: number,
     public child_decisions: DecisionListElement[]
   ) { }
 }

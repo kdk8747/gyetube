@@ -7,7 +7,7 @@
     <ion-col col-12 col-sm-6 col-xl-4>
       <ion-item tappable *ngFor="let member of members | async" (tap)="navigateToDetail(member.member_id)">
         <ion-row>
-          <grasscube-state-label [state]="member.document_state" [postfix]="member.name"></grasscube-state-label>
+          <p>{{ 'I18N_' + member.document_state | translate}} - {{ member.name }}</p>
         </ion-row>
         <ion-row>
           <p>{{member.modified_datetime | localizedDate}}</p>

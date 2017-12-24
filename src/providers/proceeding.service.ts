@@ -35,11 +35,11 @@ export class ProceedingService {
       .take(1);
   }
 
-  update(group_id: number, proceeding_id: number): Observable<ProceedingDetailElement> {
+  update(group_id: number, proceeding_id: number): Observable<void> {
     const url = `${this.proceedingsUrl}/${group_id}/${proceeding_id}`;
     return this.http
       .put(url, '', { headers: this.headers })
-      .map(response => response.json() as ProceedingDetailElement)
+      .map(() => null)
       .take(1);
   }
 

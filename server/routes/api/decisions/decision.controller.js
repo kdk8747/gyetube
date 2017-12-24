@@ -158,33 +158,4 @@ exports.create = async (conn, decision) => {
       'INSERT INTO voter\
       VALUES(?,?,?,2)', [decision.group_id, decision_new_id[0][0].new_id, member_id])),
   );
-
-  if (decision.prev_id) {
-    let updatePrev = await conn.query(
-      'UPDATE decision\
-      SET next_id=?\
-      WHERE group_id=? AND decision_id=? AND next_id=0', [
-        decision.proceeding_id,
-        decision.group_id,
-        decision.prev_id
-      ]);
-    if (updatePrev[0].affectedRows == 0);
-    throw 'Invalid prev decision id';
-  }
-}
-
-exports.overThePendingState = (req) => {
-  if (req.params.group === 'examplelocalparty') {
-  }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups) {
-      let id = req.body;
-      let found = decisions.find(item => item.id === +id);
-      if (found && found.state > 2) {
-        found.state -= 3;
-        if (+found.prevId > 0)
-          decisions.find(item => item.id === +found.prevId).nextId = found.id;
-      }
-    }
-  }
 }

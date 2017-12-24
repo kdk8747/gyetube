@@ -85,7 +85,7 @@
       </ion-buttons>
 
       <ion-toolbar *ngIf="proceeding?.prev_id || proceeding?.next_id">
-        <ion-buttons left *ngIf="proceeding?.prevId">
+        <ion-buttons left *ngIf="proceeding?.prev_id">
           <button ion-button icon-only (tap)="navigateToPrev()">
             <ion-icon name="arrow-back"></ion-icon>
             {{ 'I18N_PREV' | translate}}
@@ -94,7 +94,7 @@
           </button>
         </ion-buttons>
         <span *ngIf="proceeding?.next_id != 0">
-          <p text-center>{{'I18N_PENDING_CREATE' | translate}} - {{'I18N_REJECTED' | translate}}</p>
+          <p text-center>{{'I18N_PENDING_ADDS' | translate}} - {{'I18N_REJECTED' | translate}}</p>
         </span>
         <ion-buttons right *ngIf="proceeding?.next_id">
           <button ion-button icon-only (tap)="navigateToNext()">

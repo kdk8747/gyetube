@@ -47,14 +47,6 @@ export class ProceedingEditorPage {
 
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
-  }
-
-  ionViewWillEnter() {
-    this.translate.get(['I18N_EDITOR', 'I18N_PROCEEDING']).subscribe(values => {
-      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_PROCEEDING;
-    });
-    this.event.publish('App_ShowHeader');
-    this.event.publish('TabsGroup_ShowTab');
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
@@ -80,6 +72,15 @@ export class ProceedingEditorPage {
           });
       }
     });
+  }
+
+  ionViewWillEnter() {
+    this.translate.get(['I18N_EDITOR', 'I18N_PROCEEDING']).subscribe(values => {
+      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_PROCEEDING;
+    });
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
+
   }
 
   popNavigation() {

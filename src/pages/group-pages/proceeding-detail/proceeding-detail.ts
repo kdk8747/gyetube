@@ -74,23 +74,21 @@ export class ProceedingDetailPage {
   }
 
   onSubmit() {
-    if (this.verifiedGood) {/*
-      this.proceedingService.update(this.groupId, this.proceeding.id)
-        .subscribe((proceeding: Proceeding) => {
-          this.proceeding = proceeding;
-          if (proceeding.reviewers.length == proceeding.attendees.length) {
-            this.navCtrl.setRoot('ProceedingListPage');
-            proceeding.childDecisions.map((id: number) => {
-              this.decisionService.cacheDecision(this.groupId, id).subscribe(decision =>
-                this.decisionService.cacheDecision(this.groupId, decision.prevId).publishLast().connect());
+    if (this.verifiedGood) {
+      this.proceedingService.update(this.groupId, this.proceeding.proceeding_id)
+        .subscribe(() => {
+          this.util.getCurrentUser()
+            .then(user => {
+              this.proceeding.reviewers.push(new MemberDetailElement(0,0,0,'',null,'','',user.image_url,user.name, null));
+              if (this.proceeding.reviewers.length == this.proceeding.attendees.length) {
+                this.proceeding.child_decisions.map(decision => decision.document_state = 'ADDED');
+                this.proceeding.document_state = 'ADDED';
+              }
             });
-          }
-          else {
-            this.reviewers = proceeding.reviewers.map((id: number) => this.memberService.getMember(this.groupId, id));
-            this.event.publish('App_ShowHeader');
-            this.event.publish('TabsGroup_ShowTab');
-          }
-        });*/
+          this.proceeding.need_my_review = 0;
+          this.event.publish('App_ShowHeader');
+          this.event.publish('TabsGroup_ShowTab');
+        });
     }
     else {
       this.navCtrl.push('ProceedingEditorPage', { id: this.id });
