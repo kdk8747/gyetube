@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, MemberService, RoleService, SharedDataService } from '../../../providers';
-import { MemberDetailElement, Role } from '../../../models';
+import { MemberDetailElement, RoleDetailElement } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -16,7 +16,7 @@ export class RoleDetailPage {
 
   groupId: number;
   id: number;
-  role: Role;
+  role: RoleDetailElement;
 
   constructor(
     public navCtrl: NavController,
@@ -40,7 +40,7 @@ export class RoleDetailPage {
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
       this.roleService.getRole(this.groupId, this.id)
-      .subscribe((role: Role) => {
+      .subscribe((role: RoleDetailElement) => {
         this.role = role;
         this.sharedDataService.headerDetailTitle = role.name;
       });

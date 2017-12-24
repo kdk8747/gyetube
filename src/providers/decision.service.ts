@@ -22,7 +22,14 @@ export class DecisionService {
   getDecisions(group_id: number): Observable<DecisionListElement[]> {
     const url = `${this.decisionsUrl}/${group_id}`;
     return this.http.get(url)
-      .map(response => response.json() as DecisionListElement[])
+      .map(response => {
+        let decisions = response.json() as DecisionListElement[];
+        return decisions.map(decision => {
+          decision.expiry_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          decision.meeting_datetime += 'Z';
+          return decision;
+        });
+      })
       .take(1);
   }
 
@@ -30,7 +37,12 @@ export class DecisionService {
     const url = `${this.decisionsUrl}/${group_id}/${decision_id}`;
 
     return this.http.get(url)
-      .map(response => response.json() as DecisionDetailElement)
+      .map(response => {
+        let decision = response.json() as DecisionDetailElement;
+        decision.expiry_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        decision.meeting_datetime += 'Z';
+        return decision;
+      })
       .take(1);
   }
 

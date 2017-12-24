@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { Role } from '../models';
+import { RoleListElement, RoleDetailElement } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -19,22 +19,32 @@ export class RoleService {
     public http: AuthHttp
   ) { }
 
-  getRoles(group_id: number): Observable<Role[]> {
+  getRoles(group_id: number): Observable<RoleListElement[]> {
     const url = `${this.rolesUrl}/${group_id}`;
     return this.http.get(url)
-      .map(response => response.json() as Role[])
+      .map(response => {
+        let roles = response.json() as RoleListElement[];
+        return roles.map(role => {
+          role.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          return role;
+        });
+      })
       .take(1);
   }
 
-  getRole(group_id: number, id: number): Observable<Role> {
+  getRole(group_id: number, id: number): Observable<RoleDetailElement> {
     const url = `${this.rolesUrl}/${group_id}/${id}`;
     return this.http.get(url)
-      .map(response => response.json() as Role)
+      .map(response => {
+        let role = response.json() as RoleDetailElement;
+        role.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        return role;
+      })
       .take(1);
   }
 
-  update(group_id: number, role: Role): Observable<Role> {
-    const url = `${this.rolesUrl}/${group_id}/${role.id}`;
+  update(group_id: number, role: RoleDetailElement): Observable<RoleDetailElement> {
+    const url = `${this.rolesUrl}/${group_id}/${role.role_id}`;
     return this.http
       .put(url, JSON.stringify(role), { headers: this.headers })
       .map(() => role)

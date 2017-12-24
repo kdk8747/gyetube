@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, MemberService, RoleService, SharedDataService } from '../../../providers';
-import { MemberDetailElement, Role } from '../../../models';
+import { MemberDetailElement } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 
