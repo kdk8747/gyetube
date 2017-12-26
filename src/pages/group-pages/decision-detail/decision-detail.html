@@ -127,7 +127,7 @@
       </p>
 
       <ion-toolbar *ngIf="(decision?.prev_id || decision?.next_id)">
-        <ion-buttons left *ngIf="decision?.prev_id">
+        <ion-buttons left *ngIf="decision?.document_state != 'PENDING_UPDATES' && decision?.prev_id">
           <button ion-button icon-only (tap)="navigateToPrev()">
             <ion-icon name="arrow-back"></ion-icon>
             {{ 'I18N_PREV' | translate}}
@@ -135,7 +135,7 @@
             <br/> {{ 'I18N_REVISION' | translate}}
           </button>
         </ion-buttons>
-        <ion-buttons right *ngIf="decision?.next_id">
+        <ion-buttons right *ngIf="decision?.document_state != 'PENDING_UPDATES' && decision?.next_id">
           <button ion-button icon-only (tap)="navigateToNext()">
             {{ 'I18N_NEXT' | translate}}
             <br/>

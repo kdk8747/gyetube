@@ -65,7 +65,7 @@ export class ProceedingEditorPage {
             proceeding.child_decisions.map(dle =>
               this.decisionService.getDecision(this.groupId, dle.decision_id)
                 .subscribe(ddl => this.sharedDataService.decisionChangesets.push(
-                  new DecisionEditorElement(ddl.prev_id, ddl.expiry_datetime, ddl.title, ddl.description, ddl.abstainers, ddl.accepters, ddl.rejecters)
+                  new DecisionEditorElement(ddl.decision_id, ddl.expiry_datetime, ddl.title, ddl.description, ddl.abstainers, ddl.accepters, ddl.rejecters)
                 )
               )
             );
