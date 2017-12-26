@@ -78,7 +78,7 @@ function generateToken(req, res, next) {
     jwt.sign({
       user_id: req.user.id,
       name: encodeURIComponent(req.user.name),
-      image_url: req.user.image_url,
+      image_url: encodeURIComponent(req.user.image_url),
       third_party: req.user.third_party,
       permissions: req.user.permissions
     },

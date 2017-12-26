@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { GroupService, UserService, MemberService } from './';
-import { User, Group, MemberDetailElement } from '../models';
+import { User } from '../models';
 
 declare const process: any; // Typescript compiler will complain without this
 
@@ -79,7 +79,7 @@ export class UtilService {
 
   getCurrentUser(): Promise<User> {
     return this.getCurrentPayload().then(payload => {
-      return new User(payload.user_id, decodeURIComponent(payload.name), payload.image_url, payload.third_party);
+      return new User(payload.user_id, decodeURIComponent(payload.name), decodeURIComponent(payload.image_url), payload.third_party);
     });
   }
 
