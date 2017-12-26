@@ -58,7 +58,7 @@ export class ProceedingEditorPage {
             this.form.controls['meetingDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(proceeding.meeting_datetime)));
             this.form.controls['title'].setValue(proceeding.title);
             this.form.controls['description'].setValue(proceeding.description);
-            this.form.controls['attendees'].setValue(proceeding.attendees);
+            this.form.controls['attendees'].setValue(proceeding.attendees.map(attendee => attendee.member_id));
             this.sharedDataService.proceedingAttendees = proceeding.attendees.map(attendee => attendee.member_id);
 
             this.sharedDataService.decisionChangesets = [];
@@ -67,7 +67,7 @@ export class ProceedingEditorPage {
                 .subscribe(ddl => this.sharedDataService.decisionChangesets.push(
                   new DecisionEditorElement(ddl.prev_id, ddl.expiry_datetime, ddl.title, ddl.description, ddl.abstainers, ddl.accepters, ddl.rejecters)
                 )
-                )
+              )
             );
           });
       }

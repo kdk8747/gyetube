@@ -20,7 +20,13 @@ export class GroupService {
 
   getGroups(): Observable<Group[]> {
     return this.http.get(this.groupsUrl)
-      .map(response => response.json() as Group[])
+      .map(response => {
+        let groups = response.json() as Group[];
+        return groups.map(group => {
+          group.created_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          return group;
+        });
+      })
       .take(1);
   }
 
@@ -28,7 +34,11 @@ export class GroupService {
     const url = `${this.groupsUrl}/${id}`;
 
     return this.http.get(url)
-      .map(response => response.json() as Group)
+      .map(response => {
+        let group = response.json() as Group;
+        group.created_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        return group;
+      })
       .publishLast().refCount();
   }
 

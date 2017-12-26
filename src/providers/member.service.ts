@@ -21,7 +21,13 @@ export class MemberService {
   getMembers(group_id: number): Observable<MemberListElement[]> {
     const url = `${this.membersUrl}/${group_id}`;
     return this.http.get(url)
-      .map(response => response.json() as MemberListElement[])
+      .map(response => {
+        let members = response.json() as MemberListElement[];
+        return members.map(member => {
+          member.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          return member;
+        });
+      })
       .take(1);
   }
 
@@ -29,7 +35,11 @@ export class MemberService {
     const url = `${this.membersUrl}/${group_id}/${member_id}`;
 
     return this.http.get(url)
-      .map(response => response.json() as MemberDetailElement)
+      .map(response => {
+        let member = response.json() as MemberDetailElement;
+        member.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        return member;
+      })
       .take(1);
   }
 
@@ -37,7 +47,11 @@ export class MemberService {
     const url = `${this.membersUrl}/${group_id}/myself`;
 
     return this.http.get(url)
-      .map(response => response.json() as MemberDetailElement)
+      .map(response => {
+        let member = response.json() as MemberDetailElement;
+        member.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        return member;
+      })
       .take(1);
   }
 
