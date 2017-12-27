@@ -50,6 +50,9 @@
   "I18N_MEMBERS": "구성원",
   "I18N_ROLES": "역할",
 
+  "I18N_CREATE": "생성",
+  "I18N_READ": "읽기",
+
 
   "I18N_MEETING_DATE": "회의 시각",
   "I18N_ATTENDEES": "참석자",

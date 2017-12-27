@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
-  segment: 'fixme'
+  segment: 'main'
 })
 @Component({
   selector: 'page-group-home',

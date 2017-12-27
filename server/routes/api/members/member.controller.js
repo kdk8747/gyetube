@@ -19,9 +19,16 @@ exports.getAll = async (req, res) => {
     let result = await db.execute(
       'SELECT M.member_id, M.prev_id, M.next_id, M.modified_datetime, M.image_url, M.name,\
       get_state(M.document_state) AS document_state,\
-      count(distinct R.role_id) AS roles_count\
+      count(distinct R.role_id) AS roles_count,\
+      bit_or(R.member) AS member,\
+      bit_or(R.role) AS role,\
+      bit_or(R.proceeding) AS proceeding,\
+      bit_or(R.decision) AS decision,\
+      bit_or(R.activity) AS activity,\
+      bit_or(R.receipt) AS receipt\
       FROM member M\
-      LEFT JOIN member_role R ON R.group_id=M.group_id AND R.member_id=M.member_id\
+      LEFT JOIN member_role MR ON MR.group_id=M.group_id AND MR.member_id=M.member_id\
+      LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
       WHERE M.group_id=?\
       GROUP BY M.member_id', [req.params.group_id]);
     res.send(result[0]);
@@ -52,6 +59,13 @@ exports.getByID = async (req, res) => {
       FROM member\
       WHERE group_id=? AND member_id=?', [req.params.group_id, member[0][0].creator_id]);
     member[0][0].creator = creator[0][0];
+
+    let roles = await db.execute(
+      'SELECT *, get_state(R.document_state) AS document_state\
+      FROM member_role MR\
+        LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
+      WHERE MR.group_id=? AND MR.member_id=?', [req.params.group_id, req.params.member_id]);
+    member[0][0].roles = roles[0];
 
     res.send(member[0][0]);
   }

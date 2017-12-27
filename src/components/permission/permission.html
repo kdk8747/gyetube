@@ -1,0 +1,12 @@
+<div *ngIf="permission != 0">
+  <ion-col>
+    {{ name }}:
+  </ion-col>
+  <ion-col>
+    <ion-icon name="create" [class.selectedIcon]="bitwiseOR(permission,1)" color="grey"></ion-icon>
+    <ion-icon name="eye" [class.selectedIcon]="bitwiseOR(permission,2)" color="grey"></ion-icon>
+    <ion-icon name="text" [class.selectedIcon]="bitwiseOR(permission,4)" color="grey"></ion-icon>
+    <ion-icon name="trash" [class.selectedIcon]="bitwiseOR(permission,8)" color="grey"></ion-icon>
+    <span style="color: white;">---------</span>
+  </ion-col>
+</div>

@@ -17,15 +17,21 @@
 
       <ion-row align-items-center justify-content-start>
         <ion-col col-auto>
-          <grasscube-user [user]="creator | async"></grasscube-user>
+          <grasscube-user [user]="member?.creator"></grasscube-user>
         </ion-col>
         <ion-col>
-          <p>{{(creator | async)?.name}}</p>
+          <p>{{member?.creator?.name}}</p>
           <p>{{member?.modified_datetime | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>
 
-      <img *ngIf="member?.image_url?.includes('http')" [src]="member?.image_url" style="width: auto; height: auto">
+      <ion-item *ngIf="member?.user_id">
+        <ion-avatar item-start *ngIf="member?.image_url?.includes('http')">
+          <img [src]="member?.image_url">
+        </ion-avatar>
+        <h2>{{ member?.name }}</h2>
+        <p>{{ member?.third_party }}</p>
+      </ion-item>
 
       <ion-card *ngIf="member?.parent_decision">
         <ion-item tappable (tap)="navigateToDecisionDetail(member.parent_decision.decision_id)">
@@ -36,6 +42,34 @@
             </ion-col>
             <ion-col col-auto>
               <ion-icon style="font-size: 1.8em" name="arrow-forward"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-card>
+
+      <ion-card *ngFor="let role of member?.roles; let i=index">
+        <ion-item tappable (tap)="navigateToRoleDetail(role.role_id)">
+          <ion-row align-items-center>
+            <ion-col>
+              <p>{{ 'I18N_ROLE' | translate }}{{i+1}} - {{ role.name }}</p>
+              <ion-row justify-content-end>
+                <grasscube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role.member"></grasscube-permission>
+              </ion-row>
+              <ion-row justify-content-end>
+                <grasscube-permission [name]="('I18N_ROLE' | translate) || '&nbsp;'" [permission]="role.role"></grasscube-permission>
+              </ion-row>
+              <ion-row justify-content-end>
+                <grasscube-permission [name]="('I18N_PROCEEDING' | translate) || '&nbsp;'" [permission]="role.proceeding"></grasscube-permission>
+              </ion-row>
+              <ion-row justify-content-end>
+                <grasscube-permission [name]="('I18N_DECISION' | translate) || '&nbsp;'" [permission]="role.decision"></grasscube-permission>
+              </ion-row>
+              <ion-row justify-content-end>
+                <grasscube-permission [name]="('I18N_ACTIVITY' | translate) || '&nbsp;'" [permission]="role.activity"></grasscube-permission>
+              </ion-row>
+              <ion-row justify-content-end>
+                <grasscube-permission [name]="('I18N_RECEIPT' | translate) || '&nbsp;'" [permission]="role.receipt"></grasscube-permission>
+              </ion-row>
             </ion-col>
           </ion-row>
         </ion-item>

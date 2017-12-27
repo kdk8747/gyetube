@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, MemberService, RoleService, SharedDataService } from '../../../providers';
+import { UtilService, MemberService, SharedDataService } from '../../../providers';
 import { MemberDetailElement } from '../../../models';
-import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
@@ -24,7 +23,6 @@ export class MemberDetailPage {
     public event: Events,
     public util: UtilService,
     public memberService: MemberService,
-    public roleService: RoleService,
     public sharedDataService: SharedDataService
   ) {
   }
@@ -56,5 +54,9 @@ export class MemberDetailPage {
 
   navigateToDecisionDetail(decision_id: string) {
     this.event.publish('TabsGroup_DecisionDetail', { id: decision_id });
+  }
+
+  navigateToRoleDetail(role_id: string) {
+    this.navCtrl.push('RoleDetailPage', { id: role_id });
   }
 }

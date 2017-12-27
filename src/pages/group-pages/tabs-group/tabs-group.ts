@@ -17,7 +17,7 @@ export class TabsGroupPage {
   tab4Root: string = 'ActivityListPage';
   tab5Root: string = 'ReceiptListPage';
 
-  responseTimeMs: number = 90;
+  responseTimeMs: number = 100;
 
   constructor(
     public element: ElementRef,
@@ -81,6 +81,8 @@ export class TabsGroupPage {
   ionViewWillUnload() {
     this.event.unsubscribe('TabsGroup_HideTab');
     this.event.unsubscribe('TabsGroup_ShowTab');
+    this.event.unsubscribe('TabsGroup_MemberDetail');
+    this.event.unsubscribe('TabsGroup_RoleDetail');
     this.event.unsubscribe('TabsGroup_ProceedingDetail');
     this.event.unsubscribe('TabsGroup_DecisionDetail');
     this.event.unsubscribe('TabsGroup_ActivityDetail');

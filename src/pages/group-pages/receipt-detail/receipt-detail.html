@@ -26,8 +26,8 @@
       </ion-row>
 
       <img *ngIf="receipt?.image_url?.includes('http')" [src]="receipt?.image_url" style="width: auto; height: auto">
-      <p>{{ 'I18N_SETTLEMENT_DATE' | translate}} {{receipt?.settlement_datetime | localizedDate:'short'}}</p>
-      <p>{{ 'I18N_DIFFERENCE' | translate}} {{receipt?.difference | number}}</p>
+      <p>{{ 'I18N_SETTLEMENT_DATE' | translate}}: {{receipt?.settlement_datetime | localizedDate:'short'}}</p>
+      <p>{{ 'I18N_DIFFERENCE' | translate}}: {{receipt?.difference | number}}</p>
 
       <ion-card *ngIf="receipt?.parent_activity">
         <ion-item tappable (tap)="navigateToActivityDetail(receipt.parent_activity.activity_id)">

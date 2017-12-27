@@ -50,6 +50,9 @@
   "I18N_MEMBERS": "Members",
   "I18N_ROLES": "Roles",
 
+  "I18N_CREATE": "Create",
+  "I18N_READ": "Read",
+
 
   "I18N_MEETING_DATE": "Meeting Date",
   "I18N_ATTENDEES": "Attendee(s)",

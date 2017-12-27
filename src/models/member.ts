@@ -1,4 +1,4 @@
-import { DecisionListElement } from './'
+import { DecisionListElement, RoleListElement } from './'
 
 export class MemberListElement {
   constructor(
@@ -24,6 +24,7 @@ export class MemberDetailElement {
     public user_id: string,
     public image_url: string,
     public name: string,
-    public parent_decision: DecisionListElement
+    public parent_decision: DecisionListElement,
+    public roles: RoleListElement[]
   ) { }
 }

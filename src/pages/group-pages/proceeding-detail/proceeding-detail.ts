@@ -79,7 +79,7 @@ export class ProceedingDetailPage {
         .subscribe(() => {
           this.util.getCurrentUser()
             .then(user => {
-              this.proceeding.reviewers.push(new MemberDetailElement(0,0,0,'',null,'','',user.image_url,user.name, null));
+              this.proceeding.reviewers.push(new MemberDetailElement(0,0,0,'',null,'','',user.image_url,user.name,null,null));
               if (this.proceeding.reviewers.length == this.proceeding.attendees.length) {
                 this.proceeding.child_decisions.map(decision => decision.document_state = 'ADDED');
                 this.proceeding.document_state = 'ADDED';
