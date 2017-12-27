@@ -19,4 +19,6 @@ export class SharedDataService {
   headerDetailTitle: string = null;
 
   memberListTimelineMode: boolean = false;
+
+  roleListTimelineMode: boolean = false;
 }

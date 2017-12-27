@@ -23,7 +23,7 @@ export class RoleEditorPage {
     public sharedDataService: SharedDataService
   ) {
   }
-/*
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad RoleEditorPage');
   }
@@ -34,5 +34,4 @@ export class RoleEditorPage {
     else
       this.navCtrl.pop();
   }
-*/
 }

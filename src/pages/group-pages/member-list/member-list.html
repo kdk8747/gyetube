@@ -6,7 +6,7 @@
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
       <ion-toolbar *ngIf="sharedDataService.paneSplited">
-        <ion-buttons right>
+        <ion-buttons left>
           <button ion-button icon-only (tap)="popNavigation()">
             <ion-icon name="close"></ion-icon>
           </button>
@@ -24,7 +24,6 @@
           </ion-col>
           <ion-col>
             <p>{{ member.name }}</p>
-            <p>{{member.modified_datetime | localizedDate}}</p>
           </ion-col>
         </ion-row>
         <ion-row justify-content-end>
@@ -73,7 +72,6 @@
               </ion-col>
               <ion-col>
                 <p>{{ member.name }}</p>
-                <p>{{member.modified_datetime | localizedDate}}</p>
               </ion-col>
             </ion-row>
             <ion-row justify-content-end>

@@ -24,8 +24,24 @@
           <p>{{role?.modified_datetime | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>
-
-      <p>{{ 'I18N_ROLES' | translate}} {{role?.role }}</p>
+      <ion-row justify-content-end>
+        <grasscube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role?.member"></grasscube-permission>
+      </ion-row>
+      <ion-row justify-content-end>
+        <grasscube-permission [name]="('I18N_ROLE' | translate) || '&nbsp;'"   [permission]="role?.role"></grasscube-permission>
+      </ion-row>
+      <ion-row justify-content-end>
+        <grasscube-permission [name]="('I18N_PROCEEDING' | translate) || '&nbsp;'" [permission]="role?.proceeding"></grasscube-permission>
+      </ion-row>
+      <ion-row justify-content-end>
+        <grasscube-permission [name]="('I18N_DECISION' | translate) || '&nbsp;'" [permission]="role?.decision"></grasscube-permission>
+      </ion-row>
+      <ion-row justify-content-end>
+        <grasscube-permission [name]="('I18N_ACTIVITY' | translate) || '&nbsp;'" [permission]="role?.activity"></grasscube-permission>
+      </ion-row>
+      <ion-row justify-content-end>
+        <grasscube-permission [name]="('I18N_RECEIPT' | translate) || '&nbsp;'"  [permission]="role?.receipt"></grasscube-permission>
+      </ion-row>
 
       <ion-card *ngIf="role?.parent_decision">
           <ion-item tappable (tap)="navigateToDecisionDetail(role.parent_decision.decision_id)">
