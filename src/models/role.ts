@@ -15,7 +15,7 @@ export class RoleListElement {
     public decision: number,
     public activity: number,
     public receipt: number,
-    public parent_decision: number
+    public parent_decision_id: number
   ) { }
 }
 
@@ -35,5 +35,19 @@ export class RoleDetailElement {
     public activity: number,
     public receipt: number,
     public parent_decision: DecisionListElement
+  ) { }
+}
+
+export class RoleEditorElement {
+  constructor(
+    public prev_id: number,
+    public name: string,
+    public member: number,
+    public role: number,
+    public proceeding: number,
+    public decision: number,
+    public activity: number,
+    public receipt: number,
+    public parent_decision_id: number
   ) { }
 }

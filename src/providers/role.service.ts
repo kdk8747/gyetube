@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { RoleListElement, RoleDetailElement } from '../models';
+import { RoleListElement, RoleDetailElement, RoleEditorElement } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -48,6 +48,14 @@ export class RoleService {
     return this.http
       .put(url, JSON.stringify(role), { headers: this.headers })
       .map(() => role)
+      .take(1);
+  }
+
+  create(group_id: number, role: RoleEditorElement): Observable<void> {
+    const url = `${this.rolesUrl}/${group_id}`;
+    return this.http
+      .post(url, JSON.stringify(role), { headers: this.headers })
+      .map(() => null)
       .take(1);
   }
 }

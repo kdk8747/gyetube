@@ -113,7 +113,7 @@ export class ActivityEditorPage {
     if (!this.newActivityImageFile) {
       this.activityService.create(this.groupId, newActivity).toPromise()
         .then(() => this.navCtrl.setRoot('ActivityListPage'))
-        .catch(() => { console.log('new receipt failed') });
+        .catch(() => { console.log('new activity failed') });
     }
     else {
       let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
@@ -127,7 +127,7 @@ export class ActivityEditorPage {
           return this.activityService.create(this.groupId, newActivity).toPromise();
         })
         .then(() => this.navCtrl.setRoot('ActivityListPage'))
-        .catch(() => { console.log('new receipt failed') });
+        .catch(() => { console.log('new activity failed') });
     }
   }
 }

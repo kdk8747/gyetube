@@ -65,3 +65,55 @@ exports.updateByID = (req, res) => {
     message: 'groupId: not found'
   });
 }
+
+exports.create = async (req, res) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    let member_id = await conn.query(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.params.group_id, req.decoded.user_id]);
+    debug(member_id[0]);
+
+    debug(req.body);
+    if (!(req.body.name.length < 32)) throw 'Invalid name';
+    if (!req.body.parent_decision_id) throw 'need parent document';
+
+    let role_new_id = await conn.query('SELECT GET_SEQ(?,"role") AS new_id', [req.params.group_id]);
+
+    await conn.query(
+      'INSERT INTO role\
+      VALUES(?,?,?,0,?,NOW(),?, ?,?,?,?,?,?, ?,?)', [
+        req.params.group_id,
+        role_new_id[0][0].new_id,
+        req.body.prev_id,
+        req.body.prev_id ? 3 /*UPDATED*/ : 2/*ADDED*/,
+        req.body.name,
+
+        req.body.member,
+        req.body.role,
+        req.body.proceeding,
+        req.body.decision,
+        req.body.activity,
+        req.body.receipt,
+        member_id[0][0].member_id,
+        req.body.parent_decision_id
+      ]);
+
+    await conn.commit();
+    conn.release();
+
+    res.send();
+  }
+  catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
+    }
+    res.status(500).json({
+      success: false,
+      message: err
+    });
+  }
+}

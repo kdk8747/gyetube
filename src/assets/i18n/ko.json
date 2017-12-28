@@ -44,14 +44,18 @@
   "I18N_NEXT": "다음",
   "I18N_REVISION": "수정판",
   "I18N_BASIS_FOR_THIS_DOCUMENT": "이 문서의 근거",
+  "I18N_NAME": "이름",
 
 
   "I18N_ADMINISTRATION": "관리",
   "I18N_MEMBERS": "구성원",
   "I18N_ROLES": "역할",
 
+
   "I18N_CREATE": "생성",
   "I18N_READ": "읽기",
+  "I18N_INTERACTION": "상호작용",
+  "I18N_PERMISSIONS": "허가",
 
 
   "I18N_MEETING_DATE": "회의 시각",

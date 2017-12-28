@@ -44,14 +44,18 @@
   "I18N_NEXT": "Next",
   "I18N_REVISION": "Revision",
   "I18N_BASIS_FOR_THIS_DOCUMENT": "Basis for This Document",
+  "I18N_NAME": "Name",
 
 
   "I18N_ADMINISTRATION": "Administration",
   "I18N_MEMBERS": "Members",
   "I18N_ROLES": "Roles",
 
+
   "I18N_CREATE": "Create",
   "I18N_READ": "Read",
+  "I18N_INTERACTION": "Interaction",
+  "I18N_PERMISSIONS": "Permissions",
 
 
   "I18N_MEETING_DATE": "Meeting Date",
