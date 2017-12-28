@@ -96,6 +96,7 @@
   "I18N_ADDED": "Added",
   "I18N_UPDATED": "Updated",
   "I18N_DELETED": "Deleted",
+  "I18N_PREDEFINED": "Predefined",
   "I18N_PENDING_ADDS": "Pending Adds",
   "I18N_PENDING_UPDATES": "Pending Updates",
   "I18N_PENDING_DELETES": "Pending Deletes"

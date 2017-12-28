@@ -96,6 +96,7 @@
   "I18N_ADDED": "추가함",
   "I18N_UPDATED": "수정함",
   "I18N_DELETED": "삭제함",
+  "I18N_PREDEFINED": "미리 정의됨",
   "I18N_PENDING_ADDS": "계류중인 추가",
   "I18N_PENDING_UPDATES": "계류중인 수정",
   "I18N_PENDING_DELETES": "계류중인 삭제"
