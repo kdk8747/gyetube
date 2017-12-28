@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, MemberService, RoleService, SharedDataService } from '../../../providers';
-import { MemberDetailElement, RoleDetailElement } from '../../../models';
+import { RoleDetailElement } from '../../../models';
 
 
 @IonicPage({

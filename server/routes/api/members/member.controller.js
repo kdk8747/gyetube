@@ -17,7 +17,7 @@ exports.authRead = (req, res, next) => {
 exports.getAll = async (req, res) => {
   try {
     let result = await db.execute(
-      'SELECT M.member_id, M.prev_id, M.next_id, M.modified_datetime, M.image_url, M.name,\
+      'SELECT M.member_id, M.prev_id, M.next_id, M.created_datetime, M.image_url, M.name,\
       get_state(M.document_state) AS document_state,\
       count(distinct R.role_id) AS roles_count,\
       bit_or(R.member) AS member,\

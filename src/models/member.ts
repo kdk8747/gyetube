@@ -6,7 +6,7 @@ export class MemberListElement {
     public prev_id: number,
     public next_id: number,
     public document_state: string,
-    public modified_datetime: string,
+    public created_datetime: string,
     public user_id: string,
     public image_url: string,
     public name: string
@@ -20,7 +20,7 @@ export class MemberDetailElement {
     public next_id: number,
     public document_state: string,
     public creator: MemberListElement,
-    public modified_datetime: string,
+    public created_datetime: string,
     public user_id: string,
     public image_url: string,
     public name: string,

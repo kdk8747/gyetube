@@ -15,7 +15,7 @@
       </ion-toolbar>
 
       <ion-item tappable *ngFor="let member of members | async" (tap)="navigateToDetail(member.member_id)">
-        <p>{{ 'I18N_' + member.document_state | translate}}</p>
+        <p>{{ 'I18N_' + member.document_state | translate}} - {{member.created_datetime | localizedDate}}</p>
         <ion-row>
           <ion-col col-auto>
             <ion-avatar *ngIf="member?.image_url?.includes('http')">
