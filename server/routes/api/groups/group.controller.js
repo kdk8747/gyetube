@@ -38,8 +38,8 @@ exports.getID = async (req, res) => {
   try {
     let group = await db.execute(
       'SELECT *\
-      FROM url_segment U\
-      WHERE U.url_segment=?', [req.params.url_segment]);
+      FROM `group`\
+      WHERE url_segment=?', [req.params.url_segment]);
 
     res.send(group[0][0]);
   }

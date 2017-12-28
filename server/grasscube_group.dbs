@@ -350,14 +350,6 @@ d = 8,]]></comment>
 				<fk_column name="creator_id" pk="member_id" />
 			</fk>
 		</table>
-		<table name="url_segment" >
-			<column name="url_segment" type="char" length="32" jt="1" mandatory="y" />
-			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
-			<index name="pk_url_segment" unique="PRIMARY_KEY" >
-				<column name="url_segment" />
-			</index>
-			<storage><![CDATA[engine=InnoDB]]></storage>
-		</table>
 		<table name="user" >
 			<column name="user_id" type="binary" length="16" jt="-2" mandatory="y" />
 			<column name="third_party" type="varchar" length="16" jt="12" mandatory="y" />
@@ -443,14 +435,11 @@ END]]></string>
 	<connector name="MariaDb" database="MariaDb" driver_class="org.mariadb.jdbc.Driver" driver_jar="mariadb-java-client-2.1.0.jar" host="localhost" port="3306" instance="test" user="root" passwd="bXlsb2NhbHB3" />
 	<layout name="Default Layout" id="Layout_32e5263" show_relation="columns" >
 		<entity schema="test" name="member_role" color="c8f5bf" x="45" y="90" />
-		<entity schema="test" name="url_segment" color="99ff99" x="600" y="750" />
 		<entity schema="test" name="attendee" color="bfd4f5" x="150" y="225" />
 		<entity schema="test" name="user_permission" color="ff9999" x="780" y="1005" />
 		<entity schema="test" name="user" color="ff9999" x="990" y="1020" />
-		<entity schema="test" name="member" color="c8f5bf" x="435" y="75" />
 		<entity schema="test" name="role" color="99ff99" x="120" y="675" />
 		<entity schema="test" name="receipt" color="99ffff" x="1050" y="450" />
-		<entity schema="test" name="group" color="ff9999" x="495" y="1005" />
 		<entity schema="test" name="home" color="99ff99" x="345" y="720" />
 		<entity schema="test" name="voter" color="1f5182" x="615" y="285" />
 		<entity schema="test" name="master_seq" color="99ff99" x="735" y="750" />
@@ -458,6 +447,8 @@ END]]></string>
 		<entity schema="test" name="activity" color="99ffff" x="795" y="315" />
 		<entity schema="test" name="proceeding" color="99ffff" x="225" y="480" />
 		<entity schema="test" name="decision" color="99ffff" x="495" y="450" />
+		<entity schema="test" name="member" color="c8f5bf" x="435" y="75" />
+		<entity schema="test" name="group" color="ff9999" x="495" y="1005" />
 		<group name="Group_for_Sharding" color="c4e0f9" >
 			<entity schema="test" name="activity" />
 			<entity schema="test" name="attendee" />
@@ -469,7 +460,6 @@ END]]></string>
 			<entity schema="test" name="role" />
 			<entity schema="test" name="voter" />
 			<entity schema="test" name="home" />
-			<entity schema="test" name="url_segment" />
 		</group>
 		<group name="Group_for_Center" color="c4e0f9" >
 			<entity schema="test" name="group" />
