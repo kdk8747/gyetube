@@ -422,13 +422,25 @@ d = 8,]]></comment>
 			<storage><![CDATA[engine=InnoDB]]></storage>
 		</table>
 		<function name="get_seq" id="Function_1fb907c" isSystem="false" params_known="n" >
-			<string><![CDATA[CREATE FUNCTION test.get_seq ( p_group_id INT UNSIGNED, p_seq_name VARCHAR(16) ) RETURNS int(11)
+			<string><![CDATA[CREATE FUNCTION test.get_seq ( p_group_id INT UNSIGNED, p_seq_name VARCHAR(32) ) RETURNS int(10) unsigned
 BEGIN
- DECLARE RESULT_ID INT;
- UPDATE master_seq SET id = LAST_INSERT_ID(id+1) 
- WHERE group_id = p_group_id AND seq_name = p_seq_name;
+ DECLARE RESULT_ID INT UNSIGNED;
+ UPDATE master_seq SET id = LAST_INSERT_ID(id+1)
+ WHERE group_id=p_group_id AND seq_name = p_seq_name;
  SET RESULT_ID = (SELECT LAST_INSERT_ID());
  RETURN RESULT_ID;
+END]]></string>
+		</function>
+		<function name="get_state" id="Function_384fb6c" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE FUNCTION test.get_state ( DOCUMENT_STATE INT UNSIGNED  ) RETURNS varchar(32) CHARSET utf8
+BEGIN
+  RETURN (CASE DOCUMENT_STATE
+  WHEN 0 THEN "PENDING_ADDS"
+  WHEN 1 THEN "PENDING_UPDATES"
+  WHEN 2 THEN "ADDED"
+  WHEN 3 THEN "UPDATED"
+  ELSE "UNKNOWN_STATE"
+  END) ;
 END]]></string>
 		</function>
 	</schema>
