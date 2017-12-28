@@ -55,7 +55,7 @@ export class ReceiptEditorPage {
 
   ionViewWillEnter() {
     this.translate.get(['I18N_EDITOR', 'I18N_RECEIPT']).subscribe(values => {
-      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_RECEIPT;
+      this.sharedDataService.headerDetailTitle = values.I18N_RECEIPT + ' - ' + values.I18N_EDITOR;
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');

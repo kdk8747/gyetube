@@ -55,7 +55,7 @@ export class DecisionEditorPage {
 
   ionViewWillEnter() {
     this.translate.get(['I18N_EDITOR', 'I18N_DECISION', 'I18N_DELETE']).subscribe(values => {
-      this.sharedDataService.headerDetailTitle = values.I18N_EDITOR + ' - ' + values.I18N_DECISION;
+      this.sharedDataService.headerDetailTitle = values.I18N_DECISION + ' - ' + values.I18N_EDITOR;
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
