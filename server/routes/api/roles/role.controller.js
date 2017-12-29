@@ -14,12 +14,43 @@ exports.authRead = (req, res, next) => {
     });
 }
 
+function bitToStringArray(bit) {
+  let ret = [];
+  if (bit & 1) ret.push('CREATE');
+  if (bit & 2) ret.push('READ');
+  if (bit & 4) ret.push('INTERACTION');
+  if (bit & 8) ret.push('DELETE');
+  return ret;
+}
+
+function stringArrayToBit(stringArray) {
+  return stringArray.reduce((a, b) => {
+    switch (b) {
+      case 'CREATE': return 1 + a;
+      case 'READ': return 2 + a;
+      case 'INTERACTION': return 4 + a;
+      case 'DELETE': return 8 + a;
+      default: return a;
+    }
+  }, 0);
+}
+
 exports.getAll = async (req, res) => {
   try {
     let result = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
       FROM role\
       WHERE group_id=?', [req.params.group_id]);
+
+    result[0] = result[0].map(role => {
+      role.member = bitToStringArray(role.member);
+      role.role = bitToStringArray(role.role);
+      role.proceeding = bitToStringArray(role.proceeding);
+      role.decision = bitToStringArray(role.decision);
+      role.activity = bitToStringArray(role.activity);
+      role.receipt = bitToStringArray(role.receipt);
+      return role;
+    });
     res.send(result[0]);
   }
   catch (err) {
@@ -48,6 +79,13 @@ exports.getByID = async (req, res) => {
       FROM member\
       WHERE group_id=? AND member_id=?', [req.params.group_id, role[0][0].creator_id]);
     role[0][0].creator = creator[0][0];
+
+    role[0][0].member = bitToStringArray(role[0][0].member);
+    role[0][0].role = bitToStringArray(role[0][0].role);
+    role[0][0].proceeding = bitToStringArray(role[0][0].proceeding);
+    role[0][0].decision = bitToStringArray(role[0][0].decision);
+    role[0][0].activity = bitToStringArray(role[0][0].activity);
+    role[0][0].receipt = bitToStringArray(role[0][0].receipt);
 
     res.send(role[0][0]);
   }
@@ -91,12 +129,12 @@ exports.create = async (req, res) => {
         req.body.prev_id ? 3 /*UPDATED*/ : 2/*ADDED*/,
         req.body.name,
 
-        req.body.member,
-        req.body.role,
-        req.body.proceeding,
-        req.body.decision,
-        req.body.activity,
-        req.body.receipt,
+        stringArrayToBit(req.body.member),
+        stringArrayToBit(req.body.role),
+        stringArrayToBit(req.body.proceeding),
+        stringArrayToBit(req.body.decision),
+        stringArrayToBit(req.body.activity),
+        stringArrayToBit(req.body.receipt),
         member_id[0][0].member_id,
         req.body.parent_decision_id
       ]);

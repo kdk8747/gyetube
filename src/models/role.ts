@@ -9,12 +9,12 @@ export class RoleListElement {
     public creator_id: number,
     public created_datetime: string,
     public name: string,
-    public member: number,
-    public role: number,
-    public proceeding: number,
-    public decision: number,
-    public activity: number,
-    public receipt: number,
+    public member: string[],
+    public role: string[],
+    public proceeding: string[],
+    public decision: string[],
+    public activity: string[],
+    public receipt: string[],
     public parent_decision_id: number
   ) { }
 }
@@ -28,12 +28,12 @@ export class RoleDetailElement {
     public creator: MemberListElement,
     public created_datetime: string,
     public name: string,
-    public member: number,
-    public role: number,
-    public proceeding: number,
-    public decision: number,
-    public activity: number,
-    public receipt: number,
+    public member: string[],
+    public role: string[],
+    public proceeding: string[],
+    public decision: string[],
+    public activity: string[],
+    public receipt: string[],
     public parent_decision: DecisionListElement
   ) { }
 }
@@ -42,12 +42,12 @@ export class RoleEditorElement {
   constructor(
     public prev_id: number,
     public name: string,
-    public member: number,
-    public role: number,
-    public proceeding: number,
-    public decision: number,
-    public activity: number,
-    public receipt: number,
+    public member: string[],
+    public role: string[],
+    public proceeding: string[],
+    public decision: string[],
+    public activity: string[],
+    public receipt: string[],
     public parent_decision_id: number
   ) { }
 }

@@ -28,8 +28,8 @@
           <ion-item>
             <ion-select formControlName="member" multiple="true" [selectOptions]="{title: ('I18N_PERMISSIONS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!form.controls.member.valid && (form.controls.member.dirty || submitAttempt)">
-              <ion-option *ngFor="let permission of permissions" [value]="permission.id">
-                {{ permission.name | translate }}
+              <ion-option *ngFor="let permission of permissions" [value]="permission">
+                {{ 'I18N_' + permission | translate }}
               </ion-option>
             </ion-select>
           </ion-item>
@@ -40,8 +40,8 @@
           <ion-item>
             <ion-select formControlName="role" multiple="true" [selectOptions]="{title: ('I18N_PERMISSIONS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!form.controls.role.valid && (form.controls.role.dirty || submitAttempt)">
-              <ion-option *ngFor="let permission of permissions" [value]="permission.id">
-                {{ permission.name | translate }}
+              <ion-option *ngFor="let permission of permissions" [value]="permission">
+                {{ 'I18N_' + permission | translate }}
               </ion-option>
             </ion-select>
           </ion-item>
@@ -52,8 +52,8 @@
           <ion-item>
             <ion-select formControlName="proceeding" multiple="true" [selectOptions]="{title: ('I18N_PERMISSIONS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!form.controls.proceeding.valid && (form.controls.proceeding.dirty || submitAttempt)">
-              <ion-option *ngFor="let permission of permissions" [value]="permission.id">
-                {{ permission.name | translate }}
+              <ion-option *ngFor="let permission of permissions" [value]="permission">
+                {{ 'I18N_' + permission | translate }}
               </ion-option>
             </ion-select>
           </ion-item>
@@ -64,8 +64,8 @@
           <ion-item>
             <ion-select formControlName="decision" multiple="true" [selectOptions]="{title: ('I18N_PERMISSIONS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!form.controls.decision.valid && (form.controls.decision.dirty || submitAttempt)">
-              <ion-option *ngFor="let permission of permissions" [value]="permission.id">
-                {{ permission.name | translate }}
+              <ion-option *ngFor="let permission of permissions" [value]="permission">
+                {{ 'I18N_' + permission | translate }}
               </ion-option>
             </ion-select>
           </ion-item>
@@ -76,8 +76,8 @@
           <ion-item>
             <ion-select formControlName="activity" multiple="true" [selectOptions]="{title: ('I18N_PERMISSIONS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!form.controls.activity.valid && (form.controls.activity.dirty || submitAttempt)">
-              <ion-option *ngFor="let permission of permissions" [value]="permission.id">
-                {{ permission.name | translate }}
+              <ion-option *ngFor="let permission of permissions" [value]="permission">
+                {{ 'I18N_' + permission | translate }}
               </ion-option>
             </ion-select>
           </ion-item>
@@ -88,8 +88,8 @@
           <ion-item>
             <ion-select formControlName="receipt" multiple="true" [selectOptions]="{title: ('I18N_PERMISSIONS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!form.controls.receipt.valid && (form.controls.receipt.dirty || submitAttempt)">
-              <ion-option *ngFor="let permission of permissions" [value]="permission.id">
-                {{ permission.name | translate }}
+              <ion-option *ngFor="let permission of permissions" [value]="permission">
+                {{ 'I18N_' + permission | translate }}
               </ion-option>
             </ion-select>
           </ion-item>

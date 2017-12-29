@@ -3,10 +3,10 @@
     {{ name }}:
   </ion-col>
   <ion-col>
-    <ion-icon name="create" [class.selectedIcon]="bitwiseOR(permission,1)" color="grey"></ion-icon>
-    <ion-icon name="eye" [class.selectedIcon]="bitwiseOR(permission,2)" color="grey"></ion-icon>
-    <ion-icon name="text" [class.selectedIcon]="bitwiseOR(permission,4)" color="grey"></ion-icon>
-    <ion-icon name="trash" [class.selectedIcon]="bitwiseOR(permission,8)" color="grey"></ion-icon>
+    <ion-icon name="create" [class.selectedIcon]="has(permission,'CREATE')" color="grey"></ion-icon>
+    <ion-icon name="eye" [class.selectedIcon]="has(permission,'READ')" color="grey"></ion-icon>
+    <ion-icon name="text" [class.selectedIcon]="has(permission,'INTERACTION')" color="grey"></ion-icon>
+    <ion-icon name="trash" [class.selectedIcon]="has(permission,'DELETE')" color="grey"></ion-icon>
     <span style="color: white;">---------</span>
   </ion-col>
 </div>

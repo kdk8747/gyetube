@@ -7,12 +7,12 @@ import { Component, Input } from '@angular/core';
 export class PermissionComponent {
 
   @Input() name: string;
-  @Input() permission: number;
+  @Input() permission: string[];
 
   constructor() {
   }
 
-  bitwiseOR(permission, mask): boolean {
-    return !!(permission & mask);
+  has(permission:string[], str: string): boolean {
+    return permission.some(val => val == str);
   }
 }

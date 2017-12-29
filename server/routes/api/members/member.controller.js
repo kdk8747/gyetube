@@ -14,6 +14,27 @@ exports.authRead = (req, res, next) => {
     });
 }
 
+function bitToStringArray(bit) {
+  let ret = [];
+  if (bit & 1) ret.push('CREATE');
+  if (bit & 2) ret.push('READ');
+  if (bit & 4) ret.push('INTERACTION');
+  if (bit & 8) ret.push('DELETE');
+  return ret;
+}
+
+function stringArrayToBit(stringArray) {
+  return stringArray.reduce((a, b) => {
+    switch (b) {
+      case 'CREATE': return 1 + a;
+      case 'READ': return 2 + a;
+      case 'INTERACTION': return 4 + a;
+      case 'DELETE': return 8 + a;
+      default: return a;
+    }
+  }, 0);
+}
+
 exports.getAll = async (req, res) => {
   try {
     let result = await db.execute(
@@ -31,6 +52,15 @@ exports.getAll = async (req, res) => {
       LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
       WHERE M.group_id=?\
       GROUP BY M.member_id', [req.params.group_id]);
+    result[0] = result[0].map(member => {
+      member.member = bitToStringArray(member.member);
+      member.role = bitToStringArray(member.role);
+      member.proceeding = bitToStringArray(member.proceeding);
+      member.decision = bitToStringArray(member.decision);
+      member.activity = bitToStringArray(member.activity);
+      member.receipt = bitToStringArray(member.receipt);
+      return member;
+    });
     res.send(result[0]);
   }
   catch (err) {
@@ -65,7 +95,15 @@ exports.getByID = async (req, res) => {
       FROM member_role MR\
         LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
       WHERE MR.group_id=? AND MR.member_id=?', [req.params.group_id, req.params.member_id]);
-    member[0][0].roles = roles[0];
+    member[0][0].roles = roles[0].map(role => {
+      role.member = bitToStringArray(role.member);
+      role.role = bitToStringArray(role.role);
+      role.proceeding = bitToStringArray(role.proceeding);
+      role.decision = bitToStringArray(role.decision);
+      role.activity = bitToStringArray(role.activity);
+      role.receipt = bitToStringArray(role.receipt);
+      return role;
+    });
 
     res.send(member[0][0]);
   }

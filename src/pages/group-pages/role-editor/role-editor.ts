@@ -34,7 +34,7 @@ export class RoleEditorPage {
     public sharedDataService: SharedDataService,
     public translate: TranslateService
   ) {
-    this.permissions = [{ name: 'I18N_CREATE', id: 1 }, { name: 'I18N_READ', id: 2 }, { name: 'I18N_INTERACTION', id: 4 }, { name: 'I18N_DELETE', id: 8 }];
+    this.permissions = ['CREATE', 'READ', 'INTERACTION', 'DELETE'];
 
     this.form = formBuilder.group({
       name: ['', Validators.compose([Validators.maxLength(32), Validators.required])],
@@ -78,12 +78,12 @@ export class RoleEditorPage {
     this.form.value.name = this.form.value.name.trim();
 
     let newRole = new RoleEditorElement(0, this.form.value.name,
-      this.form.value.member.reduce((a, b) => a + b, 0),
-      this.form.value.role.reduce((a, b) => a + b, 0),
-      this.form.value.proceeding.reduce((a, b) => a + b, 0),
-      this.form.value.decision.reduce((a, b) => a + b, 0),
-      this.form.value.activity.reduce((a, b) => a + b, 0),
-      this.form.value.receipt.reduce((a, b) => a + b, 0),
+      this.form.value.member,
+      this.form.value.role,
+      this.form.value.proceeding,
+      this.form.value.decision,
+      this.form.value.activity,
+      this.form.value.receipt,
       this.form.value.parentDecision);
 
     this.roleService.create(this.groupId, newRole).toPromise()
