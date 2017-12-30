@@ -24,27 +24,30 @@
           <p>{{role?.created_datetime | localizedDate:'short'}}</p>
         </ion-col>
       </ion-row>
-      <ion-row justify-content-end>
-        <grasscube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role?.member"></grasscube-permission>
-      </ion-row>
-      <ion-row justify-content-end>
-        <grasscube-permission [name]="('I18N_ROLE' | translate) || '&nbsp;'"   [permission]="role?.role"></grasscube-permission>
-      </ion-row>
-      <ion-row justify-content-end>
-        <grasscube-permission [name]="('I18N_PROCEEDING' | translate) || '&nbsp;'" [permission]="role?.proceeding"></grasscube-permission>
-      </ion-row>
-      <ion-row justify-content-end>
-        <grasscube-permission [name]="('I18N_DECISION' | translate) || '&nbsp;'" [permission]="role?.decision"></grasscube-permission>
-      </ion-row>
-      <ion-row justify-content-end>
-        <grasscube-permission [name]="('I18N_ACTIVITY' | translate) || '&nbsp;'" [permission]="role?.activity"></grasscube-permission>
-      </ion-row>
-      <ion-row justify-content-end>
-        <grasscube-permission [name]="('I18N_RECEIPT' | translate) || '&nbsp;'"  [permission]="role?.receipt"></grasscube-permission>
-      </ion-row>
+
+      <span *ngIf="role">
+        <ion-row justify-content-end>
+          <grasscube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role.member"></grasscube-permission>
+        </ion-row>
+        <ion-row justify-content-end>
+          <grasscube-permission [name]="('I18N_ROLE' | translate) || '&nbsp;'" [permission]="role.role"></grasscube-permission>
+        </ion-row>
+        <ion-row justify-content-end>
+          <grasscube-permission [name]="('I18N_PROCEEDING' | translate) || '&nbsp;'" [permission]="role.proceeding"></grasscube-permission>
+        </ion-row>
+        <ion-row justify-content-end>
+          <grasscube-permission [name]="('I18N_DECISION' | translate) || '&nbsp;'" [permission]="role.decision"></grasscube-permission>
+        </ion-row>
+        <ion-row justify-content-end>
+          <grasscube-permission [name]="('I18N_ACTIVITY' | translate) || '&nbsp;'" [permission]="role.activity"></grasscube-permission>
+        </ion-row>
+        <ion-row justify-content-end>
+          <grasscube-permission [name]="('I18N_RECEIPT' | translate) || '&nbsp;'" [permission]="role.receipt"></grasscube-permission>
+        </ion-row>
+      </span>
 
       <ion-card *ngIf="role?.parent_decision">
-          <ion-item tappable (tap)="navigateToDecisionDetail(role.parent_decision.decision_id)">
+        <ion-item tappable (tap)="navigateToDecisionDetail(role.parent_decision.decision_id)">
           <ion-row align-items-center>
             <ion-col>
               <p>{{ 'I18N_BASIS_FOR_THIS_DOCUMENT' | translate }}</p>
