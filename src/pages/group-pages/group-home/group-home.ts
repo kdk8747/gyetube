@@ -15,6 +15,8 @@ import { Observable } from 'rxjs/Observable';
 export class GroupHomePage {
 
   group: Observable<Group>;
+  readMemberPermitted: boolean;
+  readRolePermitted: boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -32,6 +34,18 @@ export class GroupHomePage {
       this.group.subscribe(group => {
         this.sharedDataService.headerGroupTitle = group.title;
       });
+
+      this.util.isPermitted('read', 'member', group_id)
+        .then(bool => this.readMemberPermitted = bool)
+        .catch((error: any) => {
+          console.log(error);
+        });
+
+      this.util.isPermitted('read', 'role', group_id)
+        .then(bool => this.readRolePermitted = bool)
+        .catch((error: any) => {
+          console.log(error);
+        });
     });
   }
 
