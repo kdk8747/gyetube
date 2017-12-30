@@ -2,10 +2,30 @@ const db = require('../../../database');
 const debug = require('debug')('member');
 
 
+exports.checkLogin = (req, res, next) => {
+  if (req.decoded && req.decoded.user_id)
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
+exports.authAny = (req, res, next) => {
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && req.params.group_id in req.decoded.permissions.groups)
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
 exports.authCreate = (req, res, next) => {
   const CREATE = 1;
-  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-    && (req.decoded.permissions.groups[req.params.group_id].member & CREATE))
+  if (req.decoded.permissions.groups[req.params.group_id].member & CREATE)
     next();
   else
     res.status(403).json({
@@ -16,8 +36,7 @@ exports.authCreate = (req, res, next) => {
 
 exports.authRead = (req, res, next) => {
   const READ = 2;
-  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-    && (req.decoded.permissions.groups[req.params.group_id].member & READ))
+  if (req.decoded.permissions.groups[req.params.group_id].member & READ)
     next();
   else
     res.status(403).json({
@@ -28,8 +47,7 @@ exports.authRead = (req, res, next) => {
 
 exports.authUpdate = (req, res, next) => {
   const UPDATE = 4;
-  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-    && (req.decoded.permissions.groups[req.params.group_id].member & UPDATE))
+  if (req.decoded.permissions.groups[req.params.group_id].member & UPDATE)
     next();
   else
     res.status(403).json({
@@ -40,8 +58,7 @@ exports.authUpdate = (req, res, next) => {
 
 exports.authDelete = (req, res, next) => {
   const DELETE = 8;
-  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-    && (req.decoded.permissions.groups[req.params.group_id].member & DELETE))
+  if (req.decoded.permissions.groups[req.params.group_id].member & DELETE)
     next();
   else
     res.status(403).json({

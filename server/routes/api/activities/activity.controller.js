@@ -2,10 +2,20 @@ const db = require('../../../database');
 const debug = require('debug')('activity');
 
 
+exports.authAny = (req, res, next) => {
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && req.params.group_id in req.decoded.permissions.groups)
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
 exports.authCreate = (req, res, next) => {
   const CREATE = 1;
-  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-    && (req.decoded.permissions.groups[req.params.group_id].activity & CREATE))
+  if (req.decoded.permissions.groups[req.params.group_id].activity & CREATE)
     next();
   else
     res.status(403).json({
@@ -16,8 +26,7 @@ exports.authCreate = (req, res, next) => {
 
 exports.authRead = (req, res, next) => {
   const READ = 2;
-  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-    && (req.decoded.permissions.groups[req.params.group_id].activity & READ))
+  if (req.decoded.permissions.groups[req.params.group_id].activity & READ)
     next();
   else
     res.status(403).json({
@@ -28,8 +37,7 @@ exports.authRead = (req, res, next) => {
 
 exports.authUpdate = (req, res, next) => {
   const UPDATE = 4;
-  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-    && (req.decoded.permissions.groups[req.params.group_id].activity & UPDATE))
+  if (req.decoded.permissions.groups[req.params.group_id].activity & UPDATE)
     next();
   else
     res.status(403).json({
@@ -40,8 +48,7 @@ exports.authUpdate = (req, res, next) => {
 
 exports.authDelete = (req, res, next) => {
   const DELETE = 8;
-  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-    && (req.decoded.permissions.groups[req.params.group_id].activity & DELETE))
+  if (req.decoded.permissions.groups[req.params.group_id].activity & DELETE)
     next();
   else
     res.status(403).json({

@@ -6,10 +6,20 @@ const STATE_ACCEPTER = 1;
 const STATE_REJECTER = 2;
 
 
+exports.authAny = (req, res, next) => {
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && req.params.group_id in req.decoded.permissions.groups)
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
 exports.authRead = (req, res, next) => {
   const READ = 2;
-  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-    && (req.decoded.permissions.groups[req.params.group_id].decision & READ))
+  if (req.decoded.permissions.groups[req.params.group_id].decision & READ)
     next();
   else
     res.status(403).json({
