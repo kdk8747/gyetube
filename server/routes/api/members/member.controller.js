@@ -2,10 +2,46 @@ const db = require('../../../database');
 const debug = require('debug')('member');
 
 
+exports.authCreate = (req, res, next) => {
+  const CREATE = 1;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].member & CREATE))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
 exports.authRead = (req, res, next) => {
   const READ = 2;
   if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
     && (req.decoded.permissions.groups[req.params.group_id].member & READ))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
+exports.authUpdate = (req, res, next) => {
+  const UPDATE = 4;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].member & UPDATE))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
+exports.authDelete = (req, res, next) => {
+  const DELETE = 8;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].member & DELETE))
     next();
   else
     res.status(403).json({
@@ -136,4 +172,50 @@ exports.updateByID = (req, res) => {
     success: false,
     message: 'groupId: not found'
   });
+}
+
+exports.create = async (req, res) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    let member_id = await conn.query(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.params.group_id, req.decoded.user_id]);
+    debug(member_id[0]);
+
+    debug(req.body);
+    if (!(req.body.name.length < 32)) throw 'Invalid name';
+    if (!req.body.parent_decision_id) throw 'need parent document';
+
+    let member_new_id = await conn.query('SELECT GET_SEQ(?,"member") AS new_id', [req.params.group_id]);
+
+    await conn.query(
+      'INSERT INTO member\
+      VALUES(?,?,?,0,?,?,?,null,null,?,?)', [
+        req.params.group_id,
+        member_new_id[0][0].new_id,
+        req.body.prev_id,
+        req.body.prev_id ? 3 /*UPDATED*/ : 2/*ADDED*/,
+        member_id[0][0].member_id,
+        new Date().toISOString().substring(0, 19).replace('T', ' '),
+        req.body.name,
+        req.body.parent_decision_id
+      ]);
+
+    await conn.commit();
+    conn.release();
+
+    res.send();
+  }
+  catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
+    }
+    res.status(500).json({
+      success: false,
+      message: err
+    });
+  }
 }

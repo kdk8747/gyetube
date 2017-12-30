@@ -2,10 +2,46 @@ const db = require('../../../database');
 const debug = require('debug')('activity');
 
 
+exports.authCreate = (req, res, next) => {
+  const CREATE = 1;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].activity & CREATE))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
 exports.authRead = (req, res, next) => {
   const READ = 2;
   if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
     && (req.decoded.permissions.groups[req.params.group_id].activity & READ))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
+exports.authUpdate = (req, res, next) => {
+  const UPDATE = 4;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].activity & UPDATE))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
+exports.authDelete = (req, res, next) => {
+  const DELETE = 8;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].activity & DELETE))
     next();
   else
     res.status(403).json({
@@ -130,11 +166,12 @@ exports.create = async (req, res) => {
 
     await conn.query(
       'INSERT INTO activity\
-      VALUES(?,?,?,?,NOW(),?, ?,?,?,?,?, ?)', [
+      VALUES(?,?,?,?,?,?, ?,?,?,?,?, ?)', [
         req.params.group_id,
         activity_new_id[0][0].new_id,
         req.body.parent_decision_id,
         member_id[0][0].member_id,
+        new Date().toISOString().substring(0, 19).replace('T', ' '),
         new Date(req.body.activity_datetime).toISOString().substring(0, 19).replace('T', ' '),
         req.body.title,
         req.body.description,

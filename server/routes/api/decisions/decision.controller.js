@@ -105,31 +105,6 @@ exports.getByID = async (req, res) => {
   }
 }
 
-exports.updateByID = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    let i = decisions2.findIndex(item => item.id === +req.params.id);
-    decisions2[i] = req.body;
-    res.send();
-  }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups) {
-      let i = decisions.findIndex(item => item.id === +req.params.id);
-      decisions[i] = req.body;
-      res.send();
-    }
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
-      success: false,
-      message: 'groupId: not found'
-    });
-}
-
 exports.create = async (conn, decision) => {
   let decision_new_id = await conn.query('SELECT GET_SEQ(?,"decision") AS new_id', [decision.group_id]);
 

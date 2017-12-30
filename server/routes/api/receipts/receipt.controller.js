@@ -174,12 +174,13 @@ exports.create = async (req, res) => {
 
     await conn.query(
       'INSERT INTO receipt\
-        VALUES(?,GET_SEQ(?,"receipt"),?,?,?, NOW(),?,?,?,?)', [
+        VALUES(?,GET_SEQ(?,"receipt"),?,?,?, ?,?,?,?,?)', [
         req.params.group_id,
         req.params.group_id,
         req.body.parent_decision_id,
         req.body.parent_activity_id,
         member_id[0][0].member_id,
+        new Date().toISOString().substring(0, 19).replace('T', ' '),
         new Date(req.body.settlement_datetime).toISOString().substring(0, 19).replace('T', ' '),
         req.body.title,
         req.body.image_url,

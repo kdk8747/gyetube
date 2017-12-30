@@ -2,10 +2,46 @@ const db = require('../../../database');
 const debug = require('debug')('role');
 
 
+exports.authCreate = (req, res, next) => {
+  const CREATE = 1;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].role & CREATE))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
 exports.authRead = (req, res, next) => {
   const READ = 2;
   if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
     && (req.decoded.permissions.groups[req.params.group_id].role & READ))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
+exports.authUpdate = (req, res, next) => {
+  const UPDATE = 4;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].role & UPDATE))
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
+exports.authDelete = (req, res, next) => {
+  const DELETE = 8;
+  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+    && (req.decoded.permissions.groups[req.params.group_id].role & DELETE))
     next();
   else
     res.status(403).json({
@@ -122,11 +158,12 @@ exports.create = async (req, res) => {
 
     await conn.query(
       'INSERT INTO role\
-      VALUES(?,?,?,0,?,NOW(),?, ?,?,?,?,?,?, ?,?)', [
+      VALUES(?,?,?,0,?,?,?, ?,?,?,?,?,?, ?,?)', [
         req.params.group_id,
         role_new_id[0][0].new_id,
         req.body.prev_id,
         req.body.prev_id ? 3 /*UPDATED*/ : 2/*ADDED*/,
+        new Date().toISOString().substring(0, 19).replace('T', ' '),
         req.body.name,
 
         stringArrayToBit(req.body.member),
