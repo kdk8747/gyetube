@@ -23,8 +23,10 @@ export class HeaderComponent {
     this.event.subscribe('App_ShowAvatarToHeader', () => {
       this.util.getCurrentUser()
         .then((user: User) => {
-          this.sharedDataService.loggedIn = true;
-          this.sharedDataService.loggedInUser = user;
+          if (user.user_id && user.name && user.image_url && user.third_party) {
+            this.sharedDataService.loggedIn = true;
+            this.sharedDataService.loggedInUser = user;
+          }
         }).catch((error: any) => {
           console.log(error);
         });
@@ -50,7 +52,7 @@ export class HeaderComponent {
       let selectedTabIndex = this.nav.getActiveChildNavs()[0].getSelected().index;
       let childNav = this.nav.getActiveChildNavs()[0]._tabs[selectedTabIndex];
       if (childNav.length() == 1) {
-        switch(selectedTabIndex) {
+        switch (selectedTabIndex) {
           case 0: childNav.setRoot('GroupHomePage'); break;
           case 1: childNav.setRoot('ProceedingListPage'); break;
           case 2: childNav.setRoot('DecisionListPage'); break;
@@ -73,9 +75,9 @@ export class HeaderComponent {
         this.nav.setRoot('GroupListPage');
       else
         this.nav.pop();
-        this.sharedDataService.headerGroupTitle = null;
-        this.sharedDataService.decisionEditMode = false;
-        this.sharedDataService.decisionChangesets = [];
+      this.sharedDataService.headerGroupTitle = null;
+      this.sharedDataService.decisionEditMode = false;
+      this.sharedDataService.decisionChangesets = [];
     }
   }
 

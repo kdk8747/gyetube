@@ -1,5 +1,6 @@
 const db = require('../../../database');
 const debug = require('debug')('role');
+const jwt = require('jsonwebtoken');
 
 
 exports.authAny = (req, res, next) => {
@@ -104,6 +105,57 @@ exports.getAll = async (req, res) => {
   }
 }
 
+exports.getAnyone = async (req, res) => {
+  try {
+    let role = await db.execute(
+      'SELECT *\
+      FROM role\
+      WHERE group_id=? AND role_id=1', [req.params.group_id]);
+
+    let permissions_obj = { groups: {} };
+    if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
+      && req.params.group_id in req.decoded.permissions.groups) {
+      let group_id = req.params.group_id;
+      permissions_obj = req.decoded.permissions;
+
+      permissions_obj.groups[group_id] = {
+        member: (+permissions_obj.groups[group_id].member) | (+role[0][0].member),
+        role: (+permissions_obj.groups[group_id].role) | (+role[0][0].role),
+        proceeding: (+permissions_obj.groups[group_id].proceeding) | (+role[0][0].proceeding),
+        decision: (+permissions_obj.groups[group_id].decision) | (+role[0][0].decision),
+        activity: (+permissions_obj.groups[group_id].activity) | (+role[0][0].activity),
+        receipt: (+permissions_obj.groups[group_id].receipt) | (+role[0][0].receipt)
+      };
+    }
+    else {
+      permissions_obj.groups[req.params.group_id] = {
+        member: role[0][0].member,
+        role: role[0][0].role,
+        proceeding: role[0][0].proceeding,
+        decision: role[0][0].decision,
+        activity: role[0][0].activity,
+        receipt: role[0][0].receipt
+      };
+    }
+
+    res.send(jwt.sign({
+      permissions: permissions_obj
+    },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '7d',
+        issuer: 'grassroots.kr',
+        subject: 'userInfo'
+      }));
+  }
+  catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err
+    });
+  }
+}
+
 exports.getByID = async (req, res) => {
   try {
     let role = await db.execute(
@@ -165,11 +217,9 @@ exports.create = async (req, res) => {
 
     await conn.query(
       'INSERT INTO role\
-      VALUES(?,?,?,0,?,?,?, ?,?,?,?,?,?, ?,?)', [
+      VALUES(?,?,?,?, ?,?,?,?,?,?, ?,?,2)', [
         req.params.group_id,
         role_new_id[0][0].new_id,
-        req.body.prev_id,
-        req.body.prev_id ? 3 /*UPDATED*/ : 2/*ADDED*/,
         new Date().toISOString().substring(0, 19).replace('T', ' '),
         req.body.name,
 

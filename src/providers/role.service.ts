@@ -43,6 +43,13 @@ export class RoleService {
       .take(1);
   }
 
+  getRoleAnyoneToken(group_id: number): Observable<string> {
+    const url = `${this.rolesUrl}/${group_id}/anyone`;
+    return this.http.get(url)
+      .map(response => response.text())
+      .take(1);
+  }
+
   update(group_id: number, role: RoleDetailElement): Observable<RoleDetailElement> {
     const url = `${this.rolesUrl}/${group_id}/${role.role_id}`;
     return this.http

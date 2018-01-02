@@ -20,7 +20,7 @@
           <p>{{role.name}}</p>
         </ion-row>
         <ion-row>
-          <p>{{role.created_datetime | localizedDate}}</p>
+          <p>{{role.modified_datetime | localizedDate}}</p>
         </ion-row>
         <ion-row justify-content-end>
           <grasscube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role.member"></grasscube-permission>
@@ -64,7 +64,7 @@
               <p>{{ role.name }}</p>
             </ion-row>
             <ion-row>
-              <p>{{role.created_datetime | localizedDate}}</p>
+              <p>{{role.modified_datetime | localizedDate}}</p>
             </ion-row>
             <ion-row justify-content-end>
               <grasscube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role.member"></grasscube-permission>

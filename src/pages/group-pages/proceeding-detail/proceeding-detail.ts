@@ -41,7 +41,7 @@ export class ProceedingDetailPage {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.util.getCurrentGroupId().then(group_id => {
+    this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
       this.util.getCurrentUser()
         .then((user) => this.user = user)

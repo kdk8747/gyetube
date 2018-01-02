@@ -60,7 +60,7 @@ export class ActivityEditorPage {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.util.getCurrentGroupId().then(group_id => {
+    this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
       this.members = this.memberService.getMembers(this.groupId);
       this.decisions = this.decisionService.getDecisions(this.groupId);

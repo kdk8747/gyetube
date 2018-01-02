@@ -35,7 +35,7 @@ export class MemberDetailPage {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.util.getCurrentGroupId().then(group_id => {
+    this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
       this.memberService.getMember(this.groupId, this.id)
       .subscribe((member: MemberDetailElement) => {

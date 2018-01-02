@@ -36,7 +36,7 @@ export class ReceiptDetailPage {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.util.getCurrentGroupId().then(group_id => {
+    this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
       this.receiptService.getReceipt(this.groupId, this.id)
       .subscribe((receipt: ReceiptDetailElement) => {

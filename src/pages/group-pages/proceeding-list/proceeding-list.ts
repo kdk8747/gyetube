@@ -28,7 +28,7 @@ export class ProceedingListPage {
   }
 
   ionViewDidLoad() {
-    this.util.getCurrentGroupId().then(group_id => {
+    this.util.pageGetReady().then(group_id => {
       this.util.getCurrentUser()
         .then((user) => this.user = user)
         .catch((err) => console.log(err));

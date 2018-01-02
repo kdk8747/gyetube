@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { GroupService, UserService, MemberService } from './';
+import { GroupService, UserService, MemberService, RoleService } from './';
 import { User } from '../models';
 
 declare const process: any; // Typescript compiler will complain without this
@@ -17,7 +17,8 @@ export class UtilService {
     public event: Events,
     public groupService: GroupService,
     public userService: UserService,
-    public memberService: MemberService
+    public memberService: MemberService,
+    public roleService: RoleService
   ) { }
 
   isNativeApp(): boolean {
@@ -56,6 +57,17 @@ export class UtilService {
       this.storage.clear();
       return Promise.reject('invalid token');
     });
+  }
+
+  getAnyoneToken(groupId: number): Promise<void> {
+    return this.roleService.getRoleAnyoneToken(groupId).toPromise().then(token => {
+      return this.storage.set('currentUserToken', token);
+    });
+  }
+
+  pageGetReady(): Promise<number> {
+    return this.getCurrentGroupId().then(group_id =>
+      this.getAnyoneToken(group_id).then(() => group_id));
   }
 
   isPermitted(query_crud: string, category: string, groupId: number): Promise<boolean> {

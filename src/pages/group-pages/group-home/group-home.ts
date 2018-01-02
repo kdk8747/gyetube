@@ -29,7 +29,7 @@ export class GroupHomePage {
   }
 
   ionViewDidLoad() {
-    this.util.getCurrentGroupId().then(group_id => {
+    this.util.pageGetReady().then(group_id => {
       this.group = this.groupService.getGroup(group_id);
       this.group.subscribe(group => {
         this.sharedDataService.headerGroupTitle = group.title;

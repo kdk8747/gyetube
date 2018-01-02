@@ -1,6 +1,6 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, Events, ViewController, Nav } from 'ionic-angular';
-import { MemberService, UtilService, GroupService, ProceedingService, DecisionService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
+import { MemberService, UtilService, GroupService, SharedDataService } from '../../../providers';
 
 
 @IonicPage({
@@ -29,10 +29,6 @@ export class TabsGroupPage {
     public util: UtilService,
     public memberService: MemberService,
     public groupService: GroupService,
-    public proceedingService: ProceedingService,
-    public decisionService: DecisionService,
-    public activityService: ActivityService,
-    public receiptService: ReceiptService,
     public sharedDataService: SharedDataService
   ) {
   }
