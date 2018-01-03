@@ -174,7 +174,13 @@ exports.getMyself = async (req, res) => {
       'SELECT *, get_state(document_state) AS document_state\
       FROM member\
       WHERE group_id=? AND user_id=UNHEX(?)', [req.params.group_id, req.decoded.user_id]);
-    res.send(member[0][0]);
+    if (member[0].length == 0)
+      res.status(404).json({
+        success: false,
+        message: 'not found'
+      });
+    else
+      res.send(member[0][0]);
   }
   catch (err) {
     res.status(500).json({
@@ -209,6 +215,7 @@ exports.create = async (req, res) => {
 
     await conn.query(
       'INSERT INTO member\
+      (group_id,member_id,prev_id,next_id,document_state,creator_id,created_datetime,user_id,image_url,name,decision_id)\
       VALUES(?,?,?,0,?,?,?,null,null,?,?)', [
         req.params.group_id,
         member_new_id[0][0].new_id,
@@ -219,6 +226,50 @@ exports.create = async (req, res) => {
         req.body.name,
         req.body.parent_decision_id
       ]);
+
+    await conn.commit();
+    conn.release();
+
+    res.send();
+  }
+  catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
+    }
+    res.status(500).json({
+      success: false,
+      message: err
+    });
+  }
+}
+
+exports.register = async (req, res) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    let member_id = await conn.query(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.params.group_id, req.decoded.user_id]);
+    debug(member_id[0]);
+
+    if (member_id[0].length == 0) {
+      let member_new_id = await conn.query('SELECT GET_SEQ(?,"member") AS new_id', [req.params.group_id]);
+
+      await conn.query(
+        'INSERT INTO member\
+        (group_id, member_id, document_state, creator_id, created_datetime, user_id, image_url, name, prev_id, next_id)\
+        VALUES(?,?,0,?,?,unhex(?),?,?,0,0)', [
+          req.params.group_id,
+          member_new_id[0][0].new_id,
+          member_new_id[0][0].new_id,
+          new Date().toISOString().substring(0, 19).replace('T', ' '),
+          req.decoded.user_id,
+          decodeURIComponent(req.decoded.image_url),
+          decodeURIComponent(req.decoded.name)
+        ]);
+    }
 
     await conn.commit();
     conn.release();

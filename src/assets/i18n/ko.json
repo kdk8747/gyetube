@@ -38,7 +38,7 @@
   "I18N_RELATED_DECISION": "관련 결정사항",
   "I18N_RELATED_ACTIVITY": "관련 활동",
   "I18N_EDITOR": "편집",
-  "I18N_UPLOAD": "업로드",
+  "I18N_UPLOAD": "올리기",
   "I18N_SAVE": "저장",
   "I18N_PREV": "이전",
   "I18N_NEXT": "다음",
@@ -47,6 +47,8 @@
   "I18N_NAME": "이름",
 
 
+  "I18N_JOIN": "가입",
+  "I18N_JOIN_TOAST": "가입 신청이 제출되었습니다.",
   "I18N_ADMINISTRATION": "관리",
   "I18N_MEMBERS": "구성원",
   "I18N_ROLES": "역할",
@@ -56,6 +58,7 @@
   "I18N_READ": "읽기",
   "I18N_INTERACTION": "상호작용",
   "I18N_PERMISSIONS": "허가",
+  "I18N_REGISTER": "등록",
 
 
   "I18N_MEETING_DATE": "회의 시각",

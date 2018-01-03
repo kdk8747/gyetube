@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { MemberListElement, MemberDetailElement } from '../models';
+import { MemberListElement, MemberDetailElement, MemberEditorElement } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -60,6 +60,22 @@ export class MemberService {
     return this.http
       .put(url, JSON.stringify(member), { headers: this.headers })
       .map(() => member)
+      .take(1);
+  }
+
+  create(group_id: number, member: MemberEditorElement): Observable<void> {
+    const url = `${this.membersUrl}/${group_id}`;
+    return this.http
+      .post(url, JSON.stringify(member), { headers: this.headers })
+      .map(() => null)
+      .take(1);
+  }
+
+  registerMember(group_id: number): Observable<void> {
+    const url = `${this.membersUrl}/${group_id}/register`;
+    return this.http
+      .post(url, '', { headers: this.headers })
+      .map(() => null)
       .take(1);
   }
 }

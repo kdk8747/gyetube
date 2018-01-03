@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, GroupService, SharedDataService } from '../../../providers';
+import { IonicPage, NavController, NavParams, Events, ToastController } from 'ionic-angular';
+import { UtilService, GroupService, MemberService, SharedDataService } from '../../../providers';
 import { Group } from '../../../models';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -14,7 +15,9 @@ import { Observable } from 'rxjs/Observable';
 })
 export class GroupHomePage {
 
+  groupId: number;
   group: Observable<Group>;
+  needJoinButton: boolean;
   readMemberPermitted: boolean;
   readRolePermitted: boolean;
 
@@ -24,15 +27,23 @@ export class GroupHomePage {
     public util: UtilService,
     public event: Events,
     public groupService: GroupService,
-    public sharedDataService: SharedDataService
+    public memberService: MemberService,
+    public sharedDataService: SharedDataService,
+    public toastCtrl: ToastController,
+    public translate: TranslateService
   ) {
   }
 
   ionViewDidLoad() {
     this.util.pageGetReady().then(group_id => {
+      this.groupId = group_id;
       this.group = this.groupService.getGroup(group_id);
       this.group.subscribe(group => {
         this.sharedDataService.headerGroupTitle = group.title;
+      });
+
+      this.memberService.getMemberMyself(this.groupId).subscribe(() => {}, () => {
+        this.needJoinButton = true;
       });
 
       this.util.isPermitted('read', 'member', group_id)
@@ -53,6 +64,23 @@ export class GroupHomePage {
     this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
+  }
+
+  navigateToMemberRegister() {
+    if (this.sharedDataService.loggedIn) {
+      this.memberService.registerMember(this.groupId).subscribe(() => {
+        this.needJoinButton = false;
+        this.translate.get('I18N_JOIN_TOAST').subscribe(
+          (value) => {
+            let toast = this.toastCtrl.create({
+              duration: 3000,
+              message: value
+            });
+            toast.present();
+          });
+      });
+    } else
+      this.navCtrl.push('LoginPage');
   }
 
   navigateToMemberList() {

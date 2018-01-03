@@ -20,16 +20,7 @@ async function serialize(req, res, next) {
       FROM user\
       WHERE third_party=? AND third_party_access_token=?', [req.user.third_party, req.user.third_party_access_token]);
 
-    req.user.permissions = { 'groups': {
-      '2': {
-        'member': 2,
-        'role': 2,
-        'proceeding': 2,
-        'decision': 2,
-        'activity': 2,
-        'receipt': 2
-      }
-    }};
+    req.user.permissions = { 'groups': {}};
 
     if (user_id[0][0]) {
       req.user.id = user_id[0][0].user_id.toString('hex');

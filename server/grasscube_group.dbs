@@ -161,10 +161,13 @@
 			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="home_log_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
-			<column name="created_datetime" type="timestamp" jt="93" mandatory="y" />
+			<column name="created_datetime" type="timestamp" jt="93" mandatory="y" >
+				<defo>current_timestamp()</defo>
+			</column>
 			<column name="title" type="varchar" length="32" jt="12" mandatory="y" />
 			<column name="description" type="text" length="512" jt="-1" mandatory="y" />
 			<column name="image_url" type="text" jt="-1" />
+			<column name="decision_id" type="int" length="10" decimal="0" jt="4" mandatory="y" unsigned="y" />
 			<index name="pk_home_log" unique="PRIMARY_KEY" >
 				<column name="group_id" />
 				<column name="home_log_id" />
@@ -176,12 +179,20 @@
 				<column name="group_id" />
 				<column name="creator_id" />
 			</index>
+			<index name="idx_home_log_group_id_1" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="decision_id" />
+			</index>
 			<fk name="fk_home_log_home" to_schema="test" to_table="home" >
 				<fk_column name="group_id" pk="group_id" />
 			</fk>
 			<fk name="fk_home_log_member" to_schema="test" to_table="member" >
 				<fk_column name="group_id" pk="group_id" />
 				<fk_column name="creator_id" pk="member_id" />
+			</fk>
+			<fk name="fk_home_log_decision" to_schema="test" to_table="decision" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="decision_id" pk="decision_id" />
 			</fk>
 			<storage><![CDATA[engine=InnoDB]]></storage>
 		</table>
@@ -198,7 +209,7 @@
 		<table name="member" >
 			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="member_id" type="int" jt="4" mandatory="y" unsigned="y" />
-			<column name="decision_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="decision_id" type="int" jt="4" unsigned="y" />
 			<column name="prev_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="next_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
@@ -392,7 +403,9 @@ d = 8,]]></comment>
 3: updated]]></comment>
 			</column>
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
-			<column name="created_datetime" type="timestamp" jt="93" />
+			<column name="created_datetime" type="timestamp" length="19" decimal="0" jt="93" mandatory="y" >
+				<defo>current_timestamp()</defo>
+			</column>
 			<column name="name" type="varchar" length="32" jt="12" />
 			<column name="member" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="role" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
@@ -400,6 +413,7 @@ d = 8,]]></comment>
 			<column name="decision" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="activity" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="receipt" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="decision_id" type="int" length="10" decimal="0" jt="4" mandatory="y" unsigned="y" />
 			<index name="idx_role_log_group_id" unique="NORMAL" >
 				<column name="group_id" />
 				<column name="role_id" />
@@ -408,9 +422,13 @@ d = 8,]]></comment>
 				<column name="group_id" />
 				<column name="role_log_id" />
 			</index>
-			<index name="idx_role_log_group_id_0" unique="NORMAL" >
+			<index name="idx_role_log_creator_id" unique="NORMAL" >
 				<column name="group_id" />
 				<column name="creator_id" />
+			</index>
+			<index name="idx_role_log_decision_id" unique="NORMAL" >
+				<column name="group_id" />
+				<column name="decision_id" />
 			</index>
 			<fk name="fk_role_log_role" to_schema="test" to_table="role" >
 				<fk_column name="group_id" pk="group_id" />
@@ -419,6 +437,10 @@ d = 8,]]></comment>
 			<fk name="fk_role_log_member" to_schema="test" to_table="member" >
 				<fk_column name="group_id" pk="group_id" />
 				<fk_column name="creator_id" pk="member_id" />
+			</fk>
+			<fk name="fk_role_log_decision" to_schema="test" to_table="decision" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="decision_id" pk="decision_id" />
 			</fk>
 			<storage><![CDATA[engine=InnoDB]]></storage>
 		</table>
@@ -521,7 +543,6 @@ END]]></string>
 	<layout name="Default Layout" id="Layout_32e5263" show_relation="columns" >
 		<entity schema="test" name="member_role" color="c8f5bf" x="180" y="90" />
 		<entity schema="test" name="attendee" color="bfd4f5" x="285" y="225" />
-		<entity schema="test" name="user_permission" color="ff9999" x="915" y="1005" />
 		<entity schema="test" name="user" color="ff9999" x="1125" y="1020" />
 		<entity schema="test" name="receipt" color="99ffff" x="1185" y="450" />
 		<entity schema="test" name="voter" color="1f5182" x="750" y="285" />
@@ -529,13 +550,14 @@ END]]></string>
 		<entity schema="test" name="participant" color="1f5182" x="915" y="120" />
 		<entity schema="test" name="activity" color="99ffff" x="930" y="315" />
 		<entity schema="test" name="decision" color="99ffff" x="630" y="450" />
-		<entity schema="test" name="member" color="c8f5bf" x="570" y="75" />
-		<entity schema="test" name="proceeding" color="99ffff" x="360" y="480" />
-		<entity schema="test" name="role_log" color="99ff99" x="45" y="675" />
 		<entity schema="test" name="role" color="99ff99" x="255" y="675" />
 		<entity schema="test" name="group" color="ff9999" x="630" y="1005" />
 		<entity schema="test" name="home_log" color="99ff99" x="690" y="735" />
 		<entity schema="test" name="home" color="99ff99" x="480" y="720" />
+		<entity schema="test" name="role_log" color="99ff99" x="45" y="675" />
+		<entity schema="test" name="member" color="c8f5bf" x="570" y="75" />
+		<entity schema="test" name="proceeding" color="99ffff" x="360" y="480" />
+		<entity schema="test" name="user_permission" color="ff9999" x="915" y="1005" />
 		<group name="Group_for_Sharding" color="c4e0f9" >
 			<entity schema="test" name="activity" />
 			<entity schema="test" name="attendee" />
