@@ -112,23 +112,30 @@ exports.getAnyone = async (req, res) => {
       FROM role\
       WHERE group_id=? AND role_id=1', [req.params.group_id]);
 
-    let permissions_obj = { groups: {} };
-    if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-      && req.params.group_id in req.decoded.permissions.groups) {
-      let group_id = req.params.group_id;
-      permissions_obj = req.decoded.permissions;
+    let jwt_obj = { permissions: { groups: {} }};
 
-      permissions_obj.groups[group_id] = {
-        member: (+permissions_obj.groups[group_id].member) | (+role[0][0].member),
-        role: (+permissions_obj.groups[group_id].role) | (+role[0][0].role),
-        proceeding: (+permissions_obj.groups[group_id].proceeding) | (+role[0][0].proceeding),
-        decision: (+permissions_obj.groups[group_id].decision) | (+role[0][0].decision),
-        activity: (+permissions_obj.groups[group_id].activity) | (+role[0][0].activity),
-        receipt: (+permissions_obj.groups[group_id].receipt) | (+role[0][0].receipt)
+    if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups) {
+      jwt_obj.user_id = req.decoded.user_id;
+      jwt_obj.name = req.decoded.name;
+      jwt_obj.image_url = req.decoded.image_url;
+      jwt_obj.third_party = req.decoded.third_party;
+      jwt_obj.permissions = req.decoded.permissions;
+    }
+
+    if (req.params.group_id in jwt_obj.permissions.groups) {
+      let group_id = req.params.group_id;
+
+      jwt_obj.permissions.groups[group_id] = {
+        member: (+jwt_obj.permissions.groups[group_id].member) | (+role[0][0].member),
+        role: (+jwt_obj.permissions.groups[group_id].role) | (+role[0][0].role),
+        proceeding: (+jwt_obj.permissions.groups[group_id].proceeding) | (+role[0][0].proceeding),
+        decision: (+jwt_obj.permissions.groups[group_id].decision) | (+role[0][0].decision),
+        activity: (+jwt_obj.permissions.groups[group_id].activity) | (+role[0][0].activity),
+        receipt: (+jwt_obj.permissions.groups[group_id].receipt) | (+role[0][0].receipt)
       };
     }
     else {
-      permissions_obj.groups[req.params.group_id] = {
+      jwt_obj.permissions.groups[req.params.group_id] = {
         member: role[0][0].member,
         role: role[0][0].role,
         proceeding: role[0][0].proceeding,
@@ -138,9 +145,7 @@ exports.getAnyone = async (req, res) => {
       };
     }
 
-    res.send(jwt.sign({
-      permissions: permissions_obj
-    },
+    res.send(jwt.sign(jwt_obj,
       process.env.JWT_SECRET,
       {
         expiresIn: '7d',
