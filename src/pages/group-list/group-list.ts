@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, Events } from 'ionic-angular';
-import { UtilService, GroupService } from '../../providers';
+import { UtilService, GroupService, SharedDataService } from '../../providers';
 import { Group } from '../../models';
 
 @IonicPage({
@@ -18,7 +18,8 @@ export class GroupListPage {
     public navCtrl: NavController,
     public event: Events,
     public util: UtilService,
-    public groupService: GroupService
+    public groupService: GroupService,
+    public sharedDataService: SharedDataService
   ) {
   }
 
@@ -36,5 +37,9 @@ export class GroupListPage {
   navigateToGroup(group: Group) {
     this.util.setCurrentGroupId(group.group_id);
     this.navCtrl.push('TabsGroupPage', { group_url_segment: group.url_segment });
+  }
+
+  navigateToEditor() {
+    this.navCtrl.push('GroupEditorPage');
   }
 }

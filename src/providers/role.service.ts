@@ -25,7 +25,7 @@ export class RoleService {
       .map(response => {
         let roles = response.json() as RoleListElement[];
         return roles.map(role => {
-          role.created_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          role.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
           return role;
         });
       })
@@ -37,7 +37,7 @@ export class RoleService {
     return this.http.get(url)
       .map(response => {
         let role = response.json() as RoleDetailElement;
-        role.created_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        role.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
         return role;
       })
       .take(1);
@@ -45,6 +45,13 @@ export class RoleService {
 
   getRoleAnyoneToken(group_id: number): Observable<string> {
     const url = `${this.rolesUrl}/${group_id}/anyone`;
+    return this.http.get(url)
+      .map(response => response.text())
+      .take(1);
+  }
+
+  getRoleMyselfToken(group_id: number): Observable<string> {
+    const url = `${this.rolesUrl}/${group_id}/myself`;
     return this.http.get(url)
       .map(response => response.text())
       .take(1);

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { Group } from '../models';
+import { Group, GroupEditorElement } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -50,15 +50,7 @@ export class GroupService {
       .toPromise();
   }
 
-  update(group: Group): Observable<Group> {
-    const url = `${this.groupsUrl}/${group.group_id}`;
-    return this.http
-      .put(url, JSON.stringify(group), { headers: this.headers })
-      .map(() => group)
-      .take(1);
-  }
-
-  create(group: Group): Observable<Group> {
+  create(group: GroupEditorElement): Observable<Group> {
     return this.http
       .post(this.groupsUrl, JSON.stringify(group), { headers: this.headers })
       .map(response => response.json() as Group)

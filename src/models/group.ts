@@ -8,3 +8,11 @@ export class Group {
     public created_datetime: string
   ) { }
 }
+
+export class GroupEditorElement {
+  constructor(
+    public url_segment: string,
+    public title: string,
+    public description: string
+  ) { }
+}

@@ -3,6 +3,16 @@ const debug = require('debug')('role');
 const jwt = require('jsonwebtoken');
 
 
+exports.checkLogin = (req, res, next) => {
+  if (req.decoded && req.decoded.user_id)
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
 exports.authAny = (req, res, next) => {
   if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
     && req.params.group_id in req.decoded.permissions.groups)
@@ -112,7 +122,7 @@ exports.getAnyone = async (req, res) => {
       FROM role\
       WHERE group_id=? AND role_id=1', [req.params.group_id]);
 
-    let jwt_obj = { permissions: { groups: {} }};
+    let jwt_obj = { permissions: { groups: {} } };
 
     if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups) {
       jwt_obj.user_id = req.decoded.user_id;
@@ -144,6 +154,57 @@ exports.getAnyone = async (req, res) => {
         receipt: role[0][0].receipt
       };
     }
+
+    res.send(jwt.sign(jwt_obj,
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '7d',
+        issuer: 'grassroots.kr',
+        subject: 'userInfo'
+      }));
+  }
+  catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err
+    });
+  }
+}
+
+exports.getMyself = async (req, res) => {
+  try {
+    let role = await db.execute(
+      'SELECT \
+      bit_or(R.member) AS member,\
+      bit_or(R.role) AS role,\
+      bit_or(R.proceeding) AS proceeding,\
+      bit_or(R.decision) AS decision,\
+      bit_or(R.activity) AS activity,\
+      bit_or(R.receipt) AS receipt\
+      FROM member M\
+      LEFT JOIN member_role MR ON MR.group_id=M.group_id AND MR.member_id=M.member_id\
+      LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
+      WHERE M.group_id=? and M.user_id=unhex(?)\
+      GROUP BY M.member_id', [req.params.group_id, req.decoded.user_id]);
+
+
+    let jwt_obj = { permissions: { groups: {} } };
+
+    if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups) {
+      jwt_obj.user_id = req.decoded.user_id;
+      jwt_obj.name = req.decoded.name;
+      jwt_obj.image_url = req.decoded.image_url;
+      jwt_obj.third_party = req.decoded.third_party;
+      jwt_obj.permissions = req.decoded.permissions;
+    }
+    jwt_obj.permissions.groups[req.params.group_id] = {
+      member: role[0][0].member,
+      role: role[0][0].role,
+      proceeding: role[0][0].proceeding,
+      decision: role[0][0].decision,
+      activity: role[0][0].activity,
+      receipt: role[0][0].receipt
+    };
 
     res.send(jwt.sign(jwt_obj,
       process.env.JWT_SECRET,

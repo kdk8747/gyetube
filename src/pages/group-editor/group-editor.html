@@ -1,0 +1,46 @@
+<ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
+  <div style="height:56px"></div>
+
+  <ion-row>
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+    <ion-col col-12 col-sm-6 col-xl-4>
+
+      <ion-toolbar *ngIf="sharedDataService.paneSplited">
+        <ion-buttons right>
+          <button ion-button icon-only (tap)="popNavigation()">
+            <ion-icon name="close"></ion-icon>
+          </button>
+        </ion-buttons>
+        <ion-buttons>{{ 'I18N_GROUP' | translate }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
+      </ion-toolbar>
+
+      <form [formGroup]="form">
+        <ion-list>
+          <ion-item>
+            <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
+            <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'I18N_URL' | translate }}</ion-label>
+            <ion-input formControlName="url" type="text" text-right [class.invalid]="!form.controls.url.valid && (form.controls.url.dirty || submitAttempt)"></ion-input>
+          </ion-item>
+
+          <ion-item no-lines>
+            <ion-label>{{ 'I18N_DESCRIPTION' | translate }}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-textarea formControlName="description" [class.invalid]="!form.controls.description.valid && (form.controls.description.dirty || submitAttempt)"></ion-textarea>
+          </ion-item>
+
+        </ion-list>
+      </form>
+      <ion-buttons right>
+        <!-- <button ion-button>{{ 'I18N_SAVE' | translate }}</button> -->
+        <button ion-button (tap)="onSave()">{{ 'I18N_UPLOAD' | translate }}</button>
+      </ion-buttons>
+    </ion-col>
+    <ion-col col-sm-3 col-xl-4>
+    </ion-col>
+  </ion-row>
+</ion-content>

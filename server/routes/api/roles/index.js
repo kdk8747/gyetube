@@ -6,6 +6,8 @@ router.get('/:group_id/',
   controller.authAny, controller.authRead, controller.getAll);
 router.get('/:group_id/anyone',
   controller.getAnyone);
+router.get('/:group_id/myself',
+  controller.checkLogin, controller.getMyself);
 router.get('/:group_id/:role_id',
   controller.authAny, controller.authRead, controller.getByID);
 

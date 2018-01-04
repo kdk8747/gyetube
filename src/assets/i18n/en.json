@@ -27,6 +27,10 @@
   "I18N_SIGN_OUT_TOAST": "You're now using GrassCube signed out",
 
 
+  "I18N_GROUP": "Group",
+  "I18N_URL": "URL",
+
+
   "I18N_PHOTOS": "Photos",
   "I18N_OR": "or",
   "I18N_DOCUMENTS": "Documents",

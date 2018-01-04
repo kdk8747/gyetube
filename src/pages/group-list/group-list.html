@@ -15,4 +15,10 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <ion-fab right middle *ngIf="sharedDataService.loggedIn">
+    <button ion-fab (tap)="navigateToEditor()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>

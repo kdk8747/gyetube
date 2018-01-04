@@ -59,6 +59,10 @@ export class UtilService {
     });
   }
 
+  setToken(token: string): Promise<void> {
+    return this.storage.set('currentUserToken', token);
+  }
+
   getAnyoneToken(groupId: number): Promise<void> {
     return this.roleService.getRoleAnyoneToken(groupId).toPromise().then(token => {
       return this.storage.set('currentUserToken', token);
