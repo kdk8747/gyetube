@@ -54,7 +54,7 @@ export class ActivityService {
   }
 
   create(group_id: number, activity: ActivityEditorElement): Observable<void> {
-    const url = `${this.activitiesUrl}/${group_id}/${activity.activity_id}`;
+    const url = `${this.activitiesUrl}/${group_id}/`;
     return this.http
       .post(url, JSON.stringify(activity), { headers: this.headers })
       .map(() => null)

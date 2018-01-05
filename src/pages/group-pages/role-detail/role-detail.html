@@ -12,7 +12,8 @@
             <ion-icon name="close"></ion-icon>
           </button>
         </ion-buttons>
-        <ion-buttons>{{role?.name}}</ion-buttons>
+        <ion-buttons *ngIf="role?.document_state != 'PREDEFINED'">{{role?.name}}</ion-buttons>
+        <ion-buttons *ngIf="role?.document_state == 'PREDEFINED'">{{ 'I18N_' + role?.name | translate }}</ion-buttons>
       </ion-toolbar>
 
       <ion-row align-items-center justify-content-start>

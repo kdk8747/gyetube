@@ -58,6 +58,8 @@
   "I18N_ROLES": "역할",
 
 
+  "I18N_ANYONE": "아무나",
+  "I18N_COMMITEE": "운영위원",
   "I18N_CREATE": "생성",
   "I18N_READ": "읽기",
   "I18N_INTERACTION": "상호작용",

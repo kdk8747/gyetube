@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, GroupService, AmazonService, SharedDataService, RoleService } from '../../providers';
-import { GroupEditorElement, AmazonSignature } from '../../models';
+import { GroupEditorElement } from '../../models';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
@@ -15,9 +14,6 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'group-editor.html',
 })
 export class GroupEditorPage {
-
-  isNative: boolean = false;
-  newImageFile: File = null;
 
   form: FormGroup;
   submitAttempt: boolean = false;
@@ -39,7 +35,6 @@ export class GroupEditorPage {
       url: ['', Validators.compose([Validators.required, Validators.maxLength(32)])],
       description: ['', Validators.compose([Validators.required, Validators.maxLength(1024)])]
     });
-    this.isNative = this.util.isNativeApp();
   }
 
   ionViewDidLoad() {

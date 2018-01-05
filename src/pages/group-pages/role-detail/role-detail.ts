@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, MemberService, RoleService, SharedDataService } from '../../../providers';
 import { RoleDetailElement } from '../../../models';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @IonicPage({
@@ -24,7 +25,8 @@ export class RoleDetailPage {
     public util: UtilService,
     public memberService: MemberService,
     public roleService: RoleService,
-    public sharedDataService: SharedDataService
+    public sharedDataService: SharedDataService,
+    public translate: TranslateService
   ) {
   }
 
@@ -41,7 +43,12 @@ export class RoleDetailPage {
       this.roleService.getRole(this.groupId, this.id)
       .subscribe((role: RoleDetailElement) => {
         this.role = role;
-        this.sharedDataService.headerDetailTitle = role.name;
+        if (role.document_state == 'PREDEFINED')
+          this.translate.get('I18N_' + role.name).subscribe(value => {
+            this.sharedDataService.headerDetailTitle = value;
+          });
+        else
+          this.sharedDataService.headerDetailTitle = role.name;
       });
     });
   }

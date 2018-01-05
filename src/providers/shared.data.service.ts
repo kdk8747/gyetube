@@ -20,5 +20,5 @@ export class SharedDataService {
 
   memberListTimelineMode: boolean = false;
 
-  roleListTimelineMode: boolean = false;
+  deletedRoleListMode: boolean = false;
 }

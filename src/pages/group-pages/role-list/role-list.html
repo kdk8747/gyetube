@@ -1,52 +1,7 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-  <ion-row *ngIf="sharedDataService.roleListTimelineMode">
-    <ion-col col-sm-3 col-xl-4>
-    </ion-col>
-    <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-toolbar *ngIf="sharedDataService.paneSplited">
-        <ion-buttons left>
-          <button ion-button icon-only (tap)="popNavigation()">
-            <ion-icon name="close"></ion-icon>
-          </button>
-        </ion-buttons>
-        <ion-buttons>{{ 'I18N_ROLES' | translate}}</ion-buttons>
-      </ion-toolbar>
-
-      <ion-item tappable *ngFor="let role of roles | async" (tap)="navigateToDetail(role.role_id)">
-        <p>{{ 'I18N_' + role.document_state | translate}}</p>
-        <ion-row>
-          <p>{{role.name}}</p>
-        </ion-row>
-        <ion-row>
-          <p>{{role.modified_datetime | localizedDate}}</p>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role.member"></grasscube-permission>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_ROLE' | translate) || '&nbsp;'" [permission]="role.role"></grasscube-permission>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_PROCEEDING' | translate) || '&nbsp;'" [permission]="role.proceeding"></grasscube-permission>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_DECISION' | translate) || '&nbsp;'" [permission]="role.decision"></grasscube-permission>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_ACTIVITY' | translate) || '&nbsp;'" [permission]="role.activity"></grasscube-permission>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_RECEIPT' | translate) || '&nbsp;'" [permission]="role.receipt"></grasscube-permission>
-        </ion-row>
-      </ion-item>
-    </ion-col>
-    <ion-col col-sm-3 col-xl-4>
-    </ion-col>
-  </ion-row>
-
-  <ion-col *ngIf="!sharedDataService.roleListTimelineMode">
+  <ion-col>
     <ion-toolbar *ngIf="sharedDataService.paneSplited">
       <ion-buttons left>
         <button ion-button icon-only (tap)="popNavigation()">
@@ -61,7 +16,8 @@
         <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let role of roles | async">
           <ion-item tappable (tap)="navigateToDetail(role.role_id)">
             <ion-row>
-              <p>{{ role.name }}</p>
+              <p *ngIf="role.document_state != 'PREDEFINED'">{{role.name}}</p>
+              <p *ngIf="role.document_state == 'PREDEFINED'">{{ 'I18N_' + role.name | translate }}</p>
             </ion-row>
             <ion-row>
               <p>{{role.modified_datetime | localizedDate}}</p>
@@ -100,10 +56,10 @@
       <ion-icon name="eye"></ion-icon>
     </button>
     <ion-fab-list side="top">
-      <button ion-fab (tap)="sharedDataService.roleListTimelineMode = true; onFAB(fab)" [class.selectedFAB]="sharedDataService.roleListTimelineMode">
-        <ion-icon name="film"></ion-icon>
+      <button ion-fab (tap)="sharedDataService.deletedRoleListMode = true; onFAB(fab)" [class.selectedFAB]="sharedDataService.deletedRoleListMode">
+        <ion-icon name="trash"></ion-icon>
       </button>
-      <button ion-fab (tap)="sharedDataService.roleListTimelineMode = false; onFAB(fab)" [class.selectedFAB]="!sharedDataService.roleListTimelineMode">
+      <button ion-fab (tap)="sharedDataService.deletedRoleListMode = false; onFAB(fab)" [class.selectedFAB]="!sharedDataService.deletedRoleListMode">
         <ion-icon name="attach"></ion-icon>
       </button>
     </ion-fab-list>

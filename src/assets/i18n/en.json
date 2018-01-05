@@ -58,6 +58,8 @@
   "I18N_ROLES": "Roles",
 
 
+  "I18N_ANYONE": "Anyone",
+  "I18N_COMMITEE": "Commitee",
   "I18N_CREATE": "Create",
   "I18N_READ": "Read",
   "I18N_INTERACTION": "Interaction",
