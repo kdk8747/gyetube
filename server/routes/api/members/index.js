@@ -2,19 +2,18 @@ const express = require('express');
 const router = express.Router();
 const controller = require('./member.controller');
 
-router.get('/:group_id/',
-  controller.authAny, controller.authRead, controller.getAll);
-router.get('/:group_id/myself',
-  controller.checkLogin, controller.getMyself);
-router.get('/:group_id/:member_id',
-  controller.authAny, controller.authRead, controller.getByID);
+router.get('/',
+  controller.authRead, controller.getAll);
+router.get('/:member_id',
+  controller.authRead, controller.getByID);
 
-router.put('/:group_id/:member_id',
-  controller.authAny, controller.authUpdate, controller.updateByID);
+router.put('/:member_id',
+  controller.authUpdate, controller.updateByID);
 
-router.post('/:group_id/',
-  controller.authAny, controller.authCreate, controller.create);
-router.post('/:group_id/register',
+router.post('/',
+  controller.authCreate, controller.create);
+
+router.post('/register',
   controller.checkLogin, controller.register);
 
 module.exports = router;

@@ -30,7 +30,7 @@ export class ReceiptListPage {
   ionViewDidLoad() {
     this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
-      this.util.isPermitted('create', 'receipt', this.groupId)
+      this.util.isPermitted('CREATE', 'receipt', this.groupId)
         .then(bool => this.creationPermitted = bool)
         .catch((error: any) => {
           console.log(error);

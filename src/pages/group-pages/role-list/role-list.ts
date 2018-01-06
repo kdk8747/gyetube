@@ -36,7 +36,7 @@ export class RoleListPage {
       this.groupId = group_id;
       this.refreshMembers();
 
-      this.util.isPermitted('create', 'role', this.groupId)
+      this.util.isPermitted('CREATE', 'role', this.groupId)
         .then(bool => this.creationPermitted = bool)
         .catch((error: any) => {
           console.log(error);

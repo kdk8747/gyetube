@@ -43,18 +43,6 @@ export class MemberService {
       .take(1);
   }
 
-  getMemberMyself(group_id: number): Observable<MemberDetailElement> {
-    const url = `${this.membersUrl}/${group_id}/myself`;
-
-    return this.http.get(url)
-      .map(response => {
-        let member = response.json() as MemberDetailElement;
-        member.created_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-        return member;
-      })
-      .take(1);
-  }
-
   update(group_id: number, member: MemberDetailElement): Observable<MemberDetailElement> {
     const url = `${this.membersUrl}/${group_id}/${member.member_id}`;
     return this.http

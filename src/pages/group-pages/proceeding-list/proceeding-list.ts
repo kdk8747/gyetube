@@ -33,7 +33,7 @@ export class ProceedingListPage {
         .then((user) => this.user = user)
         .catch((err) => console.log(err));
 
-      this.util.isPermitted('create', 'proceeding', group_id)
+      this.util.isPermitted('CREATE', 'proceeding', group_id)
         .then(bool => this.creationPermitted = bool)
         .catch((error: any) => {
           console.log(error);

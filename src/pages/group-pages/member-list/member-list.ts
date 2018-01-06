@@ -36,7 +36,7 @@ export class MemberListPage {
       this.groupId = group_id;
       this.refreshMembers();
 
-      this.util.isPermitted('create', 'member', this.groupId)
+      this.util.isPermitted('CREATE', 'member', this.groupId)
         .then(bool => this.creationPermitted = bool)
         .catch((error: any) => {
           console.log(error);

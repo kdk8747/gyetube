@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { GroupService, UserService, MemberService, RoleService } from './';
+import { GroupService, RoleService } from './';
 import { User } from '../models';
 
 declare const process: any; // Typescript compiler will complain without this
@@ -16,8 +16,6 @@ export class UtilService {
     public storage: Storage,
     public event: Events,
     public groupService: GroupService,
-    public userService: UserService,
-    public memberService: MemberService,
     public roleService: RoleService
   ) { }
 
@@ -63,33 +61,15 @@ export class UtilService {
     return this.storage.set('currentUserToken', token);
   }
 
-  getAnyoneToken(groupId: number): Promise<void> {
-    return this.roleService.getRoleAnyoneToken(groupId).toPromise().then(token => {
-      return this.storage.set('currentUserToken', token);
-    });
-  }
-
   pageGetReady(): Promise<number> {
-    return this.getCurrentGroupId().then(group_id =>
-      this.getAnyoneToken(group_id).then(() => group_id));
+    return this.getCurrentGroupId(); /*.then(group_id =>
+      this.getAnyoneToken(group_id).then(() => group_id));*/
   }
 
   isPermitted(query_crud: string, category: string, groupId: number): Promise<boolean> {
-    return this.getCurrentPayload()
-    .then((payload) => {
-      if (groupId in payload.permissions.groups) {
-        let permission = payload.permissions.groups[groupId][category];
-
-        switch(query_crud) {
-          case 'create': return (permission & 1) != 0;
-          case 'read':   return (permission & 2) != 0;
-          case 'update': return (permission & 4) != 0;
-          case 'delete': return (permission & 8) != 0;
-          default: console.log('Unknown query_crud');
-        }
-        return false;
-      }
-      return false;
+    return this.roleService.getRoleMyself(groupId).toPromise()
+    .then((role) => {
+        return role[category].some(val => val == query_crud);
     });
   }
 

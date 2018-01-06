@@ -6,20 +6,9 @@ const STATE_ACCEPTER = 1;
 const STATE_REJECTER = 2;
 
 
-exports.authAny = (req, res, next) => {
-  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-    && req.params.group_id in req.decoded.permissions.groups)
-    next();
-  else
-    res.status(403).json({
-      success: false,
-      message: 'permission denied'
-    });
-}
-
 exports.authRead = (req, res, next) => {
   const READ = 2;
-  if (req.decoded.permissions.groups[req.params.group_id].decision & READ)
+  if (req.permissions.decision & READ)
     next();
   else
     res.status(403).json({
@@ -45,7 +34,7 @@ exports.getAll = async (req, res) => {
         LEFT JOIN activity A ON A.group_id=D.group_id AND A.decision_id=D.decision_id\
         LEFT JOIN receipt R ON R.group_id=D.group_id AND R.decision_id=D.decision_id\
       WHERE D.group_id=?\
-      GROUP BY D.decision_id', [req.params.group_id]);
+      GROUP BY D.decision_id', [req.permissions.group_id]);
     res.send(result[0]);
   }
   catch (err) {
@@ -61,24 +50,24 @@ exports.getByID = async (req, res) => {
     let decision = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
       FROM decision\
-      WHERE group_id=? AND decision_id=?', [req.params.group_id, req.params.decision_id]);
+      WHERE group_id=? AND decision_id=?', [req.permissions.group_id, req.params.decision_id]);
 
     let parent_proceeding = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
       FROM proceeding\
-      WHERE group_id=? AND proceeding_id=?', [req.params.group_id, decision[0][0].proceeding_id]);
+      WHERE group_id=? AND proceeding_id=?', [req.permissions.group_id, decision[0][0].proceeding_id]);
     decision[0][0].parent_proceeding = parent_proceeding[0][0];
 
     let child_members = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
       FROM member\
-      WHERE group_id=? AND decision_id=?', [req.params.group_id, req.params.decision_id]);
+      WHERE group_id=? AND decision_id=?', [req.permissions.group_id, req.params.decision_id]);
     decision[0][0].child_members = child_members[0];
 
     let child_roles = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
       FROM role\
-      WHERE group_id=? AND decision_id=?', [req.params.group_id, req.params.decision_id]);
+      WHERE group_id=? AND decision_id=?', [req.permissions.group_id, req.params.decision_id]);
     decision[0][0].child_roles = child_roles[0];
 
     let child_activities = await db.execute(
@@ -87,20 +76,20 @@ exports.getByID = async (req, res) => {
       FROM activity A\
       LEFT JOIN participant P ON P.group_id=A.group_id AND P.activity_id=A.activity_id\
       WHERE A.group_id=? AND A.decision_id=?\
-      GROUP BY A.activity_id', [req.params.group_id, req.params.decision_id]);
+      GROUP BY A.activity_id', [req.permissions.group_id, req.params.decision_id]);
     decision[0][0].child_activities = child_activities[0];
 
     let child_receipts = await db.execute(
       'SELECT *\
       FROM receipt\
-      WHERE group_id=? AND decision_id=?', [req.params.group_id, req.params.decision_id]);
+      WHERE group_id=? AND decision_id=?', [req.permissions.group_id, req.params.decision_id]);
     decision[0][0].child_receipts = child_receipts[0];
 
     let voters = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
       FROM voter V\
       LEFT JOIN member M ON M.group_id=? AND M.member_id=V.member_id\
-      WHERE V.group_id=? AND V.decision_id=?', [req.params.group_id, req.params.group_id, req.params.decision_id]);
+      WHERE V.group_id=? AND V.decision_id=?', [req.permissions.group_id, req.permissions.group_id, req.params.decision_id]);
     decision[0][0].abstainers = voters[0].filter(voter => voter.voter_state == STATE_ABSTAINER);
     decision[0][0].accepters = voters[0].filter(voter => voter.voter_state == STATE_ACCEPTER);
     decision[0][0].rejecters = voters[0].filter(voter => voter.voter_state == STATE_REJECTER);

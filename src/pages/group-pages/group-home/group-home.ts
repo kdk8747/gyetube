@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, ToastController } from 'ionic-angular';
-import { UtilService, GroupService, MemberService, SharedDataService } from '../../../providers';
+import { UtilService, GroupService, MemberService, RoleService, SharedDataService } from '../../../providers';
 import { Group } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
@@ -28,6 +28,7 @@ export class GroupHomePage {
     public event: Events,
     public groupService: GroupService,
     public memberService: MemberService,
+    public roleService: RoleService,
     public sharedDataService: SharedDataService,
     public toastCtrl: ToastController,
     public translate: TranslateService
@@ -42,17 +43,17 @@ export class GroupHomePage {
         this.sharedDataService.headerGroupTitle = group.title;
       });
 
-      this.memberService.getMemberMyself(this.groupId).subscribe(() => {}, () => {
+      this.roleService.getRoleMyself(this.groupId).subscribe(() => {}, () => {
         this.needJoinButton = true;
       });
 
-      this.util.isPermitted('read', 'member', group_id)
+      this.util.isPermitted('READ', 'member', group_id)
         .then(bool => this.readMemberPermitted = bool)
         .catch((error: any) => {
           console.log(error);
         });
 
-      this.util.isPermitted('read', 'role', group_id)
+      this.util.isPermitted('READ', 'role', group_id)
         .then(bool => this.readRolePermitted = bool)
         .catch((error: any) => {
           console.log(error);

@@ -1,21 +1,10 @@
 const db = require('../../../database');
-const debug = require('debug')('activity');
+const debug = require('debug')('group-auth');
 
-
-exports.authAny = (req, res, next) => {
-  if (req.decoded && req.decoded.permissions && req.decoded.permissions.groups
-    && req.params.group_id in req.decoded.permissions.groups)
-    next();
-  else
-    res.status(403).json({
-      success: false,
-      message: 'permission denied'
-    });
-}
 
 exports.authCreate = (req, res, next) => {
   const CREATE = 1;
-  if (req.decoded.permissions.groups[req.params.group_id].activity & CREATE)
+  if (req.permissions.activity & CREATE)
     next();
   else
     res.status(403).json({
@@ -26,7 +15,7 @@ exports.authCreate = (req, res, next) => {
 
 exports.authRead = (req, res, next) => {
   const READ = 2;
-  if (req.decoded.permissions.groups[req.params.group_id].activity & READ)
+  if (req.permissions.activity & READ)
     next();
   else
     res.status(403).json({
@@ -37,7 +26,7 @@ exports.authRead = (req, res, next) => {
 
 exports.authUpdate = (req, res, next) => {
   const UPDATE = 4;
-  if (req.decoded.permissions.groups[req.params.group_id].activity & UPDATE)
+  if (req.permissions.activity & UPDATE)
     next();
   else
     res.status(403).json({
@@ -48,7 +37,7 @@ exports.authUpdate = (req, res, next) => {
 
 exports.authDelete = (req, res, next) => {
   const DELETE = 8;
-  if (req.decoded.permissions.groups[req.params.group_id].activity & DELETE)
+  if (req.permissions.activity & DELETE)
     next();
   else
     res.status(403).json({
@@ -67,7 +56,7 @@ exports.getAll = async (req, res) => {
       FROM activity A\
         LEFT JOIN participant P ON P.group_id=A.group_id AND P.activity_id=A.activity_id\
       WHERE A.group_id=?\
-      GROUP BY A.activity_id', [req.params.group_id]);
+      GROUP BY A.activity_id', [req.permissions.group_id]);
     res.send(result[0]);
   }
   catch (err) {
@@ -83,31 +72,31 @@ exports.getByID = async (req, res) => {
     let activity = await db.execute(
       'SELECT *\
       FROM activity\
-      WHERE group_id=? AND activity_id=?', [req.params.group_id, req.params.activity_id]);
+      WHERE group_id=? AND activity_id=?', [req.permissions.group_id, req.params.activity_id]);
 
     let parent_decision = await db.execute(
       'SELECT *\
       FROM decision\
-      WHERE group_id=? AND decision_id=?', [req.params.group_id, activity[0][0].decision_id]);
+      WHERE group_id=? AND decision_id=?', [req.permissions.group_id, activity[0][0].decision_id]);
     activity[0][0].parent_decision = parent_decision[0][0];
 
     let child_receipts = await db.execute(
       'SELECT *\
       FROM receipt\
-      WHERE group_id=? AND activity_id=?', [req.params.group_id, req.params.activity_id]);
+      WHERE group_id=? AND activity_id=?', [req.permissions.group_id, req.params.activity_id]);
     activity[0][0].child_receipts = child_receipts[0];
 
     let participants = await db.execute(
       'SELECT *\
       FROM participant P\
       LEFT JOIN member M ON M.group_id=P.group_id AND M.member_id=P.member_id\
-      WHERE P.group_id=? AND P.activity_id=?', [req.params.group_id, req.params.activity_id]);
+      WHERE P.group_id=? AND P.activity_id=?', [req.permissions.group_id, req.params.activity_id]);
     activity[0][0].participants = participants[0];
 
     let creator = await db.execute(
       'SELECT *\
       FROM member\
-      WHERE group_id=? AND member_id=?', [req.params.group_id, activity[0][0].creator_id]);
+      WHERE group_id=? AND member_id=?', [req.permissions.group_id, activity[0][0].creator_id]);
     activity[0][0].creator = creator[0][0];
 
     activity[0][0].image_urls = JSON.parse(activity[0][0].image_urls);
@@ -155,7 +144,7 @@ exports.create = async (req, res) => {
     let member_id = await conn.query(
       'SELECT member_id\
       FROM member\
-      WHERE group_id=? AND user_id=UNHEX(?)', [req.params.group_id, req.decoded.user_id]);
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.permissions.group_id, req.decoded.user_id]);
     debug(member_id[0]);
 
     debug(req.body);
@@ -167,14 +156,14 @@ exports.create = async (req, res) => {
     await conn.query(
       'UPDATE decision\
       SET total_elapsed_time=total_elapsed_time+?*?\
-      WHERE group_id=? AND decision_id=?', [req.body.elapsed_time, req.body.participant_ids.length, req.params.group_id, req.body.parent_decision_id]);
+      WHERE group_id=? AND decision_id=?', [req.body.elapsed_time, req.body.participant_ids.length, req.permissions.group_id, req.body.parent_decision_id]);
 
-    let activity_new_id = await conn.query('SELECT GET_SEQ(?,"activity") AS new_id', [req.params.group_id]);
+    let activity_new_id = await conn.query('SELECT GET_SEQ(?,"activity") AS new_id', [req.permissions.group_id]);
 
     await conn.query(
       'INSERT INTO activity\
       VALUES(?,?,?,?,?,?, ?,?,?,?,?, ?)', [
-        req.params.group_id,
+        req.permissions.group_id,
         activity_new_id[0][0].new_id,
         req.body.parent_decision_id,
         member_id[0][0].member_id,
@@ -191,7 +180,7 @@ exports.create = async (req, res) => {
     await Promise.all(req.body.participant_ids.map(
       participant_id => conn.query(
         'INSERT INTO participant\
-        VALUES(?,?,?)', [req.params.group_id, activity_new_id[0][0].new_id, participant_id])));
+        VALUES(?,?,?)', [req.permissions.group_id, activity_new_id[0][0].new_id, participant_id])));
 
     await conn.commit();
     conn.release();

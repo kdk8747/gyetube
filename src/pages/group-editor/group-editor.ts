@@ -69,10 +69,7 @@ export class GroupEditorPage {
         this.popNavigation();
         this.util.setCurrentGroupId(group.group_id);
         this.navCtrl.push('TabsGroupPage', { group_url_segment: group.url_segment });
-        return this.roleService.getRoleMyselfToken(group.group_id).toPromise();
-      })
-      .then(token => {
-        this.util.setToken(token);
+        return this.roleService.getRoleMyself(group.group_id).toPromise();
       })
       .catch(() => { console.log('new group failed') });
   }

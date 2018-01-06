@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const controller = require('./decision.controller');
 
-router.get('/:group_id/',
-  controller.authAny, controller.authRead, controller.getAll);
-router.get('/:group_id/:decision_id',
-  controller.authAny, controller.authRead, controller.getByID);
+router.get('/',
+  controller.authRead, controller.getAll);
+router.get('/:decision_id',
+  controller.authRead, controller.getByID);
 
 module.exports = router;

@@ -20,28 +20,8 @@ async function serialize(req, res, next) {
       FROM user\
       WHERE third_party=? AND third_party_access_token=?', [req.user.third_party, req.user.third_party_access_token]);
 
-    req.user.permissions = { 'groups': {}};
-
     if (user_id[0][0]) {
       req.user.id = user_id[0][0].user_id.toString('hex');
-
-      let permissions = await db.execute(
-        'SELECT *\
-        FROM user_permission\
-        WHERE user_id=UNHEX(?)', [req.user.id]);
-      debug(permissions[0]);
-
-      for (let i = 0; i < permissions[0].length; i++) {
-        let p = permissions[0][i];
-        req.user.permissions.groups[p.group_id] = {
-          'member': p.member,
-          'role': p.role,
-          'proceeding': p.proceeding,
-          'decision': p.decision,
-          'activity': p.activity,
-          'receipt': p.receipt
-        };
-      }
     }
     else {
       req.user.id = uuidv1().replace(/-/g, '');
@@ -70,8 +50,7 @@ function generateToken(req, res, next) {
       user_id: req.user.id,
       name: encodeURIComponent(req.user.name),
       image_url: encodeURIComponent(req.user.image_url),
-      third_party: req.user.third_party,
-      permissions: req.user.permissions
+      third_party: req.user.third_party
     },
       process.env.JWT_SECRET,
       {
