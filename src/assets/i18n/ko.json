@@ -59,6 +59,11 @@
   "I18N_ROLES": "역할",
 
 
+  "I18N_APPROVE_NEW_MEMBER": "승인 - 새 구성원",
+  "I18N_APPROVE_DUPLICATED": "승인 - 중복됨",
+  "I18N_REJECT": "거부",
+
+
   "I18N_ANYONE": "아무나",
   "I18N_COMMITEE": "운영위원",
   "I18N_CREATE": "생성",

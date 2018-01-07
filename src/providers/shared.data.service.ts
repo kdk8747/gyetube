@@ -18,7 +18,5 @@ export class SharedDataService {
   headerGroupTitle: string = null;
   headerDetailTitle: string = null;
 
-  memberListTimelineMode: boolean = false;
-
   deletedRoleListMode: boolean = false;
 }

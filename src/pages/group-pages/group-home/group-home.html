@@ -16,7 +16,7 @@
         <ion-buttons right>
           <button notification-button ion-button *ngIf="readMemberPermitted" (tap)="navigateToMemberList()">
             {{ 'I18N_MEMBERS' | translate }}
-            <ion-badge notifications-badge color="danger">5</ion-badge>
+            <!--<ion-badge notifications-badge color="danger">5</ion-badge>-->
           </button>
           <button ion-button *ngIf="readRolePermitted" (tap)="navigateToRoleList()">{{ 'I18N_ROLES' | translate }}</button>
         </ion-buttons>

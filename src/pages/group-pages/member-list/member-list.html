@@ -1,56 +1,7 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-  <ion-row *ngIf="sharedDataService.memberListTimelineMode">
-    <ion-col col-sm-3 col-xl-4>
-    </ion-col>
-    <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-toolbar *ngIf="sharedDataService.paneSplited">
-        <ion-buttons left>
-          <button ion-button icon-only (tap)="popNavigation()">
-            <ion-icon name="close"></ion-icon>
-          </button>
-        </ion-buttons>
-        <ion-buttons>{{ 'I18N_MEMBERS' | translate}}</ion-buttons>
-      </ion-toolbar>
-
-      <ion-item tappable *ngFor="let member of members | async" (tap)="navigateToDetail(member.member_id)">
-        <p>{{ 'I18N_' + member.document_state | translate}} - {{member.created_datetime | localizedDate}}</p>
-        <ion-row>
-          <ion-col col-auto>
-            <ion-avatar *ngIf="member?.image_url?.includes('http')">
-              <img [src]="member?.image_url">
-            </ion-avatar>
-          </ion-col>
-          <ion-col>
-            <p>{{ member.name }}</p>
-          </ion-col>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="member.member"></grasscube-permission>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_ROLE' | translate) || '&nbsp;'"   [permission]="member.role"></grasscube-permission>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_PROCEEDING' | translate) || '&nbsp;'" [permission]="member.proceeding"></grasscube-permission>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_DECISION' | translate) || '&nbsp;'" [permission]="member.decision"></grasscube-permission>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_ACTIVITY' | translate) || '&nbsp;'" [permission]="member.activity"></grasscube-permission>
-        </ion-row>
-        <ion-row justify-content-end>
-          <grasscube-permission [name]="('I18N_RECEIPT' | translate) || '&nbsp;'"  [permission]="member.receipt"></grasscube-permission>
-        </ion-row>
-      </ion-item>
-    </ion-col>
-    <ion-col col-sm-3 col-xl-4>
-    </ion-col>
-  </ion-row>
-
-  <ion-col *ngIf="!sharedDataService.memberListTimelineMode">
+  <ion-col>
     <ion-toolbar *ngIf="sharedDataService.paneSplited">
       <ion-buttons left>
         <button ion-button icon-only (tap)="popNavigation()">
@@ -64,6 +15,10 @@
       <ion-row>
         <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let member of members | async">
           <ion-item tappable (tap)="navigateToDetail(member.member_id)">
+            <ion-toolbar *ngIf="member.document_state == 'PENDING_ADDS'">
+              {{'I18N_PENDING_ADDS' | translate}}<br>
+              <p><ion-icon name="alert" color="danger"></ion-icon>{{'I18N_NEED_YOUR_REVIEW' | translate}}</p>
+            </ion-toolbar>
             <ion-row>
               <ion-col col-auto>
                 <ion-avatar *ngIf="member?.image_url?.includes('http')">
@@ -104,15 +59,20 @@
     </button>
   </ion-fab>
   <ion-fab right bottom *ngIf="readPermitted" #fab>
-    <button ion-fab>
+    <button notification-button ion-fab>
       <ion-icon name="eye"></ion-icon>
+      <!--<ion-badge notifications-badge color="danger">5</ion-badge>-->
     </button>
     <ion-fab-list side="top">
-      <button ion-fab (tap)="sharedDataService.memberListTimelineMode = true; onFAB(fab)" [class.selectedFAB]="sharedDataService.memberListTimelineMode">
-        <ion-icon name="film"></ion-icon>
-      </button>
-      <button ion-fab (tap)="sharedDataService.memberListTimelineMode = false; onFAB(fab)" [class.selectedFAB]="!sharedDataService.memberListTimelineMode">
+      <!-- <button ion-fab (tap)="memberListState = enum.STATE_DELETED; onFAB(fab)" [class.selectedFAB]="memberListState==enum.STATE_DELETED">
+        <ion-icon name="trash"></ion-icon>
+      </button> -->
+      <button ion-fab (tap)="memberListState = enum.STATE_NORMAL; onFAB(fab)" [class.selectedFAB]="memberListState==enum.STATE_NORMAL">
         <ion-icon name="attach"></ion-icon>
+      </button>
+      <button notification-button ion-fab (tap)="memberListState = enum.STATE_PENDING; onFAB(fab)" [class.selectedFAB]="memberListState==enum.STATE_PENDING">
+        <ion-icon name="mail"></ion-icon>
+        <!--<ion-badge notifications-badge color="danger">5</ion-badge>-->
       </button>
     </ion-fab-list>
   </ion-fab>

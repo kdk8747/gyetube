@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, MemberService, SharedDataService } from '../../../providers';
-import { MemberDetailElement } from '../../../models';
+import { MemberDetailElement, MemberEditorElement } from '../../../models';
 
 
 @IonicPage({
@@ -38,10 +38,10 @@ export class MemberDetailPage {
     this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
       this.memberService.getMember(this.groupId, this.id)
-      .subscribe((member: MemberDetailElement) => {
-        this.member = member;
-        this.sharedDataService.headerDetailTitle = member.name;
-      });
+        .subscribe((member: MemberDetailElement) => {
+          this.member = member;
+          this.sharedDataService.headerDetailTitle = member.name;
+        });
     });
   }
 
@@ -52,11 +52,33 @@ export class MemberDetailPage {
       this.navCtrl.pop();
   }
 
+  navigateToPrev() {
+    this.navCtrl.setRoot('MemberDetailPage', { id: this.member.prev_id });
+  }
+
+  navigateToNext() {
+    this.navCtrl.setRoot('MemberDetailPage', { id: this.member.next_id });
+  }
+
   navigateToDecisionDetail(decision_id: string) {
     this.event.publish('TabsGroup_DecisionDetail', { id: decision_id });
   }
 
   navigateToRoleDetail(role_id: string) {
     this.navCtrl.push('RoleDetailPage', { id: role_id });
+  }
+
+  onSubmit() {
+    this.memberService.update(this.groupId, this.id)
+      .subscribe(() => {
+        this.memberService.getMember(this.groupId, this.id)
+        .subscribe((member: MemberDetailElement) => {
+          this.member = member;
+          this.sharedDataService.headerDetailTitle = member.name;
+        });
+        this.event.publish('App_ShowHeader');
+        this.event.publish('TabsGroup_ShowTab');
+        this.popNavigation();
+      });
   }
 }

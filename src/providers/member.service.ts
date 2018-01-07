@@ -43,11 +43,11 @@ export class MemberService {
       .take(1);
   }
 
-  update(group_id: number, member: MemberDetailElement): Observable<MemberDetailElement> {
-    const url = `${this.membersUrl}/${group_id}/${member.member_id}`;
+  update(group_id: number, member_id: number): Observable<void> {
+    const url = `${this.membersUrl}/${group_id}/${member_id}`;
     return this.http
-      .put(url, JSON.stringify(member), { headers: this.headers })
-      .map(() => member)
+      .put(url, '', { headers: this.headers })
+      .map(() => null)
       .take(1);
   }
 

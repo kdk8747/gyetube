@@ -6,6 +6,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
 
+enum MemberListState {
+  STATE_NORMAL,
+  STATE_DELETED,
+  STATE_PENDING,
+}
+
 @IonicPage({
   segment:'member-list'
 })
@@ -14,7 +20,9 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: 'member-list.html',
 })
 export class MemberListPage {
+  enum = MemberListState;
 
+  memberListState: MemberListState = MemberListState.STATE_NORMAL;
   groupId: number;
   members: Observable<MemberListElement[]>;
   readPermitted: boolean = false;
@@ -67,8 +75,27 @@ export class MemberListPage {
     this.navCtrl.push('MemberEditorPage');
   }
 
+  sortByDate(members: MemberListElement[]): MemberListElement[] {
+    return members.sort((h1, h2) => {
+      return h1.created_datetime < h2.created_datetime ? 1 :
+        (h1.created_datetime > h2.created_datetime ? -1 : 0);
+    });
+  }
+
   refreshMembers() {
-    this.members = this.memberService.getMembers(this.groupId);
+    this.members = this.memberService.getMembers(this.groupId)
+      .map((members: MemberListElement[]) => {
+        switch(this.memberListState) {
+          case MemberListState.STATE_NORMAL :
+            return this.sortByDate(members.filter(member => (member.document_state == 'ADDED' || member.document_state == 'UPDATED')));
+          case MemberListState.STATE_DELETED :
+            return this.sortByDate(members.filter(member => (member.document_state == 'DELETED')));
+          case MemberListState.STATE_PENDING :
+            return this.sortByDate(members.filter(member => (member.document_state == 'PENDING_ADDS' && member.next_id == 0)));
+          default:
+            return this.sortByDate(members);
+        }
+      });
     this.members.subscribe(() => this.readPermitted = true);
   }
 

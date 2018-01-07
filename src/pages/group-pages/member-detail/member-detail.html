@@ -15,6 +15,14 @@
         <ion-buttons>{{member?.name}}</ion-buttons>
       </ion-toolbar>
 
+      <ion-toolbar *ngIf="member?.document_state == 'PENDING_ADDS' && member?.next_id == 0">
+        <ion-buttons>
+          {{'I18N_PENDING_ADDS' | translate}}<br>
+          <ion-icon name="alert" color="danger"></ion-icon>
+          {{'I18N_NEED_YOUR_REVIEW' | translate}}
+        </ion-buttons>
+      </ion-toolbar>
+
       <ion-row align-items-center justify-content-start>
         <ion-col col-auto>
           <grasscube-user [user]="member?.creator"></grasscube-user>
@@ -25,7 +33,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-item *ngIf="member?.user_id">
+      <ion-item *ngIf="member?.image_url || member?.name">
         <ion-avatar item-start *ngIf="member?.image_url?.includes('http')">
           <img [src]="member?.image_url">
         </ion-avatar>
@@ -75,6 +83,46 @@
           </ion-row>
         </ion-item>
       </ion-card>
+
+      <ion-buttons right *ngIf="member?.document_state == 'PENDING_ADDS' && member?.next_id == 0">
+        <!-- <ion-list radio-group no-lines>
+          <ion-item>
+            <ion-label style="color: #7f7f7f;">{{ 'I18N_APPROVE_NEW_MEMBER' | translate }}</ion-label>
+            <ion-radio (ionSelect)="approve=true" checked="true"></ion-radio>
+          </ion-item>
+
+          <ion-item>
+            <ion-label style="color: #7f7f7f;">{{ 'I18N_APPROVE_DUPLICATED' | translate }}</ion-label>
+            <ion-radio (ionSelect)="approve=true"></ion-radio>
+          </ion-item>
+
+          <ion-item>
+            <ion-label style="color: #7f7f7f;">{{ 'I18N_REJECT' | translate }}</ion-label>
+            <ion-radio (ionSelect)="approve=false"></ion-radio>
+          </ion-item>
+        </ion-list>
+        <button ion-button (tap)="onSubmit()">{{ 'I18N_SUBMIT' | translate }}</button> -->
+        <button ion-button (tap)="onSubmit()">{{ 'I18N_APPROVE_NEW_MEMBER' | translate }}</button>
+      </ion-buttons>
+
+      <ion-toolbar *ngIf="(member?.prev_id || member?.next_id)">
+        <ion-buttons left *ngIf="member?.document_state != 'PENDING_UPDATES' && member?.prev_id">
+          <button ion-button icon-only (tap)="navigateToPrev()">
+            <ion-icon name="arrow-back"></ion-icon>
+            {{ 'I18N_PREV' | translate}}
+            <br/>
+            <br/> {{ 'I18N_REVISION' | translate}}
+          </button>
+        </ion-buttons>
+        <ion-buttons right *ngIf="member?.document_state != 'PENDING_UPDATES' && member?.next_id">
+          <button ion-button icon-only (tap)="navigateToNext()">
+            {{ 'I18N_NEXT' | translate}}
+            <br/>
+            <br/> {{ 'I18N_REVISION' | translate}}
+            <ion-icon name="arrow-forward"></ion-icon>
+          </button>
+        </ion-buttons>
+      </ion-toolbar>
     </ion-col>
     <ion-col col-sm-3 col-xl-4>
     </ion-col>

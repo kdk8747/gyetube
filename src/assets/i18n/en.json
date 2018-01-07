@@ -59,6 +59,11 @@
   "I18N_ROLES": "Roles",
 
 
+  "I18N_APPROVE_NEW_MEMBER": "Approve - New Member",
+  "I18N_APPROVE_DUPLICATED": "Approve - Duplicated",
+  "I18N_REJECT": "Reject",
+
+
   "I18N_ANYONE": "Anyone",
   "I18N_COMMITEE": "Commitee",
   "I18N_CREATE": "Create",
