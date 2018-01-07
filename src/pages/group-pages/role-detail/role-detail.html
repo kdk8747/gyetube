@@ -26,6 +26,11 @@
         </ion-col>
       </ion-row>
 
+      <p><ion-icon name="create" color="grey"></ion-icon> {{ 'I18N_CREATE' | translate }}</p>
+      <p><ion-icon name="eye" color="grey"></ion-icon> {{ 'I18N_READ' | translate }}</p>
+      <p><ion-icon name="text" color="grey"></ion-icon> {{ 'I18N_INTERACTION' | translate }}</p>
+      <p><ion-icon name="trash" color="grey"></ion-icon> {{ 'I18N_DELETE' | translate }}</p>
+
       <span *ngIf="role">
         <ion-row justify-content-end>
           <grasscube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role.member"></grasscube-permission>
