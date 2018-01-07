@@ -62,8 +62,8 @@ export class ActivityEditorPage {
 
     this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
-      this.members = this.memberService.getMembers(this.groupId);
-      this.decisions = this.decisionService.getDecisions(this.groupId);
+      this.members = this.memberService.getMembers(this.groupId).map(members => members.filter(member => member.document_state != 'PENDING_ADDS' && member.next_id == 0));
+      this.decisions = this.decisionService.getDecisions(this.groupId).map(decisions => decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' ) && decision.next_id == 0));
     });
   }
 
