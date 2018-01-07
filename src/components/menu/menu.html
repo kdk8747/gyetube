@@ -38,9 +38,9 @@
       <ion-icon name="settings" item-left></ion-icon>
       {{ 'I18N_SETTINGS' | translate }}
     </button>
-    <button ion-item>
+    <button ion-item ion-item (tap)="onMenuItemPush('PrivacyPolicyPage');">
       <ion-icon name="lock" item-left></ion-icon>
-      {{ 'I18N_TERMS_AND_PRIVACY_POLICY' | translate }}
+      {{ 'I18N_PRIVACY_POLICY' | translate }}
     </button>
   </ion-list>
 </ion-content>

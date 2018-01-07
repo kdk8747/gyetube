@@ -17,7 +17,8 @@
   "I18N_SIGN_IN": "로그인",
   "I18N_SIGN_OUT": "로그아웃",
   "I18N_SETTINGS": "설정",
-  "I18N_TERMS_AND_PRIVACY_POLICY": "서비스 약관 및 개인정보처리방침",
+  "I18N_TERMS": "서비스 약관",
+  "I18N_PRIVACY_POLICY": "개인정보처리방침",
 
 
   "I18N_SIGN_IN_BY_NAVER": "네이버로 로그인",
