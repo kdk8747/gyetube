@@ -12,8 +12,44 @@
             <ion-icon name="close"></ion-icon>
           </button>
         </ion-buttons>
-        <ion-buttons>{{ 'I18N_MEMBERS' | translate }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
+        <ion-buttons>{{ 'I18N_MEMBER' | translate }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
       </ion-toolbar>
+
+      <form [formGroup]="form">
+        <ion-list>
+          <ion-item>
+            <ion-label>{{ 'I18N_NAME' | translate }}</ion-label>
+            <ion-input formControlName="name" type="text" text-right [class.invalid]="!form.controls.name.valid && (form.controls.name.dirty || submitAttempt)"></ion-input>
+          </ion-item>
+
+          <ion-item no-lines>
+            <ion-label>{{ 'I18N_ROLES' | translate }}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-select formControlName="roles" multiple="true" [selectOptions]="{title: ('I18N_ROLES' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
+              [class.invalid]="!form.controls.roles.valid && (form.controls.roles.dirty || submitAttempt)">
+              <ion-option *ngFor="let role of roles | async" [value]="role.role_id">
+                <p *ngIf="role.document_state != 'PREDEFINED'">{{role.name}}</p>
+                <p *ngIf="role.document_state == 'PREDEFINED'">{{ 'I18N_' + role.name | translate }}</p>
+              </ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item no-lines>
+            <ion-label>{{ 'I18N_BASIS_FOR_THIS_DOCUMENT' | translate }}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-select formControlName="parentDecision" [selectOptions]="{title: ('I18N_RELATED_DECISION' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}"
+              [class.invalid]="!form.controls.parentDecision.valid && (form.controls.parentDecision.dirty || submitAttempt)">
+              <ion-option *ngFor="let decision of decisions | async" [value]="decision.decision_id">{{decision.title}}</ion-option>
+            </ion-select>
+          </ion-item>
+
+        </ion-list>
+      </form>
+      <ion-buttons right>
+        <button ion-button (tap)="onSave()">{{ 'I18N_UPLOAD' | translate }}</button>
+      </ion-buttons>
     </ion-col>
     <ion-col col-sm-3 col-xl-4>
     </ion-col>

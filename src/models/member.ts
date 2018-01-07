@@ -31,9 +31,7 @@ export class MemberDetailElement {
 
 export class MemberEditorElement {
   constructor(
-    public prev_id: number,
-    public user_id: string,
-    public image_url: string,
+    public prev_id: number, // 0: unused
     public name: string,
     public parent_decision_id: number,
     public role_ids: number[]

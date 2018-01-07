@@ -249,6 +249,15 @@ exports.create = async (req, res) => {
         req.body.parent_decision_id
       ]);
 
+    await Promise.all(req.body.role_ids.map(role => conn.query(
+      'INSERT INTO member_role\
+      (group_id, member_id, role_id)\
+      VALUES(?,?,?)', [
+        req.permissions.group_id,
+        member_new_id[0][0].new_id,
+        role
+      ])));
+
     await conn.commit();
     conn.release();
 
