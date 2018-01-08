@@ -1,5 +1,5 @@
 {
-  "I18N_GRASSCUBE": "GrassCube",
+  "I18N_APPNAME": "GyeTube",
   "I18N_OUR_LIVELIHOOD_PROCEEDINGS": "Our Livelihood Prodeedings",
 
 
@@ -25,7 +25,7 @@
   "I18N_SIGN_IN_BY_KAKAO": "Sign in by Kakao",
   "I18N_SIGN_IN_BY_FACEBOOK": "Sign in by Facebook",
   "I18N_SIGN_IN_TOAST": "Successfully signed in",
-  "I18N_SIGN_OUT_TOAST": "You're now using GrassCube signed out",
+  "I18N_SIGN_OUT_TOAST": "You're now using GyeTube signed out",
 
 
   "I18N_GROUP": "Group",
