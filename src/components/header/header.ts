@@ -5,7 +5,7 @@ import { User } from '../../models';
 
 
 @Component({
-  selector: 'grasscube-header',
+  selector: 'gyetube-header',
   templateUrl: 'header.html'
 })
 export class HeaderComponent {

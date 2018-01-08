@@ -3,7 +3,7 @@ import { User } from '../../models';
 
 
 @Component({
-  selector: 'grasscube-user',
+  selector: 'gyetube-user',
   templateUrl: 'user.html'
 })
 export class UserComponent {

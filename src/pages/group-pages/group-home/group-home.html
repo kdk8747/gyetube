@@ -7,7 +7,7 @@
     <ion-col col-12 col-sm-8 col-xl-6>
       <p style="text-align: center"><img [src]="(group | async)?.image_url"></p>
       <p>{{ (group | async)?.description }}</p>
-      <button ion-button *ngIf="needJoinButton" (tap)="navigateToMemberRegister()">{{ 'I18N_JOIN' | translate }}</button>
+      <gyetube-member-register-button></gyetube-member-register-button>
 
       <ion-list *ngIf="readMemberPermitted || readRolePermitted">
         <ion-list-header>

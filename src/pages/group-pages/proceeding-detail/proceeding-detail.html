@@ -29,11 +29,11 @@
       <p>{{proceeding?.meeting_datetime | localizedDate:'short'}}</p>
       <ion-buttons left>
         {{ 'I18N_ATTENDEES' | translate}}:
-        <grasscube-user *ngFor="let attendee of proceeding?.attendees" [user]="attendee"></grasscube-user>
+        <gyetube-user *ngFor="let attendee of proceeding?.attendees" [user]="attendee"></gyetube-user>
       </ion-buttons>
       <ion-buttons left *ngIf="proceeding?.document_state == 'PENDING_ADDS' && proceeding?.next_id == 0">
         {{ 'I18N_REVIEWED_BY' | translate}}:
-        <grasscube-user *ngFor="let reviewer of proceeding?.reviewers" [user]="reviewer"></grasscube-user>
+        <gyetube-user *ngFor="let reviewer of proceeding?.reviewers" [user]="reviewer"></gyetube-user>
       </ion-buttons>
 
       <p>{{proceeding?.description}}</p>

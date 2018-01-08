@@ -26,7 +26,7 @@
       <ion-row align-items-center justify-content-start>
         <ion-col col-auto>
           {{'I18N_AUTHOR' | translate }}:
-          <grasscube-user [user]="member?.creator"></grasscube-user>
+          <gyetube-user [user]="member?.creator"></gyetube-user>
         </ion-col>
         <ion-col>
           <p>{{member?.creator?.name}}</p>
@@ -63,22 +63,22 @@
               <p *ngIf="role.document_state != 'PREDEFINED'">{{ 'I18N_ROLE' | translate }}{{i+1}} - {{ role.name }}</p>
               <p *ngIf="role.document_state == 'PREDEFINED'">{{ 'I18N_ROLE' | translate }}{{i+1}} - {{ 'I18N_' + role.name | translate }}</p>
               <ion-row justify-content-end>
-                <grasscube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role.member"></grasscube-permission>
+                <gyetube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role.member"></gyetube-permission>
               </ion-row>
               <ion-row justify-content-end>
-                <grasscube-permission [name]="('I18N_ROLE' | translate) || '&nbsp;'" [permission]="role.role"></grasscube-permission>
+                <gyetube-permission [name]="('I18N_ROLE' | translate) || '&nbsp;'" [permission]="role.role"></gyetube-permission>
               </ion-row>
               <ion-row justify-content-end>
-                <grasscube-permission [name]="('I18N_PROCEEDING' | translate) || '&nbsp;'" [permission]="role.proceeding"></grasscube-permission>
+                <gyetube-permission [name]="('I18N_PROCEEDING' | translate) || '&nbsp;'" [permission]="role.proceeding"></gyetube-permission>
               </ion-row>
               <ion-row justify-content-end>
-                <grasscube-permission [name]="('I18N_DECISION' | translate) || '&nbsp;'" [permission]="role.decision"></grasscube-permission>
+                <gyetube-permission [name]="('I18N_DECISION' | translate) || '&nbsp;'" [permission]="role.decision"></gyetube-permission>
               </ion-row>
               <ion-row justify-content-end>
-                <grasscube-permission [name]="('I18N_ACTIVITY' | translate) || '&nbsp;'" [permission]="role.activity"></grasscube-permission>
+                <gyetube-permission [name]="('I18N_ACTIVITY' | translate) || '&nbsp;'" [permission]="role.activity"></gyetube-permission>
               </ion-row>
               <ion-row justify-content-end>
-                <grasscube-permission [name]="('I18N_RECEIPT' | translate) || '&nbsp;'" [permission]="role.receipt"></grasscube-permission>
+                <gyetube-permission [name]="('I18N_RECEIPT' | translate) || '&nbsp;'" [permission]="role.receipt"></gyetube-permission>
               </ion-row>
             </ion-col>
           </ion-row>

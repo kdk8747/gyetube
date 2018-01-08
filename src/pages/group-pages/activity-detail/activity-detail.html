@@ -17,7 +17,7 @@
 
       <ion-row align-items-center justify-content-start>
         <ion-col col-auto>
-          <grasscube-user [user]="activity?.creator"></grasscube-user>
+          <gyetube-user [user]="activity?.creator"></gyetube-user>
         </ion-col>
         <ion-col>
           <p>{{activity?.creator?.name}}</p>
@@ -37,7 +37,7 @@
       <ion-buttons left *ngIf="activity?.participants.length > 0">
         {{ 'I18N_PARTICIPANTS' | translate}}:
 
-        <grasscube-user *ngFor="let participant of activity.participants" [user]="participant"></grasscube-user>
+        <gyetube-user *ngFor="let participant of activity.participants" [user]="participant"></gyetube-user>
       </ion-buttons>
 
       <ion-card *ngIf="activity?.parent_decision">

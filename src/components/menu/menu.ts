@@ -7,7 +7,7 @@ import { SharedDataService } from '../../providers';
 
 
 @Component({
-  selector: 'grasscube-menu',
+  selector: 'gyetube-menu',
   templateUrl: 'menu.html'
 })
 export class MenuComponent {

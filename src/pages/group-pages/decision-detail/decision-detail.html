@@ -26,15 +26,15 @@
 
       <ion-buttons left *ngIf="decision?.accepters.length">
         {{ 'I18N_ACCEPTERS' | translate}}:
-        <grasscube-user *ngFor="let accepter of decision.accepters" [user]="accepter"></grasscube-user>
+        <gyetube-user *ngFor="let accepter of decision.accepters" [user]="accepter"></gyetube-user>
       </ion-buttons>
       <ion-buttons left *ngIf="decision?.rejecters.length">
         {{ 'I18N_REJECTERS' | translate}}:
-        <grasscube-user *ngFor="let rejecter of decision.rejecters" [user]="rejecter"></grasscube-user>
+        <gyetube-user *ngFor="let rejecter of decision.rejecters" [user]="rejecter"></gyetube-user>
       </ion-buttons>
       <ion-buttons left *ngIf="decision?.abstainers.length">
         {{ 'I18N_ABSTAINERS' | translate}}:
-        <grasscube-user *ngFor="let abstainer of decision.abstainers" [user]="abstainer"></grasscube-user>
+        <gyetube-user *ngFor="let abstainer of decision.abstainers" [user]="abstainer"></gyetube-user>
       </ion-buttons>
 
       <ion-card *ngIf="decision?.parent_proceeding">

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'grasscube-permission',
+  selector: 'gyetube-permission',
   templateUrl: 'permission.html'
 })
 export class PermissionComponent {
