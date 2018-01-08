@@ -23,6 +23,7 @@ export class MemberRegisterButtonComponent {
     public translate: TranslateService
   ) {
     this.util.pageGetReady().then(group_id => {
+      this.groupId = group_id;
       this.roleService.getRoleMyself(group_id).subscribe(() => {}, () => {
         this.youAreNotMember = true;
       });
