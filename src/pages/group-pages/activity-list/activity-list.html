@@ -5,6 +5,9 @@
     <p>{{'I18N_ACCESS_DENIED' | translate}}</p>
     <gyetube-member-register-button></gyetube-member-register-button>
   </span>
+  <span *ngIf="readPermitted && (activities | async)?.length == 0">
+    <p>{{'I18N_EMPTY_LIST' | translate}}</p>
+  </span>
 
   <ion-grid fixed>
     <ion-row>
