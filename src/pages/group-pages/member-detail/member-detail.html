@@ -25,6 +25,7 @@
 
       <ion-row align-items-center justify-content-start>
         <ion-col col-auto>
+          {{'I18N_AUTHOR' | translate }}:
           <grasscube-user [user]="member?.creator"></grasscube-user>
         </ion-col>
         <ion-col>
@@ -38,7 +39,7 @@
           <img [src]="member?.image_url">
         </ion-avatar>
         <h2>{{ member?.name }}</h2>
-        <p>{{ member?.third_party }}</p>
+        <p>{{'I18N_' + member?.document_state | translate}}</p>
       </ion-item>
 
       <ion-card *ngIf="member?.parent_decision">
@@ -85,24 +86,29 @@
       </ion-card>
 
       <ion-buttons right *ngIf="member?.document_state == 'PENDING_ADDS' && member?.next_id == 0">
-        <!-- <ion-list radio-group no-lines>
+        <ion-list radio-group no-lines>
           <ion-item>
             <ion-label style="color: #7f7f7f;">{{ 'I18N_APPROVE_NEW_MEMBER' | translate }}</ion-label>
-            <ion-radio (ionSelect)="approve=true" checked="true"></ion-radio>
+            <ion-radio (ionSelect)="approveState=enum.STATE_NEW_MEMBER" checked="true"></ion-radio>
           </ion-item>
 
           <ion-item>
-            <ion-label style="color: #7f7f7f;">{{ 'I18N_APPROVE_DUPLICATED' | translate }}</ion-label>
-            <ion-radio (ionSelect)="approve=true"></ion-radio>
+            <ion-label style="color: #7f7f7f;">{{ 'I18N_APPROVE_OVERWRITE' | translate }}</ion-label>
+            <ion-radio (ionSelect)="approveState=enum.STATE_OVERWRITE"></ion-radio>
+          </ion-item>
+          <ion-item *ngIf="approveState==enum.STATE_OVERWRITE">
+            <ion-select [(ngModel)]="overwrite_id" [selectOptions]="{title: ('I18N_RELATED_DECISION' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}"
+              [class.invalid]="!overwrite_id && submitAttempt">
+              <ion-option *ngFor="let member of members | async" [value]="member.member_id">{{member.name}}</ion-option>
+            </ion-select>
           </ion-item>
 
           <ion-item>
             <ion-label style="color: #7f7f7f;">{{ 'I18N_REJECT' | translate }}</ion-label>
-            <ion-radio (ionSelect)="approve=false"></ion-radio>
+            <ion-radio (ionSelect)="approveState=enum.STATE_REJECT"></ion-radio>
           </ion-item>
         </ion-list>
-        <button ion-button (tap)="onSubmit()">{{ 'I18N_SUBMIT' | translate }}</button> -->
-        <button ion-button (tap)="onSubmit()">{{ 'I18N_APPROVE_NEW_MEMBER' | translate }}</button>
+        <button ion-button (tap)="onSubmit()">{{ 'I18N_SUBMIT' | translate }}</button>
       </ion-buttons>
 
       <ion-toolbar *ngIf="(member?.prev_id || member?.next_id)">

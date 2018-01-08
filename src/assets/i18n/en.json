@@ -59,8 +59,9 @@
   "I18N_ROLES": "Roles",
 
 
+  "I18N_AUTHOR": "Author",
   "I18N_APPROVE_NEW_MEMBER": "Approve - New Member",
-  "I18N_APPROVE_DUPLICATED": "Approve - Duplicated",
+  "I18N_APPROVE_OVERWRITE": "Approve - Overwrite",
   "I18N_REJECT": "Reject",
 
 

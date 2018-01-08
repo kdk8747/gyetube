@@ -43,8 +43,22 @@ export class MemberService {
       .take(1);
   }
 
-  update(group_id: number, member_id: number): Observable<void> {
-    const url = `${this.membersUrl}/${group_id}/${member_id}`;
+  approveNewMember(group_id: number, member_id: number): Observable<void> {
+    const url = `${this.membersUrl}/${group_id}/${member_id}/approve-new-member`;
+    return this.http
+      .put(url, '', { headers: this.headers })
+      .map(() => null)
+      .take(1);
+  }
+  approveOverwrite(group_id: number, member_id: number, prev_id: number): Observable<void> {
+    const url = `${this.membersUrl}/${group_id}/${member_id}/approve-overwrite/${prev_id}`;
+    return this.http
+      .put(url, '', { headers: this.headers })
+      .map(() => null)
+      .take(1);
+  }
+  reject(group_id: number, member_id: number): Observable<void> {
+    const url = `${this.membersUrl}/${group_id}/${member_id}/reject`;
     return this.http
       .put(url, '', { headers: this.headers })
       .map(() => null)

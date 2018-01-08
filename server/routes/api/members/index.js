@@ -7,8 +7,12 @@ router.get('/',
 router.get('/:member_id',
   controller.authRead, controller.getByID);
 
-router.put('/:member_id',
-  controller.authUpdate, controller.updateByID);
+router.put('/:member_id/approve-new-member',
+  controller.authUpdate, controller.approveNewMember);
+router.put('/:member_id/approve-overwrite/:prev_id',
+  controller.authUpdate, controller.approveOverwrite);
+router.put('/:member_id/reject',
+  controller.authUpdate, controller.reject);
 
 router.post('/',
   controller.authCreate, controller.create);

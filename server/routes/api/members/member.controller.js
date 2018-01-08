@@ -157,7 +157,7 @@ exports.getByID = async (req, res) => {
   }
 }
 
-exports.updateByID = async (req, res) => {
+exports.approveNewMember = async (req, res) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
@@ -200,6 +200,130 @@ exports.updateByID = async (req, res) => {
       VALUES(?,?,2)', [
         req.permissions.group_id,
         member_new_id[0][0].new_id
+      ]);
+
+    await conn.commit();
+    conn.release();
+
+    res.send();
+  }
+  catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
+    }
+    res.status(500).json({
+      success: false,
+      message: err
+    });
+  }
+}
+
+exports.approveOverwrite = async (req, res) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    let member_id = await conn.query(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.permissions.group_id, req.decoded.user_id]);
+    debug(member_id[0]);
+
+    let member = await conn.query(
+      'SELECT *, hex(user_id) AS user_id\
+      FROM member\
+      WHERE group_id=? AND member_id=? AND document_state=0 AND next_id=0', [req.permissions.group_id, req.params.member_id]);
+    debug(member[0]);
+
+    await conn.query(
+      'UPDATE member\
+      SET user_id=null, next_id=?\
+      WHERE group_id=? AND member_id=?', [req.params.member_id, req.permissions.group_id, req.params.prev_id]);
+
+    let member_new_id = await conn.query('SELECT GET_SEQ(?,"member") AS new_id', [req.permissions.group_id]);
+
+    await conn.query(
+      'UPDATE member\
+      SET user_id=null, next_id=?, prev_id=?\
+      WHERE group_id=? AND member_id=?', [member_new_id[0][0].new_id, req.params.prev_id, req.permissions.group_id, req.params.member_id]);
+
+    await conn.query(
+      'INSERT INTO member\
+      (group_id, member_id, decision_id, prev_id, next_id, document_state, creator_id, created_datetime, user_id, image_url, name)\
+      VALUES(?,?,?,?,0,2,?,?,unhex(?),?,?)', [
+        req.permissions.group_id,
+        member_new_id[0][0].new_id,
+        member[0][0].decision_id,
+        member[0][0].member_id,
+        member_id[0][0].member_id,
+        new Date().toISOString().substring(0, 19).replace('T', ' '),
+        member[0][0].user_id,
+        member[0][0].image_url,
+        member[0][0].name
+      ]);
+    await conn.query(
+      'INSERT INTO member_role (group_id, member_id, role_id)\
+      SELECT group_id, ?, role_id\
+      FROM member_role\
+      WHERE group_id=? AND member_id=?', [
+        member_new_id[0][0].new_id,
+        req.permissions.group_id,
+        req.params.prev_id
+      ]);
+
+    await conn.commit();
+    conn.release();
+
+    res.send();
+  }
+  catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
+    }
+    res.status(500).json({
+      success: false,
+      message: err
+    });
+  }
+}
+
+exports.reject = async (req, res) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    let member_id = await conn.query(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.permissions.group_id, req.decoded.user_id]);
+    debug(member_id[0]);
+
+    let member = await conn.query(
+      'SELECT *, hex(user_id) AS user_id\
+      FROM member\
+      WHERE group_id=? AND member_id=? AND document_state=0 AND next_id=0', [req.permissions.group_id, req.params.member_id]);
+    debug(member[0]);
+
+    let member_new_id = await conn.query('SELECT GET_SEQ(?,"member") AS new_id', [req.permissions.group_id]);
+
+    await conn.query(
+      'UPDATE member\
+      SET user_id=null, next_id=?\
+      WHERE group_id=? AND member_id=?', [member_new_id[0][0].new_id, req.permissions.group_id, req.params.member_id]);
+
+    await conn.query(
+      'INSERT INTO member\
+      (group_id, member_id, decision_id, prev_id, next_id, document_state, creator_id, created_datetime, user_id, image_url, name)\
+      VALUES(?,?,?,?,0,5,?,?,null,?,?)', [
+        req.permissions.group_id,
+        member_new_id[0][0].new_id,
+        member[0][0].decision_id,
+        member[0][0].member_id,
+        member_id[0][0].member_id,
+        new Date().toISOString().substring(0, 19).replace('T', ' '),
+        //member[0][0].user_id,
+        member[0][0].image_url,
+        member[0][0].name
       ]);
 
     await conn.commit();

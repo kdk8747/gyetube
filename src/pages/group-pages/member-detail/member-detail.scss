@@ -11,4 +11,7 @@ page-member-detail {
   p {
     color: color($colors, dark, base)!important;
   }
+  .invalid {
+    border: 1px solid #ea6153;
+  }
 }
