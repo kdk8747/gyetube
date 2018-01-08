@@ -154,7 +154,7 @@ exports.create = async (req, res) => {
 
     await conn.query(
       'INSERT INTO user_permission\
-      (group_id, user_id, member, role, proceeding, decision, activity, receipt)\
+      (group_id, user_id)\
       VALUES(?,unhex(?))', [
         group_id,
         req.decoded.user_id
