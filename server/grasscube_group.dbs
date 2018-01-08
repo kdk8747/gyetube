@@ -440,21 +440,12 @@ d = 8,]]></comment>
 		<table name="user_permission" >
 			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="user_id" type="binary" length="16" jt="-2" mandatory="y" />
-			<column name="member" type="tinyint" jt="-6" mandatory="y" unsigned="y" >
-				<comment><![CDATA[crud ( create, read, update, delete)
-c = 1,
-r = 2,
-u = 4,
-d = 8,]]></comment>
-			</column>
-			<column name="role" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
-			<column name="proceeding" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
-			<column name="decision" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
-			<column name="activity" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
-			<column name="receipt" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<index name="pk_user_permission" unique="PRIMARY_KEY" >
 				<column name="group_id" />
 				<column name="user_id" />
+			</index>
+			<index name="idx_user_permission_group_id" unique="NORMAL" >
+				<column name="group_id" />
 			</index>
 			<index name="idx_user_permission_user_id" unique="NORMAL" >
 				<column name="user_id" />
