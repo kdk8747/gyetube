@@ -6,12 +6,14 @@ import { HeaderComponent } from './header/header';
 import { MenuComponent } from './menu/menu';
 import { UserComponent } from './user/user';
 import { PermissionComponent } from './permission/permission';
+import { MemberRegisterButtonComponent } from './member-register-button/member-register-button';
 @NgModule({
 	declarations: [
     HeaderComponent,
     MenuComponent,
     UserComponent,
-    PermissionComponent
+    PermissionComponent,
+    MemberRegisterButtonComponent
   ],
 	imports: [
     CommonModule,
@@ -19,13 +21,15 @@ import { PermissionComponent } from './permission/permission';
     IonicPageModule.forChild(HeaderComponent),
     IonicPageModule.forChild(MenuComponent),
     IonicPageModule.forChild(UserComponent),
-    IonicPageModule.forChild(PermissionComponent)
+    IonicPageModule.forChild(PermissionComponent),
+    IonicPageModule.forChild(MemberRegisterButtonComponent)
   ],
   exports: [
     HeaderComponent,
     MenuComponent,
     UserComponent,
-    PermissionComponent
+    PermissionComponent,
+    MemberRegisterButtonComponent
   ]
 })
 export class ComponentsModule {}

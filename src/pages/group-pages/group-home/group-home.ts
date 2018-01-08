@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, ToastController } from 'ionic-angular';
-import { UtilService, GroupService, MemberService, RoleService, SharedDataService } from '../../../providers';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { UtilService, GroupService, SharedDataService } from '../../../providers';
 import { Group } from '../../../models';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -17,7 +16,6 @@ export class GroupHomePage {
 
   groupId: number;
   group: Observable<Group>;
-  needJoinButton: boolean;
   readMemberPermitted: boolean;
   readRolePermitted: boolean;
 
@@ -27,11 +25,7 @@ export class GroupHomePage {
     public util: UtilService,
     public event: Events,
     public groupService: GroupService,
-    public memberService: MemberService,
-    public roleService: RoleService,
-    public sharedDataService: SharedDataService,
-    public toastCtrl: ToastController,
-    public translate: TranslateService
+    public sharedDataService: SharedDataService
   ) {
   }
 
@@ -41,10 +35,6 @@ export class GroupHomePage {
       this.group = this.groupService.getGroup(group_id);
       this.group.subscribe(group => {
         this.sharedDataService.headerGroupTitle = group.title;
-      });
-
-      this.roleService.getRoleMyself(this.groupId).subscribe(() => {}, () => {
-        this.needJoinButton = true;
       });
 
       this.util.isPermitted('READ', 'member', group_id)
@@ -65,23 +55,6 @@ export class GroupHomePage {
     this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-  }
-
-  navigateToMemberRegister() {
-    if (this.sharedDataService.loggedIn) {
-      this.memberService.registerMember(this.groupId).subscribe(() => {
-        this.needJoinButton = false;
-        this.translate.get('I18N_JOIN_TOAST').subscribe(
-          (value) => {
-            let toast = this.toastCtrl.create({
-              duration: 3000,
-              message: value
-            });
-            toast.present();
-          });
-      });
-    } else
-      this.navCtrl.push('LoginPage');
   }
 
   navigateToMemberList() {

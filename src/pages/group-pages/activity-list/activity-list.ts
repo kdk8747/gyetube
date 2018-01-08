@@ -16,6 +16,7 @@ export class ActivityListPage {
   groupId: number;
   activities: Observable<ActivityListElement[]>;
   creationPermitted: boolean = false;
+  readPermitted: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -37,6 +38,7 @@ export class ActivityListPage {
         });
       this.activities = this.activityService.getActivities(this.groupId)
         .map((activities: ActivityListElement[]) => this.sortByDateA(activities));
+      this.activities.subscribe(() => this.readPermitted = true);
     });
   }
 

@@ -16,6 +16,7 @@ export class ReceiptListPage {
   groupId: number;
   receipts: Observable<ReceiptListElement[]>;
   creationPermitted: boolean = false;
+  readPermitted: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -38,6 +39,7 @@ export class ReceiptListPage {
       this.receipts = this.receiptService.getReceipts(this.groupId)
         .map((receipts: ReceiptListElement[]) => this.sortByDateR(receipts))
         .map((receipts: ReceiptListElement[]) => this.setBalance(receipts));
+      this.receipts.subscribe(() => this.readPermitted = true);
     });
   }
 

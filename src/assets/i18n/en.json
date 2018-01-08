@@ -50,6 +50,8 @@
   "I18N_REVISION": "Revision",
   "I18N_BASIS_FOR_THIS_DOCUMENT": "Basis for This Document",
   "I18N_NAME": "Name",
+  "I18N_ACCESS_DENIED": "Access Denied.",
+
 
 
   "I18N_JOIN": "Join",

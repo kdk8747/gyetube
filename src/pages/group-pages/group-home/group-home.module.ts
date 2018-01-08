@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { GroupHomePage } from './group-home';
+import { ComponentsModule } from '../../../components/components.module';
 
 @NgModule({
   declarations: [
@@ -9,7 +10,8 @@ import { GroupHomePage } from './group-home';
   ],
   imports: [
     IonicPageModule.forChild(GroupHomePage),
-    TranslateModule.forChild()
+    TranslateModule.forChild(),
+    ComponentsModule
   ],
 })
 export class GroupHomePageModule {}

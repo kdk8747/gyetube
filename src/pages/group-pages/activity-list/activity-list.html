@@ -1,6 +1,11 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
+  <span *ngIf="!readPermitted">
+    <p>{{'I18N_ACCESS_DENIED' | translate}}</p>
+    <gyetube-member-register-button></gyetube-member-register-button>
+  </span>
+
   <ion-grid fixed>
     <ion-row>
       <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let activity of activities | async">

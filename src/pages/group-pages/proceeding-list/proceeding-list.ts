@@ -16,6 +16,7 @@ export class ProceedingListPage {
   user: User;
   proceedings: Observable<ProceedingListElement[]>;
   creationPermitted: boolean = false;
+  readPermitted: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -39,6 +40,7 @@ export class ProceedingListPage {
           console.log(error);
         });
       this.proceedings = this.proceedingService.getProceedings(group_id);
+      this.proceedings.subscribe(() => this.readPermitted = true);
     });
   }
 
