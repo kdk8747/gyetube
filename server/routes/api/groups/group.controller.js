@@ -76,7 +76,7 @@ exports.create = async (req, res) => {
     debug(req.body);
     if (!(req.body.url_segment.length < 32)) throw 'Invalid url';
     if (!(req.body.title.length < 32)) throw 'Invalid title';
-    if (!(req.body.description.length < 32)) throw 'Invalid description';
+    if (!(req.body.description.length < 1024)) throw 'Invalid description';
 
     let created_datetime = new Date().toISOString().substring(0, 19).replace('T', ' ');
     let group = await conn.query(
