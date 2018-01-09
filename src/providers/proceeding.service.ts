@@ -26,8 +26,8 @@ export class ProceedingService {
       .map(response => {
         let proceedings = response.json() as ProceedingListElement[];
         return proceedings.map(proceeding => {
-          proceeding.created_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-          proceeding.meeting_datetime += 'Z';
+          proceeding.created_datetime = proceeding.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          proceeding.meeting_datetime = proceeding.meeting_datetime.replace(' ','T') + 'Z';
           return proceeding;
         });
       })
@@ -40,8 +40,8 @@ export class ProceedingService {
     return this.http.get(url)
       .map(response => {
         let proceeding = response.json() as ProceedingDetailElement;
-        proceeding.created_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-        proceeding.meeting_datetime += 'Z';
+        proceeding.created_datetime = proceeding.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        proceeding.meeting_datetime = proceeding.meeting_datetime.replace(' ','T') + 'Z';
         return proceeding;
       })
       .take(1);

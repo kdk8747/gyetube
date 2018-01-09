@@ -24,7 +24,7 @@ export class MemberService {
       .map(response => {
         let members = response.json() as MemberListElement[];
         return members.map(member => {
-          member.created_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          member.created_datetime = member.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
           return member;
         });
       })
@@ -37,7 +37,7 @@ export class MemberService {
     return this.http.get(url)
       .map(response => {
         let member = response.json() as MemberDetailElement;
-        member.created_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        member.created_datetime = member.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
         return member;
       })
       .take(1);

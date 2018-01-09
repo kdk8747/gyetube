@@ -24,8 +24,8 @@ export class ActivityService {
       .map(response => {
         let activities = response.json() as ActivityListElement[];
         return activities.map(activity => {
-          activity.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-          activity.activity_datetime += 'Z';
+          activity.modified_datetime = activity.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          activity.activity_datetime = activity.activity_datetime.replace(' ','T') + 'Z';
           return activity;
         });
       })
@@ -38,8 +38,8 @@ export class ActivityService {
     return this.http.get(url)
       .map(response => {
         let activity = response.json() as ActivityDetailElement;
-        activity.modified_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-        activity.activity_datetime += 'Z';
+        activity.modified_datetime = activity.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        activity.activity_datetime = activity.activity_datetime.replace(' ','T') + 'Z';
         return activity;
       })
       .take(1);

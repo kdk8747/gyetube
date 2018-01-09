@@ -23,7 +23,7 @@ export class GroupService {
       .map(response => {
         let groups = response.json() as Group[];
         return groups.map(group => {
-          group.created_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          group.created_datetime = group.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
           return group;
         });
       })
@@ -36,7 +36,7 @@ export class GroupService {
     return this.http.get(url)
       .map(response => {
         let group = response.json() as Group;
-        group.created_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        group.created_datetime = group.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
         return group;
       })
       .publishLast().refCount();

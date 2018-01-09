@@ -25,8 +25,8 @@ export class DecisionService {
       .map(response => {
         let decisions = response.json() as DecisionListElement[];
         return decisions.map(decision => {
-          decision.expiry_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-          decision.meeting_datetime += 'Z';
+          decision.expiry_datetime = decision.expiry_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          decision.meeting_datetime = decision.meeting_datetime.replace(' ','T') + 'Z';
           return decision;
         });
       })
@@ -39,8 +39,8 @@ export class DecisionService {
     return this.http.get(url)
       .map(response => {
         let decision = response.json() as DecisionDetailElement;
-        decision.expiry_datetime += 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-        decision.meeting_datetime += 'Z';
+        decision.expiry_datetime = decision.expiry_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        decision.meeting_datetime = decision.meeting_datetime.replace(' ','T') + 'Z';
         return decision;
       })
       .take(1);
