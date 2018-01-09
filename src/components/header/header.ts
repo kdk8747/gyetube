@@ -44,7 +44,7 @@ export class HeaderComponent {
       //this.renderer.setElementStyle(this.element.nativeElement.children[0], 'top', '0px');
     });
 
-    this.event.publish('App_ShowAvatarToHeader');
+    setTimeout(() => this.event.publish('App_ShowAvatarToHeader'), 300);
   }
 
   popNavigation() {
