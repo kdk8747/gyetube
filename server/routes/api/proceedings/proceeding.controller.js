@@ -226,7 +226,7 @@ exports.create = async (req, res) => {
         decision.group_id = req.permissions.group_id;
         decision.proceeding_id = proceeding_new_id[0][0].new_id;
         decision.meeting_datetime = req.body.meeting_datetime;
-        return decisionController.create(conn, decision);
+        return decisionController.insertDecision(conn, decision);
       }));
     }
 

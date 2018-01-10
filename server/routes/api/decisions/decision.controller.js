@@ -104,7 +104,7 @@ exports.getByID = async (req, res) => {
   }
 }
 
-exports.create = async (conn, decision) => {
+exports.insertDecision = async (conn, decision) => {
   let decision_new_id = await conn.query('SELECT GET_SEQ(?,"decision") AS new_id', [decision.group_id]);
 
   await conn.query(

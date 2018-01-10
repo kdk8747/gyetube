@@ -173,9 +173,7 @@ exports.getByID = async (req, res) => {
   }
 }
 
-
-
-exports.createMember = async (conn, member) => {
+exports.insertMember = async (conn, member) => {
   await conn.query(
     'INSERT INTO member\
     (group_id, member_id, decision_id, user_id, image_url, name)\
@@ -202,24 +200,26 @@ exports.createMember = async (conn, member) => {
       new Date().toISOString().substring(0, 19).replace('T', ' ')
     ]);
 
-  await Promise.all(
-    member.role_ids.map(role_id => conn.query(
-      'INSERT INTO member_role (group_id, member_id, role_id) VALUES (?,?,?)', [
-        member.group_id,
-        member.member_id,
-        role_id
-      ])),
-    member.role_ids.map(role_id => conn.query(
-      'INSERT INTO member_role_log (group_id, member_log_id, role_log_id)\
-      SELECT R.group_id, ?, RL.role_log_id  FROM role R\
-      LEFT JOIN role_log RL ON RL.group_id=R.group_id AND RL.role_id=R.role_id\
-      WHERE R.group_id=? AND R.role_id=?\
-      ORDER BY RL.role_log_id DESC\
-      LIMIT 1', [
-        member.member_log_id,
-        member.group_id,
-        role_id
-      ])));
+  if (member.role_ids) {
+    await Promise.all(
+      member.role_ids.map(role_id => conn.query(
+        'INSERT INTO member_role (group_id, member_id, role_id) VALUES (?,?,?)', [
+          member.group_id,
+          member.member_id,
+          role_id
+        ])),
+      member.role_ids.map(role_id => conn.query(
+        'INSERT INTO member_role_log (group_id, member_log_id, role_log_id)\
+        SELECT R.group_id, ?, RL.role_log_id  FROM role R\
+        LEFT JOIN role_log RL ON RL.group_id=R.group_id AND RL.role_id=R.role_id\
+        WHERE R.group_id=? AND R.role_id=?\
+        ORDER BY RL.role_log_id DESC\
+        LIMIT 1', [
+          member.member_log_id,
+          member.group_id,
+          role_id
+        ])));
+  }
 }
 
 exports.updateMember = async (conn, member) => {
@@ -465,7 +465,7 @@ exports.create = async (req, res) => {
     member.member_log_id = member_log_new_id[0][0].new_id;
     member.creator_id = member_id[0][0].member_id;
     member.document_state = 2; /* ADDED */
-    await module.exports.createMember(conn, member);
+    await module.exports.insertMember(conn, member);
 
     await conn.commit();
     conn.release();
@@ -509,7 +509,7 @@ exports.register = async (req, res) => {
       member.creator_id = member_new_id[0][0].new_id;
       member.document_state = 0; /* PENDING_ADDS */
       debug(member);
-      await module.exports.createMember(conn, member);
+      await module.exports.insertMember(conn, member);
     }
 
     await conn.commit();

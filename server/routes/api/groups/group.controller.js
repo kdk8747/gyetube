@@ -1,3 +1,6 @@
+const decisionController = require('../decisions/decision.controller');
+const memberController = require('../members/member.controller');
+const roleController = require('../roles/role.controller');
 const db = require('../../../database');
 const debug = require('debug')('group');
 
@@ -79,6 +82,8 @@ exports.create = async (req, res) => {
     if (!(req.body.description.length < 1024)) throw 'Invalid description';
 
     let created_datetime = new Date().toISOString().substring(0, 19).replace('T', ' ');
+
+    /* creates a group */
     let group = await conn.query(
       'INSERT INTO `group`\
       (url_segment, title, description, created_datetime)\
@@ -90,6 +95,7 @@ exports.create = async (req, res) => {
       ]);
     let group_id = group[0].insertId;
 
+    /* create sequences */
     let sequences = [
       { name: 'proceeding', default: 0 },
       { name: 'decision', default: 0 },
@@ -104,28 +110,21 @@ exports.create = async (req, res) => {
     await Promise.all(sequences.map(sequence =>
       conn.query('INSERT INTO master_seq (group_id, seq_name, id) VALUES(?,?,?)', [group_id, sequence.name, sequence.default])));
 
+    /* creates a member */
     let member_new_id = 1;
-    await conn.query(
-      'INSERT INTO member\
-      (group_id, member_id, user_id, image_url, name)\
-      VALUES(?,?,unhex(?),?,?)', [
-        group_id,
-        member_new_id,
-        req.decoded.user_id,
-        decodeURIComponent(req.decoded.image_url),
-        decodeURIComponent(req.decoded.name)
-      ]);
-    await conn.query(
-      'INSERT INTO member_log\
-      (group_id, member_log_id, member_id, document_state, creator_id, created_datetime)\
-      VALUES(?,?,?,2,?,?)', [
-        group_id,
-        member_new_id,
-        member_new_id,
-        member_new_id,
-        new Date().toISOString().substring(0, 19).replace('T', ' ')
-      ]);
+    let member = {};
+    member.group_id = group_id;
+    member.member_id = member_new_id;
+    member.member_log_id = member_new_id;
+    member.user_id = req.decoded.user_id;
+    member.image_url = decodeURIComponent(req.decoded.image_url);
+    member.name = decodeURIComponent(req.decoded.name);
+    member.document_state = 2; /* ADDED */
+    member.creator_id = member_new_id;
 
+    await memberController.insertMember(conn, member);
+
+    /* create roles */
     let roles = [
       { id: 1, name: 'ANYONE', member: 0, role: 0, proceeding: 0, decision: 0, activity: 2, receipt: 2 },
       { id: 2, name: 'MEMBER', member: 0, role: 0, proceeding: 6, decision: 6, activity: 15, receipt: 15 },
@@ -134,24 +133,21 @@ exports.create = async (req, res) => {
     let role_commitee_idx = 2;
 
     await Promise.all(
-      roles.map(role => conn.query('INSERT INTO role (group_id, role_id) VALUES(?,?)', [group_id, role.id])),
-      roles.map(role =>
-        conn.query(
-          'INSERT INTO role_log\
-          (group_id, role_log_id, role_id, document_state, creator_id, created_datetime, name, member, role, proceeding, decision, activity, receipt)\
-          VALUES(?,?,?,4,?,?,?, ?,?,?,?,?,?)', [
-            group_id,
-            role.id,
-            role.id,
-            member_new_id,
-            new Date().toISOString().substring(0, 19).replace('T', ' '),
-            role.name, role.member, role.role, role.proceeding, role.decision, role.activity, role.receipt
-          ]))
+      roles.map(role => {
+        role.group_id = group_id;
+        role.role_id = role.id;
+        role.role_log_id = role.id;
+        role.creator_id = member_new_id;
+        role.document_state = 4;
+        return roleController.insertRole(conn, role);
+      })
     );
 
+    /* creates a member_role */
     await conn.query('INSERT INTO member_role (group_id, member_id, role_id) VALUES(?,?,3)', [group_id, member_new_id]);
     await conn.query('INSERT INTO member_role_log (group_id, member_log_id, role_log_id) VALUES(?,?,3)', [group_id, member_new_id]);
 
+    /* creates a home */
     await conn.query(
       'INSERT INTO home\
       (group_id, home_id, creator_id, created_datetime, title, description, url_segment)\
@@ -165,6 +161,7 @@ exports.create = async (req, res) => {
         req.body.url_segment,
       ]);
 
+    /* creates a user_permission */
     await conn.query(
       'INSERT INTO user_permission\
       (group_id, user_id)\

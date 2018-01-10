@@ -193,6 +193,51 @@ exports.getByID = async (req, res) => {
   }
 }
 
+exports.insertRole = async (conn, role) => {
+  await conn.query(
+    'INSERT INTO role\
+    (group_id, role_id, decision_id, document_state, creator_id,  modified_datetime, name, member, role, proceeding,  decision, activity, receipt)\
+    VALUES(?,?,?,?,?, ?,?,?,?,?, ?,?,?)', [
+      role.group_id,
+      role.role_id,
+      role.parent_decision_id ? member.parent_decision_id : null,
+      role.document_state,
+      role.creator_id,
+
+      new Date().toISOString().substring(0, 19).replace('T', ' '),
+      role.name,
+      role.member,
+      role.role,
+      role.proceeding,
+
+      role.decision,
+      role.activity,
+      role.receipt
+    ]);
+
+  await conn.query(
+    'INSERT INTO role_log\
+    (group_id, role_log_id, role_id, decision_id, document_state,  creator_id, created_datetime, name, member, role,  proceeding, decision, activity, receipt)\
+    VALUES(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)', [
+      role.group_id,
+      role.role_log_id,
+      role.role_id,
+      role.parent_decision_id ? member.parent_decision_id : null,
+      role.document_state,
+
+      role.creator_id,
+      new Date().toISOString().substring(0, 19).replace('T', ' '),
+      role.name,
+      role.member,
+      role.role,
+
+      role.proceeding,
+      role.decision,
+      role.activity,
+      role.receipt
+    ]);
+}
+
 exports.updateByID = async (req, res) => {
   const conn = await db.getConnection();
   try {
