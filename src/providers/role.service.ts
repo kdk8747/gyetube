@@ -11,7 +11,7 @@ import 'rxjs/add/operator/publishLast';
 
 @Injectable()
 export class RoleService {
-  private rolesUrl = '/api/v1.0/roles';  // URL to web api
+  private rolesUrl = '/api/v1.0/groups';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
 
@@ -20,12 +20,12 @@ export class RoleService {
   ) { }
 
   getRoles(group_id: number): Observable<RoleListElement[]> {
-    const url = `${this.rolesUrl}/${group_id}`;
+    const url = `${this.rolesUrl}/${group_id}/roles`;
     return this.http.get(url)
       .map(response => {
         let roles = response.json() as RoleListElement[];
         return roles.map(role => {
-          role.created_datetime = role.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          role.modified_datetime = role.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
           return role;
         });
       })
@@ -33,25 +33,25 @@ export class RoleService {
   }
 
   getRole(group_id: number, id: number): Observable<RoleDetailElement> {
-    const url = `${this.rolesUrl}/${group_id}/${id}`;
+    const url = `${this.rolesUrl}/${group_id}/roles/${id}`;
     return this.http.get(url)
       .map(response => {
         let role = response.json() as RoleDetailElement;
-        role.created_datetime = role.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        role.modified_datetime = role.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
         return role;
       })
       .take(1);
   }
 
   getRoleMyself(group_id: number): Observable<RoleDetailElement> {
-    const url = `${this.rolesUrl}/${group_id}/myself`;
+    const url = `${this.rolesUrl}/${group_id}/roles/myself`;
     return this.http.get(url)
       .map(response => response.json() as RoleDetailElement)
       .take(1);
   }
 
   update(group_id: number, role: RoleDetailElement): Observable<RoleDetailElement> {
-    const url = `${this.rolesUrl}/${group_id}/${role.role_id}`;
+    const url = `${this.rolesUrl}/${group_id}/roles/${role.role_id}`;
     return this.http
       .put(url, JSON.stringify(role), { headers: this.headers })
       .map(() => role)
@@ -59,7 +59,7 @@ export class RoleService {
   }
 
   create(group_id: number, role: RoleEditorElement): Observable<void> {
-    const url = `${this.rolesUrl}/${group_id}`;
+    const url = `${this.rolesUrl}/${group_id}/roles`;
     return this.http
       .post(url, JSON.stringify(role), { headers: this.headers })
       .map(() => null)

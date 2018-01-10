@@ -11,7 +11,7 @@ import 'rxjs/add/operator/publishLast';
 
 @Injectable()
 export class ReceiptService {
-  private receiptsUrl = '/api/v1.0/receipts';  // URL to web api
+  private receiptsUrl = '/api/v1.0/groups';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
@@ -19,7 +19,7 @@ export class ReceiptService {
   ) { }
 
   getReceipts(group_id: number): Observable<ReceiptListElement[]> {
-    const url = `${this.receiptsUrl}/${group_id}`;
+    const url = `${this.receiptsUrl}/${group_id}/receipts`;
     return this.http.get(url)
       .map(response => {
         let receipts = response.json() as ReceiptListElement[];
@@ -33,7 +33,7 @@ export class ReceiptService {
   }
 
   getReceipt(group_id: number, receipt_id: number): Observable<ReceiptDetailElement> {
-    const url = `${this.receiptsUrl}/${group_id}/${receipt_id}`;
+    const url = `${this.receiptsUrl}/${group_id}/receipts/${receipt_id}`;
     return this.http.get(url)
       .map(response => {
         let receipt = response.json() as ReceiptDetailElement;
@@ -45,7 +45,7 @@ export class ReceiptService {
   }
 
   update(group_id: number, receipt: ReceiptEditorElement): Observable<ReceiptEditorElement> {
-    const url = `${this.receiptsUrl}/${group_id}/${receipt.receipt_id}`;
+    const url = `${this.receiptsUrl}/${group_id}/receipts/${receipt.receipt_id}`;
     return this.http
       .put(url, JSON.stringify(receipt), { headers: this.headers })
       .map(() => receipt)
@@ -53,7 +53,7 @@ export class ReceiptService {
   }
 
   create(group_id: number, receipt: ReceiptEditorElement): Observable<void> {
-    const url = `${this.receiptsUrl}/${group_id}`;
+    const url = `${this.receiptsUrl}/${group_id}/receipts`;
     return this.http
       .post(url, JSON.stringify(receipt), { headers: this.headers })
       .map(() => null)
@@ -61,7 +61,7 @@ export class ReceiptService {
   }
 
   delete(group_id: number, id: number): Observable<void> {
-    const url = `${this.receiptsUrl}/${group_id}/${id}`;
+    const url = `${this.receiptsUrl}/${group_id}/receipts/${id}`;
     return this.http.delete(url, { headers: this.headers })
       .map(() => null)
       .take(1);

@@ -50,7 +50,7 @@ export class ProceedingEditorPage {
 
     this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
-      this.members = this.memberService.getMembers(this.groupId).map(members => members.filter(member => member.document_state != 'PENDING_ADDS' && member.next_id == 0));
+      this.members = this.memberService.getMembers(this.groupId).map(members => members.filter(member => member.document_state == 'ADDED' && member.next_id == null));
 
       if (this.id) {
         this.proceedingService.getProceeding(this.groupId, this.id)

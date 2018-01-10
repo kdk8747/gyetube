@@ -11,7 +11,7 @@ import 'rxjs/add/operator/publishLast';
 
 @Injectable()
 export class ProceedingService {
-  private proceedingsUrl = '/api/v1.0/proceedings';  // URL to web api
+  private proceedingsUrl = '/api/v1.0/groups';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
 
@@ -20,7 +20,7 @@ export class ProceedingService {
   ) { }
 
   getProceedings(group_id: number): Observable<ProceedingListElement[]> {
-    const url = `${this.proceedingsUrl}/${group_id}`;
+    const url = `${this.proceedingsUrl}/${group_id}/proceedings`;
 
     return this.http.get(url)
       .map(response => {
@@ -35,7 +35,7 @@ export class ProceedingService {
   }
 
   getProceeding(group_id: number, proceeding_id: number): Observable<ProceedingDetailElement> {
-    const url = `${this.proceedingsUrl}/${group_id}/${proceeding_id}`;
+    const url = `${this.proceedingsUrl}/${group_id}/proceedings/${proceeding_id}`;
 
     return this.http.get(url)
       .map(response => {
@@ -48,7 +48,7 @@ export class ProceedingService {
   }
 
   update(group_id: number, proceeding_id: number): Observable<void> {
-    const url = `${this.proceedingsUrl}/${group_id}/${proceeding_id}`;
+    const url = `${this.proceedingsUrl}/${group_id}/proceedings/${proceeding_id}`;
     return this.http
       .put(url, '', { headers: this.headers })
       .map(() => null)
@@ -56,7 +56,7 @@ export class ProceedingService {
   }
 
   create(group_id: number, proceeding: ProceedingEditorElement): Observable<void> {
-    const url = `${this.proceedingsUrl}/${group_id}`;
+    const url = `${this.proceedingsUrl}/${group_id}/proceedings`;
     return this.http
       .post(url, JSON.stringify(proceeding), { headers: this.headers })
       .map(() => null)

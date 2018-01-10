@@ -37,7 +37,8 @@ app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
 
 require('./express-middlewares/passports').initialize();
 
-app.use('/api/v1.0/', require('./express-middlewares/authentication'), require('./routes/api'));
+app.use('/api/v1.0/groups', require('./express-middlewares/authentication'), require('./routes/api'));
+app.use('/api/v1.0/group-id/:url_segment', require('./routes/api/groups/group.controller').getID);
 app.use('/api/v1.0/users', require('./routes/api/users'));
 
 

@@ -11,7 +11,7 @@ import 'rxjs/add/operator/publishLast';
 
 @Injectable()
 export class MemberService {
-  private membersUrl = '/api/v1.0/members';  // URL to web api
+  private membersUrl = '/api/v1.0/groups';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
@@ -19,20 +19,20 @@ export class MemberService {
   ) { }
 
   getMembers(group_id: number): Observable<MemberListElement[]> {
-    const url = `${this.membersUrl}/${group_id}`;
+    const url = `${this.membersUrl}/${group_id}/members`;
     return this.http.get(url)
       .map(response => {
         let members = response.json() as MemberListElement[];
         return members.map(member => {
-          member.created_datetime = member.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          member.modified_datetime = member.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
           return member;
         });
       })
       .take(1);
   }
 
-  getMember(group_id: number, member_id: number): Observable<MemberDetailElement> {
-    const url = `${this.membersUrl}/${group_id}/${member_id}`;
+  getMemberLog(group_id: number, member_id: number, member_log_id: number): Observable<MemberDetailElement> {
+    const url = `${this.membersUrl}/${group_id}/members/${member_id}/logs/${member_log_id}`;
 
     return this.http.get(url)
       .map(response => {
@@ -43,22 +43,34 @@ export class MemberService {
       .take(1);
   }
 
+  getMember(group_id: number, member_id: number): Observable<MemberListElement> {
+    const url = `${this.membersUrl}/${group_id}/members/${member_id}`;
+
+    return this.http.get(url)
+      .map(response => {
+        let member = response.json() as MemberListElement;
+        member.modified_datetime = member.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        return member;
+      })
+      .take(1);
+  }
+
   approveNewMember(group_id: number, member_id: number): Observable<void> {
-    const url = `${this.membersUrl}/${group_id}/${member_id}/approve-new-member`;
+    const url = `${this.membersUrl}/${group_id}/members/${member_id}/approve-new-member`;
     return this.http
       .put(url, '', { headers: this.headers })
       .map(() => null)
       .take(1);
   }
   approveOverwrite(group_id: number, member_id: number, prev_id: number): Observable<void> {
-    const url = `${this.membersUrl}/${group_id}/${member_id}/approve-overwrite/${prev_id}`;
+    const url = `${this.membersUrl}/${group_id}/members/${member_id}/approve-overwrite/${prev_id}`;
     return this.http
       .put(url, '', { headers: this.headers })
       .map(() => null)
       .take(1);
   }
   reject(group_id: number, member_id: number): Observable<void> {
-    const url = `${this.membersUrl}/${group_id}/${member_id}/reject`;
+    const url = `${this.membersUrl}/${group_id}/members/${member_id}/reject`;
     return this.http
       .put(url, '', { headers: this.headers })
       .map(() => null)
@@ -66,7 +78,7 @@ export class MemberService {
   }
 
   create(group_id: number, member: MemberEditorElement): Observable<void> {
-    const url = `${this.membersUrl}/${group_id}`;
+    const url = `${this.membersUrl}/members/${group_id}`;
     return this.http
       .post(url, JSON.stringify(member), { headers: this.headers })
       .map(() => null)
@@ -74,7 +86,7 @@ export class MemberService {
   }
 
   registerMember(group_id: number): Observable<void> {
-    const url = `${this.membersUrl}/${group_id}/register`;
+    const url = `${this.membersUrl}/members/${group_id}/register`;
     return this.http
       .post(url, '', { headers: this.headers })
       .map(() => null)

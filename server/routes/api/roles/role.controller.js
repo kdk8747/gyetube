@@ -109,21 +109,18 @@ exports.getAll = async (req, res) => {
 exports.getMyself = async (req, res) => {
   try {
     let role = await db.execute(
-      'SELECT RL.role_id, RL.decision_id, RL.creator_id, RL.created_datetime, RL.name,\
-      get_state(RL.document_state) AS document_state,\
-      bit_or(RL.member) AS member,\
-      bit_or(RL.role) AS role,\
-      bit_or(RL.proceeding) AS proceeding,\
-      bit_or(RL.decision) AS decision,\
-      bit_or(RL.activity) AS activity,\
-      bit_or(RL.receipt) AS receipt\
+      'SELECT R.role_id, R.decision_id, R.creator_id, R.modified_datetime, R.name,\
+      get_state(R.document_state) AS document_state,\
+      bit_or(R.member) AS member,\
+      bit_or(R.role) AS role,\
+      bit_or(R.proceeding) AS proceeding,\
+      bit_or(R.decision) AS decision,\
+      bit_or(R.activity) AS activity,\
+      bit_or(R.receipt) AS receipt\
       FROM member M\
       LEFT JOIN member_role MR ON MR.group_id=M.group_id AND MR.member_id=M.member_id\
       LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
-      LEFT JOIN role_log RL ON RL.group_id=R.group_id AND RL.role_id=R.role_id\
-      WHERE M.group_id=? and M.user_id=unhex(?)\
-      ORDER BY RL.role_log_id DESC\
-      LIMIT 1', [req.permissions.group_id, req.decoded.user_id]);
+      WHERE M.group_id=? and M.user_id=unhex(?)', [req.permissions.group_id, req.decoded.user_id]);
 
     let parent_decision = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
@@ -158,11 +155,8 @@ exports.getByID = async (req, res) => {
   try {
     let role = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
-      FROM role R\
-      LEFT JOIN role_log RL ON RL.group_id=R.group_id AND RL.role_id=R.role_id\
-      WHERE R.group_id=? AND R.role_id=?\
-      ORDER BY RL.role_log_id DESC\
-      LIMIT 1', [req.permissions.group_id, req.params.role_id]);
+      FROM role \
+      WHERE group_id=? AND role_id=?', [req.permissions.group_id, req.params.role_id]);
 
     let parent_decision = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
@@ -265,7 +259,7 @@ exports.updateByID = async (req, res) => {
 
     await conn.query(
       'UPDATE role\
-      SET created_datetime=?, name=?, member=?, role=?, proceeding=?, decision=?, activity=?, receipt=?,\
+      SET modified_datetime=?, name=?, member=?, role=?, proceeding=?, decision=?, activity=?, receipt=?,\
         creator_id=?, decision_id=?\
       WHERE group_id=? AND role_id=?', [
         new Date().toISOString().substring(0, 19).replace('T', ' '),

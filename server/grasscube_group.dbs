@@ -95,12 +95,6 @@
 				<column name="group_id" />
 				<column name="proceeding_id" />
 			</index>
-			<index name="idx_decision_notice_filter" unique="NORMAL" >
-				<column name="group_id" />
-				<column name="expiry_datetime" />
-				<column name="next_id" />
-				<column name="document_state" />
-			</index>
 			<fk name="fk_decision_proceeding" to_schema="test" to_table="proceeding" >
 				<fk_column name="group_id" pk="group_id" />
 				<fk_column name="proceeding_id" pk="proceeding_id" />
@@ -173,6 +167,9 @@
 			<comment><![CDATA[appoved new active member can be overwrite dummy member. so need this table.]]></comment>
 			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="member_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="member_log_id" type="int" jt="4" mandatory="y" unsigned="y" >
+				<comment><![CDATA[latest member log id]]></comment>
+			</column>
 			<column name="decision_id" type="int" jt="4" unsigned="y" />
 			<column name="user_id" type="binary" length="16" jt="-2" >
 				<comment><![CDATA[if next_id=0,
@@ -182,6 +179,9 @@ then user_id is null.]]></comment>
 			</column>
 			<column name="image_url" type="text" jt="-1" />
 			<column name="name" type="varchar" length="32" jt="12" mandatory="y" />
+			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_member" unique="PRIMARY_KEY" >
 				<column name="group_id" />
 				<column name="member_id" />
@@ -378,6 +378,16 @@ then user_id is null.]]></comment>
 			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="role_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="decision_id" type="int" jt="4" unsigned="y" />
+			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" />
+			<column name="name" type="varchar" length="32" jt="12" mandatory="y" />
+			<column name="member" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="role" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="proceeding" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="decision" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="activity" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="receipt" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<index name="pk_role" unique="PRIMARY_KEY" >
 				<column name="group_id" />
 				<column name="role_id" />
@@ -388,16 +398,22 @@ then user_id is null.]]></comment>
 			</index>
 			<index name="idx_role_creator_id" unique="NORMAL" >
 				<column name="group_id" />
+				<column name="creator_id" />
 			</index>
 			<fk name="fk_role_decision" to_schema="test" to_table="decision" >
 				<fk_column name="group_id" pk="group_id" />
 				<fk_column name="decision_id" pk="decision_id" />
+			</fk>
+			<fk name="fk_role_member" to_schema="test" to_table="member" >
+				<fk_column name="group_id" pk="group_id" />
+				<fk_column name="creator_id" pk="member_id" />
 			</fk>
 		</table>
 		<table name="role_log" >
 			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="role_log_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="role_id" type="int" jt="4" mandatory="y" unsigned="y" />
+			<column name="decision_id" type="int" jt="4" unsigned="y" />
 			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" >
 				<comment><![CDATA[0: pending adds
 1: pending updates
@@ -408,14 +424,13 @@ then user_id is null.]]></comment>
 			<column name="created_datetime" type="timestamp" length="19" decimal="0" jt="93" mandatory="y" >
 				<defo>current_timestamp()</defo>
 			</column>
-			<column name="name" type="varchar" length="32" jt="12" />
+			<column name="name" type="varchar" length="32" jt="12" mandatory="y" />
 			<column name="member" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="role" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="proceeding" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="decision" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="activity" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="receipt" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
-			<column name="decision_id" type="int" jt="4" unsigned="y" />
 			<index name="idx_role_log_group_id" unique="NORMAL" >
 				<column name="group_id" />
 				<column name="role_id" />
@@ -540,19 +555,19 @@ END]]></string>
 		<entity schema="test" name="voter" color="1f5182" x="765" y="480" />
 		<entity schema="test" name="master_seq" color="99ff99" x="885" y="945" />
 		<entity schema="test" name="participant" color="1f5182" x="930" y="315" />
-		<entity schema="test" name="decision" color="99ffff" x="645" y="645" />
 		<entity schema="test" name="user_permission" color="ff9999" x="930" y="1200" />
-		<entity schema="test" name="proceeding" color="99ffff" x="375" y="675" />
-		<entity schema="test" name="activity" color="99ffff" x="945" y="510" />
 		<entity schema="test" name="receipt" color="99ffff" x="1200" y="645" />
 		<entity schema="test" name="group" color="ff9999" x="645" y="1200" />
 		<entity schema="test" name="home" color="99ff99" x="495" y="915" />
-		<entity schema="test" name="role_log" color="99ff99" x="60" y="870" />
-		<entity schema="test" name="role" color="99ff99" x="270" y="870" />
 		<entity schema="test" name="member_role_log" color="99ff99" x="45" y="180" />
 		<entity schema="test" name="member_role" color="99ff99" x="210" y="300" />
-		<entity schema="test" name="member" color="c8f5bf" x="585" y="270" />
 		<entity schema="test" name="member_log" color="99ff99" x="585" y="75" />
+		<entity schema="test" name="activity" color="99ffff" x="945" y="510" />
+		<entity schema="test" name="decision" color="99ffff" x="645" y="645" />
+		<entity schema="test" name="role" color="99ff99" x="270" y="870" />
+		<entity schema="test" name="role_log" color="99ff99" x="60" y="870" />
+		<entity schema="test" name="proceeding" color="99ffff" x="375" y="675" />
+		<entity schema="test" name="member" color="c8f5bf" x="585" y="270" />
 		<group name="Group_for_Sharding" color="c4e0f9" >
 			<entity schema="test" name="activity" />
 			<entity schema="test" name="attendee" />

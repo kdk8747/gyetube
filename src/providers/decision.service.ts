@@ -11,7 +11,7 @@ import 'rxjs/add/operator/publishLast';
 
 @Injectable()
 export class DecisionService {
-  private decisionsUrl = '/api/v1.0/decisions';  // URL to web api
+  private decisionsUrl = '/api/v1.0/groups';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
 
@@ -20,7 +20,7 @@ export class DecisionService {
   ) { }
 
   getDecisions(group_id: number): Observable<DecisionListElement[]> {
-    const url = `${this.decisionsUrl}/${group_id}`;
+    const url = `${this.decisionsUrl}/${group_id}/decisions`;
     return this.http.get(url)
       .map(response => {
         let decisions = response.json() as DecisionListElement[];
@@ -34,7 +34,7 @@ export class DecisionService {
   }
 
   getDecision(group_id: number, decision_id: number): Observable<DecisionDetailElement> {
-    const url = `${this.decisionsUrl}/${group_id}/${decision_id}`;
+    const url = `${this.decisionsUrl}/${group_id}/decisions/${decision_id}`;
 
     return this.http.get(url)
       .map(response => {
@@ -47,7 +47,7 @@ export class DecisionService {
   }
 
   update(group_id: number, decision: DecisionDetailElement): Observable<DecisionDetailElement> {
-    const url = `${this.decisionsUrl}/${group_id}/${decision.decision_id}`;
+    const url = `${this.decisionsUrl}/${group_id}/decisions/${decision.decision_id}`;
     return this.http
       .put(url, JSON.stringify(decision), { headers: this.headers })
       .map(() => decision)

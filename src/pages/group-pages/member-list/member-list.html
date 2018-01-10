@@ -14,7 +14,7 @@
     <ion-grid fixed>
       <ion-row>
         <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let member of members | async">
-          <ion-item tappable (tap)="navigateToDetail(member.member_log_id)">
+          <ion-item tappable (tap)="navigateToDetail(member.member_id, member.member_log_id)">
             <ion-toolbar *ngIf="member.document_state == 'PENDING_ADDS'">
               {{'I18N_PENDING_ADDS' | translate}}<br>
               <p><ion-icon name="alert" color="danger"></ion-icon>{{'I18N_NEED_YOUR_REVIEW' | translate}}</p>
@@ -47,9 +47,9 @@
       <!--<ion-badge notifications-badge color="danger">5</ion-badge>-->
     </button>
     <ion-fab-list side="top">
-      <!-- <button ion-fab (tap)="memberListState = enum.STATE_DELETED; onFAB(fab)" [class.selectedFAB]="memberListState==enum.STATE_DELETED">
+      <button ion-fab (tap)="memberListState = enum.STATE_DELETED; onFAB(fab)" [class.selectedFAB]="memberListState==enum.STATE_DELETED">
         <ion-icon name="trash"></ion-icon>
-      </button> -->
+      </button>
       <button ion-fab (tap)="memberListState = enum.STATE_NORMAL; onFAB(fab)" [class.selectedFAB]="memberListState==enum.STATE_NORMAL">
         <ion-icon name="attach"></ion-icon>
       </button>

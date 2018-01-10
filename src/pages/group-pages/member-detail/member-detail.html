@@ -15,7 +15,7 @@
         <ion-buttons>{{member?.name}}</ion-buttons>
       </ion-toolbar>
 
-      <ion-toolbar *ngIf="member?.document_state == 'PENDING_ADDS' && member?.next_id == 0">
+      <ion-toolbar *ngIf="member?.document_state == 'PENDING_ADDS' && member?.next_id == null">
         <ion-buttons>
           {{'I18N_PENDING_ADDS' | translate}}<br>
           <ion-icon name="alert" color="danger"></ion-icon>
@@ -85,7 +85,7 @@
         </ion-item>
       </ion-card>
 
-      <ion-buttons right *ngIf="member?.document_state == 'PENDING_ADDS' && member?.next_id == 0">
+      <ion-buttons right *ngIf="member?.document_state == 'PENDING_ADDS' && member?.next_id == null">
         <ion-list radio-group no-lines>
           <ion-item>
             <ion-label style="color: #7f7f7f;">{{ 'I18N_APPROVE_NEW_MEMBER' | translate }}</ion-label>

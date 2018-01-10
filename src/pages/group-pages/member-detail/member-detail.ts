@@ -12,7 +12,7 @@ enum ApproveState {
 }
 
 @IonicPage({
-  segment: 'member-detail/:id'
+  segment: 'member-detail/:id/logs/:log_id'
 })
 @Component({
   selector: 'page-member-detail',
@@ -24,6 +24,7 @@ export class MemberDetailPage {
   approveState: ApproveState = ApproveState.STATE_NEW_MEMBER;
   groupId: number;
   id: number;
+  log_id: number;
   member: MemberDetailElement;
 
   overwrite_id: number;
@@ -42,6 +43,7 @@ export class MemberDetailPage {
 
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
+    this.log_id = this.navParams.get('log_id');
   }
 
   ionViewWillEnter() {
@@ -50,7 +52,7 @@ export class MemberDetailPage {
 
     this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
-      this.memberService.getMember(this.groupId, this.id)
+      this.memberService.getMemberLog(this.groupId, this.id, this.log_id)
         .subscribe((member: MemberDetailElement) => {
           this.member = member;
           this.sharedDataService.headerDetailTitle = member.name;
@@ -67,11 +69,11 @@ export class MemberDetailPage {
   }
 
   navigateToPrev() {
-    this.navCtrl.setRoot('MemberDetailPage', { id: this.member.prev_id });
+    this.navCtrl.setRoot('MemberDetailPage', { id: this.id, log_id: this.member.prev_id });
   }
 
   navigateToNext() {
-    this.navCtrl.setRoot('MemberDetailPage', { id: this.member.next_id });
+    this.navCtrl.setRoot('MemberDetailPage', { id: this.id, log_id: this.member.next_id });
   }
 
   navigateToDecisionDetail(decision_id: string) {

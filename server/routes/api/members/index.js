@@ -4,8 +4,10 @@ const controller = require('./member.controller');
 
 router.get('/',
   controller.authRead, controller.getAll);
-router.get('/:member_log_id',
+router.get('/:member_id',
   controller.authRead, controller.getByID);
+router.get('/:member_id/logs/:member_log_id',
+  controller.authRead, controller.getByLogID);
 
 router.put('/:member_id/approve-new-member',
   controller.authUpdate, controller.approveNewMember);

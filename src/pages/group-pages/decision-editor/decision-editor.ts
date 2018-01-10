@@ -17,7 +17,7 @@ export class DecisionEditorPage {
 
   groupId: number;
   id: number;
-  members: Observable<MemberDetailElement>[];
+  members: Observable<MemberListElement>[];
 
   form: FormGroup;
   submitAttempt: boolean = false;

@@ -11,7 +11,7 @@ import 'rxjs/add/operator/publishLast';
 
 @Injectable()
 export class ActivityService {
-  private activitiesUrl = '/api/v1.0/activities';  // URL to web api
+  private activitiesUrl = '/api/v1.0/groups';  // URL to web api
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(
@@ -19,7 +19,7 @@ export class ActivityService {
   ) { }
 
   getActivities(group_id: number): Observable<ActivityListElement[]> {
-    const url = `${this.activitiesUrl}/${group_id}`;
+    const url = `${this.activitiesUrl}/${group_id}/activities`;
     return this.http.get(url)
       .map(response => {
         let activities = response.json() as ActivityListElement[];
@@ -33,7 +33,7 @@ export class ActivityService {
   }
 
   getActivity(group_id: number, activity_id: number): Observable<ActivityDetailElement> {
-    const url = `${this.activitiesUrl}/${group_id}/${activity_id}`;
+    const url = `${this.activitiesUrl}/${group_id}/activities/${activity_id}`;
 
     return this.http.get(url)
       .map(response => {
@@ -46,7 +46,7 @@ export class ActivityService {
   }
 
   update(group_id: number, activity: ActivityEditorElement): Observable<ActivityEditorElement> {
-    const url = `${this.activitiesUrl}/${group_id}/${activity.activity_id}`;
+    const url = `${this.activitiesUrl}/${group_id}/activities/${activity.activity_id}`;
     return this.http
       .put(url, JSON.stringify(activity), { headers: this.headers })
       .map(() => activity)
@@ -54,7 +54,7 @@ export class ActivityService {
   }
 
   create(group_id: number, activity: ActivityEditorElement): Observable<void> {
-    const url = `${this.activitiesUrl}/${group_id}/`;
+    const url = `${this.activitiesUrl}/${group_id}/activities/`;
     return this.http
       .post(url, JSON.stringify(activity), { headers: this.headers })
       .map(() => null)
@@ -62,7 +62,7 @@ export class ActivityService {
   }
 
   delete(group_id: number, id: number): Observable<void> {
-    const url = `${this.activitiesUrl}/${group_id}/${id}`;
+    const url = `${this.activitiesUrl}/${group_id}/activities/${id}`;
     return this.http.delete(url, { headers: this.headers })
       .map(() => null)
       .take(1);
