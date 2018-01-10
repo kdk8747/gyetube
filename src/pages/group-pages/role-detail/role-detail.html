@@ -18,6 +18,7 @@
 
       <ion-row align-items-center justify-content-start>
         <ion-col col-auto>
+          {{'I18N_AUTHOR' | translate }}:
           <gyetube-user [user]="role?.creator"></gyetube-user>
         </ion-col>
         <ion-col>
@@ -26,10 +27,10 @@
         </ion-col>
       </ion-row>
 
-      <p><ion-icon name="create" color="grey"></ion-icon> {{ 'I18N_CREATE' | translate }}</p>
-      <p><ion-icon name="eye" color="grey"></ion-icon> {{ 'I18N_READ' | translate }}</p>
-      <p><ion-icon name="text" color="grey"></ion-icon> {{ 'I18N_INTERACTION' | translate }}</p>
-      <p><ion-icon name="trash" color="grey"></ion-icon> {{ 'I18N_DELETE' | translate }}</p>
+      <p><ion-icon name="create" color="primary"></ion-icon> {{ 'I18N_CREATE' | translate }}</p>
+      <p><ion-icon name="eye" color="primary"></ion-icon> {{ 'I18N_READ' | translate }}</p>
+      <p><ion-icon name="text" color="primary"></ion-icon> {{ 'I18N_INTERACTION' | translate }}</p>
+      <p><ion-icon name="trash" color="primary"></ion-icon> {{ 'I18N_DELETE' | translate }}</p>
 
       <span *ngIf="role">
         <ion-row justify-content-end>

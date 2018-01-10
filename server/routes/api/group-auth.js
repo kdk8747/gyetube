@@ -14,17 +14,19 @@ module.exports = async (req, res, next) => {
   if (req.decoded && req.decoded.user_id) {
     let result = await db.execute(
       'SELECT\
-        M.document_state,\
-        bit_or(R.member) AS member,\
-        bit_or(R.role) AS role,\
-        bit_or(R.proceeding) AS proceeding,\
-        bit_or(R.decision) AS decision,\
-        bit_or(R.activity) AS activity,\
-        bit_or(R.receipt) AS receipt\
+        bit_or(RL.member) AS member,\
+        bit_or(RL.role) AS role,\
+        bit_or(RL.proceeding) AS proceeding,\
+        bit_or(RL.decision) AS decision,\
+        bit_or(RL.activity) AS activity,\
+        bit_or(RL.receipt) AS receipt\
         FROM member M\
         LEFT JOIN member_role MR ON MR.group_id=M.group_id AND MR.member_id=M.member_id\
         LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
-        WHERE M.group_id=? AND M.user_id=unhex(?) AND M.document_state!=0', [req.params.group_id, req.decoded.user_id]);
+        LEFT JOIN role_log RL ON RL.group_id=R.group_id AND RL.role_id=R.role_id\
+        WHERE M.group_id=? AND M.user_id=unhex(?)\
+        ORDER BY RL.role_log_id DESC\
+        LIMIT 1', [req.params.group_id, req.decoded.user_id]);
 
     permissions_obj = {
       member: result[0][0].member,

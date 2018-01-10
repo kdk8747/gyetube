@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, GroupService, AmazonService, SharedDataService, RoleService } from '../../providers';
+import { UtilService, GroupService, SharedDataService } from '../../providers';
 import { GroupEditorElement } from '../../models';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -25,8 +25,6 @@ export class GroupEditorPage {
     public event: Events,
     public util: UtilService,
     public groupService: GroupService,
-    public roleService: RoleService,
-    public amazonService: AmazonService,
     public sharedDataService: SharedDataService,
     public translate: TranslateService
   ) {
@@ -69,7 +67,6 @@ export class GroupEditorPage {
         this.popNavigation();
         this.util.setCurrentGroupId(group.group_id);
         this.navCtrl.push('TabsGroupPage', { group_url_segment: group.url_segment });
-        return this.roleService.getRoleMyself(group.group_id).toPromise();
       })
       .catch(() => { console.log('new group failed') });
   }

@@ -25,7 +25,7 @@ export class RoleService {
       .map(response => {
         let roles = response.json() as RoleListElement[];
         return roles.map(role => {
-          role.modified_datetime = role.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          role.created_datetime = role.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
           return role;
         });
       })
@@ -37,7 +37,7 @@ export class RoleService {
     return this.http.get(url)
       .map(response => {
         let role = response.json() as RoleDetailElement;
-        role.modified_datetime = role.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        role.created_datetime = role.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
         return role;
       })
       .take(1);

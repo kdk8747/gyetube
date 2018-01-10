@@ -67,8 +67,8 @@ export class MemberListPage {
       this.navCtrl.pop();
   }
 
-  navigateToDetail(member_id: number) {
-    this.navCtrl.push('MemberDetailPage', { id: member_id });
+  navigateToDetail(member_log_id: number) {
+    this.navCtrl.push('MemberDetailPage', { id: member_log_id });
   }
 
   navigateToEditor() {
@@ -90,8 +90,8 @@ export class MemberListPage {
             return this.sortByDate(members.filter(member => (member.document_state == 'ADDED' || member.document_state == 'UPDATED')));
           case MemberListState.STATE_DELETED :
             return this.sortByDate(members.filter(member => (member.document_state == 'DELETED')));
-          case MemberListState.STATE_PENDING :
-            return this.sortByDate(members.filter(member => (member.document_state == 'PENDING_ADDS' && member.next_id == 0)));
+          //case MemberListState.STATE_PENDING :
+            //return this.sortByDate(members.filter(member => (member.document_state == 'PENDING_ADDS' && member.next_id == 0)));
           default:
             return this.sortByDate(members);
         }

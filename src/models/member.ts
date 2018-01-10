@@ -9,7 +9,8 @@ export class MemberListElement {
     public created_datetime: string,
     public user_id: string,
     public image_url: string,
-    public name: string
+    public name: string,
+    public roles: string[]
   ) { }
 }
 
@@ -31,7 +32,7 @@ export class MemberDetailElement {
 
 export class MemberEditorElement {
   constructor(
-    public prev_id: number, // 0: unused
+    public member_id: number, // 0: unused
     public name: string,
     public parent_decision_id: number,
     public role_ids: number[]

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import { TranslateService } from '@ngx-translate/core';
 import { GroupService, RoleService } from './';
 import { User } from '../models';
+import { Observable } from 'rxjs/Observable';
 
 declare const process: any; // Typescript compiler will complain without this
 
@@ -16,7 +18,8 @@ export class UtilService {
     public storage: Storage,
     public event: Events,
     public groupService: GroupService,
-    public roleService: RoleService
+    public roleService: RoleService,
+    public translate: TranslateService
   ) { }
 
   isNativeApp(): boolean {
@@ -105,5 +108,16 @@ export class UtilService {
         ':' + pad(date.getSeconds()) +
         dif + pad(tzo / 60) +
         ':' + pad(tzo % 60);
+  }
+
+  translateDBString(str: string): Observable<string> {
+    switch(str) {
+      case 'ANYONE':
+      case 'MEMBER':
+      case 'COMMITEE':
+        return this.translate.get('I18N_' + str);
+      default:
+        return new Observable<string>(obs => obs.next(str));
+    }
   }
 }

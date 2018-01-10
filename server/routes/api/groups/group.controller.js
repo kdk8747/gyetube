@@ -95,49 +95,62 @@ exports.create = async (req, res) => {
       { name: 'decision', default: 0 },
       { name: 'activity', default: 0 },
       { name: 'receipt', default: 0 },
-      { name: 'member', default: 0 },
+      { name: 'member', default: 1 },
+      { name: 'member_log', default: 1 },
       { name: 'role', default: 3 },
-      { name: 'role_log', default: 0 },
+      { name: 'role_log', default: 3 },
       { name: 'home', default: 0 }
     ];
     await Promise.all(sequences.map(sequence =>
       conn.query('INSERT INTO master_seq (group_id, seq_name, id) VALUES(?,?,?)', [group_id, sequence.name, sequence.default])));
 
-    let member_new_id = await conn.query('SELECT GET_SEQ(?,"member") AS new_id', [group_id]);
-
+    let member_new_id = 1;
     await conn.query(
       'INSERT INTO member\
-      (group_id, member_id, prev_id, next_id, document_state, creator_id, created_datetime, user_id, image_url, name)\
-      VALUES(?,?,0,0,2,?,?,unhex(?),?,?)', [
+      (group_id, member_id, user_id, image_url, name)\
+      VALUES(?,?,unhex(?),?,?)', [
         group_id,
-        member_new_id[0][0].new_id,
-        member_new_id[0][0].new_id,
-        new Date().toISOString().substring(0, 19).replace('T', ' '),
+        member_new_id,
         req.decoded.user_id,
         decodeURIComponent(req.decoded.image_url),
         decodeURIComponent(req.decoded.name)
       ]);
+    await conn.query(
+      'INSERT INTO member_log\
+      (group_id, member_log_id, member_id, document_state, creator_id, created_datetime)\
+      VALUES(?,?,?,2,?,?)', [
+        group_id,
+        member_new_id,
+        member_new_id,
+        member_new_id,
+        new Date().toISOString().substring(0, 19).replace('T', ' ')
+      ]);
 
     let roles = [
-      { id:1, name: 'ANYONE', member: 0, role: 0, proceeding: 0, decision: 0, activity: 2, receipt: 2 },
-      { id:2, name: 'MEMBER', member: 0, role: 0, proceeding: 6, decision: 6, activity: 15, receipt: 15 },
-      { id:3, name: 'COMMITEE', member: 7, role: 15, proceeding: 7, decision: 6, activity: 15, receipt: 15 }
+      { id: 1, name: 'ANYONE', member: 0, role: 0, proceeding: 0, decision: 0, activity: 2, receipt: 2 },
+      { id: 2, name: 'MEMBER', member: 0, role: 0, proceeding: 6, decision: 6, activity: 15, receipt: 15 },
+      { id: 3, name: 'COMMITEE', member: 7, role: 15, proceeding: 7, decision: 6, activity: 15, receipt: 15 }
     ];
     let role_commitee_idx = 2;
 
-    await Promise.all(roles.map(role =>
-      conn.query(
-        'INSERT INTO role\
-        (group_id, role_id, document_state, creator_id, modified_datetime, name, member, role, proceeding, decision, activity, receipt)\
-        VALUES(?,?,4,?,?,?, ?,?,?,?,?,?)', [
-          group_id,
-          role.id,
-          member_new_id[0][0].new_id,
-          new Date().toISOString().substring(0, 19).replace('T', ' '),
-          role.name, role.member, role.role, role.proceeding, role.decision, role.activity, role.receipt
-        ])));
+    await Promise.all(
+      roles.map(role => conn.query('INSERT INTO role (group_id, role_id) VALUES(?,?)', [group_id, role.id])),
+      roles.map(role =>
+        conn.query(
+          'INSERT INTO role_log\
+          (group_id, role_log_id, role_id, document_state, creator_id, created_datetime, name, member, role, proceeding, decision, activity, receipt)\
+          VALUES(?,?,?,4,?,?,?, ?,?,?,?,?,?)', [
+            group_id,
+            role.id,
+            role.id,
+            member_new_id,
+            new Date().toISOString().substring(0, 19).replace('T', ' '),
+            role.name, role.member, role.role, role.proceeding, role.decision, role.activity, role.receipt
+          ]))
+    );
 
-    await conn.query('INSERT INTO member_role (group_id, member_id, role_id) VALUES(?,?,3)', [group_id, member_new_id[0][0].new_id]);
+    await conn.query('INSERT INTO member_role (group_id, member_id, role_id) VALUES(?,?,3)', [group_id, member_new_id]);
+    await conn.query('INSERT INTO member_role_log (group_id, member_log_id, role_log_id) VALUES(?,?,3)', [group_id, member_new_id]);
 
     await conn.query(
       'INSERT INTO home\
@@ -145,7 +158,7 @@ exports.create = async (req, res) => {
       VALUES(?,GET_SEQ(?,"home"),?,?, ?,?,?)', [
         group_id,
         group_id,
-        member_new_id[0][0].new_id,
+        member_new_id,
         new Date().toISOString().substring(0, 19).replace('T', ' '),
         req.body.title,
         req.body.description,

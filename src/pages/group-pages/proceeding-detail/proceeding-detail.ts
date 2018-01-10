@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, MemberService, ProceedingService, SharedDataService } from '../../../providers';
-import { User, ProceedingDetailElement, MemberDetailElement } from '../../../models';
+import { User, ProceedingDetailElement, MemberListElement, MemberDetailElement } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -79,7 +79,7 @@ export class ProceedingDetailPage {
         .subscribe(() => {
           this.util.getCurrentUser()
             .then(user => {
-              this.proceeding.reviewers.push(new MemberDetailElement(0,0,0,'',null,'','',user.image_url,user.name,null,null));
+              this.proceeding.reviewers.push(new MemberListElement(0,0,0,'','','',user.image_url,user.name,null));
               if (this.proceeding.reviewers.length == this.proceeding.attendees.length) {
                 this.proceeding.child_decisions.map(decision => decision.document_state = 'ADDED');
                 this.proceeding.document_state = 'ADDED';

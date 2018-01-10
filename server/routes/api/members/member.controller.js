@@ -80,29 +80,22 @@ function stringArrayToBit(stringArray) {
 exports.getAll = async (req, res) => {
   try {
     let result = await db.execute(
-      'SELECT M.member_id, M.prev_id, M.next_id, M.created_datetime, M.image_url, M.name,\
-      get_state(M.document_state) AS document_state,\
-      count(distinct R.role_id) AS roles_count,\
-      bit_or(R.member) AS member,\
-      bit_or(R.role) AS role,\
-      bit_or(R.proceeding) AS proceeding,\
-      bit_or(R.decision) AS decision,\
-      bit_or(R.activity) AS activity,\
-      bit_or(R.receipt) AS receipt\
+      "SELECT M.member_id, ML.member_log_id, ML.created_datetime, M.image_url, M.name,\
+      get_state(ML.document_state) AS document_state,\
+      concat('[\"', group_concat(RL.name separator '\", \"'), '\"]') AS roles\
       FROM member M\
-      LEFT JOIN member_role MR ON MR.group_id=M.group_id AND MR.member_id=M.member_id\
-      LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
+      LEFT JOIN member_log ML       ON ML.group_id=M.group_id    AND  ML.member_id=M.member_id\
+      LEFT JOIN member_role_log MRL ON MRL.group_id=ML.group_id  AND  MRL.member_log_id=ML.member_log_id\
+      LEFT JOIN role_log RL         ON RL.group_id=MRL.group_id  AND  RL.role_log_id=MRL.role_log_id\
       WHERE M.group_id=?\
-      GROUP BY M.member_id', [req.permissions.group_id]);
+      GROUP BY ML.member_log_id\
+      ORDER BY ML.member_log_id DESC\
+      LIMIT 1", [req.permissions.group_id]);
     result[0] = result[0].map(member => {
-      member.member = bitToStringArray(member.member);
-      member.role = bitToStringArray(member.role);
-      member.proceeding = bitToStringArray(member.proceeding);
-      member.decision = bitToStringArray(member.decision);
-      member.activity = bitToStringArray(member.activity);
-      member.receipt = bitToStringArray(member.receipt);
+      member.roles = JSON.parse(member.roles);
       return member;
     });
+    debug(result[0]);
     res.send(result[0]);
   }
   catch (err) {
@@ -115,29 +108,52 @@ exports.getAll = async (req, res) => {
 
 exports.getByID = async (req, res) => {
   try {
-    let member = await db.execute(
+    let member_log = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
-      FROM member\
-      WHERE group_id=? AND member_id=?', [req.permissions.group_id, req.params.member_id]);
+      FROM member_log ML\
+      LEFT JOIN member M ON M.group_id=ML.group_id AND M.member_id=ML.member_id\
+      WHERE ML.group_id=? AND ML.member_log_id=?', [req.permissions.group_id, req.params.member_log_id]);
+    delete member_log[0][0].user_id;
+
+    let prev_id = await db.execute(
+      'SELECT max(member_log_id) AS prev_id\
+      FROM member_log\
+      WHERE group_id=? AND member_id=? AND member_log_id<?', [
+        req.permissions.group_id,
+        member_log[0][0].member_id,
+        req.params.member_log_id
+      ]);
+    member_log[0][0].prev_id = prev_id[0][0].prev_id;
+
+    let next_id = await db.execute(
+      'SELECT min(member_log_id) AS next_id\
+      FROM member_log\
+      WHERE group_id=? AND member_id=? AND member_log_id>?', [
+        req.permissions.group_id,
+        member_log[0][0].member_id,
+        req.params.member_log_id
+      ]);
+    member_log[0][0].next_id = next_id[0][0].next_id;
 
     let parent_decision = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
       FROM decision\
-      WHERE group_id=? AND decision_id=?', [req.permissions.group_id, member[0][0].decision_id]);
-    member[0][0].parent_decision = parent_decision[0][0];
+      WHERE group_id=? AND decision_id=?', [req.permissions.group_id, member_log[0][0].decision_id]);
+    member_log[0][0].parent_decision = parent_decision[0][0];
 
     let creator = await db.execute(
-      'SELECT *, get_state(document_state) AS document_state\
+      'SELECT *\
       FROM member\
-      WHERE group_id=? AND member_id=?', [req.permissions.group_id, member[0][0].creator_id]);
-    member[0][0].creator = creator[0][0];
+      WHERE group_id=? AND member_id=?', [req.permissions.group_id, member_log[0][0].creator_id]);
+    delete creator[0][0].user_id;
+    member_log[0][0].creator = creator[0][0];
 
     let roles = await db.execute(
-      'SELECT *, get_state(R.document_state) AS document_state\
-      FROM member_role MR\
-        LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
-      WHERE MR.group_id=? AND MR.member_id=?', [req.permissions.group_id, req.params.member_id]);
-    member[0][0].roles = roles[0].map(role => {
+      'SELECT *, get_state(RL.document_state) AS document_state\
+      FROM member_role_log MRL\
+      LEFT JOIN role_log RL ON RL.group_id=MRL.group_id AND RL.role_log_id=MRL.role_log_id\
+      WHERE MRL.group_id=? AND MRL.member_log_id=?', [req.permissions.group_id, req.params.member_log_id]);
+    member_log[0][0].roles = roles[0].map(role => {
       role.member = bitToStringArray(role.member);
       role.role = bitToStringArray(role.role);
       role.proceeding = bitToStringArray(role.proceeding);
@@ -147,7 +163,7 @@ exports.getByID = async (req, res) => {
       return role;
     });
 
-    res.send(member[0][0]);
+    res.send(member_log[0][0]);
   }
   catch (err) {
     res.status(500).json({
@@ -155,6 +171,111 @@ exports.getByID = async (req, res) => {
       message: err
     });
   }
+}
+
+
+
+exports.createMember = async (conn, member) => {
+  await conn.query(
+    'INSERT INTO member\
+    (group_id, member_id, decision_id, user_id, image_url, name)\
+    VALUES(?,?,?,unhex(?),?,?)', [
+      member.group_id,
+      member.member_id,
+      member.parent_decision_id ? member.parent_decision_id : null,
+      member.user_id ? member.user_id : null,
+      member.image_url ? member.image_url : null,
+      member.name
+    ]);
+
+  await conn.query(
+    'INSERT INTO member_log\
+    (group_id, member_log_id, member_id, decision_id, document_state,  creator_id, created_datetime)\
+    VALUES(?,?,?,?,?, ?,?)', [
+      member.group_id,
+      member.member_log_id,
+      member.member_id,
+      member.parent_decision_id ? member.parent_decision_id : null,
+      member.document_state,
+
+      member.creator_id,
+      new Date().toISOString().substring(0, 19).replace('T', ' ')
+    ]);
+
+  await Promise.all(
+    member.role_ids.map(role_id => conn.query(
+      'INSERT INTO member_role (group_id, member_id, role_id) VALUES (?,?,?)', [
+        member.group_id,
+        member.member_id,
+        role_id
+      ])),
+    member.role_ids.map(role_id => conn.query(
+      'INSERT INTO member_role_log (group_id, member_log_id, role_log_id)\
+      SELECT R.group_id, ?, RL.role_log_id  FROM role R\
+      LEFT JOIN role_log RL ON RL.group_id=R.group_id AND RL.role_id=R.role_id\
+      WHERE R.group_id=? AND R.role_id=?\
+      ORDER BY RL.role_log_id DESC\
+      LIMIT 1', [
+        member.member_log_id,
+        member.group_id,
+        role_id
+      ])));
+}
+
+exports.updateMember = async (conn, member) => {
+  let member_log_new_id = await conn.query('SELECT GET_SEQ(?,"member_log") AS new_id', [member.group_id]);
+  member.member_log_id = member_log_new_id[0][0].new_id;
+
+  await conn.query(
+    'UPDATE member\
+    SET decision_id=?, user_id=unhex(?), image_url=?, name=?\
+    WHERE group_id=? AND member_id=?', [
+      member.parent_decision_id ? member.parent_decision_id : null,
+      member.user_id ? member.user_id : null,
+      member.image_url ? member.image_url : null,
+      member.name,
+      member.group_id,
+      member.member_id
+    ]);
+
+  await conn.query(
+    'INSERT INTO member_log\
+    (group_id, member_log_id, member_id, decision_id, document_state,  creator_id, created_datetime)\
+    VALUES(?,?,?,?,?, ?,?)', [
+      member.group_id,
+      member.member_log_id,
+      member.member_id,
+      member.parent_decision_id ? member.parent_decision_id : null,
+      member.document_state,
+
+      member.creator_id,
+      new Date().toISOString().substring(0, 19).replace('T', ' ')
+    ]);
+
+  await conn.query(
+    'DELETE FROM member_role WHERE group_id=? AND member_id=?', [
+      member.group_id,
+      member.member_id
+    ]);
+
+  await Promise.all(
+    member.role_ids.map(role_id => conn.query(
+      'INSERT INTO member_role (group_id, member_id, role_id) VALUES (?,?,?)', [
+        member.group_id,
+        member.member_id,
+        role_id
+      ])),
+    member.role_ids.map(role_id => conn.query(
+      'INSERT INTO member_role_log (group_id, member_log_id, role_log_id)\
+      SELECT R.group_id, ?, RL.role_log_id  FROM role R\
+      LEFT JOIN role_log RL ON RL.group_id=R.group_id AND RL.role_id=R.role_id\
+      WHERE R.group_id=? AND R.role_id=?\
+      ORDER BY RL.role_log_id DESC\
+      LIMIT 1', [
+        member.member_log_id,
+        member.group_id,
+        role_id
+      ])));
 }
 
 exports.approveNewMember = async (req, res) => {
@@ -167,40 +288,18 @@ exports.approveNewMember = async (req, res) => {
       WHERE group_id=? AND user_id=UNHEX(?)', [req.permissions.group_id, req.decoded.user_id]);
     debug(member_id[0]);
 
-    let member = await conn.query(
+    let result = await conn.query(
       'SELECT *, hex(user_id) AS user_id\
-      FROM member\
-      WHERE group_id=? AND member_id=? AND document_state=0 AND next_id=0', [req.permissions.group_id, req.params.member_id]);
-    debug(member[0]);
+      FROM member M\
+      LEFT JOIN member_log ML ON ML.group_id=M.group_id AND ML.member_id=M.member_id\
+      WHERE M.group_id=? AND M.member_id=? AND ML.document_state=0', [req.permissions.group_id, req.params.member_id]);
+    debug(result[0]);
 
-    let member_new_id = await conn.query('SELECT GET_SEQ(?,"member") AS new_id', [req.permissions.group_id]);
-
-    await conn.query(
-      'UPDATE member\
-      SET user_id=null, next_id=?\
-      WHERE group_id=? AND member_id=?', [member_new_id[0][0].new_id, req.permissions.group_id, req.params.member_id]);
-
-    await conn.query(
-      'INSERT INTO member\
-      (group_id, member_id, decision_id, prev_id, next_id, document_state, creator_id, created_datetime, user_id, image_url, name)\
-      VALUES(?,?,?,?,0,2,?,?,unhex(?),?,?)', [
-        req.permissions.group_id,
-        member_new_id[0][0].new_id,
-        member[0][0].decision_id,
-        member[0][0].member_id,
-        member_id[0][0].member_id,
-        new Date().toISOString().substring(0, 19).replace('T', ' '),
-        member[0][0].user_id,
-        member[0][0].image_url,
-        member[0][0].name
-      ]);
-    await conn.query(
-      'INSERT INTO member_role\
-      (group_id, member_id, role_id)\
-      VALUES(?,?,2)', [
-        req.permissions.group_id,
-        member_new_id[0][0].new_id
-      ]);
+    let member = result[0][0];
+    member.creator_id = member_id[0][0].member_id;
+    member.role_ids = [2];
+    member.document_state = 2;
+    await module.exports.updateMember(conn, member);
 
     await conn.commit();
     conn.release();
@@ -358,29 +457,15 @@ exports.create = async (req, res) => {
     if (!req.body.parent_decision_id) throw 'need parent document';
 
     let member_new_id = await conn.query('SELECT GET_SEQ(?,"member") AS new_id', [req.permissions.group_id]);
+    let member_log_new_id = await conn.query('SELECT GET_SEQ(?,"member_log") AS new_id', [req.permissions.group_id]);
 
-    await conn.query(
-      'INSERT INTO member\
-      (group_id,member_id,prev_id,next_id,document_state,creator_id,created_datetime,user_id,image_url,name,decision_id)\
-      VALUES(?,?,?,0,?,?,?,null,null,?,?)', [
-        req.permissions.group_id,
-        member_new_id[0][0].new_id,
-        req.body.prev_id,
-        req.body.prev_id ? 3 /*UPDATED*/ : 2/*ADDED*/,
-        member_id[0][0].member_id,
-        new Date().toISOString().substring(0, 19).replace('T', ' '),
-        req.body.name,
-        req.body.parent_decision_id
-      ]);
-
-    await Promise.all(req.body.role_ids.map(role => conn.query(
-      'INSERT INTO member_role\
-      (group_id, member_id, role_id)\
-      VALUES(?,?,?)', [
-        req.permissions.group_id,
-        member_new_id[0][0].new_id,
-        role
-      ])));
+    let member = req.body;
+    member.group_id = req.permissions.group_id;
+    member.member_id = member_new_id[0][0].new_id;
+    member.member_log_id = member_log_new_id[0][0].new_id;
+    member.creator_id = member_id[0][0].member_id;
+    member.document_state = 2; /* ADDED */
+    await module.exports.createMember(conn, member);
 
     await conn.commit();
     conn.release();
@@ -411,19 +496,20 @@ exports.register = async (req, res) => {
 
     if (member_id[0].length == 0) {
       let member_new_id = await conn.query('SELECT GET_SEQ(?,"member") AS new_id', [req.permissions.group_id]);
+      let member_log_new_id = await conn.query('SELECT GET_SEQ(?,"member_log") AS new_id', [req.permissions.group_id]);
 
-      await conn.query(
-        'INSERT INTO member\
-        (group_id, member_id, document_state, creator_id, created_datetime, user_id, image_url, name, prev_id, next_id)\
-        VALUES(?,?,0,?,?,unhex(?),?,?,0,0)', [
-          req.permissions.group_id,
-          member_new_id[0][0].new_id,
-          member_new_id[0][0].new_id,
-          new Date().toISOString().substring(0, 19).replace('T', ' '),
-          req.decoded.user_id,
-          decodeURIComponent(req.decoded.image_url),
-          decodeURIComponent(req.decoded.name)
-        ]);
+      let member = req.body;
+      member.group_id = req.permissions.group_id;
+      member.member_id = member_new_id[0][0].new_id;
+      member.role_ids = [];
+      member.user_id = req.decoded.user_id;
+      member.image_url = decodeURIComponent(req.decoded.image_url);
+      member.name = decodeURIComponent(req.decoded.name);
+      member.member_log_id = member_log_new_id[0][0].new_id;
+      member.creator_id = member_new_id[0][0].new_id;
+      member.document_state = 0; /* PENDING_ADDS */
+      debug(member);
+      await module.exports.createMember(conn, member);
     }
 
     await conn.commit();

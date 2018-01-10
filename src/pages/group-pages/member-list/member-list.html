@@ -14,7 +14,7 @@
     <ion-grid fixed>
       <ion-row>
         <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let member of members | async">
-          <ion-item tappable (tap)="navigateToDetail(member.member_id)">
+          <ion-item tappable (tap)="navigateToDetail(member.member_log_id)">
             <ion-toolbar *ngIf="member.document_state == 'PENDING_ADDS'">
               {{'I18N_PENDING_ADDS' | translate}}<br>
               <p><ion-icon name="alert" color="danger"></ion-icon>{{'I18N_NEED_YOUR_REVIEW' | translate}}</p>
@@ -27,25 +27,8 @@
               </ion-col>
               <ion-col>
                 <p>{{ member.name }}</p>
+                <p text-right style="white-space: normal" *ngFor="let role of member.roles">{{ (util.translateDBString(role) | async) }}</p>
               </ion-col>
-            </ion-row>
-            <ion-row justify-content-end>
-              <gyetube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="member.member"></gyetube-permission>
-            </ion-row>
-            <ion-row justify-content-end>
-              <gyetube-permission [name]="('I18N_ROLE' | translate) || '&nbsp;'"   [permission]="member.role"></gyetube-permission>
-            </ion-row>
-            <ion-row justify-content-end>
-              <gyetube-permission [name]="('I18N_PROCEEDING' | translate) || '&nbsp;'" [permission]="member.proceeding"></gyetube-permission>
-            </ion-row>
-            <ion-row justify-content-end>
-              <gyetube-permission [name]="('I18N_DECISION' | translate) || '&nbsp;'" [permission]="member.decision"></gyetube-permission>
-            </ion-row>
-            <ion-row justify-content-end>
-              <gyetube-permission [name]="('I18N_ACTIVITY' | translate) || '&nbsp;'" [permission]="member.activity"></gyetube-permission>
-            </ion-row>
-            <ion-row justify-content-end>
-              <gyetube-permission [name]="('I18N_RECEIPT' | translate) || '&nbsp;'"  [permission]="member.receipt"></gyetube-permission>
             </ion-row>
           </ion-item>
         </ion-col>

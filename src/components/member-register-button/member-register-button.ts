@@ -24,8 +24,8 @@ export class MemberRegisterButtonComponent {
   ) {
     this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
-      this.roleService.getRoleMyself(group_id).subscribe(() => {}, () => {
-        this.youAreNotMember = true;
+      this.roleService.getRoleMyself(group_id).subscribe((role) => {
+        this.youAreNotMember = role.role_id == null;
       });
     });
   }
