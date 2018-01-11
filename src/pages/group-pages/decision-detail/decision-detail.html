@@ -126,8 +126,8 @@
         {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{decision?.total_difference | number}}
       </p>
 
-      <ion-toolbar *ngIf="(decision?.prev_id || decision?.next_id)">
-        <ion-buttons left *ngIf="decision?.document_state != 'PENDING_UPDATES' && decision?.prev_id">
+      <ion-toolbar *ngIf="decision?.prev_id || decision?.next_id || decision?.document_state == 'PENDING_ADDS'">
+        <ion-buttons left *ngIf="decision?.parent_proceeding.document_state != 'PENDING_ADDS' && decision?.prev_id">
           <button ion-button icon-only (tap)="navigateToPrev()">
             <ion-icon name="arrow-back"></ion-icon>
             {{ 'I18N_PREV' | translate}}
@@ -135,7 +135,8 @@
             <br/> {{ 'I18N_REVISION' | translate}}
           </button>
         </ion-buttons>
-        <ion-buttons right *ngIf="decision?.document_state != 'PENDING_UPDATES' && decision?.next_id">
+        <p text-center>{{'I18N_' + decision?.document_state | translate}}</p>
+        <ion-buttons right *ngIf="decision?.next_id">
           <button ion-button icon-only (tap)="navigateToNext()">
             {{ 'I18N_NEXT' | translate}}
             <br/>

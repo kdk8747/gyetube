@@ -152,16 +152,30 @@ exports.updateByID = async (req, res) => {
         SET document_state=document_state+2\
         WHERE group_id=? AND proceeding_id=?', [req.permissions.group_id, req.params.proceeding_id]);
 
-      let child_decisions = await conn.query(
+      let need_update_child_decisions = await conn.query(
         'SELECT *\
         FROM decision\
         WHERE group_id=? AND proceeding_id=? AND prev_id!=0', [req.permissions.group_id, req.params.proceeding_id]);
+      let decision_stack = need_update_child_decisions[0];
+      let visited = {};
 
-        await Promise.all(child_decisions[0].map(decision => conn.query(
-          'UPDATE decision\
-          SET next_id=?\
-          WHERE group_id=? AND decision_id=?', [decision.decision_id, req.permissions.group_id, decision.prev_id])
-        ));
+      while (decision_stack.length) {
+        let decision = decision_stack[decision_stack.length - 1];
+
+        if (visited[decision.decision_id]) {
+          conn.query(
+            'UPDATE decision SET next_id=?\
+            WHERE group_id=? AND decision_id=? AND next_id=0', [decision.decision_id, req.permissions.group_id, decision.prev_id])
+          decision_stack.pop();
+          continue;
+        }
+        let prev = await conn.query(
+          'SELECT * FROM decision\
+          WHERE group_id=? AND decision_id=? AND prev_id!=0 AND next_id=0', [req.permissions.group_id, decision.prev_id]);
+        if (prev[0][0])
+          decision_stack.push(prev[0][0]);
+        visited[decision.decision_id] = true;
+      }
     }
 
     await conn.commit();

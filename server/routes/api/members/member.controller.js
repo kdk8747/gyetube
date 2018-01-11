@@ -437,7 +437,7 @@ exports.reject = async (req, res) => {
     debug(result[0]);
 
     let member = result[0][0];
-    member.document_state = 5;
+    member.document_state = 6;
     member.user_id = null;
     member.creator_id = author[0][0].member_id;
 

@@ -89,7 +89,7 @@ export class MemberListPage {
           case MemberListState.STATE_NORMAL :
             return this.sortByDate(members.filter(member => (member.document_state == 'ADDED' || member.document_state == 'UPDATED')));
           case MemberListState.STATE_DELETED :
-            return this.sortByDate(members.filter(member => (member.document_state == 'DELETED')));
+            return this.sortByDate(members.filter(member => (member.document_state == 'DELETED' || member.document_state == 'REJECTED')));
           case MemberListState.STATE_PENDING :
             return this.sortByDate(members.filter(member => (member.document_state == 'PENDING_ADDS' && member.next_id == null)));
           default:

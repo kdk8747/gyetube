@@ -181,7 +181,9 @@ then user_id is null.]]></comment>
 			<column name="name" type="varchar" length="32" jt="12" mandatory="y" />
 			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
-			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" />
+			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" >
+				<defo>current_timestamp()</defo>
+			</column>
 			<index name="pk_member" unique="PRIMARY_KEY" >
 				<column name="group_id" />
 				<column name="member_id" />
@@ -318,7 +320,8 @@ then user_id is null.]]></comment>
 2: added
 3: updated
 4: predefined  // anyone, member, commitee
-5: deleted]]></comment>
+5: deleted
+6: rejected]]></comment>
 			</column>
 			<column name="created_datetime" type="timestamp" jt="93" mandatory="y" >
 				<defo>current_timestamp()</defo>
@@ -380,7 +383,9 @@ then user_id is null.]]></comment>
 			<column name="decision_id" type="int" jt="4" unsigned="y" />
 			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
-			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" />
+			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" >
+				<defo>current_timestamp()</defo>
+			</column>
 			<column name="name" type="varchar" length="32" jt="12" mandatory="y" />
 			<column name="member" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="role" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
@@ -543,6 +548,7 @@ BEGIN
   WHEN 3 THEN "UPDATED"
   WHEN 4 THEN "PREDEFINED"
   WHEN 5 THEN "DELETED"
+  WHEN 6 THEN "REJECTED"
   ELSE "UNKNOWN_STATE"
   END) ;
 END]]></string>
@@ -564,10 +570,10 @@ END]]></string>
 		<entity schema="test" name="member_log" color="99ff99" x="585" y="75" />
 		<entity schema="test" name="activity" color="99ffff" x="945" y="510" />
 		<entity schema="test" name="decision" color="99ffff" x="645" y="645" />
-		<entity schema="test" name="role" color="99ff99" x="270" y="870" />
 		<entity schema="test" name="role_log" color="99ff99" x="60" y="870" />
-		<entity schema="test" name="proceeding" color="99ffff" x="375" y="675" />
 		<entity schema="test" name="member" color="c8f5bf" x="585" y="270" />
+		<entity schema="test" name="proceeding" color="99ffff" x="375" y="675" />
+		<entity schema="test" name="role" color="99ff99" x="270" y="870" />
 		<group name="Group_for_Sharding" color="c4e0f9" >
 			<entity schema="test" name="activity" />
 			<entity schema="test" name="attendee" />
