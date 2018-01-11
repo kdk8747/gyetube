@@ -37,7 +37,6 @@ export class ProceedingDetailElement {
 export class ProceedingEditorElement {
   constructor(
     public prev_id: number, // 0: unused
-    public created_datetime: string,
     public meeting_datetime: string,
     public title: string,
     public description: string,

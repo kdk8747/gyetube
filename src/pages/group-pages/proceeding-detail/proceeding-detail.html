@@ -27,7 +27,7 @@
       </ion-toolbar>
 
       <p>{{proceeding?.meeting_datetime | localizedDate:'short'}}</p>
-      <ion-buttons left>
+      <ion-buttons left *ngIf="proceeding?.attendees.length">
         {{ 'I18N_ATTENDEES' | translate}}:
         <gyetube-user *ngFor="let attendee of proceeding?.attendees" [user]="attendee"></gyetube-user>
       </ion-buttons>

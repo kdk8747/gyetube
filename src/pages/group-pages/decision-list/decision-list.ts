@@ -71,7 +71,7 @@ export class DecisionListPage {
 
   filterPastDecisions(decisions: DecisionListElement[]): DecisionListElement[] {
     return decisions.filter(decision =>
-      (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED')
+      (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED')
       && new Date(decision.expiry_datetime).getTime() > new Date(Date.now()).getTime()
       && decision.next_id == 0
     );

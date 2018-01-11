@@ -136,7 +136,6 @@ export class ProceedingEditorPage {
       console.log(childDecisions);
 
     let newProceeding = new ProceedingEditorElement(this.id ? this.id : 0,
-      new Date(Date.now()).toISOString(),
       this.form.value.meetingDate, this.form.value.title, this.form.value.description,
       this.form.value.attendees,
       childDecisions);

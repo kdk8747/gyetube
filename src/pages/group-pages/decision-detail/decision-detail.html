@@ -88,10 +88,10 @@
           <ion-row align-items-center>
             <ion-col>
               <p>{{ 'I18N_ACTIVITY' | translate }}{{i+1}} - {{ activity.title }}</p>
-              <p text-right style="white-space: normal">
+              <p text-right style="white-space: normal" *ngIf="activity.elapsed_time * activity.participants_count">
                 {{ 'I18N_ELAPSED_TIME' | translate}} {{ activity.elapsed_time * activity.participants_count }} {{ 'I18N_HOURS' | translate}}
               </p>
-              <p text-right style="white-space: normal">
+              <p text-right style="white-space: normal" *ngIf="activity.total_difference">
                 {{ 'I18N_DIFFERENCE' | translate}} {{ activity.total_difference | number}}
               </p>
             </ion-col>
@@ -108,7 +108,7 @@
           <ion-row align-items-center>
             <ion-col>
               <p>{{ 'I18N_RECEIPT' | translate }}{{i+1}} - {{ receipt.title }}</p>
-              <p text-right style="white-space: normal">
+              <p text-right style="white-space: normal" *ngIf="receipt.difference">
                 {{ 'I18N_DIFFERENCE' | translate}} {{ receipt.difference | number}}
               </p>
             </ion-col>
@@ -119,10 +119,10 @@
         </ion-item>
       </ion-card>
 
-      <p text-right style="white-space: normal">
+      <p text-right style="white-space: normal" *ngIf="decision?.total_elapsed_time">
         {{ 'I18N_TOTAL_ELAPSED_TIME' | translate}} {{decision?.total_elapsed_time | number}} {{ 'I18N_HOURS' | translate}}
       </p>
-      <p text-right style="white-space: normal">
+      <p text-right style="white-space: normal" *ngIf="decision?.total_difference">
         {{ 'I18N_TOTAL_DIFFERENCE' | translate}} {{decision?.total_difference | number}}
       </p>
 

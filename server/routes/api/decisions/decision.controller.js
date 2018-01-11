@@ -121,15 +121,17 @@ exports.insertDecision = async (conn, decision) => {
       decision.description
     ]);
 
-  await Promise.all(
-    decision.abstainer_ids.map(member_id => conn.query(
-      'INSERT INTO voter\
-      VALUES(?,?,?,0)', [decision.group_id, decision_new_id[0][0].new_id, member_id])),
-    decision.accepter_ids.map(member_id => conn.query(
-      'INSERT INTO voter\
-      VALUES(?,?,?,1)', [decision.group_id, decision_new_id[0][0].new_id, member_id])),
-    decision.rejecter_ids.map(member_id => conn.query(
-      'INSERT INTO voter\
-      VALUES(?,?,?,2)', [decision.group_id, decision_new_id[0][0].new_id, member_id])),
-  );
+  if (decision.abstainer_ids && decision.accepter_ids && decision.rejecter_ids) {
+    await Promise.all(
+      decision.abstainer_ids.map(member_id => conn.query(
+        'INSERT INTO voter\
+        VALUES(?,?,?,0)', [decision.group_id, decision_new_id[0][0].new_id, member_id])),
+      decision.accepter_ids.map(member_id => conn.query(
+        'INSERT INTO voter\
+        VALUES(?,?,?,1)', [decision.group_id, decision_new_id[0][0].new_id, member_id])),
+      decision.rejecter_ids.map(member_id => conn.query(
+        'INSERT INTO voter\
+        VALUES(?,?,?,2)', [decision.group_id, decision_new_id[0][0].new_id, member_id])),
+    );
+  }
 }

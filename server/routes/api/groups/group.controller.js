@@ -1,3 +1,4 @@
+const proceedingController = require('../proceedings/proceeding.controller');
 const decisionController = require('../decisions/decision.controller');
 const memberController = require('../members/member.controller');
 const roleController = require('../roles/role.controller');
@@ -169,6 +170,40 @@ exports.create = async (req, res) => {
         group_id,
         req.decoded.user_id
       ]);
+
+    /* creates a proceeding */
+    let now = new Date();
+    let curYear = now.getFullYear();
+    let curMonth = now.getMonth();
+    let curDate = now.getDate();
+    let proceeding = {};
+    proceeding.group_id = group_id;
+    proceeding.document_state = 4; /* PREDEFINED */
+    proceeding.prev_id = 0;
+    proceeding.meeting_datetime = created_datetime;
+    proceeding.title = '환영합니다.';
+    proceeding.description = '회의록 초안을 올리고 회의 참석자들의 확인을 받아 보세요.';
+    proceeding.child_decisions = [{
+      prev_id: 0,
+      expiry_datetime: new Date(curYear, curMonth+1, curDate).toISOString().substring(0, 19).replace('T', ' '),
+      title: '구성원을 미리 추가해 보세요.',
+      description: '[홈] - [구성원] - [+]에서 구성원을 미리 추가할 수 있습니다.\n\
+구성원을 미리 추가하면, 과거의 기록들을 올리는 일에 도움이 됩니다.\n\
+추후 해당 사용자가 그룹에 가입을 할 경우, 미리 작성한 구성원과 합체시킬 수 있습니다.\n\
+구성원을 미리 추가하고 싶다면 여기에 연결해 주세요.'
+    },{
+      prev_id: 0,
+      expiry_datetime: new Date(curYear, curMonth+1, curDate).toISOString().substring(0, 19).replace('T', ' '),
+      title: '지난 활동 기록을 올려 보세요.',
+      description: '[활동] - [+]에서 활동 기록을 추가할 수 있습니다.\n적절한 합의 없이 수행된 예전 활동 기록을 올리고 싶다면 여기에 연결해 주세요.'
+    },{
+      prev_id: 0,
+      expiry_datetime: new Date(curYear, curMonth+1, curDate).toISOString().substring(0, 19).replace('T', ' '),
+      title: '지난 영수증을 올려 보세요.',
+      description: '[영수증] - [+]에서 영수증을 추가할 수 있습니다.\n적절한 합의 없이 집행된 영수증 기록을 올리고 싶다면 여기에 연결해 주세요.'
+    }];
+    await proceedingController.insertProceeding(conn, proceeding);
+    await conn.query('UPDATE decision SET document_state=4 WHERE group_id=? AND proceeding_id=1', [group_id]);
 
     await conn.commit();
     conn.release();

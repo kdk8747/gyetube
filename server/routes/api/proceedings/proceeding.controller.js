@@ -195,6 +195,53 @@ exports.updateByID = async (req, res) => {
   }
 }
 
+exports.insertProceeding = async (conn, proceeding) => {
+  let proceeding_new_id = await conn.query('SELECT GET_SEQ(?,"proceeding") AS new_id', [proceeding.group_id]);
+  proceeding.proceeding_id = proceeding_new_id[0][0].new_id;
+
+  await conn.query(
+    'INSERT INTO proceeding\
+    VALUES(?,?,?,0,?,?,?,?,?)', [
+      proceeding.group_id,
+      proceeding_new_id[0][0].new_id,
+      proceeding.prev_id,
+      proceeding.document_state,
+      new Date().toISOString().substring(0, 19).replace('T', ' '),
+      new Date(proceeding.meeting_datetime).toISOString().substring(0, 19).replace('T', ' '),
+      proceeding.title,
+      proceeding.description
+    ]);
+
+  if (proceeding.attendee_ids) {
+    await Promise.all(proceeding.attendee_ids.map(
+      attendee_id => conn.query(
+        'INSERT INTO attendee\
+        VALUES(?,?,?,0)', [proceeding.group_id, proceeding.proceeding_id, attendee_id])));
+  }
+
+  if (proceeding.prev_id) {
+    let updatePrev = await conn.query(
+      'UPDATE proceeding\
+      SET next_id=?\
+      WHERE group_id=? AND proceeding_id=? AND next_id=0', [
+        proceeding.proceeding_id,
+        proceeding.group_id,
+        proceeding.prev_id
+      ]);
+    if (updatePrev[0].affectedRows == 0)
+      throw 'Invalid target proceeding id';
+  }
+
+  if (proceeding.child_decisions && proceeding.child_decisions.length > 0) {
+    await Promise.all(proceeding.child_decisions.map(decision => {
+      decision.group_id = proceeding.group_id;
+      decision.proceeding_id = proceeding.proceeding_id;
+      decision.meeting_datetime = proceeding.meeting_datetime;
+      return decisionController.insertDecision(conn, decision);
+    }));
+  }
+}
+
 exports.create = async (req, res) => {
   const conn = await db.getConnection();
   try {
@@ -203,46 +250,10 @@ exports.create = async (req, res) => {
     if (!req.body.meeting_datetime) throw 'Invalid meeting_datetime';
     if (!(req.body.attendee_ids.length > 1)) throw 'Need at least two attendees';
 
-    let proceeding_new_id = await conn.query('SELECT GET_SEQ(?,"proceeding") AS new_id', [req.permissions.group_id]);
-
-    await conn.query(
-      'INSERT INTO proceeding\
-      VALUES(?,?,?,0,0,?,?,?,?)', [
-        req.permissions.group_id,
-        proceeding_new_id[0][0].new_id,
-        req.body.prev_id,
-        new Date().toISOString().substring(0, 19).replace('T', ' '),
-        new Date(req.body.meeting_datetime).toISOString().substring(0, 19).replace('T', ' '),
-        req.body.title,
-        req.body.description
-      ]);
-
-    await Promise.all(req.body.attendee_ids.map(
-      attendee_id => conn.query(
-        'INSERT INTO attendee\
-        VALUES(?,?,?,0)', [req.permissions.group_id, proceeding_new_id[0][0].new_id, attendee_id])));
-
-    if (req.body.prev_id) {
-      let updatePrev = await conn.query(
-        'UPDATE proceeding\
-        SET next_id=?\
-        WHERE group_id=? AND proceeding_id=? AND next_id=0', [
-          proceeding_new_id[0][0].new_id,
-          req.permissions.group_id,
-          req.body.prev_id
-        ]);
-      if (updatePrev[0].affectedRows == 0)
-        throw 'Invalid target proceeding id';
-    }
-
-    if (req.body.child_decisions && req.body.child_decisions.length > 0) {
-      await Promise.all(req.body.child_decisions.map(decision => {
-        decision.group_id = req.permissions.group_id;
-        decision.proceeding_id = proceeding_new_id[0][0].new_id;
-        decision.meeting_datetime = req.body.meeting_datetime;
-        return decisionController.insertDecision(conn, decision);
-      }));
-    }
+    let proceeding = req.body;
+    proceeding.group_id = req.permissions.group_id;
+    proceeding.document_state = 0; /* PENDING_ADDS */
+    await module.exports.insertProceeding(conn, proceeding);
 
     await conn.commit();
     conn.release();
