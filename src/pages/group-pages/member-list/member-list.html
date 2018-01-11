@@ -15,8 +15,8 @@
       <ion-row>
         <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let member of members | async">
           <ion-item tappable (tap)="navigateToDetail(member.member_id, member.member_log_id)">
-            <ion-toolbar *ngIf="member.document_state == 'PENDING_ADDS'">
-              {{'I18N_PENDING_ADDS' | translate}}<br>
+            <ion-toolbar *ngIf="member.member_state == 'JOIN_REQUESTED'">
+              {{'I18N_JOIN_REQUESTED' | translate}}<br>
               <p><ion-icon name="alert" color="danger"></ion-icon>{{'I18N_NEED_YOUR_REVIEW' | translate}}</p>
             </ion-toolbar>
             <ion-row>

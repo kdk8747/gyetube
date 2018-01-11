@@ -179,7 +179,14 @@ then user_id is null.]]></comment>
 			</column>
 			<column name="image_url" type="text" jt="-1" />
 			<column name="name" type="varchar" length="32" jt="12" mandatory="y" />
-			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="member_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" >
+				<comment><![CDATA[0: join requested
+1: join approved
+2: join rejected
+3: added
+4: updated
+5: deleted]]></comment>
+			</column>
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" >
 				<defo>current_timestamp()</defo>
@@ -206,7 +213,14 @@ then user_id is null.]]></comment>
 			<column name="member_log_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="member_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="decision_id" type="int" jt="4" unsigned="y" />
-			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="member_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" >
+				<comment><![CDATA[0: join requested
+1: join approved
+2: join rejected
+3: added
+4: updated
+5: deleted]]></comment>
+			</column>
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="created_datetime" type="timestamp" jt="93" mandatory="y" >
 				<defo>current_timestamp()</defo>
@@ -319,9 +333,8 @@ then user_id is null.]]></comment>
 1: pending updates
 2: added
 3: updated
-4: predefined  // anyone, member, commitee
-5: deleted
-6: rejected]]></comment>
+4: predefined
+5: deleted]]></comment>
 			</column>
 			<column name="created_datetime" type="timestamp" jt="93" mandatory="y" >
 				<defo>current_timestamp()</defo>
@@ -381,7 +394,14 @@ then user_id is null.]]></comment>
 			<column name="group_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="role_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="decision_id" type="int" jt="4" unsigned="y" />
-			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="document_state" type="tinyint" jt="-6" mandatory="y" unsigned="y" >
+				<comment><![CDATA[0: pending adds
+1: pending updates
+2: added
+3: updated
+4: predefined  // anyone, member, commitee
+5: deleted]]></comment>
+			</column>
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" >
 				<defo>current_timestamp()</defo>
@@ -423,7 +443,9 @@ then user_id is null.]]></comment>
 				<comment><![CDATA[0: pending adds
 1: pending updates
 2: added
-3: updated]]></comment>
+3: updated
+4: predefined  // anyone, member, commitee
+5: deleted]]></comment>
 			</column>
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="created_datetime" type="timestamp" length="19" decimal="0" jt="93" mandatory="y" >
@@ -528,6 +550,20 @@ then user_id is null.]]></comment>
 			</fk>
 			<storage><![CDATA[engine=InnoDB]]></storage>
 		</table>
+		<function name="get_member_state" id="Function_90dd44" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE FUNCTION test.get_member_state ( MEMBER_STATE INT UNSIGNED  ) RETURNS varchar(32) CHARSET utf8
+BEGIN
+  RETURN (CASE MEMBER_STATE
+  WHEN 0 THEN "JOIN_REQUESTED"
+  WHEN 1 THEN "JOIN_APPROVED"
+  WHEN 2 THEN "JOIN_REJECTED"
+  WHEN 3 THEN "ADDED"
+  WHEN 4 THEN "UPDATED"
+  WHEN 5 THEN "DELETED"
+  ELSE "UNKNOWN_STATE"
+  END) ;
+END]]></string>
+		</function>
 		<function name="get_seq" id="Function_1fb907c" isSystem="false" params_known="n" >
 			<string><![CDATA[CREATE FUNCTION test.get_seq ( p_group_id INT UNSIGNED, p_seq_name VARCHAR(32) ) RETURNS int(10) unsigned
 BEGIN
@@ -548,7 +584,6 @@ BEGIN
   WHEN 3 THEN "UPDATED"
   WHEN 4 THEN "PREDEFINED"
   WHEN 5 THEN "DELETED"
-  WHEN 6 THEN "REJECTED"
   ELSE "UNKNOWN_STATE"
   END) ;
 END]]></string>
@@ -556,9 +591,7 @@ END]]></string>
 	</schema>
 	<connector name="MariaDb" database="MariaDb" driver_class="org.mariadb.jdbc.Driver" driver_jar="mariadb-java-client-2.1.0.jar" host="localhost" port="3306" instance="test" user="root" passwd="bXlsb2NhbHB3" />
 	<layout name="Default Layout" id="Layout_32e5263" show_relation="columns" >
-		<entity schema="test" name="attendee" color="bfd4f5" x="300" y="420" />
 		<entity schema="test" name="user" color="ff9999" x="1140" y="1215" />
-		<entity schema="test" name="voter" color="1f5182" x="765" y="480" />
 		<entity schema="test" name="master_seq" color="99ff99" x="885" y="945" />
 		<entity schema="test" name="participant" color="1f5182" x="930" y="315" />
 		<entity schema="test" name="user_permission" color="ff9999" x="930" y="1200" />
@@ -567,13 +600,15 @@ END]]></string>
 		<entity schema="test" name="home" color="99ff99" x="495" y="915" />
 		<entity schema="test" name="member_role_log" color="99ff99" x="45" y="180" />
 		<entity schema="test" name="member_role" color="99ff99" x="210" y="300" />
-		<entity schema="test" name="member_log" color="99ff99" x="585" y="75" />
 		<entity schema="test" name="activity" color="99ffff" x="945" y="510" />
+		<entity schema="test" name="proceeding" color="99ffff" x="375" y="675" />
 		<entity schema="test" name="decision" color="99ffff" x="645" y="645" />
 		<entity schema="test" name="role_log" color="99ff99" x="60" y="870" />
-		<entity schema="test" name="member" color="c8f5bf" x="585" y="270" />
-		<entity schema="test" name="proceeding" color="99ffff" x="375" y="675" />
 		<entity schema="test" name="role" color="99ff99" x="270" y="870" />
+		<entity schema="test" name="attendee" color="bfd4f5" x="300" y="420" />
+		<entity schema="test" name="voter" color="1f5182" x="765" y="480" />
+		<entity schema="test" name="member_log" color="99ff99" x="585" y="75" />
+		<entity schema="test" name="member" color="c8f5bf" x="585" y="270" />
 		<group name="Group_for_Sharding" color="c4e0f9" >
 			<entity schema="test" name="activity" />
 			<entity schema="test" name="attendee" />

@@ -55,7 +55,7 @@ export class MemberEditorPage {
     this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
       this.roles = this.roleService.getRoles(this.groupId);
-      this.decisions = this.decisionService.getDecisions(this.groupId);
+      this.decisions = this.decisionService.getDecisions(this.groupId).map(decisions => decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' ) && decision.next_id == 0));
     });
   }
 

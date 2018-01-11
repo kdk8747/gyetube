@@ -15,7 +15,7 @@
         <ion-buttons>{{member?.name}}</ion-buttons>
       </ion-toolbar>
 
-      <ion-toolbar *ngIf="member?.document_state == 'PENDING_ADDS' && member?.next_id == null">
+      <ion-toolbar *ngIf="member?.member_state == 'PENDING_ADDS' && member?.next_id == null">
         <ion-buttons>
           {{'I18N_PENDING_ADDS' | translate}}<br>
           <ion-icon name="alert" color="danger"></ion-icon>
@@ -39,7 +39,7 @@
           <img [src]="member?.image_url">
         </ion-avatar>
         <h2>{{ member?.name }}</h2>
-        <p>{{'I18N_' + member?.document_state | translate}}</p>
+        <p>{{'I18N_' + member?.member_state | translate}}</p>
       </ion-item>
 
       <ion-card *ngIf="member?.parent_decision">
@@ -85,7 +85,7 @@
         </ion-item>
       </ion-card>
 
-      <ion-buttons right *ngIf="member?.document_state == 'PENDING_ADDS' && member?.next_id == null">
+      <ion-buttons right *ngIf="member?.member_state == 'PENDING_ADDS' && member?.next_id == null">
         <ion-list radio-group no-lines>
           <ion-item>
             <ion-label style="color: #7f7f7f;">{{ 'I18N_APPROVE_NEW_MEMBER' | translate }}</ion-label>
@@ -97,7 +97,7 @@
             <ion-radio (ionSelect)="approveState=enum.STATE_OVERWRITE"></ion-radio>
           </ion-item>
           <ion-item *ngIf="approveState==enum.STATE_OVERWRITE">
-            <ion-select [(ngModel)]="overwrite_id" [selectOptions]="{title: ('I18N_RELATED_DECISION' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}"
+            <ion-select [(ngModel)]="overwrite_id" [selectOptions]="{title: ('I18N_MEMBER' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}"
               [class.invalid]="!overwrite_id && submitAttempt">
               <ion-option *ngFor="let member of members | async" [value]="member.member_id">{{member.name}}</ion-option>
             </ion-select>
@@ -112,7 +112,7 @@
       </ion-buttons>
 
       <ion-toolbar *ngIf="(member?.prev_id || member?.next_id)">
-        <ion-buttons left *ngIf="member?.document_state != 'PENDING_UPDATES' && member?.prev_id">
+        <ion-buttons left *ngIf="member?.member_state != 'PENDING_UPDATES' && member?.prev_id">
           <button ion-button icon-only (tap)="navigateToPrev()">
             <ion-icon name="arrow-back"></ion-icon>
             {{ 'I18N_PREV' | translate}}
@@ -120,7 +120,7 @@
             <br/> {{ 'I18N_REVISION' | translate}}
           </button>
         </ion-buttons>
-        <ion-buttons right *ngIf="member?.document_state != 'PENDING_UPDATES' && member?.next_id">
+        <ion-buttons right *ngIf="member?.member_state != 'PENDING_UPDATES' && member?.next_id">
           <button ion-button icon-only (tap)="navigateToNext()">
             {{ 'I18N_NEXT' | translate}}
             <br/>

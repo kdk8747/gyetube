@@ -81,7 +81,7 @@ exports.getAll = async (req, res) => {
   try {
     let result = await db.execute(
       "SELECT M.member_id, M.member_log_id, M.modified_datetime, M.image_url, M.name,\
-      get_state(M.document_state) AS document_state,\
+      get_member_state(M.member_state) AS member_state,\
       concat('[\"', group_concat(R.name separator '\", \"'), '\"]') AS roles\
       FROM member M\
       LEFT JOIN member_role MR  ON MR.group_id=M.group_id  AND  MR.member_id=M.member_id\
@@ -107,7 +107,7 @@ exports.getByID = async (req, res) => { // TODO
   try {
     let result = await db.execute(
       "SELECT M.member_id, M.member_log_id, M.modified_datetime, M.image_url, M.name,\
-      get_state(M.document_state) AS document_state,\
+      get_member_state(M.member_state) AS member_state,\
       concat('[\"', group_concat(R.name separator '\", \"'), '\"]') AS roles\
       FROM member M\
       LEFT JOIN member_role MR  ON MR.group_id=M.group_id  AND  MR.member_id=M.member_id\
@@ -129,7 +129,7 @@ exports.getByID = async (req, res) => { // TODO
 exports.getByLogID = async (req, res) => {
   try {
     let member_log = await db.execute(
-      'SELECT *, ML.creator_id AS creator_id, get_state(ML.document_state) AS document_state\
+      'SELECT *, ML.creator_id AS creator_id, get_member_state(ML.member_state) AS member_state\
       FROM member_log ML\
       LEFT JOIN member M ON M.group_id=ML.group_id AND M.member_id=ML.member_id\
       WHERE ML.group_id=? AND ML.member_log_id=?', [req.permissions.group_id, req.params.member_log_id]);
@@ -197,7 +197,7 @@ exports.getByLogID = async (req, res) => {
 exports.insertMember = async (conn, member) => {
   await conn.query(
     'INSERT INTO member\
-    (group_id, member_id, member_log_id, decision_id, user_id, image_url,  name, document_state, creator_id, modified_datetime)\
+    (group_id, member_id, member_log_id, decision_id, user_id, image_url,  name, member_state, creator_id, modified_datetime)\
     VALUES(?,?,?,?,unhex(?),?, ?,?,?,?)', [
       member.group_id,
       member.member_id,
@@ -207,20 +207,20 @@ exports.insertMember = async (conn, member) => {
       member.image_url ? member.image_url : null,
 
       member.name,
-      member.document_state,
+      member.member_state,
       member.creator_id,
       new Date().toISOString().substring(0, 19).replace('T', ' ')
     ]);
 
   await conn.query(
     'INSERT INTO member_log\
-    (group_id, member_log_id, member_id, decision_id, document_state,  creator_id, created_datetime)\
+    (group_id, member_log_id, member_id, decision_id, member_state,  creator_id, created_datetime)\
     VALUES(?,?,?,?,?, ?,?)', [
       member.group_id,
       member.member_log_id,
       member.member_id,
       member.parent_decision_id ? member.parent_decision_id : null,
-      member.document_state,
+      member.member_state,
 
       member.creator_id,
       new Date().toISOString().substring(0, 19).replace('T', ' ')
@@ -254,14 +254,14 @@ exports.updateMember = async (conn, member) => {
 
   await conn.query(
     'UPDATE member\
-    SET member_log_id=?, decision_id=?, user_id=unhex(?), image_url=?, name=?, document_state=?, creator_id=?, modified_datetime=?\
+    SET member_log_id=?, decision_id=?, user_id=unhex(?), image_url=?, name=?, member_state=?, creator_id=?, modified_datetime=?\
     WHERE group_id=? AND member_id=?', [
       member.member_log_id,
       member.parent_decision_id ? member.parent_decision_id : null,
       member.user_id ? member.user_id : null,
       member.image_url ? member.image_url : null,
       member.name,
-      member.document_state,
+      member.member_state,
       member.creator_id,
       new Date().toISOString().substring(0, 19).replace('T', ' '),
 
@@ -271,25 +271,25 @@ exports.updateMember = async (conn, member) => {
 
   await conn.query(
     'INSERT INTO member_log\
-    (group_id, member_log_id, member_id, decision_id, document_state,  creator_id, created_datetime)\
+    (group_id, member_log_id, member_id, decision_id, member_state,  creator_id, created_datetime)\
     VALUES(?,?,?,?,?, ?,?)', [
       member.group_id,
       member.member_log_id,
       member.member_id,
       member.parent_decision_id ? member.parent_decision_id : null,
-      member.document_state,
+      member.member_state,
 
       member.creator_id,
       new Date().toISOString().substring(0, 19).replace('T', ' ')
     ]);
 
-  await conn.query(
-    'DELETE FROM member_role WHERE group_id=? AND member_id=?', [
-      member.group_id,
-      member.member_id
-    ]);
 
   if (member.role_ids) {
+    await conn.query(
+      'DELETE FROM member_role WHERE group_id=? AND member_id=?', [
+        member.group_id,
+        member.member_id
+      ]);
     await Promise.all(
       member.role_ids.map(role_id => conn.query(
         'INSERT INTO member_role (group_id, member_id, role_id) VALUES (?,?,?)', [
@@ -325,13 +325,13 @@ exports.approveNewMember = async (req, res) => {
     let result = await conn.query(
       'SELECT *, hex(user_id) AS user_id\
       FROM member \
-      WHERE group_id=? AND member_id=? AND document_state=0', [req.permissions.group_id, req.params.member_id]);
+      WHERE group_id=? AND member_id=? AND member_state=0', [req.permissions.group_id, req.params.member_id]);
     debug(result[0]);
 
     let member = result[0][0];
     member.creator_id = author[0][0].member_id;
     member.role_ids = [2];
-    member.document_state = 2;
+    member.member_state = 1; /* JOIN_APPROVED */
     await module.exports.updateMember(conn, member);
 
     await conn.commit();
@@ -355,53 +355,44 @@ exports.approveOverwrite = async (req, res) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
-    let member_id = await conn.query(
+
+    if (req.params.prev_id == req.params.member_id) throw 'cannot overwrites itself';
+
+    let author = await conn.query(
       'SELECT member_id\
       FROM member\
       WHERE group_id=? AND user_id=UNHEX(?)', [req.permissions.group_id, req.decoded.user_id]);
-    debug(member_id[0]);
+    debug(author[0]);
 
-    let member = await conn.query(
+    let prev = await conn.query(
+      'SELECT *\
+      FROM member\
+      WHERE group_id=? AND member_id=?', [req.permissions.group_id, req.params.prev_id]);
+    debug(prev[0]);
+
+    let result = await conn.query(
       'SELECT *, hex(user_id) AS user_id\
       FROM member\
-      WHERE group_id=? AND member_id=? AND document_state=0 AND next_id=0', [req.permissions.group_id, req.params.member_id]);
-    debug(member[0]);
+      WHERE group_id=? AND member_id=? AND member_state=0', [req.permissions.group_id, req.params.member_id]);
+    debug(result[0]);
 
     await conn.query(
-      'UPDATE member\
-      SET user_id=null, next_id=?\
-      WHERE group_id=? AND member_id=?', [req.params.member_id, req.permissions.group_id, req.params.prev_id]);
-
-    let member_new_id = await conn.query('SELECT GET_SEQ(?,"member") AS new_id', [req.permissions.group_id]);
-
+      'DELETE FROM member_log\
+      WHERE group_id=? AND member_id=? AND member_state=0', [req.permissions.group_id, req.params.member_id]);
     await conn.query(
-      'UPDATE member\
-      SET user_id=null, next_id=?, prev_id=?\
-      WHERE group_id=? AND member_id=?', [member_new_id[0][0].new_id, req.params.prev_id, req.permissions.group_id, req.params.member_id]);
+      'DELETE FROM member\
+      WHERE group_id=? AND member_id=? AND member_state=0', [req.permissions.group_id, req.params.member_id]);
 
-    await conn.query(
-      'INSERT INTO member\
-      (group_id, member_id, decision_id, prev_id, next_id, document_state, creator_id, created_datetime, user_id, image_url, name)\
-      VALUES(?,?,?,?,0,2,?,?,unhex(?),?,?)', [
-        req.permissions.group_id,
-        member_new_id[0][0].new_id,
-        member[0][0].decision_id,
-        member[0][0].member_id,
-        member_id[0][0].member_id,
-        new Date().toISOString().substring(0, 19).replace('T', ' '),
-        member[0][0].user_id,
-        member[0][0].image_url,
-        member[0][0].name
-      ]);
-    await conn.query(
-      'INSERT INTO member_role (group_id, member_id, role_id)\
-      SELECT group_id, ?, role_id\
-      FROM member_role\
-      WHERE group_id=? AND member_id=?', [
-        member_new_id[0][0].new_id,
-        req.permissions.group_id,
-        req.params.prev_id
-      ]);
+    let member = result[0][0];
+    member.member_id = prev[0][0].member_id;
+    member.creator_id = prev[0][0].member_id;
+    member.role_ids = [];
+    await module.exports.updateMember(conn, member);
+
+    member.creator_id = author[0][0].member_id;
+    member.member_state = 1; /* JOIN_APPROVED */
+    member.role_ids = [2];
+    await module.exports.updateMember(conn, member);
 
     await conn.commit();
     conn.release();
@@ -433,11 +424,11 @@ exports.reject = async (req, res) => {
     let result = await conn.query(
       'SELECT *, hex(user_id) AS user_id\
       FROM member\
-      WHERE group_id=? AND member_id=? AND document_state=0', [req.permissions.group_id, req.params.member_id]);
+      WHERE group_id=? AND member_id=? AND member_state=0', [req.permissions.group_id, req.params.member_id]);
     debug(result[0]);
 
     let member = result[0][0];
-    member.document_state = 6;
+    member.member_state = 2; /* JOIN_REJECTED */
     member.user_id = null;
     member.creator_id = author[0][0].member_id;
 
@@ -482,7 +473,7 @@ exports.create = async (req, res) => {
     member.member_id = member_new_id[0][0].new_id;
     member.member_log_id = member_log_new_id[0][0].new_id;
     member.creator_id = member_id[0][0].member_id;
-    member.document_state = 2; /* ADDED */
+    member.member_state = 3; /* ADDED */
     await module.exports.insertMember(conn, member);
 
     await conn.commit();
@@ -525,7 +516,7 @@ exports.register = async (req, res) => {
       member.name = decodeURIComponent(req.decoded.name);
       member.member_log_id = member_log_new_id[0][0].new_id;
       member.creator_id = member_new_id[0][0].new_id;
-      member.document_state = 0; /* PENDING_ADDS */
+      member.member_state = 0; /* JOIN_REQUESTED */
       debug(member);
       await module.exports.insertMember(conn, member);
     }

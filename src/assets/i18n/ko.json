@@ -64,6 +64,9 @@
   "I18N_AUTHOR": "작성자",
   "I18N_APPROVE_NEW_MEMBER": "승인 - 새 구성원",
   "I18N_APPROVE_OVERWRITE": "승인 - 덮어쓰기",
+  "I18N_JOIN_REQUESTED": "가입 요청함",
+  "I18N_JOIN_APPROVED": "가입 승인됨",
+  "I18N_JOIN_REJECTED": "가입 거부됨",
   "I18N_REJECT": "거부",
 
 

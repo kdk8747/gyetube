@@ -119,7 +119,7 @@ exports.create = async (req, res) => {
     member.user_id = req.decoded.user_id;
     member.image_url = decodeURIComponent(req.decoded.image_url);
     member.name = decodeURIComponent(req.decoded.name);
-    member.document_state = 2; /* ADDED */
+    member.member_state = 1; /* JOIN_APPROVED */
     member.creator_id = member_new_id;
 
     await memberController.insertMember(conn, member);

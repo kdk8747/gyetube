@@ -65,6 +65,9 @@
   "I18N_AUTHOR": "Author",
   "I18N_APPROVE_NEW_MEMBER": "Approve - New Member",
   "I18N_APPROVE_OVERWRITE": "Approve - Overwrite",
+  "I18N_JOIN_REQUESTED": "Join Requested",
+  "I18N_JOIN_APPROVED": "Join Approved",
+  "I18N_JOIN_REJECTED": "Join Rejected",
   "I18N_REJECT": "Reject",
 
 

@@ -87,11 +87,11 @@ export class MemberListPage {
       .map((members: MemberListElement[]) => {
         switch(this.memberListState) {
           case MemberListState.STATE_NORMAL :
-            return this.sortByDate(members.filter(member => (member.document_state == 'ADDED' || member.document_state == 'UPDATED')));
+            return this.sortByDate(members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED')));
           case MemberListState.STATE_DELETED :
-            return this.sortByDate(members.filter(member => (member.document_state == 'DELETED' || member.document_state == 'REJECTED')));
+            return this.sortByDate(members.filter(member => (member.member_state == 'DELETED' || member.member_state == 'JOIN_REJECTED')));
           case MemberListState.STATE_PENDING :
-            return this.sortByDate(members.filter(member => (member.document_state == 'PENDING_ADDS' && member.next_id == null)));
+            return this.sortByDate(members.filter(member => (member.member_state == 'JOIN_REQUESTED' && member.next_id == null)));
           default:
             return this.sortByDate(members);
         }

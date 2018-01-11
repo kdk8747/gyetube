@@ -57,7 +57,7 @@ export class MemberDetailPage {
           this.member = member;
           this.sharedDataService.headerDetailTitle = member.name;
         });
-      this.members = this.memberService.getMembers(this.groupId).map(members => members.filter(member => member.document_state != 'PENDING_ADDS' && member.next_id == 0));
+      this.members = this.memberService.getMembers(this.groupId).map(members => members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED') && member.next_id == null));
     });
   }
 
