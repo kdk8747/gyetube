@@ -105,43 +105,18 @@ exports.getAll = async (req, res) => {
 
 exports.getByID = async (req, res) => { // TODO
   try {
-    let member_log = await db.execute(
-      'SELECT *, ML.creator_id AS creator_id, get_state(ML.document_state) AS document_state\
-      FROM member_log ML\
-      LEFT JOIN member M ON M.group_id=ML.group_id AND M.member_id=ML.member_id\
-      WHERE ML.group_id=? AND ML.member_log_id=?', [req.permissions.group_id, req.params.member_log_id]);
-    delete member_log[0][0].user_id;
-    delete member_log[0][0].modified_datetime;
-
-    let parent_decision = await db.execute(
-      'SELECT *, get_state(document_state) AS document_state\
-      FROM decision\
-      WHERE group_id=? AND decision_id=?', [req.permissions.group_id, member_log[0][0].decision_id]);
-    member_log[0][0].parent_decision = parent_decision[0][0];
-
-    let creator = await db.execute(
-      'SELECT *\
-      FROM member\
-      WHERE group_id=? AND member_id=?', [req.permissions.group_id, member_log[0][0].creator_id]);
-    delete creator[0][0].user_id;
-    member_log[0][0].creator = creator[0][0];
-
-    let roles = await db.execute(
-      'SELECT *, get_state(RL.document_state) AS document_state\
-      FROM member_role_log MRL\
-      LEFT JOIN role_log RL ON RL.group_id=MRL.group_id AND RL.role_log_id=MRL.role_log_id\
-      WHERE MRL.group_id=? AND MRL.member_log_id=?', [req.permissions.group_id, req.params.member_log_id]);
-    member_log[0][0].roles = roles[0].map(role => {
-      role.member = bitToStringArray(role.member);
-      role.role = bitToStringArray(role.role);
-      role.proceeding = bitToStringArray(role.proceeding);
-      role.decision = bitToStringArray(role.decision);
-      role.activity = bitToStringArray(role.activity);
-      role.receipt = bitToStringArray(role.receipt);
-      return role;
-    });
-
-    res.send(member_log[0][0]);
+    let result = await db.execute(
+      "SELECT M.member_id, M.member_log_id, M.modified_datetime, M.image_url, M.name,\
+      get_state(M.document_state) AS document_state,\
+      concat('[\"', group_concat(R.name separator '\", \"'), '\"]') AS roles\
+      FROM member M\
+      LEFT JOIN member_role MR  ON MR.group_id=M.group_id  AND  MR.member_id=M.member_id\
+      LEFT JOIN role R          ON R.group_id=MR.group_id  AND  R.role_id=MR.role_id\
+      WHERE M.group_id=? AND M.member_id=?\
+      GROUP BY M.member_id", [req.permissions.group_id, req.params.member_id]);
+    result[0][0].roles = JSON.parse(result[0][0].roles);
+    debug(result[0][0]);
+    res.send(result[0][0]);
   }
   catch (err) {
     res.status(500).json({
@@ -222,10 +197,11 @@ exports.getByLogID = async (req, res) => {
 exports.insertMember = async (conn, member) => {
   await conn.query(
     'INSERT INTO member\
-    (group_id, member_id, decision_id, user_id, image_url,  name, document_state, creator_id, modified_datetime)\
-    VALUES(?,?,?,unhex(?),?, ?,?,?,?)', [
+    (group_id, member_id, member_log_id, decision_id, user_id, image_url,  name, document_state, creator_id, modified_datetime)\
+    VALUES(?,?,?,?,unhex(?),?, ?,?,?,?)', [
       member.group_id,
       member.member_id,
+      member.member_log_id,
       member.parent_decision_id ? member.parent_decision_id : null,
       member.user_id ? member.user_id : null,
       member.image_url ? member.image_url : null,
@@ -278,8 +254,9 @@ exports.updateMember = async (conn, member) => {
 
   await conn.query(
     'UPDATE member\
-    SET decision_id=?, user_id=unhex(?), image_url=?, name=?, document_state=?, creator_id=?, modified_datetime=?\
+    SET member_log_id=?, decision_id=?, user_id=unhex(?), image_url=?, name=?, document_state=?, creator_id=?, modified_datetime=?\
     WHERE group_id=? AND member_id=?', [
+      member.member_log_id,
       member.parent_decision_id ? member.parent_decision_id : null,
       member.user_id ? member.user_id : null,
       member.image_url ? member.image_url : null,

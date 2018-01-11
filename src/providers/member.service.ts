@@ -78,7 +78,7 @@ export class MemberService {
   }
 
   create(group_id: number, member: MemberEditorElement): Observable<void> {
-    const url = `${this.membersUrl}/members/${group_id}`;
+    const url = `${this.membersUrl}/${group_id}/members`;
     return this.http
       .post(url, JSON.stringify(member), { headers: this.headers })
       .map(() => null)
@@ -86,7 +86,7 @@ export class MemberService {
   }
 
   registerMember(group_id: number): Observable<void> {
-    const url = `${this.membersUrl}/members/${group_id}/register`;
+    const url = `${this.membersUrl}/${group_id}/members/register`;
     return this.http
       .post(url, '', { headers: this.headers })
       .map(() => null)
