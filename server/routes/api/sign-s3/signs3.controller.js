@@ -1,5 +1,16 @@
 const crypto = require('crypto');
 
+exports.authCreate = (req, res, next) => {
+  const CREATE = 1;
+  if (req.permissions[req.params.category] & CREATE)
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
 function getSignatureKey(key, dateStamp, regionName, serviceName) {
   let kDate = crypto.createHmac('sha256', 'AWS4' + key).update(dateStamp).digest();
   let kRegion = crypto.createHmac('sha256', kDate).update(regionName).digest();
@@ -12,7 +23,7 @@ exports.getSign = (req, res) => {
   const amzDate = req.query['amz-date'];
   let authDate = amzDate.split('T')[0];
   let credential = `${process.env.AWS_ACCESS_KEY_ID}/${authDate}/ap-northeast-2/s3/aws4_request`;
-  let keyPath = req.params.group + '/' + req.params.category + '/';
+  let keyPath = req.permissions.group_id + '/' + req.params.category + '/';
 
   let expiration = new Date();
   expiration.setMinutes(expiration.getMinutes() + 3);

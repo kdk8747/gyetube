@@ -103,7 +103,7 @@ exports.getAll = async (req, res) => {
   }
 }
 
-exports.getByID = async (req, res) => { // TODO
+exports.getByID = async (req, res) => {
   try {
     let result = await db.execute(
       "SELECT M.member_id, M.member_log_id, M.modified_datetime, M.image_url, M.name,\

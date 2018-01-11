@@ -100,7 +100,7 @@ exports.getByID = async (req, res) => {
     proceeding[0][0].child_decisions = child_decisions[0];
 
     let attendees = await db.execute(
-      'SELECT *, get_state(document_state) AS document_state\
+      'SELECT *, get_member_state(member_state) AS member_state\
       FROM attendee A\
       LEFT JOIN member M ON M.group_id=? AND M.member_id=A.member_id\
       WHERE A.group_id=? AND A.proceeding_id=?', [req.permissions.group_id, req.permissions.group_id, req.params.proceeding_id]);

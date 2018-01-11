@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, MemberService, GroupService, DecisionService, SharedDataService } from '../../../providers';
-import { MemberDetailElement, MemberListElement, DecisionDetailElement, DecisionEditorElement } from '../../../models';
+import { MemberListElement, DecisionDetailElement, DecisionEditorElement } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 

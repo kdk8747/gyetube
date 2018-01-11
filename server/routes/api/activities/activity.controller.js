@@ -149,7 +149,7 @@ exports.create = async (req, res) => {
 
     debug(req.body);
     if (!req.body.activity_datetime) throw 'invalid activity_datetime';
-    if (!(req.body.elapsed_time >= 0)) throw 'need elapsed_time';
+    if (!(+req.body.elapsed_time >= 0)) throw 'need elapsed_time';
     if (!(req.body.participant_ids.length > 0)) throw 'need at least one participant';
     if (!req.body.parent_decision_id) throw 'need parent document';
 
@@ -171,8 +171,8 @@ exports.create = async (req, res) => {
         new Date(req.body.activity_datetime).toISOString().substring(0, 19).replace('T', ' '),
         req.body.title,
         req.body.description,
-        JSON.stringify(req.body.image_urls),
-        JSON.stringify(req.body.document_urls),
+        JSON.stringify(req.body.image_urls ? req.body.image_urls : []),
+        JSON.stringify(req.body.document_urls ? req.body.document_urls : []),
         req.body.elapsed_time,
         0 //req.body.total_difference,
       ]);

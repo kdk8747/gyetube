@@ -59,7 +59,7 @@ exports.getByID = async (req, res) => {
     decision[0][0].parent_proceeding = parent_proceeding[0][0];
 
     let child_members = await db.execute(
-      'SELECT *, get_state(document_state) AS document_state\
+      'SELECT *, get_member_state(member_state) AS member_state\
       FROM member\
       WHERE group_id=? AND decision_id=?', [req.permissions.group_id, req.params.decision_id]);
     decision[0][0].child_members = child_members[0];
@@ -86,7 +86,7 @@ exports.getByID = async (req, res) => {
     decision[0][0].child_receipts = child_receipts[0];
 
     let voters = await db.execute(
-      'SELECT *, get_state(document_state) AS document_state\
+      'SELECT *, get_member_state(member_state) AS member_state\
       FROM voter V\
       LEFT JOIN member M ON M.group_id=? AND M.member_id=V.member_id\
       WHERE V.group_id=? AND V.decision_id=?', [req.permissions.group_id, req.permissions.group_id, req.params.decision_id]);

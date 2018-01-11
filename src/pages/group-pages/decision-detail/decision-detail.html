@@ -135,7 +135,9 @@
             <br/> {{ 'I18N_REVISION' | translate}}
           </button>
         </ion-buttons>
-        <p text-center>{{'I18N_' + decision?.document_state | translate}}</p>
+        <span *ngIf="decision?.next_id != 0">
+          <p text-center>{{'I18N_' + decision?.document_state | translate}}</p>
+        </span>
         <ion-buttons right *ngIf="decision?.next_id">
           <button ion-button icon-only (tap)="navigateToNext()">
             {{ 'I18N_NEXT' | translate}}

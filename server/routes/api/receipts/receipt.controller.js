@@ -149,7 +149,6 @@ exports.create = async (req, res) => {
     if (!req.body.settlement_datetime) throw 'need settlement_datetime';
     if (req.body.difference == undefined) throw 'need difference';
 
-
     if (req.body.parent_decision_id) {
       await conn.query(
         'UPDATE decision\
@@ -169,17 +168,17 @@ exports.create = async (req, res) => {
     }
 
     await conn.query(
-      'INSERT INTO receipt\
+      'INSERT INTO receipt (group_id, receipt_id, decision_id, activity_id, creator_id,  modified_datetime, settlement_datetime, title, image_url, difference)\
         VALUES(?,GET_SEQ(?,"receipt"),?,?,?, ?,?,?,?,?)', [
         req.permissions.group_id,
         req.permissions.group_id,
-        req.body.parent_decision_id,
-        req.body.parent_activity_id,
+        req.body.parent_decision_id ? req.body.parent_decision_id : null,
+        req.body.parent_activity_id ? req.body.parent_activity_id : null,
         member_id[0][0].member_id,
         new Date().toISOString().substring(0, 19).replace('T', ' '),
         new Date(req.body.settlement_datetime).toISOString().substring(0, 19).replace('T', ' '),
         req.body.title,
-        req.body.image_url,
+        req.body.image_url ? req.body.image_url : null,
         req.body.difference,
       ]);
 
