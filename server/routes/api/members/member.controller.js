@@ -175,6 +175,7 @@ exports.getByLogID = async (req, res) => {
       LEFT JOIN role_log RL ON RL.group_id=MRL.group_id AND RL.role_log_id=MRL.role_log_id\
       WHERE MRL.group_id=? AND MRL.member_log_id=?', [req.permissions.group_id, req.params.member_log_id]);
     member_log[0][0].roles = roles[0].map(role => {
+      role.home = bitToStringArray(role.home);
       role.member = bitToStringArray(role.member);
       role.role = bitToStringArray(role.role);
       role.proceeding = bitToStringArray(role.proceeding);

@@ -63,6 +63,9 @@
               <p *ngIf="role.document_state != 'PREDEFINED'">{{ 'I18N_ROLE' | translate }}{{i+1}} - {{ role.name }}</p>
               <p *ngIf="role.document_state == 'PREDEFINED'">{{ 'I18N_ROLE' | translate }}{{i+1}} - {{ 'I18N_' + role.name | translate }}</p>
               <ion-row justify-content-end>
+                <gyetube-permission [name]="('I18N_HOME' | translate) || '&nbsp;'" [permission]="role.home"></gyetube-permission>
+              </ion-row>
+              <ion-row justify-content-end>
                 <gyetube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role.member"></gyetube-permission>
               </ion-row>
               <ion-row justify-content-end>
