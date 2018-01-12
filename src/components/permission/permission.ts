@@ -13,6 +13,9 @@ export class PermissionComponent {
   }
 
   has(permission:string[], str: string): boolean {
-    return permission.some(val => val == str);
+    if (permission instanceof Array)
+      return permission.some(val => val == str);
+    else
+      return false;
   }
 }
