@@ -38,6 +38,7 @@ export class RoleEditorPage {
 
     this.form = formBuilder.group({
       name: ['', Validators.compose([Validators.maxLength(32), Validators.required])],
+      home: [[]],
       member: [[]],
       role: [[]],
       proceeding: [[]],
@@ -60,7 +61,7 @@ export class RoleEditorPage {
 
     this.util.pageGetReady().then(group_id => {
       this.groupId = group_id;
-      this.decisions = this.decisionService.getDecisions(this.groupId);
+      this.decisions = this.decisionService.getDecisions(this.groupId).map(decisions => decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' ) && decision.next_id == 0));
     });
   }
 
@@ -78,6 +79,7 @@ export class RoleEditorPage {
     this.form.value.name = this.form.value.name.trim();
 
     let newRole = new RoleEditorElement(0, this.form.value.name,
+      this.form.value.home,
       this.form.value.member,
       this.form.value.role,
       this.form.value.proceeding,

@@ -9,6 +9,7 @@ export class RoleListElement {
     public creator_id: number,
     public modified_datetime: string,
     public name: string,
+    public home: string[],
     public member: string[],
     public role: string[],
     public proceeding: string[],
@@ -28,6 +29,7 @@ export class RoleDetailElement {
     public creator: MemberListElement,
     public modified_datetime: string,
     public name: string,
+    public home: string[],
     public member: string[],
     public role: string[],
     public proceeding: string[],
@@ -42,6 +44,7 @@ export class RoleEditorElement {
   constructor(
     public role_id: number,
     public name: string,
+    public home: string[],
     public member: string[],
     public role: string[],
     public proceeding: string[],

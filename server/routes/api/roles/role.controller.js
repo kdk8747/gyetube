@@ -88,6 +88,7 @@ exports.getAll = async (req, res) => {
       GROUP BY R.role_id', [req.permissions.group_id]);
 
     result[0] = result[0].map(role => {
+      role.home = bitToStringArray(role.home);
       role.member = bitToStringArray(role.member);
       role.role = bitToStringArray(role.role);
       role.proceeding = bitToStringArray(role.proceeding);
@@ -111,6 +112,7 @@ exports.getMyself = async (req, res) => {
     let role = await db.execute(
       'SELECT R.role_id, R.decision_id, R.creator_id, R.modified_datetime, R.name,\
       get_state(R.document_state) AS document_state,\
+      bit_or(R.home) AS home,\
       bit_or(R.member) AS member,\
       bit_or(R.role) AS role,\
       bit_or(R.proceeding) AS proceeding,\
@@ -134,6 +136,7 @@ exports.getMyself = async (req, res) => {
       WHERE group_id=? AND member_id=?', [req.permissions.group_id, role[0][0].creator_id]);
     role[0][0].creator = creator[0][0];
 
+    role[0][0].home = bitToStringArray(role[0][0].home);
     role[0][0].member = bitToStringArray(role[0][0].member);
     role[0][0].role = bitToStringArray(role[0][0].role);
     role[0][0].proceeding = bitToStringArray(role[0][0].proceeding);
@@ -170,6 +173,7 @@ exports.getByID = async (req, res) => {
       WHERE group_id=? AND member_id=?', [req.permissions.group_id, role[0][0].creator_id]);
     role[0][0].creator = creator[0][0];
 
+    role[0][0].home = bitToStringArray(role[0][0].home);
     role[0][0].member = bitToStringArray(role[0][0].member);
     role[0][0].role = bitToStringArray(role[0][0].role);
     role[0][0].proceeding = bitToStringArray(role[0][0].proceeding);
@@ -190,8 +194,8 @@ exports.getByID = async (req, res) => {
 exports.insertRole = async (conn, role) => {
   await conn.query(
     'INSERT INTO role\
-    (group_id, role_id, decision_id, document_state, creator_id,  modified_datetime, name, member, role, proceeding,  decision, activity, receipt)\
-    VALUES(?,?,?,?,?, ?,?,?,?,?, ?,?,?)', [
+    (group_id, role_id, decision_id, document_state, creator_id,  modified_datetime, name, home, member, role,  proceeding, decision, activity, receipt)\
+    VALUES(?,?,?,?,?, ?,?,?,?,?,?, ?,?,?)', [
       role.group_id,
       role.role_id,
       role.parent_decision_id ? member.parent_decision_id : null,
@@ -200,10 +204,11 @@ exports.insertRole = async (conn, role) => {
 
       new Date().toISOString().substring(0, 19).replace('T', ' '),
       role.name,
+      role.home,
       role.member,
       role.role,
-      role.proceeding,
 
+      role.proceeding,
       role.decision,
       role.activity,
       role.receipt
@@ -211,8 +216,8 @@ exports.insertRole = async (conn, role) => {
 
   await conn.query(
     'INSERT INTO role_log\
-    (group_id, role_log_id, role_id, decision_id, document_state,  creator_id, created_datetime, name, member, role,  proceeding, decision, activity, receipt)\
-    VALUES(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)', [
+    (group_id, role_log_id, role_id, decision_id, document_state,  creator_id, created_datetime, name, home, member,  role, proceeding, decision, activity, receipt)\
+    VALUES(?,?,?,?,?, ?,?,?,?,?,?, ?,?,?,?)', [
       role.group_id,
       role.role_log_id,
       role.role_id,
@@ -222,9 +227,10 @@ exports.insertRole = async (conn, role) => {
       role.creator_id,
       new Date().toISOString().substring(0, 19).replace('T', ' '),
       role.name,
+      role.home,
       role.member,
-      role.role,
 
+      role.role,
       role.proceeding,
       role.decision,
       role.activity,
@@ -248,9 +254,9 @@ exports.updateByID = async (req, res) => {
 
     await conn.query(
       'INSERT INTO role_log (group_id, role_log_id, role_id, document_state, creator_id, created_datetime,\
-        name, member, role, proceeding, decision, activity, receipt)\
+        name, home, member, role, proceeding, decision, activity, receipt)\
       SELECT group_id, GET_SEQ(group_id,"role_log"), role_id, document_state, creator_id, modified_datetime,\
-        name, member, role, proceeding, decision, activity, receipt\
+        name, home, member, role, proceeding, decision, activity, receipt\
       FROM role\
       WHERE group_id=? AND role_id=?', [
         req.permissions.group_id,
@@ -259,12 +265,13 @@ exports.updateByID = async (req, res) => {
 
     await conn.query(
       'UPDATE role\
-      SET modified_datetime=?, name=?, member=?, role=?, proceeding=?, decision=?, activity=?, receipt=?,\
+      SET modified_datetime=?, name=?, home=?, member=?, role=?, proceeding=?, decision=?, activity=?, receipt=?,\
         creator_id=?, decision_id=?\
       WHERE group_id=? AND role_id=?', [
         new Date().toISOString().substring(0, 19).replace('T', ' '),
         req.body.name,
 
+        stringArrayToBit(req.body.home),
         stringArrayToBit(req.body.member),
         stringArrayToBit(req.body.role),
         stringArrayToBit(req.body.proceeding),
@@ -299,35 +306,41 @@ exports.create = async (req, res) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
-    let member_id = await conn.query(
+    let author = await conn.query(
       'SELECT member_id\
       FROM member\
       WHERE group_id=? AND user_id=UNHEX(?)', [req.permissions.group_id, req.decoded.user_id]);
-    debug(member_id[0]);
+    debug(author[0]);
 
     debug(req.body);
     if (!(req.body.name.length < 32)) throw 'Invalid name';
+    if (!(req.body.home instanceof Array)) throw 'Invalid home';
+    if (!(req.body.member instanceof Array)) throw 'Invalid member';
+    if (!(req.body.role instanceof Array)) throw 'Invalid role';
+    if (!(req.body.proceeding instanceof Array)) throw 'Invalid proceeding';
+    if (!(req.body.decision instanceof Array)) throw 'Invalid decision';
+    if (!(req.body.activity instanceof Array)) throw 'Invalid activity';
+    if (!(req.body.receipt instanceof Array)) throw 'Invalid receipt';
     if (!req.body.parent_decision_id) throw 'need parent document';
 
     let role_new_id = await conn.query('SELECT GET_SEQ(?,"role") AS new_id', [req.permissions.group_id]);
-
-    await conn.query(
-      'INSERT INTO role\
-      VALUES(?,?,?,?, ?,?,?,?,?,?, ?,?,2)', [
-        req.permissions.group_id,
-        role_new_id[0][0].new_id,
-        new Date().toISOString().substring(0, 19).replace('T', ' '),
-        req.body.name,
-
-        stringArrayToBit(req.body.member),
-        stringArrayToBit(req.body.role),
-        stringArrayToBit(req.body.proceeding),
-        stringArrayToBit(req.body.decision),
-        stringArrayToBit(req.body.activity),
-        stringArrayToBit(req.body.receipt),
-        member_id[0][0].member_id,
-        req.body.parent_decision_id
-      ]);
+    let role_log_new_id = await conn.query('SELECT GET_SEQ(?,"role_log") AS new_id', [req.permissions.group_id]);
+    let role = {};
+    role.group_id = req.permissions.group_id;
+    role.role_id = role_new_id[0][0].new_id;
+    role.role_log_id = role_log_new_id[0][0].new_id;
+    role.decision_id = req.body.parent_decision_id;
+    role.creator_id = author[0][0].member_id;
+    role.document_state = 2; /* ADDED */
+    role.name = req.body.name;
+    role.home = stringArrayToBit(req.body.home);
+    role.member = stringArrayToBit(req.body.member);
+    role.role = stringArrayToBit(req.body.role);
+    role.proceeding = stringArrayToBit(req.body.proceeding);
+    role.decision = stringArrayToBit(req.body.decision);
+    role.activity = stringArrayToBit(req.body.activity);
+    role.receipt = stringArrayToBit(req.body.receipt);
+    await module.exports.insertRole(conn, role);
 
     await conn.commit();
     conn.release();

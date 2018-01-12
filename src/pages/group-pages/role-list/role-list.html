@@ -23,6 +23,9 @@
               <p>{{role.modified_datetime | localizedDate}}</p>
             </ion-row>
             <ion-row justify-content-end>
+              <gyetube-permission [name]="('I18N_HOME' | translate) || '&nbsp;'" [permission]="role.home"></gyetube-permission>
+            </ion-row>
+            <ion-row justify-content-end>
               <gyetube-permission [name]="('I18N_MEMBER' | translate) || '&nbsp;'" [permission]="role.member"></gyetube-permission>
             </ion-row>
             <ion-row justify-content-end>

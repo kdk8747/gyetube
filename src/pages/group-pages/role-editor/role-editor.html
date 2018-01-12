@@ -23,6 +23,18 @@
           </ion-item>
 
           <ion-item no-lines>
+            <ion-label>{{ 'I18N_PERMISSIONS' | translate }} - {{ 'I18N_HOME' | translate }}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-select formControlName="home" multiple="true" [selectOptions]="{title: ('I18N_PERMISSIONS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
+              [class.invalid]="!form.controls.home.valid && (form.controls.home.dirty || submitAttempt)">
+              <ion-option *ngFor="let permission of permissions" [value]="permission">
+                {{ 'I18N_' + permission | translate }}
+              </ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item no-lines>
             <ion-label>{{ 'I18N_PERMISSIONS' | translate }} - {{ 'I18N_MEMBER' | translate }}</ion-label>
           </ion-item>
           <ion-item>

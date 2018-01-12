@@ -7,11 +7,9 @@
 			<column name="decision_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
+				<defo>current_timestamp()</defo>
 			</column>
-			<column name="activity_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>&#039;0000-00-00 00:00:00&#039;</defo>
-			</column>
+			<column name="activity_datetime" type="timestamp" jt="93" mandatory="y" />
 			<column name="title" type="varchar" length="32" decimal="0" jt="12" mandatory="y" />
 			<column name="description" type="text" length="256" jt="-1" mandatory="y" />
 			<column name="image_urls" type="text" jt="-1" >
@@ -82,11 +80,9 @@
 3: updated]]></comment>
 			</column>
 			<column name="meeting_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
+				<defo>current_timestamp()</defo>
 			</column>
-			<column name="expiry_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>&#039;0000-00-00 00:00:00&#039;</defo>
-			</column>
+			<column name="expiry_datetime" type="timestamp" jt="93" mandatory="y" />
 			<column name="title" type="varchar" length="32" decimal="0" jt="12" mandatory="y" />
 			<column name="description" type="text" length="512" jt="-1" mandatory="y" />
 			<column name="total_elapsed_time" type="int" jt="4" mandatory="y" unsigned="y" />
@@ -111,7 +107,7 @@
 			<column name="description" type="text" jt="-1" mandatory="y" />
 			<column name="image_url" type="text" jt="-1" />
 			<column name="created_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
+				<defo>current_timestamp()</defo>
 			</column>
 			<index name="pk_group_group_id" unique="PRIMARY_KEY" >
 				<column name="group_id" />
@@ -127,7 +123,7 @@
 			<column name="decision_id" type="int" jt="4" unsigned="y" />
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="created_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
+				<defo>current_timestamp()</defo>
 			</column>
 			<column name="title" type="varchar" length="32" jt="12" mandatory="y" />
 			<column name="description" type="text" jt="-1" mandatory="y" />
@@ -193,7 +189,7 @@ then user_id is null.]]></comment>
 			</column>
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
+				<defo>current_timestamp()</defo>
 			</column>
 			<index name="pk_member" unique="PRIMARY_KEY" >
 				<column name="group_id" />
@@ -227,7 +223,7 @@ then user_id is null.]]></comment>
 			</column>
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="created_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
+				<defo>current_timestamp()</defo>
 			</column>
 			<index name="pk_member_log" unique="PRIMARY_KEY" >
 				<column name="group_id" />
@@ -341,11 +337,9 @@ then user_id is null.]]></comment>
 5: deleted]]></comment>
 			</column>
 			<column name="created_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
+				<defo>current_timestamp()</defo>
 			</column>
-			<column name="meeting_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>&#039;0000-00-00 00:00:00&#039;</defo>
-			</column>
+			<column name="meeting_datetime" type="timestamp" jt="93" mandatory="y" />
 			<column name="title" type="varchar" length="32" jt="12" mandatory="y" />
 			<column name="description" type="text" length="512" jt="-1" mandatory="y" />
 			<index name="pk_proceeding" unique="PRIMARY_KEY" >
@@ -360,11 +354,9 @@ then user_id is null.]]></comment>
 			<column name="activity_id" type="int" jt="4" unsigned="y" />
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
+				<defo>current_timestamp()</defo>
 			</column>
-			<column name="settlement_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>&#039;0000-00-00 00:00:00&#039;</defo>
-			</column>
+			<column name="settlement_datetime" type="timestamp" jt="93" mandatory="y" />
 			<column name="title" type="varchar" length="32" decimal="0" jt="12" mandatory="y" />
 			<column name="image_url" type="text" jt="-1" />
 			<column name="difference" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
@@ -412,7 +404,7 @@ then user_id is null.]]></comment>
 			</column>
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="modified_datetime" type="timestamp" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
+				<defo>current_timestamp()</defo>
 			</column>
 			<column name="name" type="varchar" length="32" jt="12" mandatory="y" />
 			<column name="member" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
@@ -421,6 +413,7 @@ then user_id is null.]]></comment>
 			<column name="decision" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="activity" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="receipt" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="home" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<index name="pk_role" unique="PRIMARY_KEY" >
 				<column name="group_id" />
 				<column name="role_id" />
@@ -457,7 +450,7 @@ then user_id is null.]]></comment>
 			</column>
 			<column name="creator_id" type="int" jt="4" mandatory="y" unsigned="y" />
 			<column name="created_datetime" type="timestamp" length="19" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
+				<defo>current_timestamp()</defo>
 			</column>
 			<column name="name" type="varchar" length="32" jt="12" mandatory="y" />
 			<column name="member" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
@@ -466,6 +459,7 @@ then user_id is null.]]></comment>
 			<column name="decision" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="activity" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<column name="receipt" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
+			<column name="home" type="tinyint" jt="-6" mandatory="y" unsigned="y" />
 			<index name="idx_role_log_group_id" unique="NORMAL" >
 				<column name="group_id" />
 				<column name="role_id" />
@@ -558,9 +552,47 @@ then user_id is null.]]></comment>
 			</fk>
 			<storage><![CDATA[engine=InnoDB]]></storage>
 		</table>
+		<function name="get_member_state" id="Function_2b7f1d6" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE FUNCTION o66feep2ssuzioab.get_member_state ( MEMBER_STATE INT UNSIGNED  ) RETURNS varchar(32) CHARSET utf8
+BEGIN
+  RETURN (CASE MEMBER_STATE
+  WHEN 0 THEN "JOIN_REQUESTED"
+  WHEN 1 THEN "JOIN_APPROVED"
+  WHEN 2 THEN "JOIN_REJECTED"
+  WHEN 3 THEN "ADDED"
+  WHEN 4 THEN "UPDATED"
+  WHEN 5 THEN "DELETED"
+  ELSE "UNKNOWN_STATE"
+  END) ;
+END]]></string>
+		</function>
+		<function name="get_seq" id="Function_51609ad" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE FUNCTION o66feep2ssuzioab.get_seq ( p_group_id INT UNSIGNED, p_seq_name VARCHAR(32) ) RETURNS int(10) unsigned
+BEGIN
+ DECLARE RESULT_ID INT UNSIGNED;
+ UPDATE master_seq SET id = LAST_INSERT_ID(id+1)
+ WHERE group_id=p_group_id AND seq_name = p_seq_name;
+ SET RESULT_ID = (SELECT LAST_INSERT_ID());
+ RETURN RESULT_ID;
+END]]></string>
+		</function>
+		<function name="get_state" id="Function_4aacabd" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE FUNCTION o66feep2ssuzioab.get_state ( DOCUMENT_STATE INT UNSIGNED  ) RETURNS varchar(32) CHARSET utf8
+BEGIN
+  RETURN (CASE DOCUMENT_STATE
+  WHEN 0 THEN "PENDING_ADDS"
+  WHEN 1 THEN "PENDING_UPDATES"
+  WHEN 2 THEN "ADDED"
+  WHEN 3 THEN "UPDATED"
+  WHEN 4 THEN "PREDEFINED"
+  WHEN 5 THEN "DELETED"
+  ELSE "UNKNOWN_STATE"
+  END) ;
+END]]></string>
+		</function>
 	</schema>
-	<connector name="MariaDb" database="MariaDb" driver_class="org.mariadb.jdbc.Driver" driver_jar="mariadb-java-client-2.1.0.jar" host="thzz882efnak0xod.cbetxkdyhwsb.us-east-1.rds.amazonaws.com" port="3306" instance="o66feep2ssuzioab" user="zjn3sugo7wt0p13x" passwd="Ync0NmR4NGVvejJqN25tbw==" />
 	<connector name="MariaDb" database="MariaDb" driver_class="org.mariadb.jdbc.Driver" driver_jar="mariadb-java-client-2.1.0.jar" host="localhost" port="3306" instance="o66feep2ssuzioab" user="root" passwd="bXlsb2NhbHB3" />
+	<connector name="MariaDb" database="MariaDb" driver_class="org.mariadb.jdbc.Driver" driver_jar="mariadb-java-client-2.1.0.jar" host="thzz882efnak0xod.cbetxkdyhwsb.us-east-1.rds.amazonaws.com" port="3306" instance="o66feep2ssuzioab" user="zjn3sugo7wt0p13x" passwd="Ync0NmR4NGVvejJqN25tbw==" />
 	<layout name="Default Layout" id="Layout_32e5263" show_relation="columns" >
 		<entity schema="o66feep2ssuzioab" name="user" color="ff9999" x="1140" y="1215" />
 		<entity schema="o66feep2ssuzioab" name="master_seq" color="99ff99" x="885" y="945" />
@@ -568,18 +600,18 @@ then user_id is null.]]></comment>
 		<entity schema="o66feep2ssuzioab" name="user_permission" color="ff9999" x="930" y="1200" />
 		<entity schema="o66feep2ssuzioab" name="receipt" color="99ffff" x="1200" y="645" />
 		<entity schema="o66feep2ssuzioab" name="group" color="ff9999" x="645" y="1200" />
-		<entity schema="o66feep2ssuzioab" name="home" color="99ff99" x="495" y="915" />
 		<entity schema="o66feep2ssuzioab" name="member_role_log" color="99ff99" x="45" y="180" />
-		<entity schema="o66feep2ssuzioab" name="activity" color="99ffff" x="945" y="510" />
 		<entity schema="o66feep2ssuzioab" name="decision" color="99ffff" x="645" y="645" />
-		<entity schema="o66feep2ssuzioab" name="role" color="99ff99" x="270" y="870" />
 		<entity schema="o66feep2ssuzioab" name="attendee" color="bfd4f5" x="300" y="420" />
 		<entity schema="o66feep2ssuzioab" name="voter" color="1f5182" x="765" y="480" />
-		<entity schema="o66feep2ssuzioab" name="member_log" color="99ff99" x="585" y="75" />
-		<entity schema="o66feep2ssuzioab" name="member" color="c8f5bf" x="585" y="270" />
-		<entity schema="o66feep2ssuzioab" name="role_log" color="99ff99" x="60" y="870" />
 		<entity schema="o66feep2ssuzioab" name="member_role" color="99ff99" x="210" y="300" />
 		<entity schema="o66feep2ssuzioab" name="proceeding" color="99ffff" x="375" y="675" />
+		<entity schema="o66feep2ssuzioab" name="role_log" color="99ff99" x="60" y="870" />
+		<entity schema="o66feep2ssuzioab" name="role" color="99ff99" x="270" y="870" />
+		<entity schema="o66feep2ssuzioab" name="activity" color="99ffff" x="945" y="510" />
+		<entity schema="o66feep2ssuzioab" name="member_log" color="99ff99" x="585" y="75" />
+		<entity schema="o66feep2ssuzioab" name="member" color="c8f5bf" x="585" y="270" />
+		<entity schema="o66feep2ssuzioab" name="home" color="99ff99" x="495" y="915" />
 		<group name="Group_for_Sharding" color="c4e0f9" >
 			<entity schema="o66feep2ssuzioab" name="activity" />
 			<entity schema="o66feep2ssuzioab" name="attendee" />

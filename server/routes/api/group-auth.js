@@ -3,6 +3,7 @@ const debug = require('debug')('group-auth');
 
 module.exports = async (req, res, next) => {
   let permissions_obj = {
+    home:0,
     member:0,
     role:0,
     proceeding:0,
@@ -14,6 +15,7 @@ module.exports = async (req, res, next) => {
   if (req.decoded && req.decoded.user_id) {
     let result = await db.execute(
       'SELECT R.name, R.modified_datetime, get_state(R.document_state) AS document_state,\
+        bit_or(R.home) AS home,\
         bit_or(R.member) AS member,\
         bit_or(R.role) AS role,\
         bit_or(R.proceeding) AS proceeding,\
@@ -26,6 +28,7 @@ module.exports = async (req, res, next) => {
         WHERE M.group_id=? AND M.user_id=unhex(?)', [req.params.group_id, req.decoded.user_id]);
 
     permissions_obj = {
+      home: result[0][0].home,
       member: result[0][0].member,
       role: result[0][0].role,
       proceeding: result[0][0].proceeding,
@@ -40,6 +43,7 @@ module.exports = async (req, res, next) => {
 
   permissions_obj = {
     group_id: req.params.group_id,
+    home: permissions_obj.home | result_anyone[0][0].home,
     member: permissions_obj.member | result_anyone[0][0].member,
     role: permissions_obj.role | result_anyone[0][0].role,
     proceeding: permissions_obj.proceeding | result_anyone[0][0].proceeding,

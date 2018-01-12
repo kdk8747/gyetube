@@ -127,9 +127,9 @@ exports.create = async (req, res) => {
 
     /* create roles */
     let roles = [
-      { id: 1, name: 'ANYONE', member: 0, role: 0, proceeding: 0, decision: 0, activity: 2, receipt: 2 },
-      { id: 2, name: 'MEMBER', member: 0, role: 0, proceeding: 6, decision: 6, activity: 15, receipt: 15 },
-      { id: 3, name: 'COMMITEE', member: 7, role: 15, proceeding: 7, decision: 6, activity: 15, receipt: 15 }
+      { id: 1, name: 'ANYONE', home: 2, member: 0, role: 0, proceeding: 0, decision: 0, activity: 2, receipt: 2 },
+      { id: 2, name: 'MEMBER', home: 6, member: 0, role: 0, proceeding: 6, decision: 6, activity: 15, receipt: 15 },
+      { id: 3, name: 'COMMITEE', home: 7, member: 7, role: 15, proceeding: 7, decision: 6, activity: 15, receipt: 15 }
     ];
     let role_commitee_idx = 2;
 
