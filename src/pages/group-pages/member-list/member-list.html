@@ -11,6 +11,11 @@
       <ion-buttons>{{ 'I18N_MEMBERS' | translate}}</ion-buttons>
     </ion-toolbar>
 
+    <span *ngIf="!readPermitted">
+      <p>{{'I18N_ACCESS_DENIED' | translate}}</p>
+      <gyetube-member-register-button [groupId]="groupId" [memberState]="memberState"></gyetube-member-register-button>
+    </span>
+
     <ion-grid fixed>
       <ion-row>
         <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let member of members | async">
@@ -36,7 +41,7 @@
     </ion-grid>
   </ion-col>
 
-  <ion-fab right middle *ngIf="creationPermitted">
+  <ion-fab right middle *ngIf="createPermitted">
     <button ion-fab (tap)="navigateToEditor()">
       <ion-icon name="add"></ion-icon>
     </button>

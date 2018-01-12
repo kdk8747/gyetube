@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, FabContainer } from 'ionic-angular';
-import { UtilService, DecisionService, SharedDataService } from '../../../providers';
+import { UtilService, MemberService, DecisionService, SharedDataService } from '../../../providers';
 import { DecisionListElement } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -15,25 +15,22 @@ import { Observable } from 'rxjs/Observable';
 export class DecisionListPage {
 
   groupId: number;
+  memberState: string;
   decisions: Observable<DecisionListElement[]>;
-  readPermitted: boolean = false;
+  readPermitted: boolean = true;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
+    public memberService: MemberService,
     public decisionService: DecisionService,
     public sharedDataService: SharedDataService
   ) {
   }
 
   ionViewDidLoad() {
-    this.util.pageGetReady().then(group_id => {
-      this.groupId = group_id;
-      this.refreshDecisions();
-    });
-
     this.event.subscribe('DecisionList_Refresh', () => {
       this.refreshDecisions();
     });
@@ -43,6 +40,24 @@ export class DecisionListPage {
     this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
+
+    try {
+      this.util.getCurrentGroup().then(group => {
+        this.groupId = group.group_id;
+        this.sharedDataService.headerGroupTitle = group.title;
+
+        this.memberService.getMemberMyself(group.group_id).subscribe(member => {
+          this.memberState = member.member_state;
+          this.readPermitted = member.role.decision.some(val => val == 'READ');
+        }, (err) => {
+          this.readPermitted = false;
+        });
+        this.refreshDecisions();
+      });
+
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   ionViewWillUnload() {
@@ -89,7 +104,6 @@ export class DecisionListPage {
         this.sharedDataService.decisionListTimelineMode ?
           this.sortByDate(decisions) :
           this.sortByDate(this.filterPastDecisions(decisions)));
-    this.decisions.subscribe(() => this.readPermitted = true);
   }
 
   onFAB(fab: FabContainer) {

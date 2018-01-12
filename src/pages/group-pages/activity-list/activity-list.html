@@ -3,7 +3,7 @@
 
   <span *ngIf="!readPermitted">
     <p>{{'I18N_ACCESS_DENIED' | translate}}</p>
-    <gyetube-member-register-button></gyetube-member-register-button>
+    <gyetube-member-register-button [groupId]="groupId" [memberState]="memberState"></gyetube-member-register-button>
   </span>
   <span *ngIf="readPermitted && (activities | async)?.length == 0">
     <p>{{'I18N_EMPTY_LIST' | translate}}</p>
@@ -35,7 +35,7 @@
     </ion-row>
   </ion-grid>
 
-  <ion-fab right middle *ngIf="creationPermitted">
+  <ion-fab right middle *ngIf="createPermitted">
     <button ion-fab (tap)="navigateToEditor()">
       <ion-icon name="add"></ion-icon>
     </button>

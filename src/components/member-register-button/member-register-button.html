@@ -1,1 +1,2 @@
-<button ion-button *ngIf="youAreNotMember" (tap)="navigateToMemberRegister()">{{ 'I18N_JOIN' | translate }}</button>
+<button ion-button *ngIf="memberState == 'UNKNOWN_STATE'" (tap)="memberRegister()">{{ 'I18N_JOIN' | translate }}</button>
+<button ion-button *ngIf="memberState == 'JOIN_REQUESTED'" (tap)="memberRegisterInfo()">{{ 'I18N_JOIN_REQUESTED' | translate }}</button>

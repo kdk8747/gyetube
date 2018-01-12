@@ -61,7 +61,7 @@ export class DecisionEditorPage {
     this.event.publish('TabsGroup_ShowTab');
 
 
-    this.util.pageGetReady().then(group_id => {
+    this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
       this.members = this.sharedDataService.proceedingAttendees.map(id => this.memberService.getMember(this.groupId, id));
 

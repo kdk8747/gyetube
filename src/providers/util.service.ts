@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
-import { GroupService, RoleService } from './';
-import { User } from '../models';
+import { GroupService, } from './';
+import { User, Group } from '../models';
 import { Observable } from 'rxjs/Observable';
 
 declare const process: any; // Typescript compiler will complain without this
@@ -11,14 +11,13 @@ declare const process: any; // Typescript compiler will complain without this
 @Injectable()
 export class UtilService {
 
-  groupId: number = 0;
+  group: Group = null;
 
   constructor(
     public platform: Platform,
     public storage: Storage,
     public event: Events,
     public groupService: GroupService,
-    public roleService: RoleService,
     public translate: TranslateService
   ) { }
 
@@ -30,18 +29,30 @@ export class UtilService {
       return this.platform.is('mobile'); // CAUTION: This code can't determine whether it's in a mobile web browser or in a native app.
   }
 
-  setCurrentGroupId(group_id: number): void {
-    this.groupId = group_id;
+  setCurrentGroup(group: Group): void {
+    this.group = group;
   }
 
-  getCurrentGroupId(): Promise<number> {
-    if (this.groupId) return Promise.resolve(this.groupId);
+  getCurrentGroup(): Promise<Group> {
+    if (this.group) return Promise.resolve(this.group);
 
     if (!this.isNativeApp()) {
       let splits = window.location.href.split('/');
       let i = splits.findIndex((str: string) => str === 'group-page');
       if (i >= 0)
-        return this.groupService.getGroupId(splits[i - 1]);
+        return this.groupService.getGroupByUrlSegment(splits[i - 1]).toPromise();
+    }
+    return Promise.reject('getCurrentGroupId() error');
+  }
+
+  getCurrentGroupId(): Promise<number> {
+    if (this.group) return Promise.resolve(this.group.group_id);
+
+    if (!this.isNativeApp()) {
+      let splits = window.location.href.split('/');
+      let i = splits.findIndex((str: string) => str === 'group-page');
+      if (i >= 0)
+        return this.groupService.getGroupId(splits[i - 1]).toPromise(); // Cache-Control:public, max-age= 1 year
     }
     return Promise.reject('getCurrentGroupId() error');
   }
@@ -62,18 +73,6 @@ export class UtilService {
 
   setToken(token: string): Promise<void> {
     return this.storage.set('currentUserToken', token);
-  }
-
-  pageGetReady(): Promise<number> {
-    return this.getCurrentGroupId(); /*.then(group_id =>
-      this.getAnyoneToken(group_id).then(() => group_id));*/
-  }
-
-  isPermitted(query_crud: string, category: string, groupId: number): Promise<boolean> {
-    return this.roleService.getRoleMyself(groupId).toPromise()
-    .then((role) => {
-        return role[category].some(val => val == query_crud);
-    });
   }
 
   getCurrentUser(): Promise<User> {

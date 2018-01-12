@@ -59,7 +59,7 @@ export class RoleEditorPage {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.util.pageGetReady().then(group_id => {
+    this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
       this.decisions = this.decisionService.getDecisions(this.groupId).map(decisions => decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' ) && decision.next_id == 0));
     });

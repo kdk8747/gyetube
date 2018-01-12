@@ -65,7 +65,7 @@ export class GroupEditorPage {
     this.groupService.create(newGroup).toPromise()
       .then((group) => {
         this.popNavigation();
-        this.util.setCurrentGroupId(group.group_id);
+        this.util.setCurrentGroup(group);
         this.navCtrl.push('TabsGroupPage', { group_url_segment: group.url_segment });
       })
       .catch(() => { console.log('new group failed') });

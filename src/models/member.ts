@@ -4,14 +4,27 @@ export class MemberListElement {
   constructor(
     public member_id: number,
     public member_log_id: number,
-    public prev_id: number,
-    public next_id: number,
     public member_state: string,
     public modified_datetime: string,
     public user_id: string,
     public image_url: string,
     public name: string,
-    public roles: string[]
+    public roles: string[],
+    public parent_decision_id: number
+  ) { }
+}
+
+export class MemberMyselfElement {
+  constructor(
+    public member_id: number,
+    public member_log_id: number,
+    public member_state: string,
+    public modified_datetime: string,
+    public user_id: string,
+    public image_url: string,
+    public name: string,
+    public role: RoleListElement,
+    public parent_decision_id: number
   ) { }
 }
 

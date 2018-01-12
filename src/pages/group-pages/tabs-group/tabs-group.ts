@@ -1,6 +1,5 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, Events, ViewController, Nav } from 'ionic-angular';
-import { MemberService, UtilService, GroupService, SharedDataService } from '../../../providers';
+import { IonicPage, NavController, LoadingController, Events, ViewController, Nav } from 'ionic-angular';
 
 
 @IonicPage({
@@ -23,21 +22,12 @@ export class TabsGroupPage {
     public element: ElementRef,
     public renderer: Renderer,
     public navCtrl: NavController,
-    public navParams: NavParams,
     public loadingCtrl: LoadingController,
-    public event: Events,
-    public util: UtilService,
-    public memberService: MemberService,
-    public groupService: GroupService,
-    public sharedDataService: SharedDataService
+    public event: Events
   ) {
   }
 
   ionViewDidLoad() {
-    this.groupService.getGroupId(this.navParams.get('group_url_segment')).then(group_id => {
-      this.groupService.getGroup(group_id).subscribe(group => this.sharedDataService.headerGroupTitle = group.title);
-      this.util.setCurrentGroupId(group_id);
-    });
 
     this.event.subscribe('TabsGroup_HideTab', (obj) => {
       this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'opacity', '0');

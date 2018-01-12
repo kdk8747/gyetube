@@ -34,12 +34,14 @@ exports.getAll = async (req, res) => {
 
 exports.getByID = async (req, res) => {
   try {
-    let group = await db.execute(
-      'SELECT *\
-      FROM `group` G\
-      WHERE G.group_id=?', [req.params.group_id]);
-
-    res.send(group[0][0]);
+    if (typeof req.params.group_id === 'string') {
+      let group = await db.execute('SELECT * FROM `group` WHERE url_segment=?', [req.params.group_id]);
+      res.send(group[0][0]);
+    }
+    else {
+      let group = await db.execute('SELECT * FROM `group` WHERE group_id=?', [req.params.group_id]);
+      res.send(group[0][0]);
+    }
   }
   catch (err) {
     res.status(500).json({
@@ -51,12 +53,16 @@ exports.getByID = async (req, res) => {
 
 exports.getID = async (req, res) => {
   try {
-    let group = await db.execute(
-      'SELECT *\
-      FROM `group`\
-      WHERE url_segment=?', [req.params.url_segment]);
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
 
-    res.send(group[0][0]);
+    debug(typeof req.params.group_id);
+    if (typeof req.params.group_id === 'string') {
+      let group = await db.execute('SELECT * FROM `group` WHERE url_segment=?', [req.params.group_id]);
+      res.send(JSON.stringify(group[0][0].group_id));
+    }
+    else {
+      res.send(req.params.group_id);
+    }
   }
   catch (err) {
     res.status(500).json({

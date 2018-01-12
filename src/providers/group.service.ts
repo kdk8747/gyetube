@@ -23,7 +23,7 @@ export class GroupService {
       .map(response => {
         let groups = response.json() as Group[];
         return groups.map(group => {
-          group.created_datetime = group.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          group.created_datetime = group.created_datetime.replace(' ', 'T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
           return group;
         });
       })
@@ -36,18 +36,34 @@ export class GroupService {
     return this.http.get(url)
       .map(response => {
         let group = response.json() as Group;
-        group.created_datetime = group.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        group.created_datetime = group.created_datetime.replace(' ', 'T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
         return group;
       })
-      .publishLast().refCount();
+      .take(1);
   }
 
-  getGroupId(url_segment: string): Promise<number> {
-    const url = `/api/v1.0/group-id/${url_segment}`;
+  getGroupByUrlSegment(url_segment: string): Observable<Group> {
+    const url = `${this.groupsUrl}/${url_segment}`;
 
     return this.http.get(url)
-      .map(response => response.json().group_id as number)
-      .toPromise();
+      .map(response => {
+        let group = response.json() as Group;
+        group.created_datetime = group.created_datetime.replace(' ', 'T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        return group;
+      })
+      .take(1);
+  }
+
+  getGroupId(url_segment: string): Observable<number> {
+    const url = `${this.groupsUrl}/${url_segment}/id`;
+
+    return this.http.get(url)
+      .map(response => {
+        let n = response.json() as number;
+        console.log('######' + n);
+        return +n;
+      })
+      .take(1);
   }
 
   create(group: GroupEditorElement): Observable<Group> {

@@ -38,7 +38,7 @@ export class ActivityDetailPage {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.util.pageGetReady().then(group_id => {
+    this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
       this.activityService.getActivity(this.groupId, this.id).subscribe((activity: ActivityDetailElement) => {
         this.activity = activity;

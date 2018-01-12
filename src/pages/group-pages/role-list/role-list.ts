@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, FabContainer } from 'ionic-angular';
-import { UtilService, RoleService, SharedDataService } from '../../../providers';
+import { UtilService, MemberService, RoleService, SharedDataService } from '../../../providers';
 import { RoleListElement } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
@@ -16,15 +16,17 @@ import { Observable } from 'rxjs/Observable';
 export class RoleListPage {
 
   groupId: number;
+  memberState: string;
   roles: Observable<RoleListElement[]>;
   readPermitted: boolean = false;
-  creationPermitted: boolean = false;
+  createPermitted: boolean = false;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
+    public memberService: MemberService,
     public roleService: RoleService,
     public sharedDataService: SharedDataService,
     public translate: TranslateService
@@ -32,24 +34,33 @@ export class RoleListPage {
   }
 
   ionViewDidLoad() {
-    this.util.pageGetReady().then(group_id => {
-      this.groupId = group_id;
-      this.refreshMembers();
-
-      this.util.isPermitted('CREATE', 'role', this.groupId)
-        .then(bool => this.creationPermitted = bool)
-        .catch((error: any) => {
-          console.log(error);
-        });
-    });
   }
 
   ionViewWillEnter() {
     this.translate.get('I18N_ROLES').subscribe(value => {
-      this.sharedDataService.headerDetailTitle = value;
+      this.sharedDataService.headerDetailTitle = this.sharedDataService.headerGroupTitle + ' - ' + value;
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
+
+    try {
+      this.util.getCurrentGroupId().then(group_id => {
+        this.groupId = group_id;
+        this.refreshMembers();
+
+        this.memberService.getMemberMyself(group_id).subscribe(member => {
+          this.memberState = member.member_state;
+          this.createPermitted = member.role.role.some(val => val == 'CREATE');
+          this.readPermitted = member.role.role.some(val => val == 'READ');
+        }, (err) => {
+          this.createPermitted = false;
+          this.readPermitted = false;
+        });
+      });
+    }
+    catch (err) {
+      console.log(err);
+    }
   }
 
   popNavigation() {
@@ -69,7 +80,6 @@ export class RoleListPage {
 
   refreshMembers() {
     this.roles = this.roleService.getRoles(this.groupId);
-    this.roles.subscribe(() => this.readPermitted = true);
   }
 
   onFAB(fab: FabContainer) {

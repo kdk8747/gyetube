@@ -4,8 +4,6 @@ const controller = require('./role.controller');
 
 router.get('/',
   controller.authRead, controller.getAll);
-router.get('/myself',
-  controller.checkLogin, controller.getMyself);
 router.get('/:role_id',
   controller.authRead, controller.getByID);
 

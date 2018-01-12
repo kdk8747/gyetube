@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, MemberService, ProceedingService, SharedDataService } from '../../../providers';
+import { UtilService, ProceedingService, SharedDataService } from '../../../providers';
 import { User, ProceedingDetailElement, MemberListElement } from '../../../models';
 import { Observable } from 'rxjs/Observable';
 
@@ -27,7 +27,6 @@ export class ProceedingDetailPage {
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public memberService: MemberService,
     public proceedingService: ProceedingService,
     public sharedDataService: SharedDataService
   ) {
@@ -41,17 +40,18 @@ export class ProceedingDetailPage {
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
 
-    this.util.pageGetReady().then(group_id => {
+    this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.util.getCurrentUser()
-        .then((user) => this.user = user)
-        .catch((err) => console.log(err));
       this.proceedingObs = this.proceedingService.getProceeding(this.groupId, this.id);
       this.proceedingObs.subscribe((proceeding: ProceedingDetailElement) => {
         this.proceeding = proceeding;
         this.sharedDataService.headerDetailTitle = proceeding.title;
       });
     });
+
+    this.util.getCurrentUser()
+      .then((user) => this.user = user)
+      .catch((err) => console.log(err));
   }
 
   popNavigation() {
@@ -79,7 +79,7 @@ export class ProceedingDetailPage {
         .subscribe(() => {
           this.util.getCurrentUser()
             .then(user => {
-              this.proceeding.reviewers.push(new MemberListElement(0,0,0,0,'','','',user.image_url,user.name,null));
+              this.proceeding.reviewers.push(new MemberListElement(0,0,'','','',user.image_url,user.name,null,0));
               if (this.proceeding.reviewers.length == this.proceeding.attendees.length) {
                 this.proceeding.child_decisions.map(decision => decision.document_state = 'ADDED');
                 this.proceeding.document_state = 'ADDED';

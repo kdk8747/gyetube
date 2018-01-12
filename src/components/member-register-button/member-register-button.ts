@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NavController, ToastController } from 'ionic-angular';
-import { UtilService, MemberService, RoleService, SharedDataService } from '../../providers';
+import { MemberService, SharedDataService } from '../../providers';
 import { TranslateService } from '@ngx-translate/core';
 
 
@@ -10,30 +10,22 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class MemberRegisterButtonComponent {
 
-  groupId: number;
-  youAreNotMember: boolean;
+  @Input() groupId: number;
+  @Input() memberState: string;
 
   constructor(
     public navCtrl: NavController,
-    public util: UtilService,
     public memberService: MemberService,
-    public roleService: RoleService,
     public sharedDataService: SharedDataService,
     public toastCtrl: ToastController,
     public translate: TranslateService
   ) {
-    this.util.pageGetReady().then(group_id => {
-      this.groupId = group_id;
-      this.roleService.getRoleMyself(group_id).subscribe((role) => {
-        this.youAreNotMember = role.role_id == null;
-      });
-    });
   }
 
-  navigateToMemberRegister() {
+  memberRegister() {
     if (this.sharedDataService.loggedIn) {
       this.memberService.registerMember(this.groupId).subscribe(() => {
-        this.youAreNotMember = false;
+        this.memberState = 'JOIN_REQUESTED';
         this.translate.get('I18N_JOIN_TOAST').subscribe(
           (value) => {
             let toast = this.toastCtrl.create({
@@ -45,5 +37,9 @@ export class MemberRegisterButtonComponent {
       });
     } else
       this.navCtrl.push('LoginPage');
+  }
+
+  memberRegisterInfo() {
+    ;
   }
 }

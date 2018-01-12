@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
-import { MemberListElement, MemberDetailElement, MemberEditorElement } from '../models';
+import { MemberListElement, MemberMyselfElement, MemberDetailElement, MemberEditorElement } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -52,6 +52,13 @@ export class MemberService {
         member.modified_datetime = member.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
         return member;
       })
+      .take(1);
+  }
+
+  getMemberMyself(group_id: number): Observable<MemberMyselfElement> {
+    const url = `${this.membersUrl}/${group_id}/members/myself`;
+    return this.http.get(url)
+      .map(response => response.json() as MemberMyselfElement)
       .take(1);
   }
 

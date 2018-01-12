@@ -107,53 +107,6 @@ exports.getAll = async (req, res) => {
   }
 }
 
-exports.getMyself = async (req, res) => {
-  try {
-    let role = await db.execute(
-      'SELECT R.role_id, R.decision_id, R.creator_id, R.modified_datetime, R.name,\
-      get_state(R.document_state) AS document_state,\
-      bit_or(R.home) AS home,\
-      bit_or(R.member) AS member,\
-      bit_or(R.role) AS role,\
-      bit_or(R.proceeding) AS proceeding,\
-      bit_or(R.decision) AS decision,\
-      bit_or(R.activity) AS activity,\
-      bit_or(R.receipt) AS receipt\
-      FROM member M\
-      LEFT JOIN member_role MR ON MR.group_id=M.group_id AND MR.member_id=M.member_id\
-      LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
-      WHERE M.group_id=? and M.user_id=unhex(?)', [req.permissions.group_id, req.decoded.user_id]);
-
-    let parent_decision = await db.execute(
-      'SELECT *, get_state(document_state) AS document_state\
-        FROM decision\
-        WHERE group_id=? AND decision_id=?', [req.permissions.group_id, role[0][0].decision_id]);
-    role[0][0].parent_decision = parent_decision[0][0];
-
-    let creator = await db.execute(
-      'SELECT *\
-      FROM member\
-      WHERE group_id=? AND member_id=?', [req.permissions.group_id, role[0][0].creator_id]);
-    role[0][0].creator = creator[0][0];
-
-    role[0][0].home = bitToStringArray(role[0][0].home);
-    role[0][0].member = bitToStringArray(role[0][0].member);
-    role[0][0].role = bitToStringArray(role[0][0].role);
-    role[0][0].proceeding = bitToStringArray(role[0][0].proceeding);
-    role[0][0].decision = bitToStringArray(role[0][0].decision);
-    role[0][0].activity = bitToStringArray(role[0][0].activity);
-    role[0][0].receipt = bitToStringArray(role[0][0].receipt);
-
-    res.send(role[0][0]);
-  }
-  catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err
-    });
-  }
-}
-
 exports.getByID = async (req, res) => {
   try {
     let role = await db.execute(

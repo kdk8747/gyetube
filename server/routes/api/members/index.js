@@ -4,6 +4,8 @@ const controller = require('./member.controller');
 
 router.get('/',
   controller.authRead, controller.getAll);
+router.get('/myself',
+  controller.checkLogin, controller.getMyself);
 router.get('/:member_id',
   controller.authRead, controller.getByID);
 router.get('/:member_id/logs/:member_log_id',
