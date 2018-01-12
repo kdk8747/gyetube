@@ -21,7 +21,8 @@ const __port = process.env.PORT || 5000;
     EXPRESS CONFIGURATION
 ==========================*/
 const app = express();
-
+const oneHour = 3600000;    // 3600000msec == 1hour
+app.use(express.static('www', { maxAge: oneHour })); // Client-side file caching
 
 // parse JSON and url-encoded query
 app.use(bodyParser.urlencoded({ extended: true }));

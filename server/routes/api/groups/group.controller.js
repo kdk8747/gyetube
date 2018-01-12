@@ -56,6 +56,7 @@ exports.getID = async (req, res) => {
       FROM `group`\
       WHERE url_segment=?', [req.params.url_segment]);
 
+    res.setHeader('Cache-Control', 'public, max-age=31557600');
     res.send(group[0][0]);
   }
   catch (err) {
