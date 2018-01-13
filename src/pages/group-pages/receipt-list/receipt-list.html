@@ -1,19 +1,19 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-  <span *ngIf="!readPermitted">
-    <p>{{'I18N_ACCESS_DENIED' | translate}}</p>
-    <gyetube-member-register-button [groupId]="groupId" [memberState]="memberState"></gyetube-member-register-button>
+  <span *ngIf="!sharedDataService.receiptReadPermitted">
+    <p text-center>{{'I18N_ACCESS_DENIED' | translate}}</p>
+    <gyetube-member-register-button></gyetube-member-register-button>
   </span>
-  <span *ngIf="readPermitted && (receipts | async)?.length == 0">
-    <p>{{'I18N_EMPTY_LIST' | translate}}</p>
+  <span *ngIf="sharedDataService.receiptReadPermitted && receipts.length == 0">
+    <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
   </span>
 
   <ion-row>
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-item tappable *ngFor="let receipt of receipts | async" (tap)="navigateToDetail(receipt.receipt_id)">
+      <ion-item tappable *ngFor="let receipt of receipts" (tap)="navigateToDetail(receipt.receipt_id)">
           <ion-row>
             <p>{{receipt.title}}</p>
           </ion-row>
@@ -34,7 +34,7 @@
     </ion-col>
   </ion-row>
 
-  <ion-fab right middle *ngIf="createPermitted">
+  <ion-fab right middle *ngIf="sharedDataService.receiptCreatePermitted">
     <button ion-fab (tap)="navigateToEditor()">
       <ion-icon name="add"></ion-icon>
     </button>

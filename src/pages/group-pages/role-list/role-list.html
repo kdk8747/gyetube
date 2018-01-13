@@ -11,14 +11,17 @@
       <ion-buttons>{{ 'I18N_ROLES' | translate}}</ion-buttons>
     </ion-toolbar>
 
-    <span *ngIf="!readPermitted">
-      <p>{{'I18N_ACCESS_DENIED' | translate}}</p>
-      <gyetube-member-register-button [groupId]="groupId" [memberState]="memberState"></gyetube-member-register-button>
+    <span *ngIf="!sharedDataService.roleReadPermitted">
+      <p text-center>{{'I18N_ACCESS_DENIED' | translate}}</p>
+      <gyetube-member-register-button></gyetube-member-register-button>
+    </span>
+    <span *ngIf="sharedDataService.roleReadPermitted && roles.length == 0">
+      <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
     </span>
 
     <ion-grid fixed>
       <ion-row>
-        <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let role of roles | async">
+        <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let role of roles">
           <ion-item tappable (tap)="navigateToDetail(role.role_id)">
             <ion-row>
               <p *ngIf="role.document_state != 'PREDEFINED'">{{role.name}}</p>
@@ -54,12 +57,12 @@
     </ion-grid>
   </ion-col>
 
-  <ion-fab right middle *ngIf="createPermitted">
+  <ion-fab right middle *ngIf="sharedDataService.roleCreatePermitted">
     <button ion-fab (tap)="navigateToEditor()">
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
-  <ion-fab right bottom *ngIf="readPermitted" #fab>
+  <ion-fab right bottom *ngIf="sharedDataService.roleReadPermitted" #fab>
     <button ion-fab>
       <ion-icon name="eye"></ion-icon>
     </button>

@@ -1,19 +1,19 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-  <span *ngIf="!readPermitted">
-    <p>{{'I18N_ACCESS_DENIED' | translate}}</p>
-    <gyetube-member-register-button [groupId]="groupId" [memberState]="memberState"></gyetube-member-register-button>
+  <span *ngIf="!sharedDataService.decisionReadPermitted">
+    <p text-center>{{'I18N_ACCESS_DENIED' | translate}}</p>
+    <gyetube-member-register-button></gyetube-member-register-button>
   </span>
-  <span *ngIf="readPermitted && (decisions | async)?.length == 0">
-    <p>{{'I18N_EMPTY_LIST' | translate}}</p>
+  <span *ngIf="sharedDataService.decisionReadPermitted && decisions.length == 0">
+    <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
   </span>
 
   <ion-row *ngIf="sharedDataService.decisionListTimelineMode">
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-item tappable *ngFor="let decision of decisions | async" (tap)="navigateToDetail(decision.decision_id)">
+      <ion-item tappable *ngFor="let decision of decisions" (tap)="navigateToDetail(decision.decision_id)">
           <ion-row>
             <p>{{ 'I18N_' + decision.document_state | translate}} - {{ decision.title }}</p>
           </ion-row>
@@ -50,7 +50,7 @@
 
   <ion-grid fixed *ngIf="!sharedDataService.decisionListTimelineMode">
     <ion-row>
-      <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let decision of decisions | async">
+      <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let decision of decisions">
         <ion-item tappable (tap)="navigateToDetail(decision.decision_id)">
             <ion-row>
               <p>{{decision.title}}</p>
@@ -85,7 +85,7 @@
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
-  <ion-fab right middle *ngIf="!sharedDataService.decisionEditMode && readPermitted" #fab>
+  <ion-fab right middle *ngIf="!sharedDataService.decisionEditMode && sharedDataService.decisionReadPermitted" #fab>
     <button ion-fab>
       <ion-icon name="eye"></ion-icon>
     </button>

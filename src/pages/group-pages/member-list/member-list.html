@@ -11,14 +11,17 @@
       <ion-buttons>{{ 'I18N_MEMBERS' | translate}}</ion-buttons>
     </ion-toolbar>
 
-    <span *ngIf="!readPermitted">
-      <p>{{'I18N_ACCESS_DENIED' | translate}}</p>
-      <gyetube-member-register-button [groupId]="groupId" [memberState]="memberState"></gyetube-member-register-button>
+    <span *ngIf="!sharedDataService.memberReadPermitted">
+      <p text-center>{{'I18N_ACCESS_DENIED' | translate}}</p>
+      <gyetube-member-register-button></gyetube-member-register-button>
+    </span>
+    <span *ngIf="sharedDataService.roleReadPermitted && members.length == 0">
+      <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
     </span>
 
     <ion-grid fixed>
       <ion-row>
-        <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let member of members | async">
+        <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let member of members">
           <ion-item tappable (tap)="navigateToDetail(member.member_id, member.member_log_id)">
             <ion-toolbar *ngIf="member.member_state == 'JOIN_REQUESTED'">
               {{'I18N_JOIN_REQUESTED' | translate}}<br>
@@ -41,12 +44,12 @@
     </ion-grid>
   </ion-col>
 
-  <ion-fab right middle *ngIf="createPermitted">
+  <ion-fab right middle *ngIf="sharedDataService.memberCreatePermitted">
     <button ion-fab (tap)="navigateToEditor()">
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>
-  <ion-fab right bottom *ngIf="readPermitted" #fab>
+  <ion-fab right bottom *ngIf="sharedDataService.memberReadPermitted" #fab>
     <button notification-button ion-fab>
       <ion-icon name="eye"></ion-icon>
       <!--<ion-badge notifications-badge color="danger">5</ion-badge>-->

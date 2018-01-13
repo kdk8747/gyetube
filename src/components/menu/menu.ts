@@ -51,6 +51,10 @@ export class MenuComponent {
     this.event.publish('App_ShowHeader');
     this.storage.clear()
       .then(() => {
+        this.sharedDataService.loggedInUser = null;
+        this.sharedDataService.loggedIn = false;
+        this.event.publish('TabsGroup_Refresh');
+
         this.translate.get('I18N_SIGN_OUT_TOAST').subscribe(
           (value) => {
             let toast = this.toastCtrl.create({
@@ -58,8 +62,6 @@ export class MenuComponent {
               message: value
             });
             toast.present();
-            this.sharedDataService.loggedInUser = null;
-            this.sharedDataService.loggedIn = false;
           });
       });
   }

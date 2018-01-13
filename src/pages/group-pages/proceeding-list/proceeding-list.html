@@ -1,19 +1,19 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-  <span *ngIf="!readPermitted">
-    <p>{{'I18N_ACCESS_DENIED' | translate}}</p>
-    <gyetube-member-register-button [groupId]="groupId" [memberState]="memberState"></gyetube-member-register-button>
+  <span *ngIf="!this.sharedDataService.proceedingReadPermitted">
+    <p text-center>{{'I18N_ACCESS_DENIED' | translate}}</p>
+    <gyetube-member-register-button></gyetube-member-register-button>
   </span>
-  <span *ngIf="readPermitted && (proceedings | async)?.length == 0">
-    <p>{{'I18N_EMPTY_LIST' | translate}}</p>
+  <span *ngIf="this.sharedDataService.proceedingReadPermitted && proceedings.length == 0">
+    <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
   </span>
 
   <ion-row>
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-item tappable *ngFor="let proceeding of proceedings | async" (tap)="navigateToDetail(proceeding.proceeding_id)">
+      <ion-item tappable *ngFor="let proceeding of proceedings" (tap)="navigateToDetail(proceeding.proceeding_id)">
         <ion-toolbar *ngIf="proceeding.document_state == 'PENDING_ADDS'">
           {{'I18N_PENDING_ADDS' | translate}}<br>
           <span *ngIf="proceeding.need_my_review">
@@ -39,7 +39,7 @@
     </ion-col>
   </ion-row>
 
-  <ion-fab right middle *ngIf="createPermitted">
+  <ion-fab right middle *ngIf="this.sharedDataService.proceedingCreatePermitted">
     <button ion-fab (tap)="navigateToEditor()">
       <ion-icon name="add"></ion-icon>
     </button>

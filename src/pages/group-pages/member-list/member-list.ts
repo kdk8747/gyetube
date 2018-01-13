@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams, Events, FabContainer } from 'ionic
 import { UtilService, MemberService, SharedDataService } from '../../../providers';
 import { MemberListElement } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
 
 
 enum MemberListState {
@@ -23,11 +22,7 @@ export class MemberListPage {
   enum = MemberListState;
   memberListState: MemberListState = MemberListState.STATE_NORMAL;
 
-  groupId: number;
-  memberState: string;
-  members: Observable<MemberListElement[]>;
-  readPermitted: boolean = false;
-  createPermitted: boolean = false;
+  members: MemberListElement[] = [];
 
   constructor(
     public navCtrl: NavController,
@@ -41,6 +36,15 @@ export class MemberListPage {
   }
 
   ionViewDidLoad() {
+    this.refreshMembers();
+
+    this.event.subscribe('MemberList_Refresh', () => {
+      this.refreshMembers();
+    });
+  }
+
+  ionViewWillUnload() {
+    this.event.unsubscribe('MemberList_Refresh');
   }
 
   ionViewWillEnter() {
@@ -49,25 +53,6 @@ export class MemberListPage {
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-
-    try {
-      this.util.getCurrentGroupId().then(group_id => {
-        this.groupId = group_id;
-        this.refreshMembers();
-
-        this.memberService.getMemberMyself(group_id).subscribe(member => {
-          this.memberState = member.member_state;
-          this.createPermitted = member.role.member.some(val => val == 'CREATE');
-          this.readPermitted = member.role.member.some(val => val == 'READ');
-        }, (err) => {
-          this.createPermitted = false;
-          this.readPermitted = false;
-        });
-      });
-    }
-    catch (err) {
-      console.log(err);
-    }
   }
 
   popNavigation() {
@@ -93,19 +78,16 @@ export class MemberListPage {
   }
 
   refreshMembers() {
-    this.members = this.memberService.getMembers(this.groupId)
-      .map((members: MemberListElement[]) => {
-        switch (this.memberListState) {
-          case MemberListState.STATE_NORMAL:
-            return this.sortByDate(members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED')));
-          case MemberListState.STATE_DELETED:
-            return this.sortByDate(members.filter(member => (member.member_state == 'DELETED' || member.member_state == 'JOIN_REJECTED')));
-          case MemberListState.STATE_PENDING:
-            return this.sortByDate(members.filter(member => (member.member_state == 'JOIN_REQUESTED')));
-          default:
-            return this.sortByDate(members);
-        }
-      });
+    switch (this.memberListState) {
+      case MemberListState.STATE_NORMAL:
+        this.members = this.sortByDate(this.sharedDataService.members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED')));
+      case MemberListState.STATE_DELETED:
+        this.members = this.sortByDate(this.sharedDataService.members.filter(member => (member.member_state == 'DELETED' || member.member_state == 'JOIN_REJECTED')));
+      case MemberListState.STATE_PENDING:
+        this.members = this.sortByDate(this.sharedDataService.members.filter(member => (member.member_state == 'JOIN_REQUESTED')));
+      default:
+        this.members = this.sortByDate(this.sharedDataService.members);
+    }
   }
 
   onFAB(fab: FabContainer) {

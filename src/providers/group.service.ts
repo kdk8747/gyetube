@@ -58,11 +58,7 @@ export class GroupService {
     const url = `${this.groupsUrl}/${url_segment}/id`;
 
     return this.http.get(url)
-      .map(response => {
-        let n = response.json() as number;
-        console.log('######' + n);
-        return +n;
-      })
+      .map(response => response.json() as number)
       .take(1);
   }
 

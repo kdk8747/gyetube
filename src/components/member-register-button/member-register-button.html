@@ -1,2 +1,8 @@
-<button ion-button *ngIf="memberState == 'UNKNOWN_STATE'" (tap)="memberRegister()">{{ 'I18N_JOIN' | translate }}</button>
-<button ion-button *ngIf="memberState == 'JOIN_REQUESTED'" (tap)="memberRegisterInfo()">{{ 'I18N_JOIN_REQUESTED' | translate }}</button>
+<p text-center>
+  <button ion-button *ngIf="sharedDataService.myselfState == null || sharedDataService.myselfState == 'UNKNOWN_STATE'" (tap)="memberRegister()">{{ 'I18N_JOIN' | translate }}
+  </button>
+</p>
+<p text-center>
+  <button ion-button *ngIf="sharedDataService.myselfState == 'JOIN_REQUESTED'" (tap)="memberRegisterInfo()">{{ 'I18N_JOIN_REQUESTED' | translate }}
+  </button>
+</p>

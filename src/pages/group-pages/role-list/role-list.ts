@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, FabContainer } from 'ionic-angular';
-import { UtilService, MemberService, RoleService, SharedDataService } from '../../../providers';
+import { UtilService, RoleService, SharedDataService } from '../../../providers';
 import { RoleListElement } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
@@ -15,18 +14,13 @@ import { Observable } from 'rxjs/Observable';
 })
 export class RoleListPage {
 
-  groupId: number;
-  memberState: string;
-  roles: Observable<RoleListElement[]>;
-  readPermitted: boolean = false;
-  createPermitted: boolean = false;
+  roles: RoleListElement[] = [];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public memberService: MemberService,
     public roleService: RoleService,
     public sharedDataService: SharedDataService,
     public translate: TranslateService
@@ -34,6 +28,15 @@ export class RoleListPage {
   }
 
   ionViewDidLoad() {
+    this.refreshRoles();
+
+    this.event.subscribe('RoleList_Refresh', () => {
+      this.refreshRoles();
+    });
+  }
+
+  ionViewWillUnload() {
+    this.event.unsubscribe('RoleList_Refresh');
   }
 
   ionViewWillEnter() {
@@ -42,25 +45,6 @@ export class RoleListPage {
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-
-    try {
-      this.util.getCurrentGroupId().then(group_id => {
-        this.groupId = group_id;
-        this.refreshMembers();
-
-        this.memberService.getMemberMyself(group_id).subscribe(member => {
-          this.memberState = member.member_state;
-          this.createPermitted = member.role.role.some(val => val == 'CREATE');
-          this.readPermitted = member.role.role.some(val => val == 'READ');
-        }, (err) => {
-          this.createPermitted = false;
-          this.readPermitted = false;
-        });
-      });
-    }
-    catch (err) {
-      console.log(err);
-    }
   }
 
   popNavigation() {
@@ -78,13 +62,16 @@ export class RoleListPage {
     this.navCtrl.push('RoleEditorPage');
   }
 
-  refreshMembers() {
-    this.roles = this.roleService.getRoles(this.groupId);
+  refreshRoles() {
+    if (this.sharedDataService.deletedRoleListMode)
+      this.roles = this.sharedDataService.roles.filter(role => (role.document_state == 'DELETED'));
+    else
+      this.roles = this.sharedDataService.roles.filter(role => (role.document_state == 'ADDED' || role.document_state == 'UPDATED' || role.document_state == 'PREDEFINED'));
   }
 
   onFAB(fab: FabContainer) {
     fab.close();
-    this.refreshMembers();
+    this.refreshRoles();
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, ToastController } from 'ionic-angular';
 import { MemberService, SharedDataService } from '../../providers';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,9 +10,6 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class MemberRegisterButtonComponent {
 
-  @Input() groupId: number;
-  @Input() memberState: string;
-
   constructor(
     public navCtrl: NavController,
     public memberService: MemberService,
@@ -23,9 +20,9 @@ export class MemberRegisterButtonComponent {
   }
 
   memberRegister() {
-    if (this.sharedDataService.loggedIn) {
-      this.memberService.registerMember(this.groupId).subscribe(() => {
-        this.memberState = 'JOIN_REQUESTED';
+    if (this.sharedDataService.loggedIn && this.sharedDataService.group) {
+      this.memberService.registerMember(this.sharedDataService.group.group_id).subscribe(() => {
+        this.sharedDataService.myselfState = 'JOIN_REQUESTED';
         this.translate.get('I18N_JOIN_TOAST').subscribe(
           (value) => {
             let toast = this.toastCtrl.create({

@@ -1,5 +1,6 @@
 import { Component, ElementRef, Renderer } from '@angular/core';
 import { IonicPage, NavController, LoadingController, Events, ViewController, Nav } from 'ionic-angular';
+import { UtilService, MemberService, RoleService, ProceedingService, DecisionService, ActivityService, ReceiptService, SharedDataService } from '../../../providers';
 
 
 @IonicPage({
@@ -23,11 +24,63 @@ export class TabsGroupPage {
     public renderer: Renderer,
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
-    public event: Events
+    public event: Events,
+    public util: UtilService,
+    public memberService: MemberService,
+    public roleService: RoleService,
+    public proceedingService: ProceedingService,
+    public decisionService: DecisionService,
+    public activityService: ActivityService,
+    public receiptService: ReceiptService,
+    public sharedDataService: SharedDataService
   ) {
   }
 
+  ionViewWillEnter() {
+    this.event.publish('TabsGroup_Refresh');
+  }
+
   ionViewDidLoad() {
+    this.event.subscribe('TabsGroup_Refresh', (obj) => {
+      this.util.getCurrentGroup().then(group => {
+        this.sharedDataService.group = group;
+        this.sharedDataService.headerGroupTitle = group.title;
+
+        this.memberService.getMembers(group.group_id).subscribe(roles => { this.sharedDataService.members = roles; this.event.publish('MemberList_Refresh'); });
+        this.roleService.getRoles(group.group_id).subscribe(roles => { this.sharedDataService.roles = roles; this.event.publish('RoleList_Refresh'); });
+        this.proceedingService.getProceedings(group.group_id).subscribe(roles => { this.sharedDataService.proceedings = roles; this.event.publish('ProceedingList_Refresh'); });
+        this.decisionService.getDecisions(group.group_id).subscribe(roles => { this.sharedDataService.decisions = roles; this.event.publish('DecisionList_Refresh'); });
+        this.activityService.getActivities(group.group_id).subscribe(roles => { this.sharedDataService.activities = roles; this.event.publish('ActivityList_Refresh'); });
+        this.receiptService.getReceipts(group.group_id).subscribe(receipts => { this.sharedDataService.receipts = receipts; this.event.publish('ReceiptList_Refresh'); });
+        this.memberService.getMemberMyself(group.group_id).subscribe(member => {
+          this.sharedDataService.myselfState = member.member_state;
+          this.sharedDataService.memberCreatePermitted = member.role.member.some(val => val == 'CREATE');
+          this.sharedDataService.memberReadPermitted = member.role.member.some(val => val == 'READ');
+          this.sharedDataService.roleCreatePermitted = member.role.role.some(val => val == 'CREATE');
+          this.sharedDataService.roleReadPermitted = member.role.role.some(val => val == 'READ');
+          this.sharedDataService.proceedingCreatePermitted = member.role.proceeding.some(val => val == 'CREATE');
+          this.sharedDataService.proceedingReadPermitted = member.role.proceeding.some(val => val == 'READ');
+          this.sharedDataService.decisionReadPermitted = member.role.decision.some(val => val == 'READ');
+          this.sharedDataService.activityCreatePermitted = member.role.activity.some(val => val == 'CREATE');
+          this.sharedDataService.activityReadPermitted = member.role.activity.some(val => val == 'READ');
+          this.sharedDataService.receiptCreatePermitted = member.role.receipt.some(val => val == 'CREATE');
+          this.sharedDataService.receiptReadPermitted = member.role.receipt.some(val => val == 'READ');
+        }, (err) => {
+          this.sharedDataService.myselfState = null;
+          this.sharedDataService.memberCreatePermitted = false;
+          this.sharedDataService.memberReadPermitted = false;
+          this.sharedDataService.roleCreatePermitted = false;
+          this.sharedDataService.roleReadPermitted = false;
+          this.sharedDataService.proceedingCreatePermitted = false;
+          this.sharedDataService.proceedingReadPermitted = false;
+          this.sharedDataService.decisionReadPermitted = false;
+          this.sharedDataService.activityCreatePermitted = false;
+          this.sharedDataService.activityReadPermitted = false;
+          this.sharedDataService.receiptCreatePermitted = false;
+          this.sharedDataService.receiptReadPermitted = false;
+        });
+      });
+    });
 
     this.event.subscribe('TabsGroup_HideTab', (obj) => {
       this.renderer.setElementStyle(this.element.nativeElement.children[0].children[0], 'opacity', '0');
@@ -65,6 +118,7 @@ export class TabsGroupPage {
   }
 
   ionViewWillUnload() {
+    this.event.unsubscribe('TabsGroup_Refresh');
     this.event.unsubscribe('TabsGroup_HideTab');
     this.event.unsubscribe('TabsGroup_ShowTab');
     this.event.unsubscribe('TabsGroup_MemberDetail');

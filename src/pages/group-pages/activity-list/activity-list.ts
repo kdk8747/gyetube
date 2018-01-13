@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
-import { UtilService, MemberService, ActivityService, SharedDataService } from '../../../providers';
+import { IonicPage, NavController, Events } from 'ionic-angular';
+import { UtilService, ActivityService, SharedDataService } from '../../../providers';
 import { ActivityListElement } from '../../../models';
-import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
   segment: 'activity-list'
@@ -13,51 +12,33 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ActivityListPage {
 
-  groupId: number;
-  memberState: string;
-  activities: Observable<ActivityListElement[]>;
-  createPermitted: boolean = false;
-  readPermitted: boolean = true;
+  activities: ActivityListElement[] = [];
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
     public util: UtilService,
     public event: Events,
-    public memberService: MemberService,
     public activityService: ActivityService,
     public sharedDataService: SharedDataService
   ) {
   }
 
   ionViewDidLoad() {
+    this.refreshActivities();
+
+    this.event.subscribe('ActivityList_Refresh', () => {
+      this.refreshActivities();
+    });
+  }
+
+  ionViewWillUnload() {
+    this.event.unsubscribe('ActivityList_Refresh');
   }
 
   ionViewWillEnter() {
     this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-
-    try {
-      this.util.getCurrentGroup().then(group => {
-        this.groupId = group.group_id;
-        this.sharedDataService.headerGroupTitle = group.title;
-
-        this.memberService.getMemberMyself(group.group_id).subscribe(member => {
-          this.memberState = member.member_state;
-          this.createPermitted = member.role.activity.some(val => val == 'CREATE');
-          this.readPermitted = member.role.activity.some(val => val == 'READ');
-        }, (err) => {
-          this.createPermitted = false;
-          this.readPermitted = false;
-        });
-        this.activities = this.activityService.getActivities(this.groupId)
-          .map((activities: ActivityListElement[]) => this.sortByDateA(activities));
-      });
-    }
-    catch (err) {
-      console.log(err);
-    }
   }
 
   navigateToDetail(activity_id: number) {
@@ -66,6 +47,10 @@ export class ActivityListPage {
 
   navigateToEditor() {
     this.navCtrl.push('ActivityEditorPage');
+  }
+
+  refreshActivities() {
+    this.activities = this.sortByDateA(this.sharedDataService.activities);
   }
 
   sortByDateA(activities: ActivityListElement[]): ActivityListElement[] {

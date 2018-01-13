@@ -97,6 +97,7 @@ export class LoginPage {
             });
             toast.present();
             this.event.publish('App_ShowAvatarToHeader');
+            this.event.publish('TabsGroup_Refresh');
             this.popNavigation();
           });
       });

@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, FabContainer } from 'ionic-angular';
-import { UtilService, MemberService, DecisionService, SharedDataService } from '../../../providers';
+import { IonicPage, NavController, Events, FabContainer } from 'ionic-angular';
+import { UtilService, DecisionService, SharedDataService } from '../../../providers';
 import { DecisionListElement } from '../../../models';
-import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
@@ -14,54 +13,33 @@ import { Observable } from 'rxjs/Observable';
 })
 export class DecisionListPage {
 
-  groupId: number;
-  memberState: string;
-  decisions: Observable<DecisionListElement[]>;
-  readPermitted: boolean = true;
+  decisions: DecisionListElement[] = [];
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
     public event: Events,
     public util: UtilService,
-    public memberService: MemberService,
     public decisionService: DecisionService,
     public sharedDataService: SharedDataService
   ) {
   }
 
   ionViewDidLoad() {
+    this.refreshDecisions();
+
     this.event.subscribe('DecisionList_Refresh', () => {
       this.refreshDecisions();
     });
+  }
+
+  ionViewWillUnload() {
+    this.event.unsubscribe('DecisionList_Refresh');
   }
 
   ionViewWillEnter() {
     this.sharedDataService.headerDetailTitle = null;
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-
-    try {
-      this.util.getCurrentGroup().then(group => {
-        this.groupId = group.group_id;
-        this.sharedDataService.headerGroupTitle = group.title;
-
-        this.memberService.getMemberMyself(group.group_id).subscribe(member => {
-          this.memberState = member.member_state;
-          this.readPermitted = member.role.decision.some(val => val == 'READ');
-        }, (err) => {
-          this.readPermitted = false;
-        });
-        this.refreshDecisions();
-      });
-
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  ionViewWillUnload() {
-    this.event.unsubscribe('DecisionList_Refresh');
   }
 
   navigateToDetail(decisionId: number) {
@@ -92,18 +70,11 @@ export class DecisionListPage {
     );
   }
 
-  filterDeletedDecisions(decisions: DecisionListElement[]): DecisionListElement[] {
-    return decisions.filter(decision =>
-      (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED')
-    );
-  }
-
   refreshDecisions() {
-    this.decisions = this.decisionService.getDecisions(this.groupId)
-      .map((decisions: DecisionListElement[]) =>
+    this.decisions =
         this.sharedDataService.decisionListTimelineMode ?
-          this.sortByDate(decisions) :
-          this.sortByDate(this.filterPastDecisions(decisions)));
+          this.sortByDate(this.sharedDataService.decisions) :
+          this.sortByDate(this.filterPastDecisions(this.sharedDataService.decisions));
   }
 
   onFAB(fab: FabContainer) {
