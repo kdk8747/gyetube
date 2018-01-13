@@ -28,7 +28,7 @@
           <ion-item>
             <ion-select formControlName="roles" multiple="true" [selectOptions]="{title: ('I18N_ROLES' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!form.controls.roles.valid && (form.controls.roles.dirty || submitAttempt)">
-              <ion-option *ngFor="let role of roles | async" [value]="role.role_id">
+              <ion-option *ngFor="let role of roles" [value]="role.role_id">
                 <p *ngIf="role.document_state != 'PREDEFINED'">{{role.name}}</p>
                 <p *ngIf="role.document_state == 'PREDEFINED'">{{ 'I18N_' + role.name | translate }}</p>
               </ion-option>
@@ -41,7 +41,7 @@
           <ion-item>
             <ion-select formControlName="parentDecision" [selectOptions]="{title: ('I18N_RELATED_DECISION' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}"
               [class.invalid]="!form.controls.parentDecision.valid && (form.controls.parentDecision.dirty || submitAttempt)">
-              <ion-option *ngFor="let decision of decisions | async" [value]="decision.decision_id">{{decision.title}}</ion-option>
+              <ion-option *ngFor="let decision of decisions" [value]="decision.decision_id">{{decision.title}}</ion-option>
             </ion-select>
           </ion-item>
 

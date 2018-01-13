@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, ProceedingService, SharedDataService } from '../../../providers';
-import { User, ProceedingDetailElement, MemberListElement } from '../../../models';
-import { Observable } from 'rxjs/Observable';
+import { ProceedingDetailElement, MemberListElement } from '../../../models';
 
 
 @IonicPage({
@@ -17,10 +16,8 @@ export class ProceedingDetailPage {
   verifiedGood: boolean = true;
 
   groupId: number;
-  user: User;
   id: number;
-  proceeding: ProceedingDetailElement = null;
-  proceedingObs: Observable<ProceedingDetailElement>;
+  proceeding: ProceedingDetailElement;
 
   constructor(
     public navCtrl: NavController,
@@ -42,16 +39,11 @@ export class ProceedingDetailPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.proceedingObs = this.proceedingService.getProceeding(this.groupId, this.id);
-      this.proceedingObs.subscribe((proceeding: ProceedingDetailElement) => {
+      this.proceedingService.getProceeding(this.groupId, this.id).subscribe((proceeding: ProceedingDetailElement) => {
         this.proceeding = proceeding;
         this.sharedDataService.headerDetailTitle = proceeding.title;
       });
     });
-
-    this.util.getCurrentUser()
-      .then((user) => this.user = user)
-      .catch((err) => console.log(err));
   }
 
   popNavigation() {
@@ -75,20 +67,32 @@ export class ProceedingDetailPage {
 
   onSubmit() {
     if (this.verifiedGood) {
-      this.proceedingService.update(this.groupId, this.proceeding.proceeding_id)
-        .subscribe(() => {
-          this.util.getCurrentUser()
-            .then(user => {
-              this.proceeding.reviewers.push(new MemberListElement(0,0,'','','',user.image_url,user.name,null,0));
-              if (this.proceeding.reviewers.length == this.proceeding.attendees.length) {
-                this.proceeding.child_decisions.map(decision => decision.document_state = 'ADDED');
-                this.proceeding.document_state = 'ADDED';
-              }
-            });
-          this.proceeding.need_my_review = 0;
-          this.event.publish('App_ShowHeader');
-          this.event.publish('TabsGroup_ShowTab');
-        });
+      this.proceedingService.update(this.groupId, this.proceeding.proceeding_id).subscribe(() => {
+
+        /* Update Local ProceedingDetailElement */
+        this.proceeding.reviewers.push(
+          new MemberListElement(
+            this.sharedDataService.myselfMemberId,
+            this.sharedDataService.myselfMemberLogId, '', '',
+            this.sharedDataService.loggedInUser.image_url,
+            this.sharedDataService.loggedInUser.name,
+            null, 0));
+        if (this.proceeding.reviewers.length == this.proceeding.attendees.length) {
+          this.proceeding.child_decisions.map(decision => decision.document_state = 'ADDED');
+          this.proceeding.document_state = 'ADDED';
+        }
+        this.proceeding.need_my_review = 0;
+
+        /* Update Local ProceedingListElement */
+        let target = this.sharedDataService.proceedings.find(proceeding => proceeding.proceeding_id == this.proceeding.proceeding_id);
+        target.reviewers_count ++;
+        if (target.reviewers_count == target.attendees_count)
+          target.document_state = 'ADDED';
+        target.need_my_review = 0;
+
+        this.event.publish('App_ShowHeader');
+        this.event.publish('TabsGroup_ShowTab');
+      });
     }
     else {
       this.navCtrl.push('ProceedingEditorPage', { id: this.id });

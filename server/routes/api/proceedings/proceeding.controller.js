@@ -198,14 +198,12 @@ exports.updateByID = async (req, res) => {
 }
 
 exports.insertProceeding = async (conn, proceeding) => {
-  let proceeding_new_id = await conn.query('SELECT GET_SEQ(?,"proceeding") AS new_id', [proceeding.group_id]);
-  proceeding.proceeding_id = proceeding_new_id[0][0].new_id;
 
   await conn.query(
     'INSERT INTO proceeding\
     VALUES(?,?,?,0,?,?,?,?,?)', [
       proceeding.group_id,
-      proceeding_new_id[0][0].new_id,
+      proceeding.proceeding_id,
       proceeding.prev_id,
       proceeding.document_state,
       new Date().toISOString().substring(0, 19).replace('T', ' '),
@@ -252,15 +250,21 @@ exports.create = async (req, res) => {
     if (!req.body.meeting_datetime) throw 'Invalid meeting_datetime';
     if (!(req.body.attendee_ids.length > 1)) throw 'Need at least two attendees';
 
+    let proceeding_new_id = await conn.query('SELECT GET_SEQ(?,"proceeding") AS new_id', [req.permissions.group_id]);
+
     let proceeding = req.body;
     proceeding.group_id = req.permissions.group_id;
+    proceeding.proceeding_id = proceeding_new_id[0][0].new_id;
     proceeding.document_state = 0; /* PENDING_ADDS */
     await module.exports.insertProceeding(conn, proceeding);
 
     await conn.commit();
     conn.release();
 
-    res.send();
+    res.send({
+      proceeding_id: proceeding_new_id[0][0].new_id,
+      document_state: "PENDING_ADDS"
+    });
   }
   catch (err) {
     if (!conn.connection._fatalError) {

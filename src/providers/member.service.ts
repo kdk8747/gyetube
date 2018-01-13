@@ -84,11 +84,15 @@ export class MemberService {
       .take(1);
   }
 
-  create(group_id: number, member: MemberEditorElement): Observable<void> {
+  create(group_id: number, member: MemberEditorElement): Observable<MemberListElement> {
     const url = `${this.membersUrl}/${group_id}/members`;
     return this.http
       .post(url, JSON.stringify(member), { headers: this.headers })
-      .map(() => null)
+      .map(response => {
+        let res = response.json() as MemberListElement;
+        return new MemberListElement(res.member_id, res.member_log_id, res.member_state, new Date().toISOString(), null,
+          member.name, null, member.parent_decision_id);
+      })
       .take(1);
   }
 

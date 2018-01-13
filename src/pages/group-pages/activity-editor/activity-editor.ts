@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, MemberService, GroupService, ActivityService, DecisionService, AmazonService, SharedDataService } from '../../../providers';
+import { UtilService, ActivityService, AmazonService, SharedDataService } from '../../../providers';
 import { MemberListElement, ActivityEditorElement, DecisionListElement, AmazonSignature } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
@@ -19,8 +18,8 @@ export class ActivityEditorPage {
   groupId: number;
   isNative: boolean = false;
   newActivityImageFile: File = null;
-  decisions: Observable<DecisionListElement[]>;
-  members: Observable<MemberListElement[]>;
+  decisions: DecisionListElement[] = [];
+  members: MemberListElement[] = [];
 
   form: FormGroup;
   submitAttempt: boolean = false;
@@ -31,10 +30,7 @@ export class ActivityEditorPage {
     public formBuilder: FormBuilder,
     public event: Events,
     public util: UtilService,
-    public memberService: MemberService,
-    public groupService: GroupService,
     public activityService: ActivityService,
-    public decisionService: DecisionService,
     public amazonService: AmazonService,
     public sharedDataService: SharedDataService,
     public translate: TranslateService
@@ -62,8 +58,8 @@ export class ActivityEditorPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.members = this.memberService.getMembers(this.groupId).map(members => members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED')));
-      this.decisions = this.decisionService.getDecisions(this.groupId).map(decisions => decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' ) && decision.next_id == 0));
+      this.members = this.sharedDataService.members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED'));
+      this.decisions = this.sharedDataService.decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED') && decision.next_id == 0);
     });
   }
 
@@ -126,7 +122,11 @@ export class ActivityEditorPage {
           newActivity.image_urls.push(result[1]);
           return this.activityService.create(this.groupId, newActivity).toPromise();
         })
-        .then(() => this.navCtrl.setRoot('ActivityListPage'))
+        .then((activity) => {
+          this.sharedDataService.activities.push(activity);
+          this.event.publish('ActivityList_Refresh')
+          this.navCtrl.setRoot('ActivityListPage');
+        })
         .catch(() => { console.log('new activity failed') });
     }
   }

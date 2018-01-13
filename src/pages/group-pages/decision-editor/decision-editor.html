@@ -40,8 +40,8 @@
           <ion-item>
             <ion-select formControlName="accepters" multiple="true" [selectOptions]="{title: ('I18N_ACCEPTERS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!isValidAccepters() && (form.controls.accepters.dirty || submitAttempt)">
-              <ion-option *ngFor="let member of members" [value]="(member | async)">
-                {{(member | async)?.name}}
+              <ion-option *ngFor="let member of sharedDataService.proceedingAttendees" [value]="member">
+                {{member.name}}
               </ion-option>
             </ion-select>
           </ion-item>
@@ -52,8 +52,8 @@
           <ion-item>
             <ion-select formControlName="rejecters" multiple="true" [selectOptions]="{title: ('I18N_REJECTERS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!isValidRejecters() && (form.controls.rejecters.dirty || submitAttempt)">
-              <ion-option *ngFor="let member of members" [value]="(member | async)">
-                {{(member | async)?.name}}
+              <ion-option *ngFor="let member of sharedDataService.proceedingAttendees" [value]="member">
+                {{member.name}}
               </ion-option>
             </ion-select>
           </ion-item>
@@ -64,8 +64,8 @@
           <ion-item>
             <ion-select formControlName="abstainers" multiple="true" [selectOptions]="{title: ('I18N_ABSTAINERS' | translate), subTitle: ('I18N_SELECT_ALL' | translate)}"
               [class.invalid]="!isValidAbstainers() && (form.controls.abstainers.dirty || submitAttempt)">
-              <ion-option *ngFor="let member of members" [value]="(member | async)">
-                {{(member | async)?.name}}
+              <ion-option *ngFor="let member of sharedDataService.proceedingAttendees" [value]="member">
+                {{member.name}}
               </ion-option>
             </ion-select>
           </ion-item>

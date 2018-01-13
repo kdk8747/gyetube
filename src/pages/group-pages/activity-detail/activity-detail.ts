@@ -16,7 +16,6 @@ import 'rxjs/add/operator/toPromise';
 })
 export class ActivityDetailPage {
 
-  groupId: number;
   id: number;
   activity: ActivityDetailElement;
 
@@ -39,8 +38,7 @@ export class ActivityDetailPage {
     this.event.publish('TabsGroup_ShowTab');
 
     this.util.getCurrentGroupId().then(group_id => {
-      this.groupId = group_id;
-      this.activityService.getActivity(this.groupId, this.id).subscribe((activity: ActivityDetailElement) => {
+      this.activityService.getActivity(group_id, this.id).subscribe((activity: ActivityDetailElement) => {
         this.activity = activity;
         this.sharedDataService.headerDetailTitle = activity.title;
       });

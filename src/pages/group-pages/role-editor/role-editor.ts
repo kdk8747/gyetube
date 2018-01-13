@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, RoleService, DecisionService, SharedDataService } from '../../../providers';
+import { UtilService, RoleService, SharedDataService } from '../../../providers';
 import { DecisionListElement, RoleEditorElement } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
@@ -17,7 +16,7 @@ import { Observable } from 'rxjs/Observable';
 export class RoleEditorPage {
 
   groupId: number;
-  decisions: Observable<DecisionListElement[]>;
+  decisions: DecisionListElement[] = [];
 
   permissions: any;
   form: FormGroup;
@@ -30,7 +29,6 @@ export class RoleEditorPage {
     public event: Events,
     public util: UtilService,
     public roleService: RoleService,
-    public decisionService: DecisionService,
     public sharedDataService: SharedDataService,
     public translate: TranslateService
   ) {
@@ -61,7 +59,7 @@ export class RoleEditorPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.decisions = this.decisionService.getDecisions(this.groupId).map(decisions => decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' ) && decision.next_id == 0));
+      this.decisions = this.sharedDataService.decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED' ) && decision.next_id == 0);
     });
   }
 
@@ -89,7 +87,11 @@ export class RoleEditorPage {
       this.form.value.parentDecision);
 
     this.roleService.create(this.groupId, newRole).toPromise()
-      .then(() => this.navCtrl.setRoot('RoleListPage'))
+      .then((role) => {
+        this.sharedDataService.roles.push(role);
+        this.event.publish('RoleList_Refresh');
+        this.navCtrl.setRoot('RoleListPage');
+      })
       .catch(() => { console.log('new role failed') });
   }
 }

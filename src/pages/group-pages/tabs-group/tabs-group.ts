@@ -53,6 +53,8 @@ export class TabsGroupPage {
         this.activityService.getActivities(group.group_id).subscribe(roles => { this.sharedDataService.activities = roles; this.event.publish('ActivityList_Refresh'); });
         this.receiptService.getReceipts(group.group_id).subscribe(receipts => { this.sharedDataService.receipts = receipts; this.event.publish('ReceiptList_Refresh'); });
         this.memberService.getMemberMyself(group.group_id).subscribe(member => {
+          this.sharedDataService.myselfMemberId = member.member_id;
+          this.sharedDataService.myselfMemberLogId = member.member_log_id;
           this.sharedDataService.myselfState = member.member_state;
           this.sharedDataService.memberCreatePermitted = member.role.member.some(val => val == 'CREATE');
           this.sharedDataService.memberReadPermitted = member.role.member.some(val => val == 'READ');
@@ -66,6 +68,8 @@ export class TabsGroupPage {
           this.sharedDataService.receiptCreatePermitted = member.role.receipt.some(val => val == 'CREATE');
           this.sharedDataService.receiptReadPermitted = member.role.receipt.some(val => val == 'READ');
         }, (err) => {
+          this.sharedDataService.myselfMemberId = 0;
+          this.sharedDataService.myselfMemberLogId = 0;
           this.sharedDataService.myselfState = null;
           this.sharedDataService.memberCreatePermitted = false;
           this.sharedDataService.memberReadPermitted = false;

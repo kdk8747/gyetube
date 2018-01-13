@@ -55,11 +55,16 @@ export class ProceedingService {
       .take(1);
   }
 
-  create(group_id: number, proceeding: ProceedingEditorElement): Observable<void> {
+  create(group_id: number, proceeding: ProceedingEditorElement): Observable<ProceedingListElement> {
     const url = `${this.proceedingsUrl}/${group_id}/proceedings`;
     return this.http
       .post(url, JSON.stringify(proceeding), { headers: this.headers })
-      .map(() => null)
+      .map(response => {
+        let res = response.json() as ProceedingListElement;
+        return new ProceedingListElement(res.proceeding_id, 0, 0, res.document_state, new Date().toISOString(),
+          proceeding.meeting_datetime, proceeding.title, proceeding.description, proceeding.attendee_ids.length,
+          0, 0, proceeding.child_decisions.length);
+      })
       .take(1);
   }
 }

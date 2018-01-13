@@ -49,14 +49,19 @@ exports.authDelete = (req, res, next) => {
 exports.getAll = async (req, res) => {
   try {
     let result = await db.execute(
-      'SELECT A.activity_id, A.activity_datetime, A.modified_datetime,\
-        A.title, A.description,\
+      'SELECT A.activity_id, A.activity_datetime, A.modified_datetime, A.title, A.description, A.image_urls, A.document_urls,\
         count(distinct P.member_id) AS participants_count,\
         A.elapsed_time, A.total_difference\
       FROM activity A\
         LEFT JOIN participant P ON P.group_id=A.group_id AND P.activity_id=A.activity_id\
       WHERE A.group_id=?\
       GROUP BY A.activity_id', [req.permissions.group_id]);
+    result[0] = result[0].map(activity => {
+      activity.image_urls = JSON.parse(activity.image_urls);
+      activity.document_urls = JSON.parse(activity.document_urls);
+      return activity;
+    });
+
     res.send(result[0]);
   }
   catch (err) {
@@ -185,7 +190,9 @@ exports.create = async (req, res) => {
     await conn.commit();
     conn.release();
 
-    res.send();
+    res.send({
+      activity_id: activity_new_id[0][0].new_id
+    });
   }
   catch (err) {
     if (!conn.connection._fatalError) {
@@ -200,24 +207,8 @@ exports.create = async (req, res) => {
 }
 
 exports.deleteByID = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    activities2 = activities2.filter(h => h.id !== +req.params.id);
-    res.send();
-  }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups) {
-      activities = activities.filter(h => h.id !== +req.params.id);
-      res.send();
-    }
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
     res.status(404).json({
       success: false,
-      message: 'groupId: not found'
+      message: 'not found'
     });
 }

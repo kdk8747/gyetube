@@ -17,8 +17,8 @@ export class DecisionListElement {
     public child_activities_count: number,
     public child_receipts_count: number,
 
-    public total_elapsed_time: number,  // TODO
-    public total_difference: number    // TODO
+    public total_elapsed_time: number,
+    public total_difference: number
   ) { }
 }
 
@@ -40,8 +40,8 @@ export class DecisionDetailElement {
     public child_activities: ActivityListElement[],
     public child_receipts: ReceiptListElement[],
 
-    public total_elapsedTime: number,  // TODO
-    public total_difference: number    // TODO
+    public total_elapsedTime: number,
+    public total_difference: number
   ) { }
 }
 

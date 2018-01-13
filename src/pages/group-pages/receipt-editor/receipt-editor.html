@@ -52,7 +52,7 @@
           <ion-item *ngIf="!activitySelected">
             <ion-select [(ngModel)]="parentDecision" [selectOptions]="{title: ('I18N_RELATED_DECISION' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}"
               [class.invalid]="!parentDecision && submitAttempt">
-              <ion-option *ngFor="let decision of decisions | async" [value]="decision.decision_id">{{decision.title}}</ion-option>
+              <ion-option *ngFor="let decision of decisions" [value]="decision.decision_id">{{decision.title}}</ion-option>
             </ion-select>
           </ion-item>
 
@@ -63,7 +63,7 @@
           <ion-item *ngIf="activitySelected">
             <ion-select [(ngModel)]="parentActivity" [selectOptions]="{title: ('I18N_RELATED_ACTIVITY' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}"
               [class.invalid]="!parentActivity && submitAttempt">
-              <ion-option *ngFor="let activity of activities | async" [value]="activity.activity_id">{{activity.title}}</ion-option>
+              <ion-option *ngFor="let activity of activities" [value]="activity.activity_id">{{activity.title}}</ion-option>
             </ion-select>
           </ion-item>
         </ion-list>

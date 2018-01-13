@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { UtilService, MemberService, SharedDataService } from '../../../providers';
 import { MemberDetailElement, MemberListElement } from '../../../models';
-import { Observable } from 'rxjs/Observable';
 
 
 enum ApproveState {
@@ -20,15 +19,15 @@ enum ApproveState {
 })
 export class MemberDetailPage {
   enum = ApproveState;
-
   approveState: ApproveState = ApproveState.STATE_NEW_MEMBER;
+
   groupId: number;
   id: number;
   log_id: number;
   member: MemberDetailElement;
 
   overwrite_id: number;
-  members: Observable<MemberListElement[]>;
+  members: MemberListElement[] = [];
   submitAttempt: boolean = false;
 
   constructor(
@@ -57,7 +56,7 @@ export class MemberDetailPage {
           this.member = member;
           this.sharedDataService.headerDetailTitle = member.name;
         });
-      this.members = this.memberService.getMembers(this.groupId).map(members => members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED')));
+      this.members = this.sharedDataService.members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED'));
     });
   }
 
@@ -87,31 +86,32 @@ export class MemberDetailPage {
   onSubmit() {
     switch (this.approveState) {
       case this.enum.STATE_NEW_MEMBER:
-        this.memberService.approveNewMember(this.groupId, this.id)
-          .subscribe(() => {
-            this.event.publish('App_ShowHeader');
-            this.event.publish('TabsGroup_ShowTab');
-            this.popNavigation();
+        this.memberService.approveNewMember(this.groupId, this.id).subscribe(() => {
+            this.updateFinallize();
           });
         break;
       case this.enum.STATE_OVERWRITE:
         this.submitAttempt = true;
         if (this.overwrite_id)
-          this.memberService.approveOverwrite(this.groupId, this.id, this.overwrite_id)
-            .subscribe(() => {
-              this.event.publish('App_ShowHeader');
-              this.event.publish('TabsGroup_ShowTab');
-              this.popNavigation();
+          this.memberService.approveOverwrite(this.groupId, this.id, this.overwrite_id).subscribe(() => {
+              this.updateFinallize();
             });
         break;
       case this.enum.STATE_REJECT:
-        this.memberService.reject(this.groupId, this.id)
-          .subscribe(() => {
-            this.event.publish('App_ShowHeader');
-            this.event.publish('TabsGroup_ShowTab');
-            this.popNavigation();
+        this.memberService.reject(this.groupId, this.id).subscribe(() => {
+            this.updateFinallize();
           });
         break;
     }
+  }
+
+  updateFinallize() {
+    this.memberService.getMembers(this.groupId).subscribe(roles => {
+      this.sharedDataService.members = roles;
+      this.event.publish('MemberList_Refresh');
+    });
+    this.event.publish('App_ShowHeader');
+    this.event.publish('TabsGroup_ShowTab');
+    this.popNavigation();
   }
 }

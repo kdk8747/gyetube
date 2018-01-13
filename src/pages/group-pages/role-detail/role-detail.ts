@@ -40,9 +40,9 @@ export class RoleDetailPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.roleService.getRole(this.groupId, this.id)
-      .subscribe((role: RoleDetailElement) => {
+      this.roleService.getRole(this.groupId, this.id).subscribe((role: RoleDetailElement) => {
         this.role = role;
+
         if (role.document_state == 'PREDEFINED')
           this.translate.get('I18N_' + role.name).subscribe(value => {
             this.sharedDataService.headerDetailTitle = value;

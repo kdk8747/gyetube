@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, ReceiptService, ActivityService, DecisionService, AmazonService, SharedDataService } from '../../../providers';
+import { UtilService, ReceiptService, AmazonService, SharedDataService } from '../../../providers';
 import { ReceiptEditorElement, ActivityListElement, DecisionListElement, AmazonSignature } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
   segment: 'receipt-editor'
@@ -18,8 +17,8 @@ export class ReceiptEditorPage {
   groupId: number;
   isNative: boolean = false;
   newReceiptImageFile: File = null;
-  activities: Observable<ActivityListElement[]>;
-  decisions: Observable<DecisionListElement[]>;
+  activities: ActivityListElement[] = [];
+  decisions: DecisionListElement[] = [];
   activitySelected: boolean = true;
 
   form: FormGroup;
@@ -34,8 +33,6 @@ export class ReceiptEditorPage {
     public event: Events,
     public util: UtilService,
     public receiptService: ReceiptService,
-    public activityService: ActivityService,
-    public decisionService: DecisionService,
     public amazonService: AmazonService,
     public sharedDataService: SharedDataService,
     public translate: TranslateService
@@ -62,8 +59,8 @@ export class ReceiptEditorPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.activities = this.activityService.getActivities(this.groupId);
-      this.decisions = this.decisionService.getDecisions(this.groupId).map(decisions => decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' ) && decision.next_id == 0));
+      this.activities = this.sharedDataService.activities;
+      this.decisions = this.sharedDataService.decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED') && decision.next_id == 0);
     });
   }
 
@@ -120,7 +117,11 @@ export class ReceiptEditorPage {
           newReceipt.image_url = result[1];
           return this.receiptService.create(this.groupId, newReceipt).toPromise();
         })
-        .then(() => this.navCtrl.setRoot('ReceiptListPage'))
+        .then((receipt) => {
+          this.sharedDataService.receipts.push(receipt);
+          this.event.publish('ReceiptList_Refresh');
+          this.navCtrl.setRoot('ReceiptListPage');
+        })
         .catch(() => { console.log('new receipt failed') });
     }
   }

@@ -14,7 +14,6 @@ import { DecisionDetailElement } from '../../../models';
 })
 export class DecisionDetailPage {
 
-  groupId: number;
   id: number;
   decision: DecisionDetailElement;
 
@@ -37,8 +36,7 @@ export class DecisionDetailPage {
     this.event.publish('TabsGroup_ShowTab');
 
     this.util.getCurrentGroupId().then(group_id => {
-      this.groupId = group_id;
-      this.decisionService.getDecision(this.groupId, this.id).subscribe((decision: DecisionDetailElement) => {
+      this.decisionService.getDecision(group_id, this.id).subscribe((decision: DecisionDetailElement) => {
         this.decision = decision;
         this.sharedDataService.headerDetailTitle = decision.title;
       });

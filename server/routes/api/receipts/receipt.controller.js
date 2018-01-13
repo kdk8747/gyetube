@@ -167,11 +167,12 @@ exports.create = async (req, res) => {
         WHERE A.group_id=? AND A.activity_id=?', [req.body.difference, req.permissions.group_id, req.body.parent_activity_id]);
     }
 
+    let receipt_new_id = await conn.query('SELECT GET_SEQ(?,"receipt") AS new_id', [req.permissions.group_id]);
     await conn.query(
       'INSERT INTO receipt (group_id, receipt_id, decision_id, activity_id, creator_id,  modified_datetime, settlement_datetime, title, image_url, difference)\
-        VALUES(?,GET_SEQ(?,"receipt"),?,?,?, ?,?,?,?,?)', [
+        VALUES(?,?,?,?,?, ?,?,?,?,?)', [
         req.permissions.group_id,
-        req.permissions.group_id,
+        receipt_new_id[0][0].new_id,
         req.body.parent_decision_id ? req.body.parent_decision_id : null,
         req.body.parent_activity_id ? req.body.parent_activity_id : null,
         member_id[0][0].member_id,
@@ -185,7 +186,10 @@ exports.create = async (req, res) => {
     await conn.commit();
     conn.release();
 
-    res.send();
+    res.send({
+      receipt_id: receipt_new_id[0][0].new_id,
+      creator_id: member_id[0][0].member_id
+    });
   }
   catch (err) {
     if (!conn.connection._fatalError) {

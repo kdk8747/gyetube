@@ -51,11 +51,15 @@ export class RoleService {
       .take(1);
   }
 
-  create(group_id: number, role: RoleEditorElement): Observable<void> {
+  create(group_id: number, role: RoleEditorElement): Observable<RoleListElement> {
     const url = `${this.rolesUrl}/${group_id}/roles`;
     return this.http
       .post(url, JSON.stringify(role), { headers: this.headers })
-      .map(() => null)
+      .map(response => {
+        let res = response.json() as RoleListElement;
+        return new RoleListElement(res.role_id, res.role_log_id, res.document_state, res.creator_id, new Date().toISOString(),
+          role.name, role.home, role.member, role.role, role.proceeding, role.decision, role.activity, role.receipt, role.parent_decision_id);
+      })
       .take(1);
   }
 }

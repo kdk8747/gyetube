@@ -102,7 +102,7 @@
           <ion-item *ngIf="approveState==enum.STATE_OVERWRITE">
             <ion-select [(ngModel)]="overwrite_id" [selectOptions]="{title: ('I18N_MEMBER' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}"
               [class.invalid]="!overwrite_id && submitAttempt">
-              <ion-option *ngFor="let member of members | async" [value]="member.member_id">{{member.name}}</ion-option>
+              <ion-option *ngFor="let member of members" [value]="member.member_id">{{member.name}}</ion-option>
             </ion-select>
           </ion-item>
 

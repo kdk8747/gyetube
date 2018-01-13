@@ -524,7 +524,12 @@ exports.create = async (req, res) => {
     await conn.commit();
     conn.release();
 
-    res.send();
+    res.send({
+      member_id: member.member_id,
+      member_log_id: member.member_log_id,
+      member_state: 'ADDED',
+      creator_id: member.creator_id
+    });
   }
   catch (err) {
     if (!conn.connection._fatalError) {

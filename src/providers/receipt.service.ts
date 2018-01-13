@@ -52,11 +52,18 @@ export class ReceiptService {
       .take(1);
   }
 
-  create(group_id: number, receipt: ReceiptEditorElement): Observable<void> {
+  create(group_id: number, receipt: ReceiptEditorElement): Observable<ReceiptListElement> {
     const url = `${this.receiptsUrl}/${group_id}/receipts`;
     return this.http
       .post(url, JSON.stringify(receipt), { headers: this.headers })
-      .map(() => null)
+      .map(response => {
+        let res = response.json() as ReceiptListElement;
+        return new ReceiptListElement(res.receipt_id, res.creator_id, new Date().toISOString(),
+          receipt.settlement_datetime,
+          receipt.title,
+          receipt.difference,
+          0, receipt.image_url);
+      })
       .take(1);
   }
 

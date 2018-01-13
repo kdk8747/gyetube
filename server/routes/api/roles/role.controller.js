@@ -298,7 +298,12 @@ exports.create = async (req, res) => {
     await conn.commit();
     conn.release();
 
-    res.send();
+    res.send({
+      role_id: role.role_id,
+      role_log_id: role.role_log_id,
+      document_state: 'ADDED',
+      creator_id: author[0][0].member_id
+    });
   }
   catch (err) {
     if (!conn.connection._fatalError) {

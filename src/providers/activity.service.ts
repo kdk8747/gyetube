@@ -53,11 +53,16 @@ export class ActivityService {
       .take(1);
   }
 
-  create(group_id: number, activity: ActivityEditorElement): Observable<void> {
+  create(group_id: number, activity: ActivityEditorElement): Observable<ActivityListElement> {
     const url = `${this.activitiesUrl}/${group_id}/activities`;
     return this.http
       .post(url, JSON.stringify(activity), { headers: this.headers })
-      .map(() => null)
+      .map(response => {
+        let res = response.json() as ActivityListElement;
+        return new ActivityListElement(res.activity_id, new Date().toISOString(),
+          activity.activity_datetime, activity.elapsed_time, activity.title, activity.description, activity.image_urls,
+          activity.document_urls, activity.participant_ids.length, 0, 0);
+      })
       .take(1);
   }
 

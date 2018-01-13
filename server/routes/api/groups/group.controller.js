@@ -104,7 +104,7 @@ exports.create = async (req, res) => {
 
     /* create sequences */
     let sequences = [
-      { name: 'proceeding', default: 0 },
+      { name: 'proceeding', default: 1 },
       { name: 'decision', default: 0 },
       { name: 'activity', default: 0 },
       { name: 'receipt', default: 0 },
@@ -184,6 +184,7 @@ exports.create = async (req, res) => {
     let curDate = now.getDate();
     let proceeding = {};
     proceeding.group_id = group_id;
+    proceeding.proceeding_id = 1;
     proceeding.document_state = 4; /* PREDEFINED */
     proceeding.prev_id = 0;
     proceeding.meeting_datetime = created_datetime;
@@ -193,20 +194,20 @@ exports.create = async (req, res) => {
       prev_id: 0,
       expiry_datetime: new Date(curYear, curMonth+1, curDate).toISOString().substring(0, 19).replace('T', ' '),
       title: '구성원을 미리 추가해 보세요.',
-      description: '[홈] - [구성원] - [+]에서 구성원을 미리 추가할 수 있습니다.\n\
-구성원을 미리 추가하면, 과거의 기록들을 올리는 일에 도움이 됩니다.\n\
-추후 해당 사용자가 그룹에 가입을 할 경우, 미리 작성한 구성원과 합체시킬 수 있습니다.\n\
-구성원을 미리 추가하고 싶다면 여기에 연결해 주세요.'
+      description: '  [홈] - [구성원] - [+]에서 구성원을 미리 추가할 수 있습니다.\n\
+  구성원을 미리 추가하면, 과거의 기록들을 올리는 일에 도움이 됩니다.\n\
+  추후 해당 사용자가 그룹에 가입을 할 경우, 미리 작성한 구성원과 합체시킬 수 있습니다.\n\
+  구성원을 미리 추가하고 싶다면 여기에 연결해 주세요.'
     },{
       prev_id: 0,
       expiry_datetime: new Date(curYear, curMonth+1, curDate).toISOString().substring(0, 19).replace('T', ' '),
       title: '지난 활동 기록을 올려 보세요.',
-      description: '[활동] - [+]에서 활동 기록을 추가할 수 있습니다.\n적절한 합의 없이 수행된 예전 활동 기록을 올리고 싶다면 여기에 연결해 주세요.'
+      description: '  [활동] - [+]에서 활동 기록을 추가할 수 있습니다.\n  적절한 합의 없이 수행된 예전 활동 기록을 올리고 싶다면 여기에 연결해 주세요.'
     },{
       prev_id: 0,
       expiry_datetime: new Date(curYear, curMonth+1, curDate).toISOString().substring(0, 19).replace('T', ' '),
       title: '지난 영수증을 올려 보세요.',
-      description: '[영수증] - [+]에서 영수증을 추가할 수 있습니다.\n적절한 합의 없이 집행된 영수증 기록을 올리고 싶다면 여기에 연결해 주세요.'
+      description: '  [영수증] - [+]에서 영수증을 추가할 수 있습니다.\n  적절한 합의 없이 집행된 영수증 기록을 올리고 싶다면 여기에 연결해 주세요.'
     }];
     await proceedingController.insertProceeding(conn, proceeding);
     await conn.query('UPDATE decision SET document_state=4 WHERE group_id=? AND proceeding_id=1', [group_id]);

@@ -3,6 +3,7 @@ import { DecisionListElement, MemberListElement } from './'
 export class RoleListElement {
   constructor(
     public role_id: number,
+    public role_log_id: number,
     public document_state: string,
     public creator_id: number,
     public modified_datetime: string,
@@ -21,6 +22,7 @@ export class RoleListElement {
 export class RoleDetailElement {
   constructor(
     public role_id: number,
+    public role_log_id: number,
     public prev_id: number,
     public next_id: number,
     public document_state: string,

@@ -3,6 +3,7 @@ import { DecisionListElement, ActivityListElement, MemberListElement } from './'
 export class ReceiptListElement {
   constructor(
     public receipt_id: number,
+    public creator_id: number,
     public modified_datetime: string,
     public settlement_datetime: string,
     public title: string,

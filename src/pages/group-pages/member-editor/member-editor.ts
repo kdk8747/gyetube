@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, MemberService, RoleService, DecisionService, SharedDataService } from '../../../providers';
 import { DecisionListElement, RoleListElement, MemberEditorElement } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
 
 
 @IonicPage({
@@ -17,8 +16,8 @@ import { Observable } from 'rxjs/Observable';
 export class MemberEditorPage {
 
   groupId: number;
-  decisions: Observable<DecisionListElement[]>;
-  roles: Observable<RoleListElement[]>;
+  decisions: DecisionListElement[] = [];
+  roles: RoleListElement[] = [];
 
   form: FormGroup;
   submitAttempt: boolean = false;
@@ -54,8 +53,8 @@ export class MemberEditorPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.roles = this.roleService.getRoles(this.groupId);
-      this.decisions = this.decisionService.getDecisions(this.groupId).map(decisions => decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' ) && decision.next_id == 0));
+      this.roles = this.sharedDataService.roles;
+      this.decisions = this.sharedDataService.decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED' ) && decision.next_id == 0);
     });
   }
 
@@ -75,7 +74,12 @@ export class MemberEditorPage {
     let newMember = new MemberEditorElement(0, this.form.value.name, this.form.value.parentDecision, this.form.value.roles);
 
     this.memberService.create(this.groupId, newMember).toPromise()
-      .then(() => this.navCtrl.setRoot('MemberListPage'))
+      .then((member) => {
+        member.roles = newMember.role_ids.map(role_id => this.roles.find(role => role.role_id == role_id).name);
+        this.sharedDataService.members.push(member);
+        this.event.publish('MemberList_Refresh');
+        this.navCtrl.setRoot('MemberListPage');
+      })
       .catch(() => { console.log('new member failed') });
   }
 }

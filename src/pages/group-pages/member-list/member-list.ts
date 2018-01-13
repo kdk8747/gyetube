@@ -81,12 +81,16 @@ export class MemberListPage {
     switch (this.memberListState) {
       case MemberListState.STATE_NORMAL:
         this.members = this.sortByDate(this.sharedDataService.members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED')));
+        break;
       case MemberListState.STATE_DELETED:
         this.members = this.sortByDate(this.sharedDataService.members.filter(member => (member.member_state == 'DELETED' || member.member_state == 'JOIN_REJECTED')));
+        break;
       case MemberListState.STATE_PENDING:
         this.members = this.sortByDate(this.sharedDataService.members.filter(member => (member.member_state == 'JOIN_REQUESTED')));
+        break;
       default:
         this.members = this.sortByDate(this.sharedDataService.members);
+        break;
     }
   }
 

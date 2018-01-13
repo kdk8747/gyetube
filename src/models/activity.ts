@@ -14,7 +14,7 @@ export class ActivityListElement {
     public participants_count: number,
     public child_receipts_count: number,
 
-    public total_difference: number    // TODO
+    public total_difference: number
   ) { }
 }
 
@@ -34,7 +34,7 @@ export class ActivityDetailElement {
     public parent_decision: DecisionListElement,
     public child_receipts: ReceiptListElement[],
 
-    public total_difference: number    // TODO
+    public total_difference: number
   ) { }
 }
 

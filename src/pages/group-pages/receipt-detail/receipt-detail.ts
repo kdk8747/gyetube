@@ -38,8 +38,7 @@ export class ReceiptDetailPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.receiptService.getReceipt(this.groupId, this.id)
-      .subscribe((receipt: ReceiptDetailElement) => {
+      this.receiptService.getReceipt(this.groupId, this.id).subscribe((receipt: ReceiptDetailElement) => {
         this.receipt = receipt;
         this.sharedDataService.headerDetailTitle = receipt.title;
       });

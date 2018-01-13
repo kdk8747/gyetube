@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UtilService, MemberService, GroupService, DecisionService, SharedDataService } from '../../../providers';
+import { UtilService, DecisionService, SharedDataService } from '../../../providers';
 import { MemberListElement, DecisionDetailElement, DecisionEditorElement } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
 
 @IonicPage({
   segment: 'decision-editor'
@@ -17,7 +16,6 @@ export class DecisionEditorPage {
 
   groupId: number;
   id: number;
-  members: Observable<MemberListElement>[];
 
   form: FormGroup;
   submitAttempt: boolean = false;
@@ -29,8 +27,6 @@ export class DecisionEditorPage {
     public formBuilder: FormBuilder,
     public event: Events,
     public util: UtilService,
-    public memberService: MemberService,
-    public groupService: GroupService,
     public decisionService: DecisionService,
     public sharedDataService: SharedDataService,
     public translate: TranslateService
@@ -63,7 +59,6 @@ export class DecisionEditorPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.members = this.sharedDataService.proceedingAttendees.map(id => this.memberService.getMember(this.groupId, id));
 
       if (this.id) {
         this.decisionService.getDecision(this.groupId, this.id)
@@ -73,13 +68,13 @@ export class DecisionEditorPage {
             this.form.controls['description'].setValue(decision.description);
 
             this.form.controls['accepters'].setValue(decision.accepters
-              .filter(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter.member_id)));
+              .filter(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee.member_id == accepter.member_id)));
 
             this.form.controls['rejecters'].setValue(decision.rejecters
-              .filter(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter.member_id)));
+              .filter(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee.member_id == rejecter.member_id)));
 
             this.form.controls['abstainers'].setValue(decision.abstainers
-              .filter(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer.member_id)));
+              .filter(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee.member_id == abstainer.member_id)));
           });
       }
     });
@@ -103,9 +98,9 @@ export class DecisionEditorPage {
   }
 
   isPartOfAttendees(): boolean {
-    return this.form.value.accepters.every(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == accepter.member_id))
-      && this.form.value.rejecters.every(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee == rejecter.member_id))
-      && this.form.value.abstainers.every(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee == abstainer.member_id));
+    return this.form.value.accepters.every(accepter => this.sharedDataService.proceedingAttendees.some(attendee => attendee.member_id == accepter.member_id))
+      && this.form.value.rejecters.every(rejecter => this.sharedDataService.proceedingAttendees.some(attendee => attendee.member_id == rejecter.member_id))
+      && this.form.value.abstainers.every(abstainer => this.sharedDataService.proceedingAttendees.some(attendee => attendee.member_id == abstainer.member_id));
   }
 
   allAttendeesVoted(): boolean {

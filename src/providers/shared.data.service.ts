@@ -12,7 +12,7 @@ export class SharedDataService {
   loggedIn: boolean = false;
   loggedInUser: User = null;
 
-  proceedingAttendees: number[] = [];
+  proceedingAttendees: MemberListElement[] = [];
   decisionListTimelineMode: boolean = false;
   decisionEditMode: boolean = false;
   decisionChangesets: DecisionEditorElement[] = [];
@@ -31,6 +31,8 @@ export class SharedDataService {
   activities: ActivityListElement[] = [];
   receipts: ReceiptListElement[] = [];
 
+  myselfMemberId: number;
+  myselfMemberLogId: number;
   myselfState: string;
   memberReadPermitted: boolean = false;
   memberCreatePermitted: boolean = false;

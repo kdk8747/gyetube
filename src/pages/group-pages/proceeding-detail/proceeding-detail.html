@@ -20,7 +20,7 @@
           {{'I18N_PENDING_ADDS' | translate}}<br>
           <span *ngIf="proceeding?.need_my_review">
             <ion-icon name="alert" color="danger"></ion-icon>
-            {{user?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}
+            {{sharedDataService.loggedInUser?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}
           </span>
           {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding?.reviewers.length}}/{{proceeding?.attendees.length}})
         </ion-buttons>
