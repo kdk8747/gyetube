@@ -18,14 +18,24 @@ export class ReceiptService {
     public http: AuthHttp
   ) { }
 
+   //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+  convertTimestring(str: string) {
+    if (str.length == 19)
+      return str.replace(' ','T') + 'Z';
+    else if (str.length == 10)
+      return str + 'T00:00:00Z';
+    else
+      return new Date().toISOString();
+  }
+
   getReceipts(group_id: number): Observable<ReceiptListElement[]> {
     const url = `${this.receiptsUrl}/${group_id}/receipts`;
     return this.http.get(url)
       .map(response => {
         let receipts = response.json() as ReceiptListElement[];
         return receipts.map(receipt => {
-          receipt.modified_datetime = receipt.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-          receipt.settlement_datetime = receipt.settlement_datetime.replace(' ','T') + 'Z';
+          receipt.modified_datetime = this.convertTimestring(receipt.modified_datetime);
+          receipt.settlement_datetime = this.convertTimestring(receipt.settlement_datetime);
           return receipt;
         });
       })
@@ -37,8 +47,8 @@ export class ReceiptService {
     return this.http.get(url)
       .map(response => {
         let receipt = response.json() as ReceiptDetailElement;
-        receipt.modified_datetime = receipt.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-        receipt.settlement_datetime = receipt.settlement_datetime.replace(' ','T') + 'Z';
+        receipt.modified_datetime = this.convertTimestring(receipt.modified_datetime);
+        receipt.settlement_datetime = this.convertTimestring(receipt.settlement_datetime);
         return receipt;
       })
       .take(1);

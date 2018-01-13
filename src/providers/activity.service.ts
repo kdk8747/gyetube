@@ -18,14 +18,24 @@ export class ActivityService {
     public http: AuthHttp
   ) { }
 
+   //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+  convertTimestring(str: string) {
+    if (str.length == 19)
+      return str.replace(' ','T') + 'Z';
+    else if (str.length == 10)
+      return str + 'T00:00:00Z';
+    else
+      return new Date().toISOString();
+  }
+
   getActivities(group_id: number): Observable<ActivityListElement[]> {
     const url = `${this.activitiesUrl}/${group_id}/activities`;
     return this.http.get(url)
       .map(response => {
         let activities = response.json() as ActivityListElement[];
         return activities.map(activity => {
-          activity.modified_datetime = activity.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-          activity.activity_datetime = activity.activity_datetime.replace(' ','T') + 'Z';
+          activity.modified_datetime = this.convertTimestring(activity.modified_datetime);
+          activity.activity_datetime = this.convertTimestring(activity.activity_datetime);
           return activity;
         });
       })
@@ -38,8 +48,8 @@ export class ActivityService {
     return this.http.get(url)
       .map(response => {
         let activity = response.json() as ActivityDetailElement;
-        activity.modified_datetime = activity.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-        activity.activity_datetime = activity.activity_datetime.replace(' ','T') + 'Z';
+        activity.modified_datetime = this.convertTimestring(activity.modified_datetime);
+        activity.activity_datetime = this.convertTimestring(activity.activity_datetime);
         return activity;
       })
       .take(1);

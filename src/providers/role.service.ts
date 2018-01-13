@@ -19,13 +19,23 @@ export class RoleService {
     public http: AuthHttp
   ) { }
 
+   //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+  convertTimestring(str: string) {
+    if (str.length == 19)
+      return str.replace(' ','T') + 'Z';
+    else if (str.length == 10)
+      return str + 'T00:00:00Z';
+    else
+      return new Date().toISOString();
+  }
+
   getRoles(group_id: number): Observable<RoleListElement[]> {
     const url = `${this.rolesUrl}/${group_id}/roles`;
     return this.http.get(url)
       .map(response => {
         let roles = response.json() as RoleListElement[];
         return roles.map(role => {
-          role.modified_datetime = role.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          role.modified_datetime = this.convertTimestring(role.modified_datetime);
           return role;
         });
       })
@@ -37,7 +47,7 @@ export class RoleService {
     return this.http.get(url)
       .map(response => {
         let role = response.json() as RoleDetailElement;
-        role.modified_datetime = role.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        role.modified_datetime = this.convertTimestring(role.modified_datetime);
         return role;
       })
       .take(1);

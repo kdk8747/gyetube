@@ -18,12 +18,22 @@ export class GroupService {
     public http: AuthHttp
   ) { }
 
+   //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+  convertTimestring(str: string) {
+    if (str.length == 19)
+      return str.replace(' ','T') + 'Z';
+    else if (str.length == 10)
+      return str + 'T00:00:00Z';
+    else
+      return new Date().toISOString();
+  }
+
   getGroups(): Observable<Group[]> {
     return this.http.get(this.groupsUrl)
       .map(response => {
         let groups = response.json() as Group[];
         return groups.map(group => {
-          group.created_datetime = group.created_datetime.replace(' ', 'T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          group.created_datetime = this.convertTimestring(group.created_datetime);
           return group;
         });
       })
@@ -36,7 +46,7 @@ export class GroupService {
     return this.http.get(url)
       .map(response => {
         let group = response.json() as Group;
-        group.created_datetime = group.created_datetime.replace(' ', 'T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        group.created_datetime = this.convertTimestring(group.created_datetime);
         return group;
       })
       .take(1);
@@ -48,7 +58,7 @@ export class GroupService {
     return this.http.get(url)
       .map(response => {
         let group = response.json() as Group;
-        group.created_datetime = group.created_datetime.replace(' ', 'T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        group.created_datetime = this.convertTimestring(group.created_datetime);
         return group;
       })
       .take(1);

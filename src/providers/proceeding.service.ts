@@ -19,6 +19,16 @@ export class ProceedingService {
     public http: AuthHttp
   ) { }
 
+   //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+  convertTimestring(str: string) {
+    if (str.length == 19)
+      return str.replace(' ','T') + 'Z';
+    else if (str.length == 10)
+      return str + 'T00:00:00Z';
+    else
+      return new Date().toISOString();
+  }
+
   getProceedings(group_id: number): Observable<ProceedingListElement[]> {
     const url = `${this.proceedingsUrl}/${group_id}/proceedings`;
 
@@ -26,8 +36,8 @@ export class ProceedingService {
       .map(response => {
         let proceedings = response.json() as ProceedingListElement[];
         return proceedings.map(proceeding => {
-          proceeding.created_datetime = proceeding.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-          proceeding.meeting_datetime = proceeding.meeting_datetime.replace(' ','T') + 'Z';
+          proceeding.created_datetime = this.convertTimestring(proceeding.created_datetime);
+          proceeding.meeting_datetime = this.convertTimestring(proceeding.meeting_datetime);
           return proceeding;
         });
       })
@@ -40,8 +50,8 @@ export class ProceedingService {
     return this.http.get(url)
       .map(response => {
         let proceeding = response.json() as ProceedingDetailElement;
-        proceeding.created_datetime = proceeding.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
-        proceeding.meeting_datetime = proceeding.meeting_datetime.replace(' ','T') + 'Z';
+        proceeding.created_datetime = this.convertTimestring(proceeding.created_datetime);
+        proceeding.meeting_datetime = this.convertTimestring(proceeding.meeting_datetime);
         return proceeding;
       })
       .take(1);

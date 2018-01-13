@@ -18,13 +18,23 @@ export class MemberService {
     public http: AuthHttp
   ) { }
 
+   //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+  convertTimestring(str: string) {
+    if (str.length == 19)
+      return str.replace(' ','T') + 'Z';
+    else if (str.length == 10)
+      return str + 'T00:00:00Z';
+    else
+      return new Date().toISOString();
+  }
+
   getMembers(group_id: number): Observable<MemberListElement[]> {
     const url = `${this.membersUrl}/${group_id}/members`;
     return this.http.get(url)
       .map(response => {
         let members = response.json() as MemberListElement[];
         return members.map(member => {
-          member.modified_datetime = member.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+          member.modified_datetime = this.convertTimestring(member.modified_datetime);
           return member;
         });
       })
@@ -37,7 +47,7 @@ export class MemberService {
     return this.http.get(url)
       .map(response => {
         let member = response.json() as MemberDetailElement;
-        member.created_datetime = member.created_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        member.created_datetime = this.convertTimestring(member.created_datetime);
         return member;
       })
       .take(1);
@@ -49,7 +59,7 @@ export class MemberService {
     return this.http.get(url)
       .map(response => {
         let member = response.json() as MemberListElement;
-        member.modified_datetime = member.modified_datetime.replace(' ','T') + 'Z'; //https://github.com/sidorares/node-mysql2/issues/262  // If this issue is closed, remove this workaround and add timezone=Z to JAWSDB_MARIA_URL
+        member.modified_datetime = this.convertTimestring(member.modified_datetime);
         return member;
       })
       .take(1);
