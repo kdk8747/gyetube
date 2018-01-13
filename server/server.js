@@ -25,7 +25,7 @@ const oneHour = 3600000;    // 3600000msec == 1hour
 app.use(express.static('www', { maxAge: oneHour })); // Client-side file caching
 
 function setCache (req, res, next) {
-  res.setHeader("Cache-Control", "public, max-age=3");
+  res.setHeader('Cache-Control', 'public, max-age=3');
   next();
 }
 
@@ -45,7 +45,6 @@ app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
 require('./express-middlewares/passports').initialize();
 
 app.use('/api/v1.0/groups', setCache, require('./express-middlewares/authentication'), require('./routes/api'));
-app.use('/api/v1.0/group-id/:url_segment', setCache, require('./routes/api/groups/group.controller').getID);
 app.use('/api/v1.0/users', setCache, require('./routes/api/users'));
 
 
