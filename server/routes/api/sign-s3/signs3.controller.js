@@ -30,7 +30,7 @@ exports.getSign = (req, res) => {
   let policy = {
     'expiration': expiration,
     'conditions': [
-      { 'bucket': 'grassroots-groups' },
+      { 'bucket': process.env.S3_BUCKET_NAME },
       ['starts-with', '$key', keyPath],
       { 'acl': 'public-read' },
       { 'x-amz-meta-uuid': '14365123651274' },
