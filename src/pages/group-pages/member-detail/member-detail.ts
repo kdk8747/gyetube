@@ -109,6 +109,9 @@ export class MemberDetailPage {
     this.memberService.getMembers(this.groupId).subscribe(roles => {
       this.sharedDataService.members = roles;
       this.event.publish('MemberList_Refresh');
+    },err => {
+      this.sharedDataService.members = [];
+      this.event.publish('MemberList_Refresh');
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');

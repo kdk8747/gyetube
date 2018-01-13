@@ -105,26 +105,40 @@ exports.getAll = async (req, res) => {
 
 exports.getMyself = async (req, res) => {
   try {
-    let member = await db.execute(
-      'SELECT *, get_member_state(member_state) AS member_state\
-      FROM member\
-      WHERE group_id=? and user_id=unhex(?)', [req.permissions.group_id, req.decoded.user_id]);
-    delete member[0][0].user_id;
+    let member = [[{
+      member_id: 0,
+      member_log_id: 0,
+      member_state: 'UNKNOWN_STATE'
+    }]];
 
-    let role = await db.execute(
-      'SELECT R.role_id, R.decision_id, R.creator_id, R.modified_datetime, R.name,\
-      get_state(R.document_state) AS document_state,\
-      bit_or(R.home) AS home,\
-      bit_or(R.member) AS member,\
-      bit_or(R.role) AS role,\
-      bit_or(R.proceeding) AS proceeding,\
-      bit_or(R.decision) AS decision,\
-      bit_or(R.activity) AS activity,\
-      bit_or(R.receipt) AS receipt\
-      FROM member M\
-      LEFT JOIN member_role MR ON MR.group_id=M.group_id AND MR.member_id=M.member_id\
-      LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
-      WHERE M.group_id=? and M.member_id=?', [req.permissions.group_id, member[0][0].member_id]);
+    let role = null;
+
+    if (req.decoded && req.decoded.user_id) {
+      member = await db.execute(
+        'SELECT *, get_member_state(member_state) AS member_state\
+        FROM member\
+        WHERE group_id=? and user_id=unhex(?)', [req.permissions.group_id, req.decoded.user_id]);
+      delete member[0][0].user_id;
+
+      role = await db.execute(
+        'SELECT\
+        bit_or(R.home) AS home,\
+        bit_or(R.member) AS member,\
+        bit_or(R.role) AS role,\
+        bit_or(R.proceeding) AS proceeding,\
+        bit_or(R.decision) AS decision,\
+        bit_or(R.activity) AS activity,\
+        bit_or(R.receipt) AS receipt\
+        FROM member M\
+        LEFT JOIN member_role MR ON MR.group_id=M.group_id AND MR.member_id=M.member_id\
+        LEFT JOIN role R ON R.group_id=MR.group_id AND R.role_id=MR.role_id\
+        WHERE M.group_id=? and M.member_id=?', [req.permissions.group_id, member[0][0].member_id]);
+    }
+    else {
+      role = await db.execute('SELECT home, member, role, proceeding, decision, activity, receipt\
+        FROM role WHERE group_id=? AND role_id=1', [req.permissions.group_id]);
+    }
+
     role[0][0].home = bitToStringArray(role[0][0].home);
     role[0][0].member = bitToStringArray(role[0][0].member);
     role[0][0].role = bitToStringArray(role[0][0].role);

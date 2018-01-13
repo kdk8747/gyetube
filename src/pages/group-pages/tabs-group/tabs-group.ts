@@ -46,12 +46,30 @@ export class TabsGroupPage {
         this.sharedDataService.group = group;
         this.sharedDataService.headerGroupTitle = group.title;
 
-        this.memberService.getMembers(group.group_id).subscribe(roles => { this.sharedDataService.members = roles; this.event.publish('MemberList_Refresh'); });
-        this.roleService.getRoles(group.group_id).subscribe(roles => { this.sharedDataService.roles = roles; this.event.publish('RoleList_Refresh'); });
-        this.proceedingService.getProceedings(group.group_id).subscribe(roles => { this.sharedDataService.proceedings = roles; this.event.publish('ProceedingList_Refresh'); });
-        this.decisionService.getDecisions(group.group_id).subscribe(roles => { this.sharedDataService.decisions = roles; this.event.publish('DecisionList_Refresh'); });
-        this.activityService.getActivities(group.group_id).subscribe(roles => { this.sharedDataService.activities = roles; this.event.publish('ActivityList_Refresh'); });
-        this.receiptService.getReceipts(group.group_id).subscribe(receipts => { this.sharedDataService.receipts = receipts; this.event.publish('ReceiptList_Refresh'); });
+        this.memberService.getMembers(group.group_id).subscribe(
+          roles => { this.sharedDataService.members = roles; this.event.publish('MemberList_Refresh'); },
+          err => { this.sharedDataService.members = []; this.event.publish('MemberList_Refresh'); }
+        );
+        this.roleService.getRoles(group.group_id).subscribe(
+          roles => { this.sharedDataService.roles = roles; this.event.publish('RoleList_Refresh'); },
+          err => { this.sharedDataService.roles = []; this.event.publish('RoleList_Refresh'); }
+        );
+        this.proceedingService.getProceedings(group.group_id).subscribe(
+          roles => { this.sharedDataService.proceedings = roles; this.event.publish('ProceedingList_Refresh'); },
+          err => { this.sharedDataService.proceedings = []; this.event.publish('ProceedingList_Refresh'); }
+        );
+        this.decisionService.getDecisions(group.group_id).subscribe(
+          roles => { this.sharedDataService.decisions = roles; this.event.publish('DecisionList_Refresh'); },
+          err => { this.sharedDataService.decisions = []; this.event.publish('DecisionList_Refresh'); }
+        );
+        this.activityService.getActivities(group.group_id).subscribe(
+          roles => { this.sharedDataService.activities = roles; this.event.publish('ActivityList_Refresh'); },
+          err => { this.sharedDataService.activities = []; this.event.publish('ActivityList_Refresh'); }
+        );
+        this.receiptService.getReceipts(group.group_id).subscribe(
+          receipts => { this.sharedDataService.receipts = receipts; this.event.publish('ReceiptList_Refresh'); },
+          err => { this.sharedDataService.receipts = []; this.event.publish('ReceiptList_Refresh'); }
+        );
         this.memberService.getMemberMyself(group.group_id).subscribe(member => {
           this.sharedDataService.myselfMemberId = member.member_id;
           this.sharedDataService.myselfMemberLogId = member.member_log_id;

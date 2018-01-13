@@ -34,9 +34,9 @@ export class SharedDataService {
   myselfMemberId: number;
   myselfMemberLogId: number;
   myselfState: string;
-  memberReadPermitted: boolean = false;
+  memberReadPermitted: boolean = true;
   memberCreatePermitted: boolean = false;
-  roleReadPermitted: boolean = false;
+  roleReadPermitted: boolean = true;
   roleCreatePermitted: boolean = false;
   proceedingCreatePermitted: boolean = false;
   proceedingReadPermitted: boolean = true;
