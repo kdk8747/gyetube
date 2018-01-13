@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Http } from '@angular/http';
 import { AmazonSignature } from '../models';
 import { AuthHttp } from 'angular2-jwt';
+import { EnvVariables } from '../app/environment-variables/environment-variables.token';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/toPromise';
@@ -11,7 +12,8 @@ import 'rxjs/add/operator/take';
 export class AmazonService {
     constructor(
       public authHttp: AuthHttp,
-      public http: Http
+      public http: Http,
+      @Inject(EnvVariables) public envVariables
     ) { }
 
     getISO8601Date(date: Date) {
@@ -55,7 +57,7 @@ export class AmazonService {
         formData.append('Policy', amazonSignature.stringToSign);
         formData.append('X-Amz-Signature', amazonSignature.signature);
         formData.append('file', file, file.name);
-        return this.http.post('http://grassroots-groups.s3.amazonaws.com/', formData)
+        return this.http.post(this.envVariables.amazonS3Endpoint, formData)
             .map(response => response.text())
             .take(1);
     }
