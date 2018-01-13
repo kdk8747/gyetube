@@ -134,6 +134,7 @@ exports.getMyself = async (req, res) => {
     role[0][0].receipt = bitToStringArray(role[0][0].receipt);
     member[0][0].role = role[0][0];
 
+    res.setHeader('Cache-Control', 'public, max-age=1');
     res.send(member[0][0]);
   }
   catch (err) {
@@ -226,6 +227,8 @@ exports.getByLogID = async (req, res) => {
       return role;
     });
 
+    if (member_log[0][0].next_id > 0)
+      res.setHeader('Cache-Control', 'public, max-age=2592000');
     res.send(member_log[0][0]);
   }
   catch (err) {

@@ -107,6 +107,8 @@ exports.getByID = async (req, res) => {
     proceeding[0][0].attendees = attendees[0];
     proceeding[0][0].reviewers = attendees[0].filter(attendee => attendee.attendee_state == 1/*REVIEWED*/);
 
+    if (proceeding[0][0].next_id > 0)
+      res.setHeader('Cache-Control', 'public, max-age=2592000');
     res.send(proceeding[0][0]);
   }
   catch (err) {
