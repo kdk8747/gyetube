@@ -31,7 +31,7 @@ exports.getSign = (req, res) => {
   let policy = {
     'expiration': expiration,
     'conditions': [
-      { 'bucket': 'grassroots-groups' },
+      { 'bucket': process.env.S3_BUCKET_NAME },
       ['starts-with', '$key', keyPath],
       { 'acl': 'public-read' },
       { 'x-amz-meta-uuid': '14365123651274' },
@@ -45,6 +45,7 @@ exports.getSign = (req, res) => {
   if (req.params.category != 'documents')
     policy.conditions.push(['starts-with', '$Content-Type', 'image/']);
 
+  debug('################' + policy);;
   let policyString = JSON.stringify(policy);
   let stringToSign = new Buffer(policyString).toString('base64');
   let signingKey = getSignatureKey(process.env.AWS_SECRET_ACCESS_KEY, authDate, 'ap-northeast-2', 's3', 'aws4_request');
