@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const debug = require('debug')('sign-s3');
 
 exports.authCreate = (req, res, next) => {
   const CREATE = 1;
@@ -27,6 +28,7 @@ exports.getSign = (req, res) => {
 
   let expiration = new Date();
   expiration.setMinutes(expiration.getMinutes() + 3);
+  debug('################' + process.env.S3_BUCKET_NAME);
   let policy = {
     'expiration': expiration,
     'conditions': [
