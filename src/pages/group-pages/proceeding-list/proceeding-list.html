@@ -1,11 +1,11 @@
 <ion-content fullscreen (ionScroll)="util.onContentScroll($event)">
   <div style="height:56px"></div>
 
-  <span *ngIf="!this.sharedDataService.proceedingReadPermitted">
+  <span *ngIf="!sharedDataService.proceedingReadPermitted">
     <p text-center>{{'I18N_ACCESS_DENIED' | translate}}</p>
     <gyetube-member-register-button></gyetube-member-register-button>
   </span>
-  <span *ngIf="this.sharedDataService.proceedingReadPermitted && proceedings.length == 0">
+  <span *ngIf="sharedDataService.proceedingReadPermitted && proceedings.length == 0">
     <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
   </span>
 
@@ -39,7 +39,7 @@
     </ion-col>
   </ion-row>
 
-  <ion-fab right middle *ngIf="this.sharedDataService.proceedingCreatePermitted">
+  <ion-fab right middle *ngIf="sharedDataService.proceedingCreatePermitted">
     <button ion-fab (tap)="navigateToEditor()">
       <ion-icon name="add"></ion-icon>
     </button>
