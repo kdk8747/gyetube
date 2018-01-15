@@ -28,11 +28,10 @@ exports.getSign = (req, res) => {
 
   let expiration = new Date();
   expiration.setMinutes(expiration.getMinutes() + 3);
-  debug('################' + process.env.S3_BUCKET_NAME);
   let policy = {
     'expiration': expiration,
     'conditions': [
-      { 'bucket': 'gyetube-groups' },
+      { 'bucket': 'grassroots-groups' },
       ['starts-with', '$key', keyPath],
       { 'acl': 'public-read' },
       { 'x-amz-meta-uuid': '14365123651274' },
