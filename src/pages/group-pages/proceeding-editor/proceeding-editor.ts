@@ -153,8 +153,11 @@ export class ProceedingEditorPage {
       this.sharedDataService.proceedings.push(proceeding);
       this.sharedDataService.decisionEditMode = false;
       this.sharedDataService.decisionChangesets = [];
+      this.decisionService.getDecisions(this.groupId).subscribe(
+        decisions => { this.sharedDataService.decisions = decisions; this.event.publish('DecisionList_Refresh'); },
+        err => { this.sharedDataService.decisions = []; this.event.publish('DecisionList_Refresh'); }
+      );
       this.event.publish('ProceedingList_Refresh');
-      this.event.publish('DecisionList_Refresh');
       this.navCtrl.setRoot('ProceedingListPage');
     });
   }
