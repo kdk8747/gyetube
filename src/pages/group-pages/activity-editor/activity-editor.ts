@@ -17,7 +17,9 @@ export class ActivityEditorPage {
 
   groupId: number;
   isNative: boolean = false;
-  newActivityImageFile: File = null;
+  //newActivityImageFile: File = null;
+  newActivityImageFiles: File[] = [];
+
   decisions: DecisionListElement[] = [];
   members: MemberListElement[] = [];
 
@@ -86,13 +88,13 @@ export class ActivityEditorPage {
   }
 
   onChangeActivityPhoto(event: any) {
-    /*let fileList = event.target.files;
-    this.newActivityFiles = [];
+    let fileList = event.target.files;
+    this.newActivityImageFiles = [];
     for (let i = 0; i < fileList.length; i++) {
-      this.newActivityFiles.push(event.target.files[i] as File);
-    }*/
+      this.newActivityImageFiles.push(event.target.files[i] as File);
+    }
 
-    this.newActivityImageFile = event.target.files[0] as File;
+    /*this.newActivityImageFile = event.target.files[0] as File;
 
     let preview = event.srcElement.nextElementSibling.nextElementSibling;
     let file: File = this.newActivityImageFile;
@@ -106,7 +108,7 @@ export class ActivityEditorPage {
       reader.readAsDataURL(file);
     } else {
       preview.src = "";
-    }
+    }*/
   }
 
   onSave(): void {
@@ -121,7 +123,7 @@ export class ActivityEditorPage {
        this.form.value.participants, +this.form.value.parentDecision);
 
 
-    if (!this.newActivityImageFile) {
+    if (this.newActivityImageFiles.length == 0) {
       this.activityService.create(this.groupId, newActivity).toPromise()
         .then(() => this.navCtrl.setRoot('ActivityListPage'))
         .catch(() => { console.log('new activity failed') });
@@ -129,14 +131,17 @@ export class ActivityEditorPage {
     else {
       let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
       this.amazonService.getAmazonSignatureForActivityPOST(this.groupId, dateForSign).toPromise()
-        .then((amzSign: AmazonSignature) => this.amazonService.postFile(this.newActivityImageFile, dateForSign, amzSign).toPromise())
-        .then((xml: string) => {
-          let regexp = /<Location>(.+)<\/Location>/;
-          let result = regexp.exec(xml);
-          if (result.length < 2) return Promise.reject('Unknown XML format');
-          newActivity.image_urls.push(result[1]);
-          return this.activityService.create(this.groupId, newActivity).toPromise();
-        })
+        .then((amzSign: AmazonSignature) => Promise.all(this.newActivityImageFiles.map(file =>
+          this.amazonService.postFile(file, dateForSign, amzSign).toPromise()
+            .then((xml: string) => {
+              let regexp = /<Location>(.+)<\/Location>/;
+              let result = regexp.exec(xml);
+              if (result.length < 2) return Promise.reject('Unknown XML format');
+              newActivity.image_urls.push(result[1]);
+              return Promise.resolve();
+            })
+        )))
+        .then(() => this.activityService.create(this.groupId, newActivity).toPromise())
         .then((activity) => {
           this.sharedDataService.activities.push(activity);
           this.event.publish('ActivityList_Refresh')

@@ -17,7 +17,7 @@
 
       <ion-item *ngIf="!isNative">
         {{ 'I18N_PHOTOS' | translate }}
-        <input type="file" (change)="onChangeActivityPhoto($event)" accept="image/*" />
+        <input type="file" multiple (change)="onChangeActivityPhoto($event)" accept="image/*" />
         <div style="height:56px"></div>
         <img src="" style="width: auto; height: auto">
       </ion-item>
