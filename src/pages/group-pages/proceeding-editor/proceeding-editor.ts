@@ -110,7 +110,7 @@ export class ProceedingEditorPage {
   }
 
   isThisPartOfAttendees(memberId: string): boolean {
-    return this.form.value.attendees.some(attendee => attendee == memberId);
+    return this.form.value.attendees.some(attendee => attendee.member_id == memberId);
   }
 
   isValidVote(): boolean {
@@ -135,7 +135,7 @@ export class ProceedingEditorPage {
 
     let newProceeding = new ProceedingEditorElement(this.id ? this.id : 0,
       this.form.value.meetingDate, this.form.value.title, this.form.value.description,
-      this.form.value.attendees,
+      this.form.value.attendees.map(attendee => attendee.member_id),
       childDecisions);
 
     this.proceedingService.create(this.groupId, newProceeding).subscribe((proceeding) => {
