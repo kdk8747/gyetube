@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, ReceiptService, AmazonService, SharedDataService } from '../../../providers';
-import { ReceiptEditorElement, ActivityListElement, DecisionListElement, AmazonSignature } from '../../../models';
+import { ReceiptEditorElement, ReceiptDetailElement, ActivityListElement, DecisionListElement, AmazonSignature, ReceiptListElement } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage({
@@ -15,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class ReceiptEditorPage {
 
   groupId: number;
+  id: number;
   isNative: boolean = false;
   newReceiptImageFile: File = null;
   activities: ActivityListElement[] = [];
@@ -23,6 +24,8 @@ export class ReceiptEditorPage {
 
   form: FormGroup;
   submitAttempt: boolean = false;
+
+  imageUrl: string = '';
   parentActivity: string = '';
   parentDecision: string = '';
 
@@ -48,6 +51,8 @@ export class ReceiptEditorPage {
   }
 
   ionViewDidLoad() {
+    this.id = this.navParams.get('id');
+
     this.event.subscribe('DecisionList_Refresh', () => {
       this.decisions = this.sharedDataService.decisions.filter(decision =>
         (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED' ) && decision.next_id == 0);
@@ -62,6 +67,24 @@ export class ReceiptEditorPage {
       this.activities = this.sharedDataService.activities;
       this.decisions = this.sharedDataService.decisions.filter(decision =>
         (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED' ) && decision.next_id == 0);
+
+      if (this.id) {
+        this.receiptService.getReceipt(this.groupId, this.id)
+          .subscribe((receipt: ReceiptDetailElement) => {
+            this.form.controls['title'].setValue(receipt.title);
+            this.form.controls['settlementDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(receipt.settlement_datetime)));
+            this.form.controls['difference'].setValue(receipt.difference);
+            this.imageUrl = receipt.image_url;
+            if (receipt.parent_activity && receipt.parent_activity.activity_id) {
+              this.activitySelected = true;
+              this.parentActivity = receipt.parent_activity.activity_id.toString();
+            }
+            if (receipt.parent_decision && receipt.parent_decision.decision_id) {
+              this.activitySelected = false;
+              this.parentDecision = receipt.parent_decision.decision_id.toString();
+            }
+          });
+      }
     });
   }
 
@@ -110,15 +133,22 @@ export class ReceiptEditorPage {
       || !this.form.valid) return;
     this.form.value.title = this.form.value.title.trim();
 
-    let newReceipt = new ReceiptEditorElement(0, this.form.value.settlementDate,
-      this.form.value.title, +this.form.value.difference, '',
+    let newReceipt = new ReceiptEditorElement(this.id ? this.id : 0, this.form.value.settlementDate,
+      this.form.value.title, +this.form.value.difference, this.imageUrl,
       this.activitySelected ? +this.parentActivity : 0,
       this.activitySelected ? 0 : +this.parentDecision);
 
     if (!this.newReceiptImageFile) {
-      this.receiptService.create(this.groupId, newReceipt).toPromise()
-        .then(() => this.navCtrl.setRoot('ReceiptListPage'))
-        .catch(() => { console.log('new receipt failed') });
+      if (newReceipt.receipt_id == 0) {
+        this.receiptService.create(this.groupId, newReceipt).toPromise()
+          .then((receipt) => this.finalizeCreate(receipt))
+          .catch(() => { console.log('new receipt failed') });
+      }
+      else {
+        this.receiptService.update(this.groupId, newReceipt).toPromise()
+          .then((receipt) => this.finalizeUpdate(receipt, newReceipt.receipt_id))
+          .catch(() => { console.log('update receipt failed') });
+      }
     }
     else {
       let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
@@ -129,14 +159,28 @@ export class ReceiptEditorPage {
           let result = regexp.exec(xml);
           if (result.length < 2) return Promise.reject('Unknown XML format');
           newReceipt.image_url = result[1];
-          return this.receiptService.create(this.groupId, newReceipt).toPromise();
-        })
-        .then((receipt) => {
-          this.sharedDataService.receipts.push(receipt);
-          this.event.publish('ReceiptList_Refresh');
-          this.navCtrl.setRoot('ReceiptListPage');
+
+          if (newReceipt.receipt_id == 0)
+            return this.receiptService.create(this.groupId, newReceipt).toPromise()
+              .then((receipt) => this.finalizeCreate(receipt));
+          else
+            return this.receiptService.update(this.groupId, newReceipt).toPromise()
+              .then((receipt) => this.finalizeUpdate(receipt, newReceipt.receipt_id));
         })
         .catch(() => { console.log('new receipt failed') });
     }
+  }
+
+  finalizeCreate(receipt: ReceiptListElement) {
+    this.sharedDataService.receipts.push(receipt);
+    this.event.publish('ReceiptList_Refresh');
+    this.navCtrl.setRoot('ReceiptListPage');
+  }
+
+  finalizeUpdate(receipt: ReceiptListElement, receipt_id: number) {
+    let i = this.sharedDataService.receipts.findIndex(receipt => receipt.receipt_id == receipt_id);
+    this.sharedDataService.receipts[i] = receipt;
+    this.event.publish('ReceiptList_Refresh');
+    this.navCtrl.setRoot('ReceiptListPage');
   }
 }

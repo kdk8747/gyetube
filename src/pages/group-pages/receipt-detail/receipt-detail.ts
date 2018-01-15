@@ -52,6 +52,10 @@ export class ReceiptDetailPage {
       this.navCtrl.pop();
   }
 
+  navigateToEditorForUpdate(receipt_id: number) {
+    this.navCtrl.push('ReceiptEditorPage', { id: receipt_id });
+  }
+
   navigateToActivityDetail(activity_id: number) {
     this.event.publish('TabsGroup_ActivityDetail', { id: activity_id });
   }

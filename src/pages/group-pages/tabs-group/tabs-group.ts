@@ -85,6 +85,7 @@ export class TabsGroupPage {
           this.sharedDataService.activityReadPermitted = member.role.activity.some(val => val == 'READ');
           this.sharedDataService.receiptCreatePermitted = member.role.receipt.some(val => val == 'CREATE');
           this.sharedDataService.receiptReadPermitted = member.role.receipt.some(val => val == 'READ');
+          this.sharedDataService.receiptInteractionPermitted = member.role.receipt.some(val => val == 'INTERACTION');
         }, (err) => {
           this.sharedDataService.myselfMemberId = 0;
           this.sharedDataService.myselfMemberLogId = 0;
@@ -100,6 +101,7 @@ export class TabsGroupPage {
           this.sharedDataService.activityReadPermitted = false;
           this.sharedDataService.receiptCreatePermitted = false;
           this.sharedDataService.receiptReadPermitted = false;
+          this.sharedDataService.receiptInteractionPermitted = false;
         });
       });
     });

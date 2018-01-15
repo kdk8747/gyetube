@@ -19,7 +19,7 @@
         {{ 'I18N_RECEIPT' | translate }}
         <input type="file" (change)="onChangeReceiptPhoto($event)" accept="image/*" />
         <div style="height:56px"></div>
-        <img src="" style="width: auto; height: auto">
+        <img [src]="imageUrl" style="width: auto; height: auto">
       </ion-item>
 
       <ion-list>

@@ -119,14 +119,89 @@ exports.getBalance = async (req, res) => {
 }
 
 exports.updateByID = async (req, res) => {
+  const conn = await db.getConnection();
   try {
-    let result = await db.execute(
+    await conn.beginTransaction();
+    let author = await conn.query(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.permissions.group_id, req.decoded.user_id]);
+    debug(author[0]);
+
+    let prev = await conn.query(
       'SELECT *\
       FROM receipt\
-      WHERE group_id=? AND receipt_id=?', [req.permissions.group_id, req.params.receipt_id]);
-    res.send(result[0]);
+      WHERE group_id=? AND receipt_id=?', [req.permissions.group_id, req.body.receipt_id]);
+    debug(prev[0]);
+
+    debug(req.body);
+    if (!prev[0][0]) throw 'cannot find one matched with receipt_id';
+    if (prev[0][0].creator_id != author[0][0].member_id) throw 'creator_id does not match';
+    if (!req.body.parent_decision_id && !req.body.parent_activity_id) throw 'need at least one parent document';
+    if (!req.body.settlement_datetime) throw 'need settlement_datetime';
+    if (req.body.difference == undefined) throw 'need difference';
+
+
+    if (prev[0][0].decision_id) {
+      await conn.query(
+        'UPDATE decision\
+        SET total_difference=total_difference-?\
+        WHERE group_id=? AND decision_id=?', [prev[0][0].difference, req.permissions.group_id, prev[0][0].decision_id]);
+    }
+    if (prev[0][0].activity_id) {
+      await conn.query(
+        'UPDATE activity\
+        SET total_difference=total_difference-?\
+        WHERE group_id=? AND activity_id=?', [prev[0][0].difference, req.permissions.group_id, prev[0][0].activity_id]);
+      await conn.query(
+        'UPDATE decision D\
+          INNER JOIN activity A ON D.group_id=A.group_id AND D.decision_id=A.decision_id\
+        SET D.total_difference=D.total_difference-?\
+        WHERE A.group_id=? AND A.activity_id=?', [prev[0][0].difference, req.permissions.group_id, prev[0][0].activity_id]);
+    }
+
+    if (req.body.parent_decision_id) {
+      await conn.query(
+        'UPDATE decision\
+        SET total_difference=total_difference+?\
+        WHERE group_id=? AND decision_id=?', [req.body.difference, req.permissions.group_id, req.body.parent_decision_id]);
+    }
+    if (req.body.parent_activity_id) {
+      await conn.query(
+        'UPDATE activity\
+        SET total_difference=total_difference+?\
+        WHERE group_id=? AND activity_id=?', [req.body.difference, req.permissions.group_id, req.body.parent_activity_id]);
+      await conn.query(
+        'UPDATE decision D\
+          INNER JOIN activity A ON D.group_id=A.group_id AND D.decision_id=A.decision_id\
+        SET D.total_difference=D.total_difference+?\
+        WHERE A.group_id=? AND A.activity_id=?', [req.body.difference, req.permissions.group_id, req.body.parent_activity_id]);
+    }
+
+    let update = await conn.query(
+      'UPDATE receipt SET decision_id=?, activity_id=?, modified_datetime=?, settlement_datetime=?, title=?, image_url=?, difference=?\
+        WHERE group_id=? AND receipt_id=?', [
+        req.body.parent_decision_id ? req.body.parent_decision_id : null,
+        req.body.parent_activity_id ? req.body.parent_activity_id : null,
+        new Date().toISOString().substring(0, 19).replace('T', ' '),
+        new Date(req.body.settlement_datetime).toISOString().substring(0, 19).replace('T', ' '),
+        req.body.title,
+        req.body.image_url ? req.body.image_url : null,
+        req.body.difference,
+        req.permissions.group_id,
+        req.body.receipt_id
+      ]);
+
+    await conn.commit();
+    conn.release();
+
+    res.send();
   }
   catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
+    }
     res.status(500).json({
       success: false,
       message: err
@@ -204,6 +279,10 @@ exports.create = async (req, res) => {
 }
 
 exports.deleteByID = async (req, res) => {
+  res.status(500).json({
+    success: false,
+    message: err
+  });
   try {
     let result = await db.execute(
       'DELETE FROM receipt\
