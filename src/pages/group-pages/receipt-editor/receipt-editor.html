@@ -47,7 +47,7 @@
           </ion-item>
           <ion-item>
             <ion-label>{{ 'I18N_RELATED_DECISION' | translate }}</ion-label>
-            <ion-radio value="decision" (ionSelect)="activitySelected=false"></ion-radio>
+            <ion-radio value="decision" (ionSelect)="activitySelected=false" [checked]="!activitySelected"></ion-radio>
           </ion-item>
           <ion-item *ngIf="!activitySelected">
             <ion-select [(ngModel)]="parentDecision" [selectOptions]="{title: ('I18N_RELATED_DECISION' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}"
@@ -58,7 +58,7 @@
 
           <ion-item no-lines>
             <ion-label>{{ 'I18N_RELATED_ACTIVITY' | translate }}</ion-label>
-            <ion-radio value="activity" (ionSelect)="activitySelected=true" checked="true"></ion-radio>
+            <ion-radio value="activity" (ionSelect)="activitySelected=true" [checked]="activitySelected"></ion-radio>
           </ion-item>
           <ion-item *ngIf="activitySelected">
             <ion-select [(ngModel)]="parentActivity" [selectOptions]="{title: ('I18N_RELATED_ACTIVITY' | translate), subTitle: ('I18N_SELECT_ONE' | translate)}"
