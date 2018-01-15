@@ -42,6 +42,17 @@ export class MemberEditorPage {
   }
 
   ionViewDidLoad() {
+    this.event.subscribe('RoleList_Refresh', () => {
+      this.roles = this.sharedDataService.roles;
+    });
+    this.event.subscribe('DecisionList_Refresh', () => {
+      this.decisions = this.sharedDataService.decisions.filter(decision =>
+        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED' ) && decision.next_id == 0);
+    });
+  }
+
+  ionViewWillUnload() {
+    this.event.unsubscribe('DecisionList_Refresh');
   }
 
   ionViewWillEnter() {

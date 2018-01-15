@@ -47,6 +47,19 @@ export class ActivityEditorPage {
   }
 
   ionViewDidLoad() {
+    this.event.subscribe('MemberList_Refresh', () => {
+      this.members = this.sharedDataService.members.filter(member =>
+        (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED'));
+    });
+    this.event.subscribe('DecisionList_Refresh', () => {
+      this.decisions = this.sharedDataService.decisions.filter(decision =>
+        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED' ) && decision.next_id == 0);
+    });
+  }
+
+  ionViewWillUnload() {
+    this.event.unsubscribe('MemberList_Refresh');
+    this.event.unsubscribe('DecisionList_Refresh');
   }
 
   ionViewWillEnter() {
@@ -58,8 +71,10 @@ export class ActivityEditorPage {
 
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.members = this.sharedDataService.members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED'));
-      this.decisions = this.sharedDataService.decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED') && decision.next_id == 0);
+      this.members = this.sharedDataService.members.filter(member =>
+        (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED'));
+      this.decisions = this.sharedDataService.decisions.filter(decision =>
+        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED') && decision.next_id == 0);
     });
   }
 

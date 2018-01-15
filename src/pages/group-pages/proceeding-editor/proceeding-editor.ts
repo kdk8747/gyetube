@@ -47,9 +47,15 @@ export class ProceedingEditorPage {
   ionViewDidLoad() {
     this.id = this.navParams.get('id');
 
+    this.event.subscribe('MemberList_Refresh', () => {
+      this.members = this.sharedDataService.members.filter(member =>
+        (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED'));
+    });
+
     this.util.getCurrentGroupId().then(group_id => {
       this.groupId = group_id;
-      this.members = this.sharedDataService.members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED'));
+      this.members = this.sharedDataService.members.filter(member =>
+        (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED'));
 
       if (this.id) {
         this.proceedingService.getProceeding(this.groupId, this.id)
@@ -71,6 +77,10 @@ export class ProceedingEditorPage {
           });
       }
     });
+  }
+
+  ionViewWillUnload() {
+    this.event.unsubscribe('MemberList_Refresh');
   }
 
   ionViewWillEnter() {

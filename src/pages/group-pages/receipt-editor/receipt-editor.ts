@@ -48,6 +48,26 @@ export class ReceiptEditorPage {
   }
 
   ionViewDidLoad() {
+    this.event.subscribe('DecisionList_Refresh', () => {
+      this.decisions = this.sharedDataService.decisions.filter(decision =>
+        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED' ) && decision.next_id == 0);
+    });
+
+    this.event.subscribe('ActivityList_Refresh', () => {
+      this.activities = this.sharedDataService.activities;
+    });
+
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.activities = this.sharedDataService.activities;
+      this.decisions = this.sharedDataService.decisions.filter(decision =>
+        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED' ) && decision.next_id == 0);
+    });
+  }
+
+  ionViewWillUnload() {
+    this.event.unsubscribe('DecisionList_Refresh');
+    this.event.unsubscribe('ActivityList_Refresh');
   }
 
   ionViewWillEnter() {
@@ -56,12 +76,6 @@ export class ReceiptEditorPage {
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-
-    this.util.getCurrentGroupId().then(group_id => {
-      this.groupId = group_id;
-      this.activities = this.sharedDataService.activities;
-      this.decisions = this.sharedDataService.decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED') && decision.next_id == 0);
-    });
   }
 
   popNavigation() {
