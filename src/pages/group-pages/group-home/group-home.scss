@@ -3,19 +3,16 @@ page-group-home {
     white-space: pre-wrap;
   }
 
-  notification-button {
-    position: relative;
-    width: 42px;
-    top:1px;
-    right: 1px;
+  .noti-button {
     overflow: visible!important;
   }
 
-  notifications-badge {
+  .noti-badge {
     background-color: red;
     position: absolute;
-    top: -3px;
-    right: -3px;
+    top: -4px;
+    right: 63px;
     border-radius: 100%;
+    z-index:10;
   }
 }

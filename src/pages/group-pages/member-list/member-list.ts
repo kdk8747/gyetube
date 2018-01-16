@@ -78,6 +78,9 @@ export class MemberListPage {
     this.translate.get('I18N_MEMBERS').subscribe(value => {
       this.sharedDataService.headerDetailTitle = this.sharedDataService.headerGroupTitle + ' - ' + value;
     });
+
+    this.sharedDataService.joinRequestedCount = this.sharedDataService.members.filter(member => (member.member_state == 'JOIN_REQUESTED')).length;
+
     switch (this.memberListState) {
       case MemberListState.STATE_NORMAL:
         this.members = this.sortByDate(this.sharedDataService.members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED')));

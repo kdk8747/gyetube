@@ -22,15 +22,11 @@ page-member-list {
     color: color($colors, dark, base)!important;
   }
 
-  notification-button {
-    position: relative;
-    width: 42px;
-    top:1px;
-    right: 1px;
+  .noti-button {
     overflow: visible!important;
   }
 
-  notifications-badge {
+  .noti-badge {
     background-color: red;
     position: absolute;
     top: -3px;

@@ -27,6 +27,7 @@ export class SharedDataService {
   /* FOR API CACHE */
   group: Group;
   members: MemberListElement[] = [];
+  joinRequestedCount: number = 0;
   roles: RoleListElement[] = [];
   proceedings: ProceedingListElement[] = [];
   decisions: DecisionListElement[] = [];
@@ -36,6 +37,7 @@ export class SharedDataService {
   myselfMemberId: number;
   myselfMemberLogId: number;
   myselfState: string;
+
   memberReadPermitted: boolean = false;
   memberCreatePermitted: boolean = false;
   roleReadPermitted: boolean = false;

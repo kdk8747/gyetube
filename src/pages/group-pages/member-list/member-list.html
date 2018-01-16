@@ -50,10 +50,10 @@
     </button>
   </ion-fab>
   <ion-fab right bottom *ngIf="sharedDataService.memberReadPermitted" #fab>
-    <button notification-button ion-fab>
+    <button [class.noti-button]="true" ion-fab>
       <ion-icon name="eye"></ion-icon>
-      <!--<ion-badge notifications-badge color="danger">5</ion-badge>-->
     </button>
+    <ion-badge *ngIf="sharedDataService.joinRequestedCount" [class.noti-badge]="sharedDataService.joinRequestedCount" >{{sharedDataService.joinRequestedCount}}</ion-badge>
     <ion-fab-list side="top">
       <button ion-fab (tap)="memberListState = enum.STATE_DELETED; onFAB(fab)" [class.selectedFAB]="memberListState==enum.STATE_DELETED">
         <ion-icon name="trash"></ion-icon>
@@ -61,10 +61,10 @@
       <button ion-fab (tap)="memberListState = enum.STATE_NORMAL; onFAB(fab)" [class.selectedFAB]="memberListState==enum.STATE_NORMAL">
         <ion-icon name="attach"></ion-icon>
       </button>
-      <button notification-button ion-fab (tap)="memberListState = enum.STATE_PENDING; onFAB(fab)" [class.selectedFAB]="memberListState==enum.STATE_PENDING">
+      <button [class.noti-button]="true" ion-fab (tap)="memberListState = enum.STATE_PENDING; onFAB(fab)" [class.selectedFAB]="memberListState==enum.STATE_PENDING">
         <ion-icon name="mail"></ion-icon>
-        <!--<ion-badge notifications-badge color="danger">5</ion-badge>-->
       </button>
+      <ion-badge *ngIf="sharedDataService.joinRequestedCount" [class.noti-badge]="sharedDataService.joinRequestedCount" >{{sharedDataService.joinRequestedCount}}</ion-badge>
     </ion-fab-list>
   </ion-fab>
 </ion-content>

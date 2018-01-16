@@ -47,7 +47,10 @@ export class TabsGroupPage {
         this.sharedDataService.headerGroupTitle = group.title;
 
         this.memberService.getMembers(group.group_id).subscribe(
-          roles => { this.sharedDataService.members = roles; this.event.publish('MemberList_Refresh'); },
+          members => {
+            this.sharedDataService.joinRequestedCount = members.filter(member => (member.member_state == 'JOIN_REQUESTED')).length;
+            this.sharedDataService.members = members; this.event.publish('MemberList_Refresh');
+          },
           err => { this.sharedDataService.members = []; this.event.publish('MemberList_Refresh'); }
         );
         this.roleService.getRoles(group.group_id).subscribe(

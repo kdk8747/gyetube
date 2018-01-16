@@ -108,8 +108,8 @@ export class MemberDetailPage {
   }
 
   updateFinallize() {
-    this.memberService.getMembers(this.groupId).subscribe(roles => {
-      this.sharedDataService.members = roles;
+    this.memberService.getMembers(this.groupId).subscribe(members => {
+      this.sharedDataService.members = members;
       this.event.publish('MemberList_Refresh');
     },err => {
       this.sharedDataService.members = [];
