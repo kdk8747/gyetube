@@ -53,7 +53,17 @@ export class HeaderComponent {
       let childNav = this.nav.getActiveChildNavs()[0]._tabs[selectedTabIndex];
       if (childNav.length() == 1) {
         switch (selectedTabIndex) {
-          case 0: childNav.setRoot('GroupHomePage'); break;
+          case 0:
+            if (this.sharedDataService.headerReturnMemberList){
+              childNav.setRoot('MemberListPage');
+              break;
+            }
+            if (this.sharedDataService.headerReturnRoleList){
+              childNav.setRoot('RoleListPage');
+              break;
+            }
+            childNav.setRoot('GroupHomePage');
+            break;
           case 1: childNav.setRoot('ProceedingListPage'); break;
           case 2: childNav.setRoot('DecisionListPage'); break;
           case 3: childNav.setRoot('ActivityListPage'); break;

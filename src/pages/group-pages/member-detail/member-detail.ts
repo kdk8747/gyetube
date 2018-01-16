@@ -68,10 +68,12 @@ export class MemberDetailPage {
   }
 
   navigateToPrev() {
+    this.sharedDataService.headerReturnMemberList = true;
     this.navCtrl.setRoot('MemberDetailPage', { id: this.id, log_id: this.member.prev_id });
   }
 
   navigateToNext() {
+    this.sharedDataService.headerReturnMemberList = true;
     this.navCtrl.setRoot('MemberDetailPage', { id: this.id, log_id: this.member.next_id });
   }
 
