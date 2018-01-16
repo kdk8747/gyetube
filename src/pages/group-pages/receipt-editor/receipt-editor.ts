@@ -25,7 +25,7 @@ export class ReceiptEditorPage {
   form: FormGroup;
   submitAttempt: boolean = false;
 
-  prevReceipt: ReceiptDetailElement;
+  imageUrl: string = '';
   parentActivity: string = '';
   parentDecision: string = '';
 
@@ -74,7 +74,7 @@ export class ReceiptEditorPage {
             this.form.controls['title'].setValue(receipt.title);
             this.form.controls['settlementDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(receipt.settlement_datetime)));
             this.form.controls['difference'].setValue(receipt.difference);
-            this.prevReceipt = receipt;
+            this.imageUrl = receipt.image_url;
             if (receipt.parent_activity && receipt.parent_activity.activity_id) {
               this.activitySelected = true;
               this.parentActivity = receipt.parent_activity.activity_id.toString();
@@ -134,12 +134,12 @@ export class ReceiptEditorPage {
     this.form.value.title = this.form.value.title.trim();
 
     let newReceipt = new ReceiptEditorElement(this.id ? this.id : 0, this.form.value.settlementDate,
-      this.form.value.title, +this.form.value.difference, this.prevReceipt.image_url,
+      this.form.value.title, +this.form.value.difference, this.imageUrl,
       this.activitySelected ? +this.parentActivity : 0,
       this.activitySelected ? 0 : +this.parentDecision);
 
     if (!this.newReceiptImageFile) {
-      if (!this.prevReceipt) {
+      if (!this.id) {
         this.receiptService.create(this.groupId, newReceipt).toPromise()
           .then((receipt) => this.finalizeCreate(receipt))
           .catch(() => { console.log('new receipt failed') });
@@ -160,7 +160,7 @@ export class ReceiptEditorPage {
           if (result.length < 2) return Promise.reject('Unknown XML format');
           newReceipt.image_url = result[1];
 
-          if (!this.prevReceipt)
+          if (!this.id)
             return this.receiptService.create(this.groupId, newReceipt).toPromise()
               .then((receipt) => this.finalizeCreate(receipt));
           else
@@ -178,14 +178,14 @@ export class ReceiptEditorPage {
   }
 
   finalizeUpdate(receipt: ReceiptEditorElement) {
-    let i = this.sharedDataService.receipts.findIndex(receipt => receipt.receipt_id == this.prevReceipt.receipt_id);
+    let i = this.sharedDataService.receipts.findIndex(receipt => receipt.receipt_id == this.id);
     this.sharedDataService.receipts[i] = new ReceiptListElement(receipt.receipt_id, 0, new Date().toISOString(),
       receipt.settlement_datetime, receipt.title, receipt.difference, 0, receipt.image_url);
     this.event.publish('ReceiptList_Refresh');
 
-    if (this.prevReceipt.parent_activity && this.prevReceipt.parent_activity.activity_id){
-      let i = this.sharedDataService.activities.findIndex(activity => activity.activity_id == this.prevReceipt.parent_activity.activity_id);
-      this.sharedDataService.activities[i].total_difference -= this.prevReceipt.difference;
+    if (+this.parentActivity != 0){
+      let i = this.sharedDataService.activities.findIndex(activity => activity.activity_id == +this.parentActivity);
+      this.sharedDataService.activities[i].total_difference -= +this.form.value.difference;
     }
     if (receipt.parent_activity_id) {
       let i = this.sharedDataService.activities.findIndex(activity => activity.activity_id == receipt.parent_activity_id);
@@ -193,9 +193,9 @@ export class ReceiptEditorPage {
     }
     this.event.publish('ActivityList_Refresh');
 
-    if (this.prevReceipt.parent_decision && this.prevReceipt.parent_decision.decision_id) {
-      let i = this.sharedDataService.decisions.findIndex(decision => decision.decision_id == this.prevReceipt.parent_decision.decision_id);
-      this.sharedDataService.decisions[i].total_difference -= this.prevReceipt.difference;
+    if (+this.parentDecision != 0) {
+      let i = this.sharedDataService.decisions.findIndex(decision => decision.decision_id == +this.parentDecision);
+      this.sharedDataService.decisions[i].total_difference -= +this.form.value.difference;
     }
     if (receipt.parent_decision_id){
       let i = this.sharedDataService.decisions.findIndex(decision => decision.decision_id == receipt.parent_decision_id);
