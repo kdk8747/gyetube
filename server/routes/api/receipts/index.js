@@ -10,7 +10,7 @@ router.get('/:receipt_id',
   controller.authRead, controller.getByID);
 
 router.put('/:receipt_id',
-  controller.authUpdate, controller.updateByID);
+  controller.authCreate, controller.updateByID);
 
 router.post('/',
   controller.authCreate, controller.create);
