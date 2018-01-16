@@ -48,9 +48,6 @@ export class MemberListPage {
   }
 
   ionViewWillEnter() {
-    this.translate.get('I18N_MEMBERS').subscribe(value => {
-      this.sharedDataService.headerDetailTitle = this.sharedDataService.headerGroupTitle + ' - ' + value;
-    });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }
@@ -78,6 +75,9 @@ export class MemberListPage {
   }
 
   refreshMembers() {
+    this.translate.get('I18N_MEMBERS').subscribe(value => {
+      this.sharedDataService.headerDetailTitle = this.sharedDataService.headerGroupTitle + ' - ' + value;
+    });
     switch (this.memberListState) {
       case MemberListState.STATE_NORMAL:
         this.members = this.sortByDate(this.sharedDataService.members.filter(member => (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED')));

@@ -40,9 +40,6 @@ export class RoleListPage {
   }
 
   ionViewWillEnter() {
-    this.translate.get('I18N_ROLES').subscribe(value => {
-      this.sharedDataService.headerDetailTitle = this.sharedDataService.headerGroupTitle + ' - ' + value;
-    });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }
@@ -63,6 +60,9 @@ export class RoleListPage {
   }
 
   refreshRoles() {
+    this.translate.get('I18N_ROLES').subscribe(value => {
+      this.sharedDataService.headerDetailTitle = this.sharedDataService.headerGroupTitle + ' - ' + value;
+    });
     if (this.sharedDataService.deletedRoleListMode)
       this.roles = this.sharedDataService.roles.filter(role => (role.document_state == 'DELETED'));
     else
