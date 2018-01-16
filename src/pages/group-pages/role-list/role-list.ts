@@ -40,6 +40,7 @@ export class RoleListPage {
   }
 
   ionViewWillEnter() {
+    this.refreshRoles();
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }

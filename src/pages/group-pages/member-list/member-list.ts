@@ -48,6 +48,7 @@ export class MemberListPage {
   }
 
   ionViewWillEnter() {
+    this.refreshMembers();
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
   }
