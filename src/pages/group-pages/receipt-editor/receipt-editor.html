@@ -15,18 +15,15 @@
         <ion-buttons>{{ 'I18N_RECEIPT' | translate }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
       </ion-toolbar>
 
-      <ion-item *ngIf="!isNative">
+      <ion-item>
         {{ 'I18N_RECEIPT' | translate }}
         <input type="file" (change)="onChangeReceiptPhoto($event)" accept="image/*" />
         <div style="height:56px"></div>
-        <img [src]="imageUrl" style="width: auto; height: auto">
+        <img [src]="prevReceipt?.image_url" style="width: auto; height: auto">
       </ion-item>
 
       <ion-list>
         <form [formGroup]="form">
-          <ion-item *ngIf="isNative">
-            <ion-label>{{ 'I18N_RECEIPT' | translate }}</ion-label>
-          </ion-item>
           <ion-item>
             <ion-label>{{ 'I18N_TITLE' | translate }}</ion-label>
             <ion-input formControlName="title" type="text" text-right [class.invalid]="!form.controls.title.valid && (form.controls.title.dirty || submitAttempt)"></ion-input>
