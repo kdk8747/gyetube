@@ -1,5 +1,27 @@
 const mysql = require('mysql2/promise');
-const pool = mysql.createPool(process.env.JAWSDB_MARIA_URL);
+const debug = require('debug')('database');
+const pool = mysql.createPool({
+  host            : process.env.MARIADB_HOST,
+  user            : process.env.MARIADB_USER,
+  password        : process.env.MARIADB_PASSWORD,
+  database        : process.env.MARIADB_DATABASE,
+  connectionLimit : 10,
+  dateStrings     : true
+});
+let connection_count = 0;
+
+pool.on('acquire', function (connection) {
+  debug('############## Connection %d acquired', connection.threadId);
+});
+pool.on('connection', function (connection) {
+  debug('############## connection: ' + ++connection_count);
+});
+pool.on('enqueue', function () {
+  debug('############## Waiting for available connection slot');
+});
+pool.on('release', function (connection) {
+  debug('############## Connection %d released', connection.threadId);
+});
 
 module.exports = pool;
 
