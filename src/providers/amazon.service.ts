@@ -60,14 +60,14 @@ export class AmazonService {
       .take(1);
   }
 
-  getAmazonSignatureForReceiptDELETE(groupID: number, ISO8601Date: string, keyPath: string): Observable<AmazonSignature> {
-    let url = `/api/v1.0/groups/${groupID}/sign-s3/delete/receipt?amz-date=${ISO8601Date}&key-path=${keyPath}`;
+  getAmazonSignatureForReceiptDELETE(groupID: number, ISO8601Date: string, URL: string): Observable<AmazonSignature> {
+    let url = `/api/v1.0/groups/${groupID}/sign-s3/delete/receipt?amz-date=${ISO8601Date}&URL=${URL}`;
     return this.authHttp.get(url)
       .map(response => response.json() as AmazonSignature)
       .take(1);
   }
 
-  deleteFile(ISO8601Date: string, amazonSignature: AmazonSignature, keyPath: string): Observable<string> {
+  deleteFile(ISO8601Date: string, amazonSignature: AmazonSignature): Observable<string> {
     let myHeaders = new Headers();
     myHeaders.append('Authorization',
     `AWS4-HMAC-SHA256 \
@@ -80,7 +80,7 @@ Signature=${amazonSignature.signature}`);
     let options = new RequestOptions();
     options.headers = myHeaders;
 
-    return this.http.delete(this.envVariables.amazonS3Endpoint + keyPath, options)
+    return this.http.delete(this.envVariables.amazonS3Endpoint + amazonSignature.keyPath, options)
       .map(response => response.text())
       .take(1);
   }

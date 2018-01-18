@@ -5,6 +5,6 @@ const controller = require('./signs3.controller');
 router.get('/post/:category(receipt|activity)',
   controller.authCreate, controller.getPostSign);
 router.get('/delete/:category(receipt|activity)',
-  controller.authDelete, controller.getDeleteSign);
+  controller.authCreateOrDelete, controller.getDeleteSign);
 
 module.exports = router;

@@ -83,10 +83,9 @@ export class ReceiptDetailPage {
   requestDelete(receipt_id: number) {
     if (this.receipt.image_url) {
       let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
-      let keyPath = (this.receipt.image_url.split('amazonaws.com/')[1]);
 
-      this.amazonService.getAmazonSignatureForReceiptDELETE(this.groupId, dateForSign, keyPath).toPromise()
-        .then((amzSign: AmazonSignature) => this.amazonService.deleteFile(dateForSign, amzSign, keyPath).toPromise())
+      this.amazonService.getAmazonSignatureForReceiptDELETE(this.groupId, dateForSign, this.receipt.image_url).toPromise()
+        .then((amzSign: AmazonSignature) => this.amazonService.deleteFile(dateForSign, amzSign).toPromise())
         .then(() => this.receiptService.delete(this.groupId, receipt_id).toPromise())
         .then(() => this.finalizeDelete())
         .catch(() => { console.log('delete receipt failed') });

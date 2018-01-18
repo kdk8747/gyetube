@@ -12,9 +12,10 @@ exports.authCreate = (req, res, next) => {
     });
 }
 
-exports.authDelete = (req, res, next) => {
+exports.authCreateOrDelete = (req, res, next) => {
+  const CREATE = 1;
   const DELETE = 8;
-  if (req.permissions[req.params.category] & DELETE)
+  if (req.permissions[req.params.category] & CREATE || req.permissions[req.params.category] & DELETE)
     next();
   else
     res.status(403).json({
@@ -71,8 +72,10 @@ exports.getPostSign = (req, res) => {
 
 exports.getDeleteSign = (req, res) => {
   const amzDate = req.query['amz-date'];
-  const keyPath = req.query['key-path'];
+  const URL = req.query['URL'];
   const payload = '';//req.query['payload'];
+
+  let keyPath = URL.split('amazonaws.com/')[1];
   let authDate = amzDate.split('T')[0];
   let scope = `${authDate}/ap-northeast-2/s3/aws4_request`;
   let credential = `${process.env.AWS_ACCESS_KEY_ID}/${scope}`;
