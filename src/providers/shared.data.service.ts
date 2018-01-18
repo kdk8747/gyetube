@@ -50,4 +50,5 @@ export class SharedDataService {
   receiptCreatePermitted: boolean = false;
   receiptReadPermitted: boolean = true;
   receiptInteractionPermitted: boolean = false;
+  receiptDeletePermitted: boolean = false;
 }

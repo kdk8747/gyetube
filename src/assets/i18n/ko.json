@@ -52,6 +52,9 @@
   "I18N_NAME": "이름",
   "I18N_ACCESS_DENIED": "접근 권한이 없습니다.",
   "I18N_EMPTY_LIST": "목록이 비었습니다.",
+  "I18N_DELETE_UPLOAD": "게시물을 삭제할까요?",
+  "I18N_OK": "확인",
+  "I18N_CANCEL": "취소",
 
 
   "I18N_JOIN": "가입",
@@ -89,7 +92,6 @@
   "I18N_SUBMIT": "제출",
 
   "I18N_ADD": "추가",
-  "I18N_CANCEL": "취소",
   "I18N_UPDATE": "수정",
   "I18N_DELETE": "삭제",
   "I18N_REJECTED": "거부됨",

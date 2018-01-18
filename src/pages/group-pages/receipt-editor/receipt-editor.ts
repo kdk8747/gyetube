@@ -150,7 +150,7 @@ export class ReceiptEditorPage {
     else {
       let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
       this.amazonService.getAmazonSignatureForReceiptPOST(this.groupId, dateForSign).toPromise()
-        .then((amzSign: AmazonSignature) => this.amazonService.postFile(this.newReceiptImageFile, dateForSign, amzSign).toPromise())
+        .then((amzSign: AmazonSignature) => this.amazonService.postImageFile(this.newReceiptImageFile, dateForSign, amzSign).toPromise())
         .then((xml: string) => {
           let regexp = /<Location>(.+)<\/Location>/;
           let result = regexp.exec(xml);
@@ -171,6 +171,13 @@ export class ReceiptEditorPage {
   finalizeCreate(receipt: ReceiptListElement) {
     this.sharedDataService.receipts.push(receipt);
     this.event.publish('ReceiptList_Refresh');
+
+    if (!this.activitySelected && +this.parentDecision != 0){
+      let i = this.sharedDataService.decisions.findIndex(decision => decision.decision_id == +this.parentDecision);
+      this.sharedDataService.decisions[i].total_difference += receipt.difference;
+    }
+    this.event.publish('DecisionList_Refresh');
+
     this.navCtrl.setRoot('ReceiptListPage');
   }
 
@@ -183,10 +190,16 @@ export class ReceiptEditorPage {
     if (this.prevReceipt.parent_activity && this.prevReceipt.parent_activity.activity_id){
       let i = this.sharedDataService.activities.findIndex(activity => activity.activity_id == this.prevReceipt.parent_activity.activity_id);
       this.sharedDataService.activities[i].total_difference -= this.prevReceipt.difference;
+
+      let j = this.sharedDataService.decisions.findIndex(decision => decision.decision_id == this.sharedDataService.activities[i].parent_decision_id);
+      this.sharedDataService.decisions[j].total_difference -= this.prevReceipt.difference;
     }
     if (receipt.parent_activity_id) {
       let i = this.sharedDataService.activities.findIndex(activity => activity.activity_id == receipt.parent_activity_id);
       this.sharedDataService.activities[i].total_difference += receipt.difference;
+
+      let j = this.sharedDataService.decisions.findIndex(decision => decision.decision_id == this.sharedDataService.activities[i].parent_decision_id);
+      this.sharedDataService.decisions[j].total_difference += receipt.difference;
     }
     this.event.publish('ActivityList_Refresh');
 

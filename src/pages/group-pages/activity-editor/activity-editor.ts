@@ -132,7 +132,7 @@ export class ActivityEditorPage {
       let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
       this.amazonService.getAmazonSignatureForActivityPOST(this.groupId, dateForSign).toPromise()
         .then((amzSign: AmazonSignature) => Promise.all(this.newActivityImageFiles.map(file =>
-          this.amazonService.postFile(file, dateForSign, amzSign).toPromise()
+          this.amazonService.postImageFile(file, dateForSign, amzSign).toPromise()
             .then((xml: string) => {
               let regexp = /<Location>(.+)<\/Location>/;
               let result = regexp.exec(xml);

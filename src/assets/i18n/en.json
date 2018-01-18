@@ -50,8 +50,11 @@
   "I18N_REVISION": "Revision",
   "I18N_BASIS_FOR_THIS_DOCUMENT": "Basis for This Document",
   "I18N_NAME": "Name",
-  "I18N_ACCESS_DENIED": "Access Denied.",
-  "I18N_EMPTY_LIST": "This List is Empty.",
+  "I18N_ACCESS_DENIED": "Access denied.",
+  "I18N_EMPTY_LIST": "This List is empty.",
+  "I18N_DELETE_UPLOAD": "Delete upload?",
+  "I18N_OK": "Ok",
+  "I18N_CANCEL": "Cancel",
 
 
 
@@ -90,7 +93,6 @@
   "I18N_SUBMIT": "Submit",
 
   "I18N_ADD": "Add",
-  "I18N_CANCEL": "Cancel",
   "I18N_UPDATE": "Update",
   "I18N_DELETE": "Delete",
   "I18N_REJECTED": "Rejected",

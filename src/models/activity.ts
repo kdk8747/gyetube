@@ -12,6 +12,7 @@ export class ActivityListElement {
     public document_urls: string[],
 
     public participants_count: number,
+    public parent_decision_id: number,
     public child_receipts_count: number,
 
     public total_difference: number

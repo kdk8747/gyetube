@@ -49,7 +49,7 @@ exports.authDelete = (req, res, next) => {
 exports.getAll = async (req, res) => {
   try {
     let result = await db.execute(
-      'SELECT A.activity_id, A.activity_datetime, A.modified_datetime, A.title, A.description, A.image_urls, A.document_urls,\
+      'SELECT A.activity_id, A.activity_datetime, A.modified_datetime, A.title, A.description, A.image_urls, A.document_urls, A.decision_id AS parent_decision_id,\
         count(distinct P.member_id) AS participants_count,\
         A.elapsed_time, A.total_difference\
       FROM activity A\

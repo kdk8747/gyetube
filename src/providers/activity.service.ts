@@ -71,7 +71,7 @@ export class ActivityService {
         let res = response.json() as ActivityListElement;
         return new ActivityListElement(res.activity_id, new Date().toISOString(),
           activity.activity_datetime, activity.elapsed_time, activity.title, activity.description, activity.image_urls,
-          activity.document_urls, activity.participant_ids.length, 0, 0);
+          activity.document_urls, activity.participant_ids.length, activity.parent_decision_id, 0, 0);
       })
       .take(1);
   }
