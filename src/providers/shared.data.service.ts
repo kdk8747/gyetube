@@ -47,6 +47,7 @@ export class SharedDataService {
   decisionReadPermitted: boolean = true;
   activityCreatePermitted: boolean = false;
   activityReadPermitted: boolean = true;
+  activityDeletePermitted: boolean = false;
   receiptCreatePermitted: boolean = false;
   receiptReadPermitted: boolean = true;
   receiptInteractionPermitted: boolean = false;

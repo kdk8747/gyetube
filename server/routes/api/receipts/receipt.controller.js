@@ -121,6 +121,8 @@ exports.getBalance = async (req, res) => {
 exports.updateByID = async (req, res) => {
   const conn = await db.getConnection();
   try {
+    if (req.params.receipt_id != req.body.receipt_id) throw 'receipt_id does not match';
+
     await conn.beginTransaction();
     let author = await conn.query(
       'SELECT member_id\
@@ -131,7 +133,7 @@ exports.updateByID = async (req, res) => {
     let prev = await conn.query(
       'SELECT *\
       FROM receipt\
-      WHERE group_id=? AND receipt_id=?', [req.permissions.group_id, req.body.receipt_id]);
+      WHERE group_id=? AND receipt_id=?', [req.permissions.group_id, req.params.receipt_id]);
     debug(prev[0]);
 
     debug(req.body);
@@ -189,7 +191,7 @@ exports.updateByID = async (req, res) => {
         req.body.image_url ? req.body.image_url : null,
         req.body.difference,
         req.permissions.group_id,
-        req.body.receipt_id
+        req.params.receipt_id
       ]);
 
     await conn.commit();

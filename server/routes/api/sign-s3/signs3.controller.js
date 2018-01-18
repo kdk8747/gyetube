@@ -70,6 +70,7 @@ exports.getPostSign = (req, res) => {
   res.end();
 }
 
+
 exports.getDeleteSign = (req, res) => {
   const amzDate = req.query['amz-date'];
   const URL = req.query['URL'];
@@ -106,7 +107,57 @@ ${crypto.createHash('sha256').update(canonicalRequest).digest('hex')}`;
     signature: signature,
     keyPath: keyPath,
     credential: credential,
-    hashedPayload: hashedPayload
+    SHA256HashedPayload: hashedPayload
+  };
+  res.write(JSON.stringify(returnData));
+  res.end();
+}
+
+
+exports.getMultipleDeleteSign = (req, res) => {
+  const amzDate = req.query['amz-date'];
+  const URLcount = req.query['URL-count'];
+
+  let payload = '<?xml version="1.0" encoding="UTF-8"?>\n<Delete>\n';
+  for (let i = 0; i < +URLcount; i ++)
+    payload += `<Object><Key>${decodeURIComponent(req.query['URL' + i].split('amazonaws.com/')[1])}</Key></Object>\n`;
+  payload += '</Delete>';
+
+  let authDate = amzDate.split('T')[0];
+  let scope = `${authDate}/ap-northeast-2/s3/aws4_request`;
+  let credential = `${process.env.AWS_ACCESS_KEY_ID}/${scope}`;
+
+  let MD5HashedPayload = crypto.createHash('md5').update(payload).digest('base64');
+  let SHA256HashedPayload = crypto.createHash('sha256').update(payload).digest('hex');
+  let canonicalRequest = `\
+POST\n\
+/\n\
+delete=\n\
+content-length:${payload.length}\n\
+content-md5:${MD5HashedPayload}\n\
+host:${process.env.S3_BUCKET_NAME}.s3.amazonaws.com\n\
+x-amz-content-sha256:${SHA256HashedPayload}\n\
+x-amz-date:${amzDate}\n\
+\n\
+content-length;content-md5;host;x-amz-content-sha256;x-amz-date\n\
+${SHA256HashedPayload}`;
+
+  let stringToSign = `\
+AWS4-HMAC-SHA256\n\
+${amzDate}\n\
+${scope}\n\
+${crypto.createHash('sha256').update(canonicalRequest).digest('hex')}`;
+
+  let signingKey = getSignatureKey(process.env.AWS_SECRET_ACCESS_KEY, authDate, 'ap-northeast-2', 's3', 'aws4_request');
+  let signature = crypto.createHmac('sha256', signingKey).update(stringToSign).digest('hex');
+
+  let returnData = {
+    stringToSign: stringToSign,
+    signature: signature,
+    credential: credential,
+    SHA256HashedPayload: SHA256HashedPayload,
+    MD5HashedPayload: MD5HashedPayload,
+    payload: payload
   };
   res.write(JSON.stringify(returnData));
   res.end();

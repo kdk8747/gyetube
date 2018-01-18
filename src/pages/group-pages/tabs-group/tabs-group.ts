@@ -86,6 +86,7 @@ export class TabsGroupPage {
           this.sharedDataService.decisionReadPermitted = member.role.decision.some(val => val == 'READ');
           this.sharedDataService.activityCreatePermitted = member.role.activity.some(val => val == 'CREATE');
           this.sharedDataService.activityReadPermitted = member.role.activity.some(val => val == 'READ');
+          this.sharedDataService.activityDeletePermitted = member.role.activity.some(val => val == 'DELETE');
           this.sharedDataService.receiptCreatePermitted = member.role.receipt.some(val => val == 'CREATE');
           this.sharedDataService.receiptReadPermitted = member.role.receipt.some(val => val == 'READ');
           this.sharedDataService.receiptInteractionPermitted = member.role.receipt.some(val => val == 'INTERACTION');
@@ -103,6 +104,7 @@ export class TabsGroupPage {
           this.sharedDataService.decisionReadPermitted = false;
           this.sharedDataService.activityCreatePermitted = false;
           this.sharedDataService.activityReadPermitted = false;
+          this.sharedDataService.activityDeletePermitted = false;
           this.sharedDataService.receiptCreatePermitted = false;
           this.sharedDataService.receiptReadPermitted = false;
           this.sharedDataService.receiptInteractionPermitted = false;

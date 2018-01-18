@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Http, Headers, RequestOptions, URLSearchParams } from '@angular/http';
 import { AmazonSignature } from '../models';
 import { AuthHttp } from 'angular2-jwt';
 import { EnvVariables } from '../app/environment-variables/environment-variables.token';
@@ -42,9 +42,9 @@ export class AmazonService {
       .take(1);
   }
 
-  postImageFile(file: File, ISO8601Date: string, amazonSignature: AmazonSignature): Observable<string> {
+  postImageFile(file: File, ISO8601Date: string, amazonSignature: AmazonSignature, postfix: number): Observable<string> {
     let formData = new FormData();
-    formData.append('key', amazonSignature.keyPath);
+    formData.append('key', amazonSignature.keyPath + postfix);
     formData.append('acl', 'public-read');
     formData.append('Content-Type', file.type);
     formData.append('x-amz-server-side-encryption', 'AES256');
@@ -70,17 +70,49 @@ export class AmazonService {
   deleteFile(ISO8601Date: string, amazonSignature: AmazonSignature): Observable<string> {
     let myHeaders = new Headers();
     myHeaders.append('Authorization',
-    `AWS4-HMAC-SHA256 \
+      `AWS4-HMAC-SHA256 \
 Credential=${amazonSignature.credential},\
 SignedHeaders=host;x-amz-content-sha256;x-amz-date,\
 Signature=${amazonSignature.signature}`);
-    myHeaders.append('x-amz-content-sha256', amazonSignature.hashedPayload);
+    myHeaders.append('x-amz-content-sha256', amazonSignature.SHA256HashedPayload);
     myHeaders.append('x-amz-date', ISO8601Date);
 
     let options = new RequestOptions();
     options.headers = myHeaders;
 
     return this.http.delete(this.envVariables.amazonS3Endpoint + amazonSignature.keyPath, options)
+      .map(response => response.text())
+      .take(1);
+  }
+
+  getAmazonSignatureForActivityDELETE(groupID: number, ISO8601Date: string, URLs: string[]): Observable<AmazonSignature> {
+    let params = new URLSearchParams();
+    params.set('URL-count', URLs.length.toString());
+    for (let i = 0; i < URLs.length; i ++) {
+      params.set('URL' + i, URLs[i]);
+    }
+
+    console.log("http://someUrl?" + params.toString());
+    let url = `/api/v1.0/groups/${groupID}/sign-s3/delete/activity?amz-date=${ISO8601Date}&${params.toString()}`;
+    return this.authHttp.get(url)
+      .map(response => response.json() as AmazonSignature)
+      .take(1);
+  }
+
+  deleteMultipleFile(ISO8601Date: string, amazonSignature: AmazonSignature): Observable<string> {
+    let myHeaders = new Headers();
+    myHeaders.append('Authorization', `AWS4-HMAC-SHA256 \
+Credential=${amazonSignature.credential},\
+SignedHeaders=content-length;content-md5;host;x-amz-content-sha256;x-amz-date,\
+Signature=${amazonSignature.signature}`);
+    myHeaders.append('content-md5', amazonSignature.MD5HashedPayload);
+    myHeaders.append('x-amz-content-sha256', amazonSignature.SHA256HashedPayload);
+    myHeaders.append('x-amz-date', ISO8601Date);
+
+    let options = new RequestOptions();
+    options.headers = myHeaders;
+
+    return this.http.post(this.envVariables.amazonS3Endpoint + '?delete', amazonSignature.payload, options)
       .map(response => response.text())
       .take(1);
   }

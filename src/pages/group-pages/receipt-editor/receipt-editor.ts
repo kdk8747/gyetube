@@ -157,7 +157,7 @@ export class ReceiptEditorPage {
     }
     else {
       this.amazonService.getAmazonSignatureForReceiptPOST(this.groupId, dateForSign).toPromise()
-        .then((amzSign: AmazonSignature) => this.amazonService.postImageFile(this.newReceiptImageFile, dateForSign, amzSign).toPromise())
+        .then((amzSign: AmazonSignature) => this.amazonService.postImageFile(this.newReceiptImageFile, dateForSign, amzSign, 0).toPromise())
         .then((xml: string) => {
           let regexp = /<Location>(.+)<\/Location>/;
           let result = regexp.exec(xml);

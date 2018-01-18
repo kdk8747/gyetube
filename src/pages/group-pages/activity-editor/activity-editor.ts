@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, ActivityService, AmazonService, SharedDataService } from '../../../providers';
-import { MemberListElement, ActivityEditorElement, DecisionListElement, AmazonSignature } from '../../../models';
+import { MemberListElement, ActivityEditorElement, ActivityListElement, ActivityDetailElement, DecisionListElement, AmazonSignature } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 
 
@@ -16,7 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class ActivityEditorPage {
 
   groupId: number;
-  isNative: boolean = false;
+  id: number;
   //newActivityImageFile: File = null;
   newActivityImageFiles: File[] = [];
 
@@ -25,6 +25,8 @@ export class ActivityEditorPage {
 
   form: FormGroup;
   submitAttempt: boolean = false;
+
+  prevActivity: ActivityDetailElement = new ActivityDetailElement(0,'','',null,0,'','',[],[],[],null,[],0);
 
   constructor(
     public navCtrl: NavController,
@@ -45,17 +47,39 @@ export class ActivityEditorPage {
       participants: [[], Validators.compose([Validators.minLength(1), Validators.required])],
       parentDecision: ['', Validators.required],
     });
-    this.isNative = this.util.isNativeApp();
   }
 
   ionViewDidLoad() {
+    this.id = this.navParams.get('id');
+
     this.event.subscribe('MemberList_Refresh', () => {
       this.members = this.sharedDataService.members.filter(member =>
         (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED'));
     });
     this.event.subscribe('DecisionList_Refresh', () => {
       this.decisions = this.sharedDataService.decisions.filter(decision =>
-        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED' ) && decision.next_id == 0);
+        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED') && decision.next_id == 0);
+    });
+
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.members = this.sharedDataService.members.filter(member =>
+        (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED'));
+      this.decisions = this.sharedDataService.decisions.filter(decision =>
+        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED') && decision.next_id == 0);
+
+      if (this.id) {
+        this.activityService.getActivity(this.groupId, this.id)
+          .subscribe((activity: ActivityDetailElement) => {
+            this.form.controls['title'].setValue(activity.title);
+            this.form.controls['activityDate'].setValue(activity.activity_datetime);
+            this.form.controls['elapsedTime'].setValue(activity.elapsed_time);
+            this.form.controls['description'].setValue(activity.description);
+            this.form.controls['participants'].setValue(activity.participants.map(member => member.member_id));
+            this.form.controls['parentDecision'].setValue(activity.parent_decision.decision_id);
+            this.prevActivity = activity;
+          });
+      }
     });
   }
 
@@ -70,14 +94,6 @@ export class ActivityEditorPage {
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-
-    this.util.getCurrentGroupId().then(group_id => {
-      this.groupId = group_id;
-      this.members = this.sharedDataService.members.filter(member =>
-        (member.member_state == 'ADDED' || member.member_state == 'UPDATED' || member.member_state == 'JOIN_APPROVED'));
-      this.decisions = this.sharedDataService.decisions.filter(decision =>
-        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED') && decision.next_id == 0);
-    });
   }
 
   popNavigation() {
@@ -118,21 +134,41 @@ export class ActivityEditorPage {
     this.form.value.title = this.form.value.title.trim();
     this.form.value.description = this.form.value.description.trim();
 
-    let newActivity = new ActivityEditorElement(0, this.form.value.activityDate,
-       this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
-       this.form.value.participants, +this.form.value.parentDecision);
+    let newActivity = new ActivityEditorElement(this.id ? this.id : 0, this.form.value.activityDate,
+      this.form.value.elapsedTime, this.form.value.title, this.form.value.description, this.prevActivity.image_urls, [],
+      this.form.value.participants, +this.form.value.parentDecision);
 
+    let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
+
+    if (this.prevActivity.image_urls.length > 0) {
+      this.amazonService.getAmazonSignatureForActivityDELETE(this.groupId, dateForSign, this.prevActivity.image_urls).toPromise()
+        .then((amzSign: AmazonSignature) => this.amazonService.deleteMultipleFile(dateForSign, amzSign).toPromise())
+        .then((xml) => {
+          let regexp = /<Deleted>/;
+          if (!regexp.test(xml))
+            return Promise.reject(xml);
+          else
+            return Promise.resolve();
+        })
+        .catch((err) => { console.log('delete image failed:\n' + err) });
+    }
 
     if (this.newActivityImageFiles.length == 0) {
-      this.activityService.create(this.groupId, newActivity).toPromise()
-        .then(() => this.navCtrl.setRoot('ActivityListPage'))
-        .catch(() => { console.log('new activity failed') });
+      if (this.id) {
+        this.activityService.update(this.groupId, newActivity).toPromise()
+          .then((activity) => this.finalizeUpdate(activity))
+          .catch(() => { console.log('new activity failed') });
+      }
+      else {
+        this.activityService.create(this.groupId, newActivity).toPromise()
+          .then((activity) => this.finalizeCreate(activity))
+          .catch(() => { console.log('new activity failed') });
+      }
     }
     else {
-      let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
       this.amazonService.getAmazonSignatureForActivityPOST(this.groupId, dateForSign).toPromise()
-        .then((amzSign: AmazonSignature) => Promise.all(this.newActivityImageFiles.map(file =>
-          this.amazonService.postImageFile(file, dateForSign, amzSign).toPromise()
+        .then((amzSign: AmazonSignature) => Promise.all(this.newActivityImageFiles.map((file, index) =>
+          this.amazonService.postImageFile(file, dateForSign, amzSign, index).toPromise()
             .then((xml: string) => {
               let regexp = /<Location>(.+)<\/Location>/;
               let result = regexp.exec(xml);
@@ -141,13 +177,41 @@ export class ActivityEditorPage {
               return Promise.resolve();
             })
         )))
-        .then(() => this.activityService.create(this.groupId, newActivity).toPromise())
-        .then((activity) => {
-          this.sharedDataService.activities.push(activity);
-          this.event.publish('ActivityList_Refresh')
-          this.navCtrl.setRoot('ActivityListPage');
+        .then(() => {
+          if (this.id)
+            return this.activityService.update(this.groupId, newActivity).toPromise()
+              .then((activity) => this.finalizeUpdate(activity))
+          else
+            return this.activityService.create(this.groupId, newActivity).toPromise()
+              .then((activity) => this.finalizeCreate(activity))
         })
         .catch(() => { console.log('new activity failed') });
     }
+  }
+
+  finalizeCreate(activity: ActivityListElement) {
+    this.sharedDataService.activities.push(activity);
+    this.event.publish('ActivityList_Refresh')
+    this.navCtrl.setRoot('ActivityListPage');
+  }
+
+  finalizeUpdate(activity: ActivityEditorElement) {
+    let i = this.sharedDataService.activities.findIndex(activity => activity.activity_id == this.id);
+    this.sharedDataService.activities[i] = new ActivityListElement(activity.activity_id, new Date().toISOString(), activity.activity_datetime,
+      activity.elapsed_time, activity.title, activity.description, activity.image_urls, activity.document_urls, activity.participant_ids.length,
+      activity.parent_decision_id, this.prevActivity.child_receipts.length, this.prevActivity.total_difference);
+    this.event.publish('ActivityList_Refresh');
+
+    if (this.prevActivity.parent_decision && this.prevActivity.parent_decision.decision_id) {
+      let i = this.sharedDataService.decisions.findIndex(decision => decision.decision_id == this.prevActivity.parent_decision.decision_id);
+      this.sharedDataService.decisions[i].total_elapsed_time -= this.prevActivity.participants.length * this.prevActivity.elapsed_time;
+    }
+    if (activity.parent_decision_id){
+      let i = this.sharedDataService.decisions.findIndex(decision => decision.decision_id == activity.parent_decision_id);
+      this.sharedDataService.decisions[i].total_elapsed_time += activity.participant_ids.length *  activity.elapsed_time;
+    }
+    this.event.publish('DecisionList_Refresh');
+
+    this.navCtrl.setRoot('ActivityListPage');
   }
 }

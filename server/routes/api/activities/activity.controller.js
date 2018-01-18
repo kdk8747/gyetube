@@ -1,5 +1,5 @@
 const db = require('../../../database');
-const debug = require('debug')('group-auth');
+const debug = require('debug')('activity');
 
 
 exports.authCreate = (req, res, next) => {
@@ -117,29 +117,83 @@ exports.getByID = async (req, res) => {
   }
 }
 
-exports.updateByID = (req, res) => {
-  if (req.params.group === 'examplelocalparty') {
-    let i = activities2.findIndex(item => item.id === +req.params.id);
-    activities2[i] = req.body;
+exports.updateByID = async (req, res) => {
+  const conn = await db.getConnection();
+  try {
+    if (req.params.activity_id != req.body.activity_id) throw 'receipt_id does not match';
+
+    await conn.beginTransaction();
+    let author = await conn.query(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.permissions.group_id, req.decoded.user_id]);
+    debug(author[0]);
+
+    let prev = await conn.query(
+      'SELECT *, count(distinct P.member_id) AS participants_count\
+      FROM activity A\
+        LEFT JOIN participant P ON P.group_id=A.group_id AND P.activity_id=A.activity_id\
+      WHERE A.group_id=? AND A.activity_id=?\
+      GROUP BY A.activity_id', [req.permissions.group_id, req.params.activity_id]);
+    debug(prev[0]);
+
+    debug(req.body);
+    if (!prev[0][0]) throw 'cannot find one matched with activity_id';
+    if (prev[0][0].creator_id != author[0][0].member_id) throw 'creator_id does not match';
+    if (!req.body.activity_datetime) throw 'invalid activity_datetime';
+    if (!(+req.body.elapsed_time >= 0)) throw 'need elapsed_time';
+    if (!(req.body.participant_ids.length > 0)) throw 'need at least one participant';
+    if (!req.body.parent_decision_id) throw 'need parent document';
+
+    await conn.query(
+      'UPDATE decision\
+      SET total_elapsed_time=total_elapsed_time-?*?\
+      WHERE group_id=? AND decision_id=?', [prev[0][0].elapsed_time, prev[0][0].participants_count, req.permissions.group_id, prev[0][0].decision_id]);
+    await conn.query(
+      'UPDATE decision\
+      SET total_elapsed_time=total_elapsed_time+?*?\
+      WHERE group_id=? AND decision_id=?', [req.body.elapsed_time, req.body.participant_ids.length, req.permissions.group_id, req.body.parent_decision_id]);
+
+    await conn.query(
+      'UPDATE activity SET decision_id=?, creator_id=?, modified_datetime=?, activity_datetime=?, title=?,  description=?, image_urls=?, document_urls=?, elapsed_time=?\
+      WHERE group_id=? AND activity_id=?', [
+        req.body.parent_decision_id,
+        author[0][0].member_id,
+        new Date().toISOString().substring(0, 19).replace('T', ' '),
+        new Date(req.body.activity_datetime).toISOString().substring(0, 19).replace('T', ' '),
+        req.body.title,
+
+        req.body.description,
+        JSON.stringify(req.body.image_urls ? req.body.image_urls : []),
+        JSON.stringify(req.body.document_urls ? req.body.document_urls : []),
+        req.body.elapsed_time,
+
+        req.permissions.group_id,
+        req.params.activity_id,
+      ]);
+
+    await conn.query(
+      'DELETE FROM participant WHERE group_id=? AND activity_id=?', [req.permissions.group_id, req.params.activity_id]);
+    await Promise.all(req.body.participant_ids.map(
+      participant_id => conn.query(
+        'INSERT INTO participant\
+        VALUES(?,?,?)', [req.permissions.group_id, req.params.activity_id, participant_id])));
+
+    await conn.commit();
+    conn.release();
+
     res.send();
   }
-  else if (req.params.group === 'suwongreenparty') {
-    if (req.params.group in req.decoded.permissions.groups) {
-      let i = activities.findIndex(item => item.id === +req.params.id);
-      activities[i] = req.body;
-      res.send();
+  catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
     }
-    else
-      res.status(401).json({
-        success: false,
-        message: 'not logged in'
-      });
-  }
-  else
-    res.status(404).json({
+    res.status(500).json({
       success: false,
-      message: 'groupId: not found'
+      message: err
     });
+  }
 }
 
 exports.create = async (req, res) => {
@@ -206,9 +260,56 @@ exports.create = async (req, res) => {
   }
 }
 
-exports.deleteByID = (req, res) => {
-    res.status(404).json({
+exports.deleteByID = async (req, res) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    let author = await conn.query(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.permissions.group_id, req.decoded.user_id]);
+    debug(author[0]);
+
+    let prev = await conn.query(
+      'SELECT *, count(distinct P.member_id) AS participants_count\
+      FROM activity A\
+        LEFT JOIN participant P ON P.group_id=A.group_id AND P.activity_id=A.activity_id\
+      WHERE A.group_id=? AND A.activity_id=?\
+      GROUP BY A.activity_id', [req.permissions.group_id, req.params.activity_id]);
+    debug(prev[0]);
+
+    debug(req.body);
+    if (!prev[0][0]) throw 'cannot find one matched with activity_id';
+    if (prev[0][0].creator_id != author[0][0].member_id) throw 'creator_id does not match';
+
+
+    if (prev[0][0].decision_id) {
+      let total_elapsed_time = prev[0][0].elapsed_time * prev[0][0].participants_count;
+      await conn.query(
+        'UPDATE decision\
+        SET total_elapsed_time=total_elapsed_time-?\
+        WHERE group_id=? AND decision_id=?', [total_elapsed_time, req.permissions.group_id, prev[0][0].decision_id]);
+    }
+    await conn.query(
+      'DELETE FROM participant\
+      WHERE group_id=? AND activity_id=?', [req.permissions.group_id, req.params.activity_id]);
+    await conn.query(
+      'DELETE FROM activity\
+      WHERE group_id=? AND activity_id=?', [req.permissions.group_id, req.params.activity_id]);
+
+    await conn.commit();
+    conn.release();
+
+    res.send();
+  }
+  catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
+    }
+    res.status(500).json({
       success: false,
-      message: 'not found'
+      message: err
     });
+  }
 }

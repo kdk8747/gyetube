@@ -4,6 +4,8 @@ export class AmazonSignature {
     public signature: string,
     public keyPath: string,
     public credential: string,
-    public hashedPayload: string
+    public MD5HashedPayload: string,
+    public SHA256HashedPayload: string,
+    public payload: string
   ) { }
 }
