@@ -111,7 +111,7 @@ export class UtilService {
 
   translateDBString(str: string): Observable<string> {
     switch(str) {
-      case 'ANYONE':
+      case 'EVERYONE':
       case 'MEMBER':
       case 'COMMITEE':
         return this.translate.get('I18N_' + str);
