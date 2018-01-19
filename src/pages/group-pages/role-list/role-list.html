@@ -19,7 +19,7 @@
       <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
     </span>
 
-    <ion-grid fixed>
+    <ion-grid fixed *ngIf="sharedDataService.roleReadPermitted">
       <ion-row>
         <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let role of roles">
           <ion-item tappable (tap)="navigateToDetail(role.role_id)">

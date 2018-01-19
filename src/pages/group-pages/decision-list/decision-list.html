@@ -9,7 +9,7 @@
     <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
   </span>
 
-  <ion-row *ngIf="sharedDataService.decisionListTimelineMode">
+  <ion-row *ngIf="sharedDataService.decisionReadPermitted && sharedDataService.decisionListTimelineMode">
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
@@ -48,7 +48,7 @@
     </ion-col>
   </ion-row>
 
-  <ion-grid fixed *ngIf="!sharedDataService.decisionListTimelineMode">
+  <ion-grid fixed *ngIf="sharedDataService.decisionReadPermitted && !sharedDataService.decisionListTimelineMode">
     <ion-row>
       <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let decision of decisions">
         <ion-item tappable (tap)="navigateToDetail(decision.decision_id)">

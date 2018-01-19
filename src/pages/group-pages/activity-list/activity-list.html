@@ -9,7 +9,7 @@
     <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
   </span>
 
-  <ion-grid fixed>
+  <ion-grid fixed *ngIf="sharedDataService.activityReadPermitted">
     <ion-row>
       <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let activity of activities">
         <ion-item tappable (tap)="navigateToDetail(activity.activity_id)">

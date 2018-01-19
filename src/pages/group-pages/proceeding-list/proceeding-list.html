@@ -9,7 +9,7 @@
     <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
   </span>
 
-  <ion-row>
+  <ion-row *ngIf="sharedDataService.proceedingReadPermitted">
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
