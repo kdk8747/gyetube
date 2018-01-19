@@ -174,13 +174,16 @@ exports.getByID = async (req, res) => {
   try {
     let result = await db.execute(
       "SELECT M.member_id, M.member_log_id, M.modified_datetime, M.image_url, M.name,\
+      M.decision_id AS parent_decision_id,\
       get_member_state(M.member_state) AS member_state,\
+      concat('[\"', group_concat(R.role_id separator '\", \"'), '\"]') AS role_ids,\
       concat('[\"', group_concat(R.name separator '\", \"'), '\"]') AS roles\
       FROM member M\
       LEFT JOIN member_role MR  ON MR.group_id=M.group_id  AND  MR.member_id=M.member_id\
       LEFT JOIN role R          ON R.group_id=MR.group_id  AND  R.role_id=MR.role_id\
       WHERE M.group_id=? AND M.member_id=?\
       GROUP BY M.member_id", [req.permissions.group_id, req.params.member_id]);
+    result[0][0].role_ids = JSON.parse(result[0][0].role_ids);
     result[0][0].roles = JSON.parse(result[0][0].roles);
     debug(result[0][0]);
     res.send(result[0][0]);
@@ -196,7 +199,7 @@ exports.getByID = async (req, res) => {
 exports.getByLogID = async (req, res) => {
   try {
     let member_log = await db.execute(
-      'SELECT *, ML.creator_id AS creator_id, get_member_state(ML.member_state) AS member_state\
+      'SELECT *, ML.decision_id, ML.creator_id AS creator_id, get_member_state(ML.member_state) AS member_state\
       FROM member_log ML\
       LEFT JOIN member M ON M.group_id=ML.group_id AND M.member_id=ML.member_id\
       WHERE ML.group_id=? AND ML.member_log_id=?', [req.permissions.group_id, req.params.member_log_id]);
@@ -319,9 +322,6 @@ exports.insertMember = async (conn, member) => {
 }
 
 exports.updateMember = async (conn, member) => {
-  let member_log_new_id = await conn.query('SELECT GET_SEQ(?,"member_log") AS new_id', [member.group_id]);
-  member.member_log_id = member_log_new_id[0][0].new_id;
-
   await conn.query(
     'UPDATE member\
     SET member_log_id=?, decision_id=?, user_id=unhex(?), image_url=?, name=?, member_state=?, creator_id=?, modified_datetime=?\
@@ -382,6 +382,56 @@ exports.updateMember = async (conn, member) => {
   }
 }
 
+exports.update = async (req, res) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    let author = await conn.query(
+      'SELECT member_id\
+      FROM member\
+      WHERE group_id=? AND user_id=UNHEX(?)', [req.permissions.group_id, req.decoded.user_id]);
+    debug(author[0]);
+
+    let result = await conn.query(
+      'SELECT *, hex(user_id) AS user_id\
+      FROM member \
+      WHERE group_id=? AND member_id=?', [req.permissions.group_id, req.params.member_id]);
+    debug(result[0]);
+
+    let member = result[0][0];
+    member.name = req.body.name;
+    member.parent_decision_id = req.body.parent_decision_id;
+    member.creator_id = author[0][0].member_id;
+    member.role_ids = req.body.role_ids;
+    member.member_state = 4; /* UPDATED */
+    let member_log_new_id = await conn.query('SELECT GET_SEQ(?,"member_log") AS new_id', [member.group_id]);
+    member.member_log_id = member_log_new_id[0][0].new_id;
+
+    await module.exports.updateMember(conn, member);
+
+    await conn.commit();
+    conn.release();
+
+    res.send({
+      member_id: member.member_id,
+      member_log_id: member.member_log_id,
+      member_state: 'UPDATED',
+      creator_id: member.creator_id,
+      image_url: member.image_url
+    });
+  }
+  catch (err) {
+    if (!conn.connection._fatalError) {
+      conn.rollback();
+      conn.release();
+    }
+    res.status(500).json({
+      success: false,
+      message: err
+    });
+  }
+}
+
 exports.approveNewMember = async (req, res) => {
   const conn = await db.getConnection();
   try {
@@ -402,6 +452,9 @@ exports.approveNewMember = async (req, res) => {
     member.creator_id = author[0][0].member_id;
     member.role_ids = [2];
     member.member_state = 1; /* JOIN_APPROVED */
+    let member_log_new_id = await conn.query('SELECT GET_SEQ(?,"member_log") AS new_id', [member.group_id]);
+    member.member_log_id = member_log_new_id[0][0].new_id;
+
     await module.exports.updateMember(conn, member);
 
     await conn.commit();
@@ -457,11 +510,17 @@ exports.approveOverwrite = async (req, res) => {
     member.member_id = prev[0][0].member_id;
     member.creator_id = prev[0][0].member_id;
     member.role_ids = [];
+    let member_log_new_id = await conn.query('SELECT GET_SEQ(?,"member_log") AS new_id', [member.group_id]);
+    member.member_log_id = member_log_new_id[0][0].new_id;
+
     await module.exports.updateMember(conn, member);
 
     member.creator_id = author[0][0].member_id;
     member.member_state = 1; /* JOIN_APPROVED */
     member.role_ids = [2];
+    member_log_new_id = await conn.query('SELECT GET_SEQ(?,"member_log") AS new_id', [member.group_id]);
+    member.member_log_id = member_log_new_id[0][0].new_id;
+
     await module.exports.updateMember(conn, member);
 
     await conn.query(
@@ -507,6 +566,8 @@ exports.reject = async (req, res) => {
     member.member_state = 2; /* JOIN_REJECTED */
     member.user_id = null;
     member.creator_id = author[0][0].member_id;
+    let member_log_new_id = await conn.query('SELECT GET_SEQ(?,"member_log") AS new_id', [member.group_id]);
+    member.member_log_id = member_log_new_id[0][0].new_id;
 
     await module.exports.updateMember(conn, member);
 

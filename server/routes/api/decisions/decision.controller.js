@@ -59,14 +59,14 @@ exports.getByID = async (req, res) => {
     decision[0][0].parent_proceeding = parent_proceeding[0][0];
 
     let child_members = await db.execute(
-      'SELECT *, get_member_state(member_state) AS member_state\
-      FROM member\
-      WHERE group_id=? AND decision_id=?', [req.permissions.group_id, req.params.decision_id]);
+      'SELECT M.name, ML.member_id, ML. member_log_id, get_member_state(ML.member_state) AS member_state\
+      FROM member_log ML LEFT JOIN member M ON M.group_id=ML.group_id AND M.member_id=ML.member_id\
+      WHERE ML.group_id=? AND ML.decision_id=?', [req.permissions.group_id, req.params.decision_id]);
     decision[0][0].child_members = child_members[0];
 
     let child_roles = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
-      FROM role\
+      FROM role_log\
       WHERE group_id=? AND decision_id=?', [req.permissions.group_id, req.params.decision_id]);
     decision[0][0].child_roles = child_roles[0];
 

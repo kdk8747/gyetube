@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilService, MemberService, RoleService, DecisionService, SharedDataService } from '../../../providers';
-import { DecisionListElement, RoleListElement, MemberEditorElement } from '../../../models';
+import { DecisionListElement, RoleListElement, MemberListElement, MemberEditorElement } from '../../../models';
 import { TranslateService } from '@ngx-translate/core';
 
 
@@ -16,6 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class MemberEditorPage {
 
   groupId: number;
+  id: number;
   decisions: DecisionListElement[] = [];
   roles: RoleListElement[] = [];
 
@@ -42,12 +43,30 @@ export class MemberEditorPage {
   }
 
   ionViewDidLoad() {
+    this.id = this.navParams.get('id');
+
     this.event.subscribe('RoleList_Refresh', () => {
       this.roles = this.sharedDataService.roles;
     });
     this.event.subscribe('DecisionList_Refresh', () => {
       this.decisions = this.sharedDataService.decisions.filter(decision =>
-        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED' ) && decision.next_id == 0);
+        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED') && decision.next_id == 0);
+    });
+
+    this.util.getCurrentGroupId().then(group_id => {
+      this.groupId = group_id;
+      this.roles = this.sharedDataService.roles;
+      this.decisions = this.sharedDataService.decisions.filter(decision =>
+        (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED') && decision.next_id == 0);
+
+      if (this.id) {
+        this.memberService.getMember(this.groupId, this.id)
+          .subscribe((member: MemberListElement) => {
+            this.form.controls['name'].setValue(member.name);
+            this.form.controls['roles'].setValue(member.role_ids);
+            this.form.controls['parentDecision'].setValue(member.parent_decision_id);
+          });
+      }
     });
   }
 
@@ -61,12 +80,6 @@ export class MemberEditorPage {
     });
     this.event.publish('App_ShowHeader');
     this.event.publish('TabsGroup_ShowTab');
-
-    this.util.getCurrentGroupId().then(group_id => {
-      this.groupId = group_id;
-      this.roles = this.sharedDataService.roles;
-      this.decisions = this.sharedDataService.decisions.filter(decision => (decision.document_state == 'ADDED' || decision.document_state == 'UPDATED' || decision.document_state == 'PREDEFINED' ) && decision.next_id == 0);
-    });
   }
 
   popNavigation() {
@@ -82,15 +95,28 @@ export class MemberEditorPage {
     if (!this.form.valid) return;
     this.form.value.name = this.form.value.name.trim();
 
-    let newMember = new MemberEditorElement(0, this.form.value.name, this.form.value.parentDecision, this.form.value.roles);
+    let newMember = new MemberEditorElement(this.id ? this.id : 0, this.form.value.name, this.form.value.parentDecision, this.form.value.roles);
 
-    this.memberService.create(this.groupId, newMember).toPromise()
-      .then((member) => {
-        member.roles = newMember.role_ids.map(role_id => this.roles.find(role => role.role_id == role_id).name);
-        this.sharedDataService.members.push(member);
-        this.event.publish('MemberList_Refresh');
-        this.navCtrl.setRoot('MemberListPage');
-      })
-      .catch(() => { console.log('new member failed') });
+    if (this.id) {
+      this.memberService.update(this.groupId, newMember).toPromise()
+        .then((member) => {
+          member.roles = newMember.role_ids.map(role_id => this.roles.find(role => role.role_id == role_id).name);
+          let i = this.sharedDataService.members.findIndex(list_member => list_member.member_id == member.member_id);
+          this.sharedDataService.members[i] = member;
+          this.event.publish('MemberList_Refresh');
+          this.navCtrl.setRoot('MemberListPage');
+        })
+        .catch(() => { console.log('update member failed') });
+    }
+    else {
+      this.memberService.create(this.groupId, newMember).toPromise()
+        .then((member) => {
+          member.roles = newMember.role_ids.map(role_id => this.roles.find(role => role.role_id == role_id).name);
+          this.sharedDataService.members.push(member);
+          this.event.publish('MemberList_Refresh');
+          this.navCtrl.setRoot('MemberListPage');
+        })
+        .catch(() => { console.log('new member failed') });
+    }
   }
 }

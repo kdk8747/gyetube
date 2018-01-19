@@ -62,12 +62,12 @@ export class DecisionDetailPage {
     this.event.publish('TabsGroup_ProceedingDetail', { id: proceeding_id });
   }
 
-  navigateToMemberDetail(member_id: string) {
-    this.event.publish('TabsGroup_MemberDetail', { id: member_id });
+  navigateToMemberDetail(member_id: string, member_log_id: string) {
+    this.event.publish('TabsGroup_MemberDetail', { id: member_id, log_id: member_log_id });
   }
 
-  navigateToRoleDetail(role_id: string) {
-    this.event.publish('TabsGroup_RoleDetail', { id: role_id });
+  navigateToRoleDetail(role_id: string, role_log_id: string) {
+    this.event.publish('TabsGroup_RoleDetail', { id: role_id, log_id: role_log_id});
   }
 
   navigateToActivityDetail(activity_id: string) {

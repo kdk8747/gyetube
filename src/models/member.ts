@@ -9,6 +9,7 @@ export class MemberListElement {
     public image_url: string,
     public name: string,
     public roles: string[],
+    public role_ids: string[],
     public parent_decision_id: number
   ) { }
 }

@@ -76,7 +76,7 @@ export class ProceedingDetailPage {
             this.sharedDataService.myselfMemberLogId, '', '',
             this.sharedDataService.loggedInUser.image_url,
             this.sharedDataService.loggedInUser.name,
-            null, 0));
+            null, null, 0));
         if (this.proceeding.reviewers.length == this.proceeding.reviewed_attendees.length) {
           this.proceeding.child_decisions.map(decision => decision.document_state = 'ADDED');
           this.proceeding.document_state = 'ADDED';

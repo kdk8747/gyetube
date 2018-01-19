@@ -77,6 +77,10 @@ export class MemberDetailPage {
     this.navCtrl.setRoot('MemberDetailPage', { id: this.id, log_id: this.member.next_id });
   }
 
+  navigateToEditorForUpdate() {
+    this.navCtrl.push('MemberEditorPage', { id: this.member.member_id });
+  }
+
   navigateToDecisionDetail(decision_id: string) {
     this.event.publish('TabsGroup_DecisionDetail', { id: decision_id });
   }

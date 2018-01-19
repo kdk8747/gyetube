@@ -59,7 +59,7 @@
       <div style="height:10px"></div>
 
       <ion-card *ngFor="let member of decision?.child_members; let i=index">
-        <ion-item tappable (tap)="navigateToMemberDetail(member.member_id)">
+        <ion-item tappable (tap)="navigateToMemberDetail(member.member_id, member.member_log_id)">
           <ion-row align-items-center>
             <ion-col col-auto>
               <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>
@@ -74,7 +74,7 @@
       <div style="height:10px" *ngIf="decision?.child_members.length > 0"></div>
 
       <ion-card *ngFor="let role of decision?.child_roles; let i=index">
-        <ion-item tappable (tap)="navigateToRoleDetail(role.role_id)">
+        <ion-item tappable (tap)="navigateToRoleDetail(role.role_id, role.role.log_id)">
           <ion-row align-items-center>
             <ion-col col-auto>
               <ion-icon style="font-size: 1.8em" name="arrow-back"></ion-icon>

@@ -178,7 +178,7 @@ export class TabsGroupPage {
 
   setRootToChildNav(childNav: Nav, page: string, obj: any): boolean {
     let top: ViewController = childNav.last();
-    if (top.id !== page || top.data.id !== obj.id) {
+    if (top.id !== page || top.data.id !== obj.id || top.data.log_id !== obj.log_id) {
       childNav.setRoot(page, obj);
       return true;
     }

@@ -11,6 +11,8 @@ router.get('/:member_id',
 router.get('/:member_id/logs/:member_log_id',
   controller.authRead, controller.getByLogID);
 
+router.put('/:member_id',
+  controller.authUpdate, controller.update);
 router.put('/:member_id/approve-new-member',
   controller.authUpdate, controller.approveNewMember);
 router.put('/:member_id/approve-overwrite/:prev_id',

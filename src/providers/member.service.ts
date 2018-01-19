@@ -72,6 +72,18 @@ export class MemberService {
       .take(1);
   }
 
+  update(group_id: number, member: MemberEditorElement): Observable<MemberListElement> {
+    const url = `${this.membersUrl}/${group_id}/members/${member.member_id}`;
+    return this.http
+      .put(url, JSON.stringify(member), { headers: this.headers })
+      .map(response => {
+        let res = response.json() as MemberListElement;
+        return new MemberListElement(res.member_id, res.member_log_id, res.member_state, new Date().toISOString(), res.image_url,
+          member.name, null, null, member.parent_decision_id);
+      })
+      .take(1);
+  }
+
   approveNewMember(group_id: number, member_id: number): Observable<void> {
     const url = `${this.membersUrl}/${group_id}/members/${member_id}/approve-new-member`;
     return this.http
@@ -101,7 +113,7 @@ export class MemberService {
       .map(response => {
         let res = response.json() as MemberListElement;
         return new MemberListElement(res.member_id, res.member_log_id, res.member_state, new Date().toISOString(), null,
-          member.name, null, member.parent_decision_id);
+          member.name, null, null, member.parent_decision_id);
       })
       .take(1);
   }

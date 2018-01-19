@@ -30,12 +30,16 @@
 
       <ion-row align-items-center justify-content-start>
         <ion-col col-auto>
-          {{'I18N_AUTHOR' | translate }}:
           <gyetube-user [user]="member?.creator"></gyetube-user>
         </ion-col>
         <ion-col>
-          <p>{{member?.creator?.name}}</p>
+          <p>{{'I18N_AUTHOR' | translate }}: {{member?.creator?.name}}</p>
           <p>{{member?.created_datetime | localizedDate:'short'}}</p>
+        </ion-col>
+        <ion-col col-auto *ngIf="sharedDataService.memberCreatePermitted">
+          <button ion-button icon-only (tap)="navigateToEditorForUpdate()">
+            <ion-icon name="create"></ion-icon>
+          </button>
         </ion-col>
       </ion-row>
 
@@ -47,8 +51,8 @@
         <p>{{'I18N_' + member?.member_state | translate}}</p>
       </ion-item>
 
-      <ion-card *ngIf="member?.parent_decision">
-        <ion-item tappable (tap)="navigateToDecisionDetail(member.parent_decision.decision_id)">
+      <ion-card *ngIf="member?.decision_id">
+        <ion-item tappable (tap)="navigateToDecisionDetail(member.decision_id)">
           <ion-row align-items-center>
             <ion-col>
               <p>{{ 'I18N_BASIS_FOR_THIS_DOCUMENT' | translate }}</p>

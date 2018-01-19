@@ -1,4 +1,4 @@
-import { ProceedingListElement, ActivityListElement, ReceiptListElement, MemberListElement } from './';
+import { ProceedingListElement, ActivityListElement, ReceiptListElement, MemberListElement, RoleListElement } from './';
 
 export class DecisionListElement {
   constructor(
@@ -37,6 +37,8 @@ export class DecisionDetailElement {
     public accepters: MemberListElement[],
     public rejecters: MemberListElement[],
     public parent_proceeding: ProceedingListElement,
+    public child_members: MemberListElement[],
+    public child_roles: RoleListElement[],
     public child_activities: ActivityListElement[],
     public child_receipts: ReceiptListElement[],
 
