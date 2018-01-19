@@ -79,6 +79,7 @@ export class TabsGroupPage {
           this.sharedDataService.myselfState = member.member_state;
           this.sharedDataService.memberCreatePermitted = member.role.member.some(val => val == 'CREATE');
           this.sharedDataService.memberReadPermitted = member.role.member.some(val => val == 'READ');
+          this.sharedDataService.memberInteractionPermitted = member.role.member.some(val => val == 'INTERACTION');
           this.sharedDataService.roleCreatePermitted = member.role.role.some(val => val == 'CREATE');
           this.sharedDataService.roleReadPermitted = member.role.role.some(val => val == 'READ');
           this.sharedDataService.proceedingCreatePermitted = member.role.proceeding.some(val => val == 'CREATE');
@@ -97,6 +98,7 @@ export class TabsGroupPage {
           this.sharedDataService.myselfState = null;
           this.sharedDataService.memberCreatePermitted = false;
           this.sharedDataService.memberReadPermitted = false;
+          this.sharedDataService.memberInteractionPermitted = false;
           this.sharedDataService.roleCreatePermitted = false;
           this.sharedDataService.roleReadPermitted = false;
           this.sharedDataService.proceedingCreatePermitted = false;

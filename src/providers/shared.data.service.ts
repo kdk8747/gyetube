@@ -40,6 +40,7 @@ export class SharedDataService {
 
   memberReadPermitted: boolean = false;
   memberCreatePermitted: boolean = false;
+  memberInteractionPermitted: boolean = false;
   roleReadPermitted: boolean = false;
   roleCreatePermitted: boolean = false;
   proceedingCreatePermitted: boolean = false;
