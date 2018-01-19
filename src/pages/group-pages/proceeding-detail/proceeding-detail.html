@@ -27,7 +27,7 @@
             <ion-icon name="alert" color="danger"></ion-icon>
             {{sharedDataService.loggedInUser?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}
           </span>
-          {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding?.reviewers.length}}/{{proceeding?.attendees.length}})
+          {{'I18N_REVIEWED_BY' | translate}}: ({{proceeding?.reviewed_attendees.length}}/{{proceeding?.reviewers.length}})
         </ion-buttons>
       </ion-toolbar>
 
@@ -38,7 +38,7 @@
       </ion-buttons>
       <ion-buttons left *ngIf="proceeding?.document_state == 'PENDING_ADDS' && proceeding?.next_id == 0">
         {{ 'I18N_REVIEWED_BY' | translate}}:
-        <gyetube-user *ngFor="let reviewer of proceeding?.reviewers" [user]="reviewer"></gyetube-user>
+        <gyetube-user *ngFor="let reviewer of proceeding?.reviewed_attendees" [user]="reviewer"></gyetube-user>
       </ion-buttons>
 
       <p>{{proceeding?.description}}</p>

@@ -70,25 +70,37 @@ export class ProceedingDetailPage {
       this.proceedingService.update(this.groupId, this.proceeding.proceeding_id).subscribe(() => {
 
         /* Update Local ProceedingDetailElement */
-        this.proceeding.reviewers.push(
+        this.proceeding.reviewed_attendees.push(
           new MemberListElement(
             this.sharedDataService.myselfMemberId,
             this.sharedDataService.myselfMemberLogId, '', '',
             this.sharedDataService.loggedInUser.image_url,
             this.sharedDataService.loggedInUser.name,
             null, 0));
-        if (this.proceeding.reviewers.length == this.proceeding.attendees.length) {
+        if (this.proceeding.reviewers.length == this.proceeding.reviewed_attendees.length) {
           this.proceeding.child_decisions.map(decision => decision.document_state = 'ADDED');
           this.proceeding.document_state = 'ADDED';
         }
         this.proceeding.need_my_review = 0;
 
-        /* Update Local ProceedingListElement */
-        let target = this.sharedDataService.proceedings.find(proceeding => proceeding.proceeding_id == this.proceeding.proceeding_id);
-        target.reviewers_count ++;
-        if (target.reviewers_count == target.attendees_count)
-          target.document_state = 'ADDED';
-        target.need_my_review = 0;
+        /* Update Local List Element */
+        let proceedingInList = this.sharedDataService.proceedings.find(proceeding => proceeding.proceeding_id == this.proceeding.proceeding_id);
+        proceedingInList.reviewed_attendees_count++;
+        if (proceedingInList.reviewers_count == proceedingInList.reviewed_attendees_count) {
+          proceedingInList.document_state = 'ADDED';
+
+          this.proceeding.child_decisions.map(child_decision => {
+            let decisionInList = this.sharedDataService.decisions.find(decision => decision.decision_id == child_decision.decision_id);
+            switch (decisionInList.document_state){
+              case 'PENDING_ADDS': decisionInList.document_state = 'ADDED'; break;
+              case 'PENDING_UPDATES': decisionInList.document_state = 'UPDATED'; break;
+            }
+          });
+          this.event.publish('DecisionList_Refresh');
+        }
+        proceedingInList.need_my_review = 0;
+        this.event.publish('ProceedingList_Refresh');
+
 
         this.event.publish('App_ShowHeader');
         this.event.publish('TabsGroup_ShowTab');

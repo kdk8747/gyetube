@@ -19,7 +19,7 @@
           <span *ngIf="proceeding.need_my_review">
             <p><ion-icon name="alert" color="danger"></ion-icon>{{user?.name}}, {{'I18N_NEED_YOUR_REVIEW' | translate}}</p>
           </span>
-          <p>{{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewers_count}}/{{proceeding.attendees_count}})</p>
+          <p>{{'I18N_REVIEWED_BY' | translate}}: ({{proceeding.reviewed_attendees_count}}/{{proceeding.reviewers_count}})</p>
         </ion-toolbar>
         <ion-row>
           <p>{{proceeding.title}}</p>

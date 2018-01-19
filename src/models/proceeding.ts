@@ -12,6 +12,7 @@ export class ProceedingListElement {
     public description: string,
     public attendees_count: number,
     public reviewers_count: number,
+    public reviewed_attendees_count: number,
     public need_my_review: number,
     public child_decisions_count: number
   ) { }
@@ -29,6 +30,7 @@ export class ProceedingDetailElement {
     public description: string,
     public attendees: MemberListElement[],
     public reviewers: MemberListElement[],
+    public reviewed_attendees: MemberListElement[],
     public need_my_review: number,
     public child_decisions: DecisionListElement[]
   ) { }

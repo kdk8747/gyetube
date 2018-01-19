@@ -73,7 +73,7 @@ export class ProceedingService {
         let res = response.json() as ProceedingListElement;
         return new ProceedingListElement(res.proceeding_id, 0, 0, res.document_state, new Date().toISOString(),
           proceeding.meeting_datetime, proceeding.title, proceeding.description, proceeding.attendee_ids.length,
-          0, 0, proceeding.child_decisions.length);
+          res.reviewers_count, 0, res.need_my_review, proceeding.child_decisions.length);
       })
       .take(1);
   }

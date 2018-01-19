@@ -11,6 +11,6 @@ router.put('/:proceeding_id',
   controller.authUpdate, controller.updateByID);
 
 router.post('/',
-  controller.authCreate, controller.create);
+  controller.authCreateOrUpdate, controller.create);
 
 module.exports = router;

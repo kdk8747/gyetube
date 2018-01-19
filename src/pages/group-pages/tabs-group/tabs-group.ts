@@ -62,7 +62,7 @@ export class TabsGroupPage {
           err => { this.sharedDataService.proceedings = []; this.event.publish('ProceedingList_Refresh'); }
         );
         this.decisionService.getDecisions(group.group_id).subscribe(
-          roles => { this.sharedDataService.decisions = roles; this.event.publish('DecisionList_Refresh'); },
+          decisions => { this.sharedDataService.decisions = decisions; this.event.publish('DecisionList_Refresh'); },
           err => { this.sharedDataService.decisions = []; this.event.publish('DecisionList_Refresh'); }
         );
         this.activityService.getActivities(group.group_id).subscribe(

@@ -14,6 +14,18 @@ exports.authCreate = (req, res, next) => {
     });
 }
 
+exports.authCreateOrUpdate = (req, res, next) => {
+  const CREATE = 1;
+  const UPDATE = 4;
+  if (req.permissions.proceeding & CREATE || req.permissions.proceeding & UPDATE)
+    next();
+  else
+    res.status(403).json({
+      success: false,
+      message: 'permission denied'
+    });
+}
+
 exports.authRead = (req, res, next) => {
   const READ = 2;
   if (req.permissions.proceeding & READ)
@@ -60,14 +72,16 @@ exports.getAll = async (req, res) => {
         P.title, P.description,\
         get_state(P.document_state) AS document_state,\
         count(distinct A.member_id) AS attendees_count,\
-        count(distinct (case when A.attendee_state=1 then A.member_id end)) AS reviewers_count,\
+        count(distinct M.user_id) AS reviewers_count,\
+        count(distinct (case when A.attendee_state=1 then A.member_id end)) AS reviewed_attendees_count,\
         count(distinct D.decision_id) AS child_decisions_count,\
         count(distinct (case when P.document_state=0 and P.next_id=0 and A.member_id=? and A.attendee_state=0 then 1 end)) AS need_my_review\
       FROM proceeding P\
-        LEFT JOIN attendee A ON A.group_id=? AND A.proceeding_id=P.proceeding_id\
-        LEFT JOIN decision D ON D.group_id=? AND D.proceeding_id=P.proceeding_id\
+        LEFT JOIN attendee A ON A.group_id=P.group_id AND A.proceeding_id=P.proceeding_id\
+        LEFT JOIN member M ON M.group_id=A.group_id AND M.member_id=A.member_id\
+        LEFT JOIN decision D ON D.group_id=P.group_id AND D.proceeding_id=P.proceeding_id\
       WHERE P.group_id=? AND P.next_id=0\
-      GROUP BY P.proceeding_id', [member_id[0][0].member_id, req.permissions.group_id, req.permissions.group_id, req.permissions.group_id]);
+      GROUP BY P.proceeding_id', [member_id[0][0].member_id, req.permissions.group_id]);
     res.send(result[0]);
   }
   catch (err) {
@@ -90,8 +104,8 @@ exports.getByID = async (req, res) => {
       'SELECT *, get_state(P.document_state) AS document_state,\
       count(distinct case when P.document_state=0 and P.next_id=0 and A.member_id=? and A.attendee_state=0 then 1 end) AS need_my_review\
       FROM proceeding P\
-        LEFT JOIN attendee A ON A.group_id=? AND A.proceeding_id=P.proceeding_id\
-      WHERE P.group_id=? AND P.proceeding_id=?', [member_id[0][0].member_id, req.permissions.group_id, req.permissions.group_id, req.params.proceeding_id]);
+        LEFT JOIN attendee A ON A.group_id=P.group_id AND A.proceeding_id=P.proceeding_id\
+      WHERE P.group_id=? AND P.proceeding_id=?', [member_id[0][0].member_id, req.permissions.group_id, req.params.proceeding_id]);
 
     let child_decisions = await db.execute(
       'SELECT *, get_state(document_state) AS document_state\
@@ -102,10 +116,16 @@ exports.getByID = async (req, res) => {
     let attendees = await db.execute(
       'SELECT *, get_member_state(member_state) AS member_state\
       FROM attendee A\
-      LEFT JOIN member M ON M.group_id=? AND M.member_id=A.member_id\
-      WHERE A.group_id=? AND A.proceeding_id=?', [req.permissions.group_id, req.permissions.group_id, req.params.proceeding_id]);
-    proceeding[0][0].attendees = attendees[0];
-    proceeding[0][0].reviewers = attendees[0].filter(attendee => attendee.attendee_state == 1/*REVIEWED*/);
+      LEFT JOIN member M ON M.group_id=A.group_id AND M.member_id=A.member_id\
+      WHERE A.group_id=? AND A.proceeding_id=?', [req.permissions.group_id, req.params.proceeding_id]);
+    proceeding[0][0].reviewers = attendees[0]
+      .filter(attendee => attendee.user_id != null)
+      .map(attendee => {delete attendee.user_id; return attendee;});
+    proceeding[0][0].attendees = attendees[0]
+      .map(attendee => {delete attendee.user_id; return attendee;});
+    proceeding[0][0].reviewed_attendees = attendees[0]
+      .filter(attendee => attendee.attendee_state == 1/*REVIEWED*/)
+      .map(attendee => {delete attendee.user_id; return attendee;});
 
     if (proceeding[0][0].next_id > 0)
       res.setHeader('Cache-Control', 'public, max-age=2592000');
@@ -137,14 +157,15 @@ exports.updateByID = async (req, res) => {
 
     let attendee = await conn.query(
       'SELECT\
-      count(member_id) AS attendees_count,\
-      count(case when attendee_state=1 then 1 end) AS reviewers_count\
-      FROM attendee\
-      WHERE group_id=? AND proceeding_id=?\
-      GROUP BY proceeding_id', [req.permissions.group_id, req.params.proceeding_id]);
-    debug(attendee[0][0].attendees_count + ' ' + attendee[0][0].reviewers_count);
+      count(distinct M.user_id) AS reviewers_count,\
+      count(distinct (case when A.attendee_state=1 then A.member_id end)) AS reviewed_attendees_count\
+      FROM attendee A\
+      LEFT JOIN member M ON M.group_id=A.group_id AND M.member_id=A.member_id\
+      WHERE A.group_id=? AND A.proceeding_id=?\
+      GROUP BY A.proceeding_id', [req.permissions.group_id, req.params.proceeding_id]);
+    debug(attendee[0][0].reviewed_attendees_count + ' ' + attendee[0][0].reviewers_count);
 
-    if (attendee[0][0].attendees_count == attendee[0][0].reviewers_count) {
+    if (attendee[0][0].reviewed_attendees_count == attendee[0][0].reviewers_count) {
       await conn.query(
         'UPDATE proceeding\
         SET document_state=2\
@@ -244,6 +265,7 @@ exports.insertProceeding = async (conn, proceeding) => {
 
 exports.create = async (req, res) => {
   const conn = await db.getConnection();
+  debug('create');
   try {
     await conn.beginTransaction();
     debug(req.body);
@@ -258,12 +280,21 @@ exports.create = async (req, res) => {
     proceeding.document_state = 0; /* PENDING_ADDS */
     await module.exports.insertProceeding(conn, proceeding);
 
+    let result = await conn.query(
+      'SELECT count(distinct M.user_id) AS reviewers_count,\
+      count(distinct (case when M.user_id=unhex(?) then 1 end)) AS need_my_review\
+      FROM attendee A\
+      LEFT JOIN member M ON M.group_id=A.group_id AND M.member_id=A.member_id\
+      WHERE A.group_id=? AND A.proceeding_id=?', [req.decoded.user_id, req.permissions.group_id, proceeding.proceeding_id]);
+
     await conn.commit();
     conn.release();
 
     res.send({
       proceeding_id: proceeding_new_id[0][0].new_id,
-      document_state: "PENDING_ADDS"
+      document_state: "PENDING_ADDS",
+      reviewers_count: result[0][0].reviewers_count,
+      need_my_review: result[0][0].need_my_review
     });
   }
   catch (err) {

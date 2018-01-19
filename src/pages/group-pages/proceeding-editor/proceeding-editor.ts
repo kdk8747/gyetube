@@ -148,17 +148,21 @@ export class ProceedingEditorPage {
       this.form.value.attendees.map(attendee => attendee.member_id),
       childDecisions);
 
-    this.proceedingService.create(this.groupId, newProceeding).subscribe((proceeding) => {
-      proceeding.need_my_review = newProceeding.attendee_ids.some(member_id => member_id == this.sharedDataService.myselfMemberId) ? 1 : 0;
-      this.sharedDataService.proceedings.push(proceeding);
-      this.sharedDataService.decisionEditMode = false;
-      this.sharedDataService.decisionChangesets = [];
-      this.decisionService.getDecisions(this.groupId).subscribe(
-        decisions => { this.sharedDataService.decisions = decisions; this.event.publish('DecisionList_Refresh'); },
-        err => { this.sharedDataService.decisions = []; this.event.publish('DecisionList_Refresh'); }
-      );
-      this.event.publish('ProceedingList_Refresh');
-      this.navCtrl.setRoot('ProceedingListPage');
-    });
+    this.proceedingService.create(this.groupId, newProceeding).subscribe((proceeding) => this.finalize(proceeding));
+  }
+
+  finalize(proceeding) {
+    if (this.id)
+      this.sharedDataService.proceedings = this.sharedDataService.proceedings.filter(proceeding => proceeding.proceeding_id != this.id);
+    this.sharedDataService.proceedings.push(proceeding);
+
+    this.sharedDataService.decisionEditMode = false;
+    this.sharedDataService.decisionChangesets = [];
+    this.decisionService.getDecisions(this.groupId).subscribe(
+      decisions => { this.sharedDataService.decisions = decisions; this.event.publish('DecisionList_Refresh'); },
+      err => { this.sharedDataService.decisions = []; this.event.publish('DecisionList_Refresh'); }
+    );
+    this.event.publish('ProceedingList_Refresh');
+    this.navCtrl.setRoot('ProceedingListPage');
   }
 }

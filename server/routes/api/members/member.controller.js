@@ -464,6 +464,12 @@ exports.approveOverwrite = async (req, res) => {
     member.role_ids = [2];
     await module.exports.updateMember(conn, member);
 
+    await conn.query(
+      'UPDATE proceeding P LEFT JOIN attendee A\
+      ON P.group_id=A.group_id AND P.proceeding_id=A.proceeding_id AND P.next_id=0\
+      SET P.document_state=0\
+      WHERE A.group_id=? AND A.member_id=? AND attendee_state=0', [req.permissions.group_id, req.params.prev_id]);
+
     await conn.commit();
     conn.release();
 
