@@ -56,10 +56,12 @@ export class HeaderComponent {
           case 0:
             if (this.sharedDataService.headerReturnMemberList){
               childNav.setRoot('MemberListPage');
+              this.sharedDataService.headerReturnMemberList = false;
               break;
             }
             if (this.sharedDataService.headerReturnRoleList){
               childNav.setRoot('RoleListPage');
+              this.sharedDataService.headerReturnRoleList = false;
               break;
             }
             childNav.setRoot('GroupHomePage');
