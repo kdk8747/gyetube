@@ -29,9 +29,9 @@
           <p>{{activity?.modified_datetime | localizedDate:'short'}}</p>
         </ion-col>
         <ion-col col-auto *ngIf="sharedDataService.activityCreatePermitted && activity?.creator?.member_id == sharedDataService.myselfMemberId">
-          <!-- <button ion-button icon-only (tap)="navigateToEditorForUpdate()">
+          <button ion-button icon-only (tap)="navigateToEditorForUpdate()">
             <ion-icon name="create"></ion-icon>
-          </button> -->
+          </button>
         </ion-col>
         <ion-col col-auto *ngIf="sharedDataService.activityDeletePermitted && activity?.creator?.member_id == sharedDataService.myselfMemberId">
           <button ion-button icon-only (tap)="deleteButtonHandler()">

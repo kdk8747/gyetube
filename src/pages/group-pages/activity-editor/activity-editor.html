@@ -15,12 +15,14 @@
         <ion-buttons>{{ 'I18N_ACTIVITY' | translate }} - {{ 'I18N_EDITOR' | translate }}</ion-buttons>
       </ion-toolbar>
 
-      <ion-item>
+      <ion-item no-lines>
         {{ 'I18N_PHOTOS' | translate }}
         <input type="file" multiple (change)="onChangeActivityPhoto($event)" accept="image/*" />
-        <div style="height:56px"></div>
-        <img src="" style="width: auto; height: auto">
       </ion-item>
+      <div style="height:56px"></div>
+      <span *ngIf="newActivityImageFiles.length == 0">
+        <img *ngFor="let image of prevActivity.image_urls" [src]="image" style="width: auto; height: auto">
+      </span>
 
       <form [formGroup]="form">
         <ion-list>

@@ -147,12 +147,12 @@ exports.updateByID = async (req, res) => {
 
     await conn.query(
       'UPDATE decision\
-      SET total_elapsed_time=total_elapsed_time-?*?\
-      WHERE group_id=? AND decision_id=?', [prev[0][0].elapsed_time, prev[0][0].participants_count, req.permissions.group_id, prev[0][0].decision_id]);
+      SET total_elapsed_time=total_elapsed_time-?*?, total_difference=total_difference-?\
+      WHERE group_id=? AND decision_id=?', [prev[0][0].elapsed_time, prev[0][0].participants_count, prev[0][0].total_difference, req.permissions.group_id, prev[0][0].decision_id]);
     await conn.query(
       'UPDATE decision\
-      SET total_elapsed_time=total_elapsed_time+?*?\
-      WHERE group_id=? AND decision_id=?', [req.body.elapsed_time, req.body.participant_ids.length, req.permissions.group_id, req.body.parent_decision_id]);
+      SET total_elapsed_time=total_elapsed_time+?*?, total_difference=total_difference+?\
+      WHERE group_id=? AND decision_id=?', [req.body.elapsed_time, req.body.participant_ids.length, prev[0][0].total_difference, req.permissions.group_id, req.body.parent_decision_id]);
 
     await conn.query(
       'UPDATE activity SET decision_id=?, creator_id=?, modified_datetime=?, activity_datetime=?, title=?,  description=?, image_urls=?, document_urls=?, elapsed_time=?\

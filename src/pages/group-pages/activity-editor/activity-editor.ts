@@ -78,6 +78,7 @@ export class ActivityEditorPage {
             this.form.controls['participants'].setValue(activity.participants.map(member => member.member_id));
             this.form.controls['parentDecision'].setValue(activity.parent_decision.decision_id);
             this.prevActivity = activity;
+            console.log(this.prevActivity.image_urls);
           });
       }
     });
@@ -140,19 +141,6 @@ export class ActivityEditorPage {
 
     let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
 
-    if (this.prevActivity.image_urls.length > 0) {
-      this.amazonService.getAmazonSignatureForActivityDELETE(this.groupId, dateForSign, this.prevActivity.image_urls).toPromise()
-        .then((amzSign: AmazonSignature) => this.amazonService.deleteMultipleFile(dateForSign, amzSign).toPromise())
-        .then((xml) => {
-          let regexp = /<Deleted>/;
-          if (!regexp.test(xml))
-            return Promise.reject(xml);
-          else
-            return Promise.resolve();
-        })
-        .catch((err) => { console.log('delete image failed:\n' + err) });
-    }
-
     if (this.newActivityImageFiles.length == 0) {
       if (this.id) {
         this.activityService.update(this.groupId, newActivity).toPromise()
@@ -166,6 +154,19 @@ export class ActivityEditorPage {
       }
     }
     else {
+      if (this.prevActivity.image_urls.length > 0) {
+        this.amazonService.getAmazonSignatureForActivityDELETE(this.groupId, dateForSign, this.prevActivity.image_urls).toPromise()
+          .then((amzSign: AmazonSignature) => this.amazonService.deleteMultipleFile(dateForSign, amzSign).toPromise())
+          .then((xml) => {
+            let regexp = /<Deleted>/;
+            if (!regexp.test(xml))
+              return Promise.reject(xml);
+            else
+              return Promise.resolve();
+          })
+          .catch((err) => { console.log('delete image failed:\n' + err) });
+      }
+
       this.amazonService.getAmazonSignatureForActivityPOST(this.groupId, dateForSign).toPromise()
         .then((amzSign: AmazonSignature) => Promise.all(this.newActivityImageFiles.map((file, index) =>
           this.amazonService.postImageFile(file, dateForSign, amzSign, index).toPromise()
@@ -205,10 +206,12 @@ export class ActivityEditorPage {
     if (this.prevActivity.parent_decision && this.prevActivity.parent_decision.decision_id) {
       let i = this.sharedDataService.decisions.findIndex(decision => decision.decision_id == this.prevActivity.parent_decision.decision_id);
       this.sharedDataService.decisions[i].total_elapsed_time -= this.prevActivity.participants.length * this.prevActivity.elapsed_time;
+      this.sharedDataService.decisions[i].total_difference -= this.prevActivity.total_difference;
     }
     if (activity.parent_decision_id){
       let i = this.sharedDataService.decisions.findIndex(decision => decision.decision_id == activity.parent_decision_id);
       this.sharedDataService.decisions[i].total_elapsed_time += activity.participant_ids.length *  activity.elapsed_time;
+      this.sharedDataService.decisions[i].total_difference += this.prevActivity.total_difference;
     }
     this.event.publish('DecisionList_Refresh');
 

@@ -29,9 +29,9 @@
           <p>{{receipt?.modified_datetime | localizedDate:'short'}}</p>
         </ion-col>
         <ion-col col-auto *ngIf="sharedDataService.receiptCreatePermitted && receipt?.creator?.member_id == sharedDataService.myselfMemberId">
-          <!-- <button ion-button icon-only (tap)="navigateToEditorForUpdate(receipt.receipt_id)">
+          <button ion-button icon-only (tap)="navigateToEditorForUpdate(receipt.receipt_id)">
             <ion-icon name="create"></ion-icon>
-          </button> -->
+          </button>
         </ion-col>
         <ion-col col-auto *ngIf="sharedDataService.receiptDeletePermitted && receipt?.creator?.member_id == sharedDataService.myselfMemberId">
           <button ion-button icon-only (tap)="deleteButtonHandler(receipt.receipt_id)">

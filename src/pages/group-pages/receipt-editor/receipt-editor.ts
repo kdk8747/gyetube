@@ -137,12 +137,6 @@ export class ReceiptEditorPage {
 
     let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
 
-    if (this.prevReceipt.image_url) {
-      this.amazonService.getAmazonSignatureForReceiptDELETE(this.groupId, dateForSign, this.prevReceipt.image_url).toPromise()
-        .then((amzSign: AmazonSignature) => this.amazonService.deleteFile(dateForSign, amzSign).toPromise())
-        .catch(() => { console.log('delete image failed') });
-    }
-
     if (!this.newReceiptImageFile) {
       if (!this.id) {
         this.receiptService.create(this.groupId, newReceipt).toPromise()
@@ -156,6 +150,12 @@ export class ReceiptEditorPage {
       }
     }
     else {
+      if (this.prevReceipt.image_url) {
+        this.amazonService.getAmazonSignatureForReceiptDELETE(this.groupId, dateForSign, this.prevReceipt.image_url).toPromise()
+          .then((amzSign: AmazonSignature) => this.amazonService.deleteFile(dateForSign, amzSign).toPromise())
+          .catch(() => { console.log('delete image failed') });
+      }
+
       this.amazonService.getAmazonSignatureForReceiptPOST(this.groupId, dateForSign).toPromise()
         .then((amzSign: AmazonSignature) => this.amazonService.postImageFile(this.newReceiptImageFile, dateForSign, amzSign, 0).toPromise())
         .then((xml: string) => {
