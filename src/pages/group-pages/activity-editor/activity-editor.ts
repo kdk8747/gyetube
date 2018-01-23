@@ -136,7 +136,7 @@ export class ActivityEditorPage {
     this.form.value.description = this.form.value.description.trim();
 
     let newActivity = new ActivityEditorElement(this.id ? this.id : 0, this.form.value.activityDate,
-      this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
+      this.form.value.elapsedTime, this.form.value.title, this.form.value.description, this.prevActivity.image_urls, [],
       this.form.value.participants, +this.form.value.parentDecision);
 
     let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
@@ -155,6 +155,7 @@ export class ActivityEditorPage {
     }
     else {
       if (this.prevActivity.image_urls.length > 0) {
+        newActivity.image_urls = [];
         this.amazonService.getAmazonSignatureForActivityDELETE(this.groupId, dateForSign, this.prevActivity.image_urls).toPromise()
           .then((amzSign: AmazonSignature) => this.amazonService.deleteMultipleFile(dateForSign, amzSign).toPromise())
           .then((xml) => {
