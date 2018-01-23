@@ -136,7 +136,7 @@ export class ActivityEditorPage {
     this.form.value.description = this.form.value.description.trim();
 
     let newActivity = new ActivityEditorElement(this.id ? this.id : 0, this.form.value.activityDate,
-      this.form.value.elapsedTime, this.form.value.title, this.form.value.description, this.prevActivity.image_urls, [],
+      this.form.value.elapsedTime, this.form.value.title, this.form.value.description, [], [],
       this.form.value.participants, +this.form.value.parentDecision);
 
     let dateForSign = this.amazonService.getISO8601Date(new Date(Date.now()));
