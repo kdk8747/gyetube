@@ -72,7 +72,7 @@ export class ActivityEditorPage {
         this.activityService.getActivity(this.groupId, this.id)
           .subscribe((activity: ActivityDetailElement) => {
             this.form.controls['title'].setValue(activity.title);
-            this.form.controls['activityDate'].setValue(activity.activity_datetime);
+            this.form.controls['activityDate'].setValue(this.util.toIsoStringWithTimezoneOffset(new Date(activity.activity_datetime)));
             this.form.controls['elapsedTime'].setValue(activity.elapsed_time);
             this.form.controls['description'].setValue(activity.description);
             this.form.controls['participants'].setValue(activity.participants.map(member => member.member_id));
