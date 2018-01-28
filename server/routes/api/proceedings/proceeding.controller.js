@@ -165,7 +165,7 @@ exports.updateByID = async (req, res) => {
       GROUP BY A.proceeding_id', [req.permissions.group_id, req.params.proceeding_id]);
     debug(attendee[0][0].reviewed_attendees_count + ' ' + attendee[0][0].reviewers_count);
 
-    if (attendee[0][0].reviewed_attendees_count == attendee[0][0].reviewers_count) {
+    if (attendee[0][0].reviewed_attendees_count > 0 /*== attendee[0][0].reviewers_count*/) {
       await conn.query(
         'UPDATE proceeding\
         SET document_state=2\

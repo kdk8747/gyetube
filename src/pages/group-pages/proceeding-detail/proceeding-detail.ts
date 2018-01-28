@@ -77,7 +77,7 @@ export class ProceedingDetailPage {
             this.sharedDataService.loggedInUser.image_url,
             this.sharedDataService.loggedInUser.name,
             null, null, 0));
-        if (this.proceeding.reviewers.length == this.proceeding.reviewed_attendees.length) {
+        if (/*this.proceeding.reviewers.length ==*/ 0 < this.proceeding.reviewed_attendees.length) {
           this.proceeding.child_decisions.map(decision => decision.document_state = 'ADDED');
           this.proceeding.document_state = 'ADDED';
         }
@@ -86,7 +86,7 @@ export class ProceedingDetailPage {
         /* Update Local List Element */
         let proceedingInList = this.sharedDataService.proceedings.find(proceeding => proceeding.proceeding_id == this.proceeding.proceeding_id);
         proceedingInList.reviewed_attendees_count++;
-        if (proceedingInList.reviewers_count == proceedingInList.reviewed_attendees_count) {
+        if (/*proceedingInList.reviewers_count ==*/ 0 < proceedingInList.reviewed_attendees_count) {
           proceedingInList.document_state = 'ADDED';
 
           this.proceeding.child_decisions.map(child_decision => {
