@@ -30,3 +30,10 @@ ion-header {
 p {
   white-space: pre-wrap;
 }
+
+body {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
