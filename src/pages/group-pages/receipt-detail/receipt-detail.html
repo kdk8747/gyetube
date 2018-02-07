@@ -40,7 +40,7 @@
         </ion-col>
       </ion-row>
 
-      <img *ngIf="receipt?.image_url?.includes('http')" [src]="receipt?.image_url" style="width: auto; height: auto">
+      <img *ngIf="receipt?.image_url?.includes('http')" [src]="receipt?.image_url" style="width: auto; height: auto; image-orientation: from-image">
       <p>{{ 'I18N_SETTLEMENT_DATE' | translate}}: {{receipt?.settlement_datetime | localizedDate:'short'}}</p>
       <p>{{ 'I18N_DIFFERENCE' | translate}}: {{receipt?.difference | number}}</p>
 
