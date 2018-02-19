@@ -42,7 +42,7 @@
 
       <img *ngIf="receipt?.image_url?.includes('http')" [src]="receipt?.image_url" style="width: auto; height: auto; image-orientation: from-image">
       <p>{{ 'I18N_SETTLEMENT_DATE' | translate}}: {{receipt?.settlement_datetime | localizedDate:'short'}}</p>
-      <p>{{ 'I18N_DIFFERENCE' | translate}}: {{receipt?.difference | number}}</p>
+      <p>{{ 'I18N_DIFFERENCE' | translate}}: <span [style.color]="receipt?.difference >= 0 ? 'green' : 'red'">{{receipt?.difference | number}}</span></p>
 
       <ion-card *ngIf="receipt?.parent_activity">
         <ion-item tappable (tap)="navigateToActivityDetail(receipt.parent_activity.activity_id)">

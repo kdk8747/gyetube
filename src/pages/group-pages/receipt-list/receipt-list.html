@@ -25,7 +25,7 @@
           <ion-row>
             <ion-col>
               <p text-right>{{ 'I18N_BALANCE' | translate}} {{receipt.balance | number}}</p>
-              <p text-center>{{ 'I18N_DIFFERENCE' | translate}} {{receipt.difference | number}}</p>
+              <p text-center>{{ 'I18N_DIFFERENCE' | translate}} <span [style.color]="receipt?.difference >= 0 ? 'green' : 'red'">{{receipt.difference | number}}</span></p>
             </ion-col>
           </ion-row>
         </ion-item>
