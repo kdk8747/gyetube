@@ -185,7 +185,7 @@ export class ReceiptEditorPage {
     }
     this.event.publish('DecisionList_Refresh');
 
-    this.navCtrl.setRoot('ReceiptListPage');
+    this.popNavigation();
   }
 
   finalizeUpdate(receipt: ReceiptEditorElement) {
@@ -220,6 +220,6 @@ export class ReceiptEditorPage {
     }
     this.event.publish('DecisionList_Refresh');
 
-    this.navCtrl.setRoot('ReceiptListPage');
+    this.popNavigation();
   }
 }

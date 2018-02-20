@@ -104,7 +104,7 @@ export class MemberEditorPage {
           let i = this.sharedDataService.members.findIndex(list_member => list_member.member_id == member.member_id);
           this.sharedDataService.members[i] = member;
           this.event.publish('MemberList_Refresh');
-          this.navCtrl.setRoot('MemberListPage');
+          this.popNavigation();
         })
         .catch(() => { console.log('update member failed') });
     }
@@ -114,7 +114,7 @@ export class MemberEditorPage {
           member.roles = newMember.role_ids.map(role_id => this.roles.find(role => role.role_id == role_id).name);
           this.sharedDataService.members.push(member);
           this.event.publish('MemberList_Refresh');
-          this.navCtrl.setRoot('MemberListPage');
+          this.popNavigation();
         })
         .catch(() => { console.log('new member failed') });
     }

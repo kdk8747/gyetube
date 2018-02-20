@@ -99,7 +99,7 @@ export class RoleEditorPage {
       .then((role) => {
         this.sharedDataService.roles.push(role);
         this.event.publish('RoleList_Refresh');
-        this.navCtrl.setRoot('RoleListPage');
+        this.popNavigation();
       })
       .catch(() => { console.log('new role failed') });
   }

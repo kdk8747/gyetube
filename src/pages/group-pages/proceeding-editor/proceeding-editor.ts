@@ -163,6 +163,6 @@ export class ProceedingEditorPage {
       err => { this.sharedDataService.decisions = []; this.event.publish('DecisionList_Refresh'); }
     );
     this.event.publish('ProceedingList_Refresh');
-    this.navCtrl.setRoot('ProceedingListPage');
+    this.popNavigation();
   }
 }

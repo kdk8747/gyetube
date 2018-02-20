@@ -194,7 +194,7 @@ export class ActivityEditorPage {
   finalizeCreate(activity: ActivityListElement) {
     this.sharedDataService.activities.push(activity);
     this.event.publish('ActivityList_Refresh')
-    this.navCtrl.setRoot('ActivityListPage');
+    this.popNavigation();
   }
 
   finalizeUpdate(activity: ActivityEditorElement) {
@@ -216,6 +216,6 @@ export class ActivityEditorPage {
     }
     this.event.publish('DecisionList_Refresh');
 
-    this.navCtrl.setRoot('ActivityListPage');
+    this.popNavigation();
   }
 }
