@@ -9,11 +9,12 @@
     <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
   </span>
 
-  <ion-row *ngIf="sharedDataService.receiptReadPermitted">
+  <ion-row *ngIf="sharedDataService.receiptReadPermitted" style="height: 100%">
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-item tappable *ngFor="let receipt of receipts" (tap)="navigateToDetail(receipt.receipt_id)">
+      <ion-list [virtualScroll]="receipts" approxItemHeight="130px">
+        <ion-item tappable *virtualItem="let receipt" (tap)="navigateToDetail(receipt.receipt_id)">
           <ion-row>
             <p>{{receipt.title}}</p>
           </ion-row>
@@ -29,6 +30,7 @@
             </ion-col>
           </ion-row>
         </ion-item>
+      </ion-list>
     </ion-col>
     <ion-col col-sm-3 col-xl-4>
     </ion-col>

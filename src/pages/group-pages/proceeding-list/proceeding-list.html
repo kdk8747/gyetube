@@ -9,11 +9,12 @@
     <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
   </span>
 
-  <ion-row *ngIf="sharedDataService.proceedingReadPermitted">
+  <ion-row *ngIf="sharedDataService.proceedingReadPermitted" style="height: 100%">
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
-      <ion-item tappable *ngFor="let proceeding of proceedings" (tap)="navigateToDetail(proceeding.proceeding_id)">
+      <ion-list [virtualScroll]="proceedings" approxItemHeight="100px">
+      <ion-item tappable *virtualItem="let proceeding" (tap)="navigateToDetail(proceeding.proceeding_id)">
         <ion-toolbar *ngIf="proceeding.document_state == 'PENDING_ADDS'">
           {{'I18N_PENDING_ADDS' | translate}}<br>
           <span *ngIf="proceeding.need_my_review">
@@ -34,6 +35,7 @@
           </ion-col>
         </ion-row>
       </ion-item>
+      </ion-list>
     </ion-col>
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
