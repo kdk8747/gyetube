@@ -71,10 +71,7 @@ export class DecisionListPage {
   }
 
   refreshDecisions() {
-    this.decisions =
-        this.sharedDataService.decisionListTimelineMode ?
-          this.sortByDate(this.sharedDataService.decisions) :
-          this.sortByDate(this.filterPastDecisions(this.sharedDataService.decisions));
+    this.decisions = this.sortByDate(this.sharedDataService.decisions);
   }
 
   onFAB(fab: FabContainer) {

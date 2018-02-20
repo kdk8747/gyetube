@@ -9,7 +9,7 @@
     <p text-center>{{'I18N_EMPTY_LIST' | translate}}</p>
   </span>
 
-  <ion-row *ngIf="sharedDataService.decisionReadPermitted && sharedDataService.decisionListTimelineMode">
+  <ion-row *ngIf="sharedDataService.decisionReadPermitted">
     <ion-col col-sm-3 col-xl-4>
     </ion-col>
     <ion-col col-12 col-sm-6 col-xl-4>
@@ -48,54 +48,9 @@
     </ion-col>
   </ion-row>
 
-  <ion-grid fixed *ngIf="sharedDataService.decisionReadPermitted && !sharedDataService.decisionListTimelineMode">
-    <ion-row>
-      <ion-col col-12 col-md-6 col-lg-4 col-xl-3 *ngFor="let decision of decisions">
-        <ion-item tappable (tap)="navigateToDetail(decision.decision_id)">
-            <ion-row>
-              <p>{{decision.title}}</p>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <p>{{decision.meeting_datetime | localizedDate}}</p>
-              </ion-col>
-              <ion-col>
-                <p text-right style="white-space: normal" *ngIf="decision.accepters_count"> {{ 'I18N_ACCEPTERS' | translate}} {{ decision.accepters_count }} </p>
-                <p text-right style="white-space: normal" *ngIf="decision.rejecters_count"> {{ 'I18N_REJECTERS' | translate}} {{ decision.rejecters_count }} </p>
-                <p text-right style="white-space: normal" *ngIf="decision.abstainers_count"> {{ 'I18N_ABSTAINERS' | translate}} {{ decision.abstainers_count }} </p>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <p text-right style="white-space: normal">
-                  {{ 'I18N_ELAPSED_TIME' | translate}} {{decision.total_elapsed_time | number}} {{ 'I18N_HOURS' | translate}}
-                </p>
-                <p text-right style="white-space: normal">
-                  {{ 'I18N_DIFFERENCE' | translate}} {{decision.total_difference | number}}
-                </p>
-              </ion-col>
-            </ion-row>
-          </ion-item>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
   <ion-fab right middle *ngIf="sharedDataService.decisionEditMode">
     <button ion-fab (tap)="navigateToEditor()">
       <ion-icon name="add"></ion-icon>
     </button>
-  </ion-fab>
-  <ion-fab right middle *ngIf="!sharedDataService.decisionEditMode && sharedDataService.decisionReadPermitted" #fab>
-    <button ion-fab>
-      <ion-icon name="eye"></ion-icon>
-    </button>
-    <ion-fab-list>
-      <button ion-fab (tap)="sharedDataService.decisionListTimelineMode = true; onFAB(fab)" [class.selectedFAB]="sharedDataService.decisionListTimelineMode">
-        <ion-icon name="film"></ion-icon>
-      </button>
-      <button ion-fab (tap)="sharedDataService.decisionListTimelineMode = false; onFAB(fab)" [class.selectedFAB]="!sharedDataService.decisionListTimelineMode">
-        <ion-icon name="attach"></ion-icon>
-      </button>
-    </ion-fab-list>
   </ion-fab>
 </ion-content>

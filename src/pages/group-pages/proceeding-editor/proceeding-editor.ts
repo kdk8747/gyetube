@@ -109,7 +109,6 @@ export class ProceedingEditorPage {
     if (this.form.value.attendees.length < 2) return;
 
     this.sharedDataService.proceedingAttendees = this.form.value.attendees;
-    this.sharedDataService.decisionListTimelineMode = true;
     this.sharedDataService.decisionEditMode = true;
     this.navCtrl.parent.select(2);
     this.navCtrl.parent._tabs[2].setRoot('DecisionListPage');

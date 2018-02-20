@@ -13,7 +13,6 @@ export class SharedDataService {
   loggedInUser: User = null;
 
   proceedingAttendees: MemberListElement[] = [];
-  decisionListTimelineMode: boolean = false;
   decisionEditMode: boolean = false;
   decisionChangesets: DecisionEditorElement[] = [];
 
