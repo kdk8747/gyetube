@@ -6,7 +6,7 @@ const expressStaticGzip = require('express-static-gzip');
 const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
-const sslRedirect = require('heroku-ssl-redirect');
+//const sslRedirect = require('heroku-ssl-redirect');
 const debug = require('debug')('server');
 
 
@@ -39,7 +39,7 @@ if (process.env.NODE_ENV != 'production')
   app.use(require('morgan')('dev'));
 
 
-app.use(sslRedirect(['production'], 301));
+//app.use(sslRedirect(['production'], 301));
 app.use('/', expressStaticGzip(__public)); // FIX ME (performance)
 
 require('./express-middlewares/passports').initialize();
